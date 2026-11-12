@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T07:45:13+00:00",
+  "updated": "2026-11-12T07:54:34+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8602,7 +8602,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -8634,6 +8634,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -14271,10 +14279,14 @@
           "apps/api/src/metrics/metrics-http.integration.test.ts",
           "apps/api/src/metrics/metrics.service.test.ts",
           "apps/api/src/metrics/metrics.service.ts",
-          "packages/db/src/metrics.integration.test.ts"
+          "packages/db/src/metrics.integration.test.ts",
+          "apps/api/src/metrics/database-telemetry.test.ts",
+          "apps/api/src/metrics/database-telemetry.ts",
+          "docs/operations/postgresql-monitoring.md"
         ],
         "batches": [
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-otlp-connection-deadline"
         ],
         "current_acceptance": null,
         "verified_staging_postgres_monitoring": {
@@ -568608,7 +568620,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the final candidate with the selected providers and protected OTLP or other operational HTTP transports. Implemented application provider paths have deadlines and bounded control responses. Server-side S3 uses a terminal header deadline, a 10 MiB control response cap and deadline, and an idle timeout for streaming object bodies. Repeat the deployed file-size and byte-verification rehearsal."
+        "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP now closes a continuously streaming connection within the configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and an idle timeout for object bodies. Repeat the deployed file-size and byte-verification rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -568629,7 +568641,10 @@
           "packages/shared/src/storage/read-capped-bytes.ts",
           "packages/shared/src/storage/s3-storage-provider.ts",
           "packages/shared/src/storage/storage.test.ts",
-          "docs/operations/storage-configuration.md"
+          "docs/operations/storage-configuration.md",
+          "apps/api/src/metrics/database-telemetry.test.ts",
+          "apps/api/src/metrics/database-telemetry.ts",
+          "docs/operations/postgresql-monitoring.md"
         ],
         "batches": [
           "release-0.6-provider-egress-regressions",
@@ -568638,7 +568653,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-s3-response-limits"
+          "release-0.6-s3-response-limits",
+          "release-0.6-otlp-connection-deadline"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -587983,7 +587999,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -588106,6 +588122,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -588646,7 +588670,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -588815,6 +588839,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -597021,7 +597053,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             }
           ],
           "checks": [
@@ -597083,6 +597115,14 @@
                 "apps/api/src/metrics/http-request-metrics.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -597136,7 +597176,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -597173,6 +597213,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -599146,7 +599194,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -599234,6 +599282,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
+            },
+            {
+              "batch": "release-0.6-otlp-connection-deadline",
+              "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
             }
           ]
         }
@@ -919294,7 +919350,8 @@
           "release-0.6-staging-image-scans",
           "release-0.6-multipart-policy-validation",
           "release-0.6-structured-log-fixtures",
-          "release-0.6-portable-staging-images"
+          "release-0.6-portable-staging-images",
+          "release-0.6-otlp-connection-deadline"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -919510,7 +919567,10 @@
           "packages/i18n/src/storage-policy-forms.ts",
           "packages/shared/src/storage/runtime-config.ts",
           "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-          "apps/api/src/crm/crm-verification.integration.test.ts"
+          "apps/api/src/crm/crm-verification.integration.test.ts",
+          "apps/api/src/metrics/database-telemetry.test.ts",
+          "apps/api/src/metrics/database-telemetry.ts",
+          "docs/operations/postgresql-monitoring.md"
         ]
       }
     },
@@ -1059259,6 +1059319,76 @@
         {
           "file": "notifier-tests.log",
           "sha256": "eecae0594911ef0190cc912005dc745030e5948d182b3b270cb4471335198e28"
+        }
+      ]
+    },
+    "release-0.6-otlp-connection-deadline": {
+      "batch": "release-0.6-otlp-connection-deadline",
+      "base_commit": "d7023208aa55b94298db1cd9a43f2b4b8f3238ab",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "01-platform-infrastructure.md#T-04.01.04",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "06-security-testing-observability.md#T-06.14.01.03",
+        "06-security-testing-observability.md#T-06.14.02.03"
+      ],
+      "changed_paths": [
+        "apps/api/src/metrics/database-telemetry.test.ts",
+        "apps/api/src/metrics/database-telemetry.ts",
+        "docs/operations/postgresql-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/database-telemetry.test.ts",
+          "sha256": "06a428edb76582a9f3fa9ef7f38f7a6d2b18f69948aa8ad83cad1bb2ead33569"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.ts",
+          "sha256": "4d2b88a69e79eaca54053e8944b05ae8d03a2f497498da542313dde72e9c974f"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+        }
+      ],
+      "checks": [
+        "The installed OTLP HTTP transport already rejects redirects and caps its response at 4 MiB. Its request timeout measures inactivity. The configured per-connection deadline now closes the socket during DNS, TLS or a continuously streaming response. Existing SDK retry, concurrency and optional configuration remain in place.",
+        "The collector URL rejects credentials embedded in the URL and fragments. Standard protected OTLP headers still reach the configured collector. The HTTPS fixture accepted the trusted IP certificate, rejected a hostname mismatch and preserved the configured header.",
+        "Thirteen local socket tests passed. Native Linux run 43178421902 passed all sixteen cases across the collector tests and the compiled API/PostgreSQL telemetry fixture. The cases verify stream closure, subsequent recovery, and the existing Prometheus, API liveness and database compatibility boundaries.",
+        "API typecheck, changed-file ESLint, Prettier, actionlint and whitespace checks passed. No dependency versions changed."
+      ],
+      "limitations": [
+        "Fixtures verify the application and collector transport. The final protected staging and production-equivalent collector, role visibility and alert delivery still need their own evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-otlp-connection-deadline",
+      "execution_receipts": [
+        {
+          "file": "diagnostic-snapshot.json",
+          "sha256": "3d8fb2648a11619446d3c66e94e8d216319a321f1812ea870d1c2b1a6c721835"
+        },
+        {
+          "file": "verify-v06-otlp-connection-deadline.yml",
+          "sha256": "991f473f2befa11ee7b495ad514b7ccbbb721787634f27f509cc81acce1148e5"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "881909feb2b27e86655fa8937d463447dfab7f102ea57a368aa93d30d52adc06"
+        },
+        {
+          "file": "native/otlp-connection-deadline.log",
+          "sha256": "c737f8489ce5404e8ebb7559558ddec65d5f68c0effd1eb317d7b77255381d39"
+        },
+        {
+          "file": "socket-tests.log",
+          "sha256": "2f1fb01b51288b6c1d250f08e8dc3cf73efabf32f7e3f2be1346fc41b8ebb67c"
+        },
+        {
+          "file": "tls-fixture.json",
+          "sha256": "10e738d477233776cb4a4a17853a7608b81cebf70f1363fc019470d4733aa617"
         }
       ]
     }
