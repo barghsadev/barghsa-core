@@ -17,6 +17,14 @@ configuration changes use Turbo's affected workspace graph and its
 `--only --force` test tasks. An unavailable comparison base runs the full
 workspace test set. Manual release coverage keeps its separate full scope.
 
+On a direct push to `main`, the affected-test job can reuse the exact completed
+preflight that was used for branch protection. The receipt must match the
+published SHA, the push's previous `main` SHA and the successful workflow
+attempt. GitHub Actions must also report a successful `Verify monorepo integrity`
+check for that preflight within the last hour. If the proof is unavailable or
+differs, the job runs the affected suite. The other application and security jobs
+continue to run on the push. Full CI and manual release checks run their own tests.
+
 The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
 ### Nightly outcome email

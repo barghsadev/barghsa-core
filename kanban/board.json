@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T08:22:42+00:00",
+  "updated": "2026-11-12T08:33:49+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4209,7 +4209,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             }
           ],
           "checks": [
@@ -4380,6 +4380,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -4765,7 +4773,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4937,6 +4945,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -5164,7 +5180,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             }
           ],
           "checks": [
@@ -5373,6 +5389,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -5669,7 +5693,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -5857,6 +5881,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -6118,7 +6150,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6289,6 +6321,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -6400,7 +6440,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6571,6 +6611,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -6932,7 +6980,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -7194,6 +7242,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -7355,7 +7411,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7526,6 +7582,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -7654,7 +7718,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -7848,6 +7912,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -10987,7 +11059,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             }
           ],
           "checks": [
@@ -11130,6 +11202,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -18077,11 +18157,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "AGENTS.md",
@@ -18274,6 +18354,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -18347,7 +18436,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -18540,6 +18629,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -18619,7 +18716,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "package.json",
@@ -18872,6 +18969,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -19113,7 +19218,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -19267,6 +19372,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -23634,7 +23747,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -24243,6 +24356,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -26587,11 +26708,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "eslint.config.mjs",
@@ -26794,6 +26915,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -26872,7 +27002,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".prettierignore",
@@ -27055,6 +27185,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -27139,7 +27277,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".husky/commit-msg",
@@ -27163,7 +27301,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "eslint.config.mjs",
@@ -27374,6 +27512,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -28614,7 +28761,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -29347,6 +29494,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -29430,7 +29585,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".prettierignore",
@@ -29446,7 +29601,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "package.json",
@@ -29743,6 +29898,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -30030,7 +30194,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -30093,6 +30257,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -518339,7 +518511,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -518874,6 +519046,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -519031,7 +519211,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -519864,6 +520044,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -520017,7 +520205,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -520537,6 +520725,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -520656,7 +520852,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -521176,6 +521372,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -521295,7 +521499,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -521815,6 +522019,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -564347,7 +564559,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "Dockerfile.web",
@@ -564564,6 +564776,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -564857,7 +565077,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -565048,6 +565268,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -565108,7 +565336,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "Dockerfile.web",
@@ -565325,6 +565553,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -565756,7 +565992,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             }
           ],
           "checks": [
@@ -565928,6 +566164,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -571166,7 +571410,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -571319,6 +571563,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -576719,7 +576971,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -577098,6 +577350,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -578272,7 +578532,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".gitignore",
@@ -578517,6 +578777,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -578580,7 +578848,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".gitignore",
@@ -578784,6 +579052,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         },
@@ -578906,7 +579182,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -579077,6 +579353,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         },
@@ -579183,7 +579467,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -579336,6 +579620,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -579394,7 +579686,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "Dockerfile.base",
@@ -579589,6 +579881,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -579652,7 +579952,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".gitignore",
@@ -579856,6 +580156,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         },
@@ -579964,7 +580272,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -580107,6 +580415,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -580173,7 +580489,8 @@
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-unified-license-review",
           "release-0.6-runtime-log-channel-and-image",
-          "release-0.6-weekly-dependency-advisory"
+          "release-0.6-weekly-dependency-advisory",
+          "release-0.6-reuse-affected-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -580990,7 +581307,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -581160,6 +581477,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -582864,7 +583189,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "vitest.config.ts",
@@ -582916,7 +583241,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -583093,6 +583418,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md",
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -583141,7 +583475,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -583316,6 +583650,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -583363,7 +583705,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -583526,6 +583868,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -586000,11 +586350,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -586124,6 +586474,15 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -586170,7 +586529,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -586255,6 +586614,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -586301,7 +586668,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -586386,6 +586753,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -586467,7 +586842,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -586633,6 +587008,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -588243,7 +588626,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -588410,6 +588793,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -588491,7 +588882,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -588556,6 +588947,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -589775,7 +590174,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -589783,7 +590182,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -589967,6 +590366,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -590092,7 +590500,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -590164,6 +590572,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -590475,7 +590891,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -590724,6 +591140,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -590783,7 +591207,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -591019,6 +591443,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -591540,7 +591972,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -591693,6 +592125,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -591745,7 +592185,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -591906,6 +592346,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -592896,7 +593344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -593154,6 +593602,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -594244,7 +594700,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -594431,6 +594887,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -594479,7 +594943,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -594666,6 +595130,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -594716,7 +595188,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -594903,6 +595375,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -594950,7 +595430,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -595137,6 +595617,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -595153,19 +595641,25 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.01 | Implement CI workflow with all 12 PR gate checks in parallel where possible | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Read back exact final strict license, coverage and production browser receipts and the required domain review. Ordinary branch protection still requires the original set of successful jobs. Hosted diagnostic 43183685348 proves the optional receipt transport. Verify one actual direct push that reuses the exact affected tests and reruns the other checks."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "docs/development/ci.md",
+          "scripts/ci_preflight_receipt.py",
+          "scripts/test_ci_preflight_receipt.py"
+        ],
         "batches": [
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-reuse-affected-preflight"
         ],
         "current_acceptance": null
       }
@@ -595203,11 +595697,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -595277,6 +595771,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -595323,7 +595826,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -595510,6 +596013,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -595559,7 +596070,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/openapi.json",
@@ -595822,6 +596333,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -595916,7 +596435,10 @@
           "docs/operations/backup/postgresql-image-upgrade.md",
           "scripts/check-release-licenses.py",
           "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          "docs/development/ci.md",
+          "scripts/ci_preflight_receipt.py",
+          "scripts/test_ci_preflight_receipt.py"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -595928,7 +596450,8 @@
           "release-0.6-durable-multipart-operations",
           "release-0.6-exact-storage-receipt-locator",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-reuse-affected-preflight"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -596054,7 +596577,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -596259,6 +596782,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -596306,7 +596837,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -596604,6 +597135,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -596667,7 +597206,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/README.md",
@@ -596954,6 +597493,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -597680,7 +598227,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -597877,6 +598424,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -597935,7 +598490,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -598132,6 +598687,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -609435,7 +609998,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "Dockerfile.base",
@@ -609782,6 +610345,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -612199,7 +612770,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "Dockerfile.base",
@@ -612410,6 +612981,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -612610,7 +613189,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -612720,6 +613299,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -612836,7 +613423,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -612946,6 +613533,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -613000,7 +613595,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -613110,6 +613705,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -666978,7 +667581,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -667995,6 +668598,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -668139,7 +668750,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -669156,6 +669767,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -669986,7 +670605,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -671003,6 +671622,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -671086,7 +671713,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -671265,6 +671892,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         }
@@ -882031,7 +882666,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -882311,6 +882946,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -882869,7 +883512,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -883149,6 +883792,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -883707,7 +884358,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -883987,6 +884638,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -884546,7 +885205,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -884826,6 +885485,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -885384,7 +886051,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -885664,6 +886331,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -886222,7 +886897,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -886502,6 +887177,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -887060,7 +887743,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -887340,6 +888023,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -887899,7 +888590,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -888179,6 +888870,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -888737,7 +889436,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -889017,6 +889716,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -889575,7 +890282,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -889855,6 +890562,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -909757,7 +910472,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/openapi.json",
@@ -914261,6 +914976,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "presentation_renewals": [
@@ -914706,7 +915429,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": "apps/api/openapi.json",
@@ -919070,6 +919793,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -921376,7 +922107,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
             },
             {
               "path": ".size-limit.json",
@@ -923756,6 +924487,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-reuse-affected-preflight",
+              "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
             }
           ]
         },
@@ -924072,7 +924811,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Verify the corrected cumulative tip in the exact protected integrity check. The earlier protected run found four mutation tool dependency advisories and eight legacy-format or log destination assertions in the API tests. The unchanged dependency validator and the two native log fixture files passed with their respective fixes."
+        "Protected run 43176139660 passed on f8d97479 and the GitHub main ref was read back at that exact commit. Continue with the consolidated 8f8bd360 preflight 43182814816 and successor integrity results. The branch-protection result uses report-only image licenses. Final strict release evidence remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -924344,7 +925083,8 @@
           "release-0.6-multipart-policy-validation",
           "release-0.6-structured-log-fixtures",
           "release-0.6-portable-staging-images",
-          "release-0.6-otlp-connection-deadline"
+          "release-0.6-otlp-connection-deadline",
+          "release-0.6-reuse-affected-preflight"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -924563,7 +925303,9 @@
           "apps/api/src/crm/crm-verification.integration.test.ts",
           "apps/api/src/metrics/database-telemetry.test.ts",
           "apps/api/src/metrics/database-telemetry.ts",
-          "docs/operations/postgresql-monitoring.md"
+          "docs/operations/postgresql-monitoring.md",
+          "scripts/ci_preflight_receipt.py",
+          "scripts/test_ci_preflight_receipt.py"
         ]
       }
     },
@@ -1065337,6 +1066079,190 @@
         {
           "file": "lint.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-reuse-affected-preflight": {
+      "batch": "release-0.6-reuse-affected-preflight",
+      "base_commit": "8f8bd36035665de888544a474a4bd3c29d1c2d1c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/development/ci.md",
+        "scripts/ci_preflight_receipt.py",
+        "scripts/test_ci_preflight_receipt.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+        },
+        {
+          "path": "scripts/ci_preflight_receipt.py",
+          "sha256": "7c980c777ce1dc0c0ec4a90b6771e18f7e23a5c7f90f2ce7d8bedb95d451d12f"
+        },
+        {
+          "path": "scripts/test_ci_preflight_receipt.py",
+          "sha256": "2ab6ea602ce7c1a6d0c106c7bf1c9527b079f7b6373b59b5e59b588c4a439005"
+        }
+      ],
+      "checks": [
+        "GitHub required integration 15368 returned success for f8d97479 in run 43176139660 and job 131062324097. All seven jobs completed successfully. GitHub reported main at that exact commit. The separate main push run 43182780582 repeats the same affected tests.",
+        "A main push can now reuse a recent affected-test receipt only when the published SHA, previous main SHA, workflow attempt and exact required Actions check all match. It reruns the normal suite for unavailable, stale or different evidence. Full CI, release license enforcement, security scans and browser or coverage assertions retain their original conditions.",
+        "Seven receipt tests, four existing test-selector tests and actionlint passed. Hosted diagnostic 43183685348 round-tripped the attempt-bound artifact with a read-only Actions token, verified the live protected check and rejected a different base, a missing receipt and its own unrelated workflow.",
+        "The five-image 8f8bd360 inventory from run 43182814816 matches all 847 published f8d97479 package rows. It has 460 allowed entries and 387 awaiting package-specific dispositions. The strict final release check remains required."
+      ],
+      "limitations": [
+        "The protected f8d97479 push and the new helper fixture are separate receipts. Observe an actual direct push using the new workflow before claiming the production GitHub job reused tests. The protected push does not certify release acceptance or staging deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-reuse-affected-preflight",
+      "execution_receipts": [
+        {
+          "file": "diagnostic-ref.txt",
+          "sha256": "b11ee03012d5c521209f5abb3ac1663a05839a798e319b52a47786090a613cf3"
+        },
+        {
+          "file": "diagnostic-run.json",
+          "sha256": "19f56ab4274c07227a124be9fb0d141b3041235322f905ed05dd7cd22fef0ee2"
+        },
+        {
+          "file": "verify-v06-preflight-receipt.yml",
+          "sha256": "4fc2507426d03b3e68b0720798a7a96d90ff31a441eb726743a4eed91dd40b10"
+        },
+        {
+          "file": "diagnostic/preflight-receipt-transport.log",
+          "sha256": "eff13ee0a410c712ce13de828308afb29332f4762cae5606f2928e5dd68a9554"
+        },
+        {
+          "file": "live-api-proof.log",
+          "sha256": "bcaba4d971db8f686a637b06ee2b4f47233d2b251775704baadcc9916da7f872"
+        },
+        {
+          "file": "receipt-tests.log",
+          "sha256": "209637c5270ea62667d3505f25f6e8e713fd220b3020983b799e40ff6ae4138a"
+        },
+        {
+          "file": "selector-tests.log",
+          "sha256": "64273a3246f3df5b0ea0190faf45baabf1e234a2ca673ba470a716c2c03f6bf7"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "published-f8-run.json",
+          "sha256": "6863ca3a2a02af2c2fa255af841cf193535ae0aa3248d87dfcc319fbb77914ca"
+        },
+        {
+          "file": "published-f8-check.json",
+          "sha256": "a88814e16e358c3fdc8acdbc362f4f06c6ce2359cf871554025b06323c732def"
+        },
+        {
+          "file": "published-main.txt",
+          "sha256": "6205496a3ce7a47ebb5a2188ff3da3cb181a91ea3ad2663c0b57e9ed4f15df01"
+        },
+        {
+          "file": "successor-license-compare.json",
+          "sha256": "732131183cfb07b1767be532463c8f8bed1f41c40be08d218281193c63d8886b"
         }
       ]
     }
