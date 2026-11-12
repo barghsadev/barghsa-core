@@ -1,0 +1,9 @@
+apiVersion: 1
+datasources:
+  - name: Barghsa Tempo
+    uid: barghsa-tempo
+    type: tempo
+    access: proxy
+    url: $BARGHSA_TEMPO_QUERY_URL
+    isDefault: false
+    editable: false

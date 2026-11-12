@@ -86,6 +86,35 @@ host ports. Its Jaeger v3 API returned the same successful and rolled-back
 traces after restart. A temporary staging instance also returned both
 synthetic traces over SSH. Its cleanup verified staging health and the
 previous release metadata. Badger used a seven-day TTL in the rehearsal.
-Persistent staging access, the 30-day error and slow-trace policy, and
-operator UI verification remain release checks.
+Persistent staging access and the 30-day error and slow-trace policy remain
+release checks.
 [Jaeger release](https://github.com/jaegertracing/jaeger/releases/tag/v2.23.0) · [Go security advisory](https://pkg.go.dev/vuln/GO-2026-6860)
+
+### Find a trace in Grafana Explore
+
+Add `deploy/monitoring/staging-trace-query.yml` after the existing staging
+monitoring and dashboard Compose files once an approved Tempo instance is
+available. Set `BARGHSA_TEMPO_QUERY_NETWORK` to the name of its dedicated
+internal Docker network. Check the network's `Internal` field and membership
+before attaching Grafana. The Tempo query service needs the alias `tempo` on
+this network. Keep its query port unpublished and restrict Grafana to its
+loopback binding and authenticated operators.
+
+In Grafana, open **Explore** and select **Barghsa Tempo**. Paste the `traceId`
+from a structured log into **Trace ID**. To find an operation without a known
+ID, choose a time range and search by service and span name. Compare span
+parents and durations before following the `correlationId` back to logs.
+Prometheus remains the default source for the existing dashboards. To remove
+access, temporarily replace the mounted Tempo provisioning file with the
+following configuration and reload datasource provisioning. Verify that
+`barghsa-tempo` is gone, then recreate Grafana without the trace overlay and
+check that it has left the query network.
+
+```yaml
+apiVersion: 1
+deleteDatasources:
+  - name: Barghsa Tempo
+    orgId: 1
+```
+
+[Grafana Tempo documentation](https://grafana.com/docs/grafana/latest/datasources/tempo/) · [Datasource provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources).

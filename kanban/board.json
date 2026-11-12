@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T09:55:48+00:00",
+  "updated": "2026-11-12T10:06:20+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -614635,7 +614635,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             }
           ],
           "source_renewals": [
@@ -614646,6 +614646,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -614783,7 +614791,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -614868,6 +614876,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -615137,7 +615153,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615222,6 +615238,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -615427,7 +615451,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -615548,6 +615572,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -615753,7 +615785,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -615874,6 +615906,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -616554,7 +616594,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -616675,6 +616715,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
+            },
+            {
+              "batch": "release-0.6-grafana-trace-search",
+              "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
             }
           ]
         }
@@ -626099,19 +626147,56 @@
         "story": "06-security-testing-observability.md#spec-4321834970e2"
       },
       "requirement": "| T-06.16.01.04 | Create Grafana Explore / Tempo search UI integration for trace discovery | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/operations/structured-logging.md",
+          "deploy/monitoring/staging-trace-query.yml",
+          "deploy/monitoring/grafana-provisioning/tempo.yml"
+        ],
+        "batches": [
+          "release-0.6-grafana-trace-search"
+        ],
+        "current_acceptance": {
+          "batch": "release-0.6-grafana-trace-search",
+          "checks": [
+            "Compose normalization of the three staging monitoring files preserved the existing services, private Grafana loopback port and anonymous sign-in denial. The optional overlay added only the read-only Tempo datasource and the named external query network to Grafana.",
+            "Native Grafana OSS 13.3.1 authenticated an operator against the exact provisioning file, used Tempo 3.1.1 at the recorded immutable arm64 manifest digest, and returned an injected OTLP fixture by trace ID and TraceQL service and span filters. Playwright verified that the trace span rendered in Grafana Explore. Unauthenticated datasource and query requests returned 401.",
+            "The explicit provisioning removal procedure returned 404 for the removed datasource and retained default Prometheus. The temporary native Grafana process, browser session, fixture credentials and Tempo container were removed. Documentation formatting and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "docs/operations/structured-logging.md",
+              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+            },
+            {
+              "path": "deploy/monitoring/staging-trace-query.yml",
+              "sha256": "bd26f0d645bc3115c6d74709e32dd434ba582e256d48be9e9cfc9658f6fa1b67"
+            },
+            {
+              "path": "deploy/monitoring/grafana-provisioning/tempo.yml",
+              "sha256": "003e197dce03739d9258d8fe9afd5ad8726ef550dc306a01dd8de4ab72487c12"
+            },
+            {
+              "path": "deploy/monitoring/staging-compose.yml",
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+            },
+            {
+              "path": "deploy/monitoring/staging-dashboards.yml",
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+            },
+            {
+              "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+              "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+            }
+          ]
+        }
       }
     },
     {
@@ -1091767,6 +1091852,78 @@
         {
           "file": "source.sha256",
           "sha256": "2eecdc1eefd31d1c8f3379a2b08ff9c7b3a91ff6d9cda46465ec71b975b0ccdb"
+        }
+      ]
+    },
+    "release-0.6-grafana-trace-search": {
+      "batch": "release-0.6-grafana-trace-search",
+      "base_commit": "9f26047aee22cdbb08bfd627551bcbf566522023",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.16.01.04",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md",
+        "deploy/monitoring/staging-trace-query.yml",
+        "deploy/monitoring/grafana-provisioning/tempo.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+        },
+        {
+          "path": "deploy/monitoring/staging-trace-query.yml",
+          "sha256": "bd26f0d645bc3115c6d74709e32dd434ba582e256d48be9e9cfc9658f6fa1b67"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/tempo.yml",
+          "sha256": "003e197dce03739d9258d8fe9afd5ad8726ef550dc306a01dd8de4ab72487c12"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+          "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+        }
+      ],
+      "checks": [
+        "Compose normalization of the three staging monitoring files preserved the existing services, private Grafana loopback port and anonymous sign-in denial. The optional overlay added only the read-only Tempo datasource and the named external query network to Grafana.",
+        "Native Grafana OSS 13.3.1 authenticated an operator against the exact provisioning file, used Tempo 3.1.1 at the recorded immutable arm64 manifest digest, and returned an injected OTLP fixture by trace ID and TraceQL service and span filters. Playwright verified that the trace span rendered in Grafana Explore. Unauthenticated datasource and query requests returned 401.",
+        "The explicit provisioning removal procedure returned 404 for the removed datasource and retained default Prometheus. The temporary native Grafana process, browser session, fixture credentials and Tempo container were removed. Documentation formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The patched Jaeger 2.23.0 rehearsal worked through its v3 API. Grafana Jaeger plugin 13.0.8 used the removed Jaeger v1 services endpoint and returned a downstream 404. The Explore overlay uses native Tempo.",
+        "The test used disposable local storage and a loopback Tempo endpoint. Persistent staging activation, trace image promotion, production storage and error/slow retention remain separate operational gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-grafana-trace-search",
+      "execution_receipts": [
+        {
+          "file": "rehearse-tempo.py",
+          "sha256": "f0c9e726e8b2ef2631d98f9c9404541d048a2f85b0206015ad4d474baf1b655e"
+        },
+        {
+          "file": "tempo-proof.yml",
+          "sha256": "20bb78e78954990f202a31b7d952f89829bb89fb9be85f50c48c1685d9bac56f"
+        },
+        {
+          "file": "tempo-rehearsal.log",
+          "sha256": "41697e82e7788dd7ef831645ade21d6c45bad1da4ed4b1594d15d4ec912b81b8"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "da82380f00b1752ee90b3aaac605fc277163bace10601a62f3cf310884e6bec4"
         }
       ]
     }

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T09:55:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T10:06:20+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1243 | Accepted with unchanged source bindings. |
-| verify | 17 | Existing work may be complete; inspect evidence before building. |
+| done | 1244 | Accepted with unchanged source bindings. |
+| verify | 16 | Existing work may be complete; inspect evidence before building. |
 | partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1411,7 +1411,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.16.01.01` | partial | Recorded batch work | Configure OTel trace exporter to Tempo/Jaeger via OTLP |
 | `06-security-testing-observability.md#T-06.16.01.02` | partial | Recorded batch work | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
 | `06-security-testing-observability.md#T-06.16.01.03` | partial | Recorded batch work | Configure retention: sampled traces 7 days, error/slow 30 days |
-| `06-security-testing-observability.md#T-06.16.01.04` | verify | Inventory needed | Create Grafana Explore / Tempo search UI integration for trace discovery |
+| `06-security-testing-observability.md#T-06.16.01.04` | done | Recorded batch work | Create Grafana Explore / Tempo search UI integration for trace discovery |
 | `06-security-testing-observability.md#T-06.16.01.05` | partial | Recorded batch work | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
 | `06-security-testing-observability.md#T-06.16.02.01` | partial | Recorded batch work | Integrate Sentry SDK (or open-source alternative) into API, worker, and web processes |
 | `06-security-testing-observability.md#T-06.16.02.02` | done | Recorded batch work | Configure PII scrubbing: strip secrets, national IDs, financial details, tokens from error reports |
