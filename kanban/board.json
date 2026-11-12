@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T15:15:40+00:00",
+  "updated": "2026-11-12T15:21:56+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -45390,7 +45390,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -46921,6 +46921,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -80089,7 +80097,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
@@ -81562,6 +81570,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -136014,19 +136030,19 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0b0ffc9aeb7b75288b0849144358010f6bab4cf40af4af958126a88a55b1c732"
+              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
-              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+              "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.module.ts",
@@ -136911,6 +136927,17 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+                "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -149845,19 +149872,19 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0b0ffc9aeb7b75288b0849144358010f6bab4cf40af4af958126a88a55b1c732"
+              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
-              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+              "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.module.ts",
@@ -150748,6 +150775,17 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+                "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -191570,7 +191608,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -191785,6 +191823,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -192270,7 +192316,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -192517,6 +192563,14 @@
                 "apps/api/src/wallet/bank-receipt-topup.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -199330,11 +199384,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -199757,6 +199811,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -200066,11 +200129,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -200520,6 +200583,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -200838,11 +200910,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -201300,6 +201372,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -201649,11 +201730,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -202307,6 +202388,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -202623,11 +202713,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -203085,6 +203175,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -203288,11 +203387,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -203711,6 +203810,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -203914,11 +204022,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -204337,6 +204445,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -204541,11 +204658,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -204964,6 +205081,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -205169,11 +205295,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -205592,6 +205718,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -205805,11 +205940,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -206228,6 +206363,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -206433,11 +206577,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -206856,6 +207000,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -608873,7 +609026,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -609126,6 +609279,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -609492,7 +609653,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -609611,6 +609772,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -609685,7 +609854,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -609815,6 +609984,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -609912,7 +610089,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -610064,6 +610241,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -610223,7 +610408,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -610441,6 +610626,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -610491,7 +610684,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -610744,6 +610937,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -610917,7 +611118,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -611179,6 +611380,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -612175,8 +612384,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, and 11 refund route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with wallet ledger and remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, and five wallet balance, creation and ledger route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with wallet chargeback and reversal evidence, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -612257,6 +612466,11 @@
           "apps/api/src/wallet/online-topup-callback.service.ts",
           "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
           "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+          "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "apps/api/src/wallet/wallet-history.test.ts",
+          "apps/api/src/wallet/wallet-history.ts",
+          "apps/api/src/wallet/wallet.controller.ts",
           "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
           "apps/web/src/lib/electricity-increase-decision-form.test.ts",
           "apps/web/src/lib/electricity-increase-decision-form.ts",
@@ -612292,7 +612506,8 @@
           "release-0.6-receipt-attachment-scope",
           "release-0.6-wallet-payment-scope",
           "release-0.6-invoice-correction-scope",
-          "release-0.6-refund-provenance"
+          "release-0.6-refund-provenance",
+          "release-0.6-wallet-ledger-scope"
         ],
         "current_acceptance": null
       }
@@ -612368,7 +612583,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -612514,6 +612729,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -612856,11 +613079,11 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
-              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+              "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -613138,6 +613361,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -613417,7 +613649,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -613636,6 +613868,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -613753,7 +613993,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -613975,6 +614215,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -615358,11 +615606,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
@@ -615471,6 +615719,15 @@
                 "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -615953,11 +616210,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -616100,6 +616357,15 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -627546,7 +627812,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9b4a1a617af101ffba8ebfd5341aaafc17a9f9565605920bd22766b0ef7d8bc2"
+              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
             },
             {
               "path": "docs/threat-model.md",
@@ -627702,6 +627968,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -635540,11 +635814,11 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0b0ffc9aeb7b75288b0849144358010f6bab4cf40af4af958126a88a55b1c732"
+              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
-              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+              "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
             },
             {
               "path": "apps/worker/src/refunds/retry-runner.ts",
@@ -635720,6 +635994,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+                "apps/api/src/wallet/staff-wallet-ledger.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -660909,7 +661192,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
@@ -661006,6 +661289,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "The contract delta is limited to maintenance history, recovery-draft creation and the existing maintenance update. Drafts use the existing audit trail. Normal maintenance changes, other routes and storage schema retain their existing boundaries."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -661132,7 +661423,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
@@ -661229,6 +661520,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "The contract delta is limited to maintenance history, recovery-draft creation and the existing maintenance update. Drafts use the existing audit trail. Normal maintenance changes, other routes and storage schema retain their existing boundaries."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -661356,7 +661655,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
@@ -661453,6 +661752,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "The contract delta is limited to maintenance history, recovery-draft creation and the existing maintenance update. Drafts use the existing audit trail. Normal maintenance changes, other routes and storage schema retain their existing boundaries."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -661532,7 +661839,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "deploy/production/README.md",
@@ -661688,6 +661995,14 @@
                 "apps/api/src/health/health.controller.ts"
               ],
               "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -661815,7 +662130,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
@@ -661912,6 +662227,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "The contract delta is limited to maintenance history, recovery-draft creation and the existing maintenance update. Drafts use the existing audit trail. Normal maintenance changes, other routes and storage schema retain their existing boundaries."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ]
         }
@@ -963549,7 +963872,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -963905,11 +964228,11 @@
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
-              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+              "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.ts",
-              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+              "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -967260,6 +967583,16 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet-history.test.ts",
+                "apps/api/src/wallet/wallet-history.ts",
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -968117,7 +968450,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
-              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+              "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
@@ -972647,6 +972980,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-wallet-ledger-scope",
+              "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.ts"
+              ],
+              "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
             }
           ],
           "presentation_renewals": [
@@ -1142234,6 +1142575,182 @@
         {
           "file": "refund-routes.json",
           "sha256": "ce837563e26c0b4470e5f738d97473e4f2a522de4c0d2b6f5e48f398e3125ddb"
+        }
+      ]
+    },
+    "release-0.6-wallet-ledger-scope": {
+      "batch": "release-0.6-wallet-ledger-scope",
+      "base_commit": "ec5fde5ae73f550141aa24447804a0b24c37ab54",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.12.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.02.05",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.04.01.04",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.10.02.09",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+        "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+        "apps/api/src/wallet/wallet-history.test.ts",
+        "apps/api/src/wallet/wallet-history.ts",
+        "apps/api/src/wallet/wallet.controller.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/finance/financial-submission-actor.ts",
+          "sha256": "be447c7c19d24dd99b0e6673c7469b5e5c56f16cda33cd4ea40cec905ad014eb"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "af60a9ca1bda412f65e7192c228a6cb7a9739054b4dd38ecf62dc17f20f6c205"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
+          "sha256": "b5afbb591c976f80e9a158c499901b0685aa5cb55b3fb16126c7d0b802fceed4"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-access.ts",
+          "sha256": "896b620ceed66ca78e32091287cd4ec8f4df38bcdce574d4c3628f4cd8ee4518"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
+          "sha256": "3e776e3de4b3245df7a9fea8dffdd226058808d4e2df6b33bb70225df820c6d2"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-balance.controller.ts",
+          "sha256": "69964bdb94a45f758f6feaf61fb724d9cb24fee9dbd62448f416ec37d0dd312f"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+          "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.test.ts",
+          "sha256": "f0f1918d8031f41bf4a7d1676ddd88cd8e4a41f89bad1b66fdc31bf463a13321"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.ts",
+          "sha256": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.test.ts",
+          "sha256": "aaf5cfb48b4ff8da4d72d7aef74ded5e47db3f14756f5bff104cea17c1a8fd7f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-history.ts",
+          "sha256": "62ce604e15fd0b5ac0eb6f1d1010936ec768b999f1c81dea1130cbb7717f84a6"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed five wallet balance, creation and history route aliases. Customer operations hold current profile authority, and customer history verifies active selection. Staff reconciliation and financial balance reads retain distinct grants and current staff sessions.",
+        "Staff reconciliation history queries only its visible ledger fields and returns no bank receipt metadata. A protected database fixture proves a pending receipt remains searchable by its ledger description and is excluded when only its payer reference matches.",
+        "Customer bank receipt search, exact amount and time filters, current grants, session expiry and cross-profile cursor rejection passed existing checks. Cursor format and scope remain unchanged.",
+        "All 61 targeted API cases passed. API build, typecheck, generated API contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-wallet-ledger-scope",
+      "execution_receipts": [
+        {
+          "file": "final-build.log",
+          "sha256": "8e23de07a8c1dfa84f5788f3b9bb9ebdf6d9cb23f3601e6904ab40a1184c1c6e"
+        },
+        {
+          "file": "final-wallet-checks.log",
+          "sha256": "84d7576d86f9bc6c7d82743e55382b42940268f3dc5eb7102984cd65d1f21c7f"
+        },
+        {
+          "file": "final-typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "final-contract.log",
+          "sha256": "59132c3336656a4e9892ccca4afbdbd6e77eb58fef51cf10b59d2b321c5b9d39"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "d54d074d87a3a7bf72291f31e85c4068a7d6be4da2c8c75699f300e1c0c5cc37"
+        },
+        {
+          "file": "wallet-ledger-routes.json",
+          "sha256": "ff2406a6493dd6230a07706bfab2c507f546fe7074de7f82013a9251e5c00e0c"
         }
       ]
     }

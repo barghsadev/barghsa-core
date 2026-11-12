@@ -16,7 +16,12 @@ describe('wallet history query boundaries', () => {
       })
     ).toString('base64url');
     const client = { query: vi.fn().mockResolvedValue({ rows: [] }) };
-    await readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({ cursor }));
+    await readWalletHistory(
+      client as never,
+      'profile',
+      parseWalletHistoryQuery({ cursor }),
+      'customer'
+    );
     expect(client.query.mock.calls[0]?.[1]).toEqual([
       'profile',
       '2026-09-01T00:00:00.123456Z',
@@ -66,14 +71,14 @@ describe('wallet history query boundaries', () => {
   ])('rejects malformed cursors before querying: %s', async (cursor) => {
     const client = { query: vi.fn() };
     await expect(async () =>
-      readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({ cursor }))
+      readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({ cursor }), 'customer')
     ).rejects.toMatchObject({ status: 400 });
     expect(client.query).not.toHaveBeenCalled();
   });
   it('returns an empty terminal page without exposing internal ledger fields', async () => {
     const client = { query: vi.fn().mockResolvedValue({ rows: [] }) };
     expect(
-      await readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({}))
+      await readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({}), 'customer')
     ).toEqual({ transactions: [], nextCursor: null });
   });
 });
@@ -100,7 +105,12 @@ it('adds only the curated receipt projection, using the same scoped page query',
     },
   };
   const client = { query: vi.fn().mockResolvedValue({ rows: [row] }) };
-  const result = await readWalletHistory(client as never, 'profile', parseWalletHistoryQuery({}));
+  const result = await readWalletHistory(
+    client as never,
+    'profile',
+    parseWalletHistoryQuery({}),
+    'customer'
+  );
   expect(result.transactions[0]?.bankReceipt?.timeline.events.at(-1)).toEqual({
     state: 'rejected',
     occurredAt: '2026-09-02T12:00:00Z',

@@ -115,8 +115,10 @@ type HistoryQuery = ReturnType<typeof parseWalletHistoryQuery>;
 export async function readWalletHistory(
   client: Pick<PoolClient, 'query'>,
   profileId: string,
-  query: HistoryQuery
+  query: HistoryQuery,
+  audience: 'customer' | 'reconciliation'
 ) {
+  const includeReceipt = audience === 'customer';
   const scope = createHash('sha256')
     .update(
       JSON.stringify([
@@ -155,13 +157,14 @@ export async function readWalletHistory(
   if (query.max !== undefined) where.push(`abs(amount::numeric) <= ${bind(query.max)}::numeric`);
   if (query.q) {
     const pattern = bind(literalSearchPattern(query.q));
-    where.push(`(id::text ILIKE ${pattern} ESCAPE E'\\\\'
-        OR ref_id::text ILIKE ${pattern} ESCAPE E'\\\\'
-        OR description ILIKE ${pattern} ESCAPE E'\\\\'
-        OR (type = 'topup' AND state IN ('Pending','Released','Rejected')
+    const match = `ILIKE ${pattern} ESCAPE E'\\\\'`;
+    const fields = [`id::text ${match}`, `ref_id::text ${match}`, `description ${match}`];
+    if (includeReceipt)
+      fields.push(`(type = 'topup' AND state IN ('Pending','Released','Rejected')
           AND metadata->>'channel' = 'bank_receipt' AND NOT (metadata ? 'pendingTransactionId')
-          AND (metadata#>>'{receipt,bankName}' ILIKE ${pattern} ESCAPE E'\\\\'
-            OR metadata#>>'{receipt,payerReference}' ILIKE ${pattern} ESCAPE E'\\\\'))) `);
+          AND (metadata#>>'{receipt,bankName}' ${match}
+            OR metadata#>>'{receipt,payerReference}' ${match}))`);
+    where.push(`(${fields.join(' OR ')})`);
   }
   if (query.cursor) {
     let decoded: unknown;
@@ -186,9 +189,9 @@ export async function readWalletHistory(
     ref_id: string | null;
     description: string | null;
     created_at: string;
-    metadata: unknown;
+    metadata?: unknown;
   }>(
-    `SELECT id, type, amount::text, state, ref_id, description, metadata,
+    `SELECT id, type, amount::text, state, ref_id, description${includeReceipt ? ', metadata' : ''},
     to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS created_at
     FROM wallet_transactions WHERE ${where.join(' AND ')}
     ORDER BY wallet_transactions.created_at ${direction}, id ${direction} LIMIT ${bind(limit + 1)}`,
@@ -198,12 +201,14 @@ export async function readWalletHistory(
   const last = page.at(-1);
   return {
     transactions: page.map((row) => {
-      const bankReceipt = readWalletBankReceiptHistory({
-        type: row.type,
-        state: row.state,
-        createdAt: row.created_at,
-        metadata: row.metadata,
-      });
+      const bankReceipt =
+        includeReceipt &&
+        readWalletBankReceiptHistory({
+          type: row.type,
+          state: row.state,
+          createdAt: row.created_at,
+          metadata: row.metadata,
+        });
       return {
         id: row.id,
         type: row.type,

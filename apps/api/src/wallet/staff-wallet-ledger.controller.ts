@@ -77,22 +77,10 @@ export class StaffWalletLedgerController {
       if (context?.operating_context !== 'staff') throw new ForbiddenException();
       if (!(await client.query('SELECT id FROM profiles WHERE id=$1', [profileId])).rows.length)
         throw new NotFoundException();
-      const page = await readWalletHistory(client, profileId, query);
-      // Staff investigation exposes the ledger, without customer-only receipt links or metadata.
-      const transactions = page.transactions.map(
-        ({ id, type, amount, state, refId, description, createdAt }) => ({
-          id,
-          type,
-          amount,
-          state,
-          refId,
-          description,
-          createdAt,
-        })
-      );
+      const page = await readWalletHistory(client, profileId, query, 'reconciliation');
       await requireCurrentSession(client, req.session);
       await client.query('COMMIT');
-      return { profileId, transactions, nextCursor: page.nextCursor };
+      return { profileId, ...page };
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;

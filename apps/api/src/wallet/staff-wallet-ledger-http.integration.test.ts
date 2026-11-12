@@ -151,6 +151,40 @@ it('filters exact amounts and literal descriptions through the existing history 
   expect(body.nextCursor).toBeNull();
 });
 
+it('limits reconciliation search to visible ledger fields', async () => {
+  const receiptId = randomUUID();
+  const receiptProfile = randomUUID();
+  await http.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'ledger-customer')", [
+    receiptProfile,
+  ]);
+  await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [receiptProfile]);
+  await http.pool.query(
+    `INSERT INTO wallet_transactions(id,wallet_id,type,state,amount,idempotency_key,description,metadata)
+     VALUES($1,$2,'topup','Pending',100,$1::uuid::text,'Receipt awaiting review',$3)`,
+    [
+      receiptId,
+      receiptProfile,
+      { channel: 'bank_receipt', receipt: { payerReference: 'PRIVATE-FIXTURE-REFERENCE' } },
+    ]
+  );
+  const response = await get(receiptProfile, 'ledger-staff', '?q=Receipt%20awaiting');
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toEqual({
+    profileId: receiptProfile,
+    transactions: [
+      expect.objectContaining({ id: receiptId, description: 'Receipt awaiting review' }),
+    ],
+    nextCursor: null,
+  });
+  const metadataSearch = await get(receiptProfile, 'ledger-staff', '?q=PRIVATE-FIXTURE-REFERENCE');
+  expect(metadataSearch.status, http.logs()).toBe(200);
+  expect(await metadataSearch.json()).toEqual({
+    profileId: receiptProfile,
+    transactions: [],
+    nextCursor: null,
+  });
+});
+
 it('returns an empty history without creating a wallet, and 404 for an unknown profile', async () => {
   const response = await get(empty);
   expect(response.status, http.logs()).toBe(200);

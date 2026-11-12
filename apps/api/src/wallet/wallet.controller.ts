@@ -498,7 +498,7 @@ export class WalletController {
     return withCustomerWalletAccess(req.session, profileId, 'wallet:view', async (client) => {
       const active = await client.query(activeProfileSql('wallet:view'), [req.session.userId]);
       if (active.rows[0]?.id !== profileId) throw new NotFoundException('No active profile');
-      return readWalletHistory(client, profileId, query);
+      return readWalletHistory(client, profileId, query, 'customer');
     });
   }
 }
