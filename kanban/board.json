@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:28:42+00:00",
+  "updated": "2026-11-12T20:42:31+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -657257,7 +657257,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
         "Run the release worker for the accepted v0.6.0 candidate. Use exact prepared CI images if the local builder remains unavailable. Verify the running image IDs and scan/SBOM evidence for both application images and the retained stateful images, then verify migration, live readiness/liveness, private S3 and Telegram receipts."
       ],
       "owner": null,
@@ -657294,7 +657294,8 @@
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-runtime-image-binding",
           "release-0.6-staging-image-scans",
-          "release-0.6-portable-staging-images"
+          "release-0.6-portable-staging-images",
+          "release-0.6-staging-paired-restore-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -1010480,7 +1010481,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
         "GitHub preflight 43286083146 passed Verify monorepo integrity at 736bcb0cca45ad85f46e58f70037d5df0b047d68. The exact SHA reached protected main. The successor preflight and strict release image-license, coverage and live acceptance gates remain open."
       ],
       "owner": null,
@@ -1010760,7 +1010761,8 @@
           "release-0.6-node-postgres-lint",
           "release-0.6-postgres-package-alignment",
           "release-0.6-postgres-restore-readback",
-          "release-0.6-refreshed-license-review"
+          "release-0.6-refreshed-license-review",
+          "release-0.6-staging-paired-restore-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1171210,6 +1171212,103 @@
         {
           "file": "license-workbook-verified.json",
           "sha256": "310c633590b5ba75a82e081488ddcbb2bb5106710dd3e760f41ef009ce01d3cb"
+        }
+      ]
+    },
+    "release-0.6-staging-paired-restore-rehearsal": {
+      "batch": "release-0.6-staging-paired-restore-rehearsal",
+      "base_commit": "9545cd2c7d21f2028ef3869619a88fd3cafef119",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/single/Dockerfile",
+          "sha256": "c362dd9347bb2063bc34a13532e240c151787899b07388af82ba45038806908b"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "5316c0ab8fcfac0464598964557549b30674274810a6fb8f1550fa04fe8a488c"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "8bb3c2a236588d643fe6cc9998ec3d91e79a30e887318eb14cce93d1d730e204"
+        },
+        {
+          "path": "packages/db/drizzle/production/0289_solar_document_destruction_guard.sql",
+          "sha256": "4e207a567b4a1a704dc77cebb2fd42f08511fe35ce2c313bdc1fa27de2855e84"
+        },
+        {
+          "path": "packages/db/drizzle/production/0290_operations_alert_p3_priority.sql",
+          "sha256": "3206b61d597a5d888a986da60ceff1f750b3253ac28000188988d03ea9937b84"
+        },
+        {
+          "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
+          "sha256": "3fa262afcc6514a18cfefbf54329ab6b081c1aee70103b2c3f0024d387015487"
+        },
+        {
+          "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
+          "sha256": "974a1448bf3a1e75b1d2789bcb8fe6b45df338d1f717f25ad93a8bf730429893"
+        },
+        {
+          "path": "packages/db/drizzle/production/0293_electricity_increase_automation_scope.sql",
+          "sha256": "054b809d3881ddb507047dc298855fa5b4bee97dbd2fabf6c67e7b83f1de6fbe"
+        },
+        {
+          "path": "packages/db/drizzle/production/0294_saving_invoice_automation_scope.sql",
+          "sha256": "4e2ebb2a13041563716a8b9701206a354fdddd9212fd64710c57b7a426a4bdc9"
+        }
+      ],
+      "checks": [
+        "Read back the exact Linux AMD64 application image sha256:db42b8e0682c5e143f896f40c610ab607f9c0ac4ce23125c8d4df35311556a9a and PostgreSQL image sha256:5627531321e4d13276e28651d6945ccd9ee443a471539de2c26b9941ecc86b90 on staging.",
+        "Took a read-only snapshot at 209 migration journal rows and restored it into isolated copies using the previous and candidate PostgreSQL images.",
+        "Applied packaged migrations 0289–0294 to the candidate copy. The journal reached 215 rows and a rerun added no migration.",
+        "Verified the previous app rejects the forward schema and accepts the preserved copy. Both matched pairs returned HTTP 200 and reported PostgreSQL ready.",
+        "Removed the scratch resources, verified the running staging container identities and 209 journal rows, and read back healthy public v0.5.1."
+      ],
+      "limitations": [
+        "Isolated API status was degraded for the candidate and degraded for the previous pair.",
+        "The rehearsal did not switch live volumes, release the candidate, or verify external provider readiness. Exact final-candidate cutover and production recovery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-restore-readback",
+      "execution_receipts": [
+        {
+          "file": "image-transfer-local.txt",
+          "sha256": "1b7c0e341142ea3a3fe9db872ceb7ce517b768cad50421cedfc30a9ff25c9dea"
+        },
+        {
+          "file": "image-transfer-staging.txt",
+          "sha256": "1b7c0e341142ea3a3fe9db872ceb7ce517b768cad50421cedfc30a9ff25c9dea"
+        },
+        {
+          "file": "image-transfer.log",
+          "sha256": "83b600a325449f5faf27168aea5706fee96e23c7ecc5fd6e7e0e5e41aac96a9b"
+        },
+        {
+          "file": "rehearse-candidate-on-staging.sh",
+          "sha256": "cc5b73663ed7675f9b9c275e5f341f3f8ff72928754181d85c862f6573bf0a62"
+        },
+        {
+          "file": "staging-pair-rehearsal.log",
+          "sha256": "08dfbc7c4042b97fc52c8e63fdb6434774081ef19c0f1f23380d9bb86934508a"
+        },
+        {
+          "file": "staging-release-before-pair.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-release-after-pair.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-health-after-pair.json",
+          "sha256": "4eed01c862bd0037f3fcfb6a31e8980157f2e178ecc1f36f1ae17ddede0375bc"
         }
       ]
     }
