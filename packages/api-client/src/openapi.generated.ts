@@ -30166,6 +30166,20 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Invalid profile identifier. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not authenticated. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authorized — owner or manager role required. */
             403: {
                 headers: {
@@ -30223,6 +30237,13 @@ export interface operations {
             };
             /** @description Invalid or wrong-scope cursor or identifier. */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not authenticated. */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };

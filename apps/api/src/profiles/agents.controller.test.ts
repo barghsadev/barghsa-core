@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { HttpException } from '@nestjs/common';
 import { AgentsController } from './agents.controller.js';
 
 const mockAgentsService = {
-  isOwnerOrManager: vi.fn(),
-  getAgentRoles: vi.fn().mockResolvedValue(['Owner']),
   listAgents: vi.fn(),
   withdrawInvitation: vi.fn(),
 };
@@ -17,10 +16,12 @@ describe('AgentsController', () => {
   });
 
   describe('listAgents', () => {
+    const profileId = '00000000-0000-4000-8000-000000000001';
+
     it('returns agent list for authorized user', async () => {
-      mockAgentsService.isOwnerOrManager.mockResolvedValue(true);
       mockAgentsService.listAgents.mockResolvedValue({
-        profileId: 'prof-1',
+        profileId,
+        canTransferOwnership: true,
         agents: [
           {
             id: 'agent-1',
@@ -36,20 +37,23 @@ describe('AgentsController', () => {
         ],
       });
 
-      const req = { session: { userId: 'user-1' } } as any;
-      const result = await controller.listAgents('prof-1', req);
+      const req = {
+        session: { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf' },
+      } as any;
+      const result = await controller.listAgents(profileId, req);
 
       expect(result.agents).toHaveLength(1);
       expect(result.canTransferOwnership).toBe(true);
-      expect(mockAgentsService.getAgentRoles).toHaveBeenCalledWith('prof-1', 'user-1');
-      expect(mockAgentsService.isOwnerOrManager).toHaveBeenCalledWith('user-1', 'prof-1');
+      expect(mockAgentsService.listAgents).toHaveBeenCalledWith(profileId, req.session);
     });
 
     it('throws 403 when user is not owner or manager', async () => {
-      mockAgentsService.isOwnerOrManager.mockResolvedValue(false);
+      mockAgentsService.listAgents.mockRejectedValueOnce(
+        new HttpException({ statusCode: 403 }, 403)
+      );
 
       const req = { session: { userId: 'user-2' } } as any;
-      await expect(controller.listAgents('prof-1', req)).rejects.toMatchObject({
+      await expect(controller.listAgents(profileId, req)).rejects.toMatchObject({
         response: { statusCode: 403 },
       });
     });

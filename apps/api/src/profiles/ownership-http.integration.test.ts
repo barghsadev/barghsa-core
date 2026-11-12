@@ -93,6 +93,10 @@ it('requires step-up and keeps the old owner until exact-transfer acceptance', a
   expect(await list.json()).toMatchObject({
     transfers: [{ id, profileId, direction: 'incoming' }],
   });
+  const unrelated = await fetch(`${http.base}/api/profiles/ownership-transfers`, {
+    headers: headers.stranger!,
+  });
+  expect(await unrelated.json()).toEqual({ transfers: [] });
   expect((await post('ownership-accept', 'stranger', { transferId: id })).status).toBe(404);
   expect((await post('ownership-accept', 'target', { transferId: randomUUID() })).status).toBe(404);
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='target'");

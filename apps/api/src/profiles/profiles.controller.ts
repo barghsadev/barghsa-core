@@ -315,7 +315,9 @@ export class ProfilesController {
   @Get('ownership-transfers')
   @HttpCode(200)
   async listOwnershipTransfers(@Req() req: AuthenticatedRequest) {
-    return this.agentsService.listOwnershipTransfers(req.session.userId);
+    return readWithCurrentAccount(req.session, (client) =>
+      this.agentsService.listOwnershipTransfers(req.session.userId, client)
+    );
   }
 
   @Post(':profileId/ownership-accept')

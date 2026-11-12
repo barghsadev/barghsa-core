@@ -21,6 +21,7 @@ import {
   type ValidatedSession,
 } from '../session/session.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { notifyAgentRoleChange } from './role-notifications.js';
 import { notifyAgentInvitation } from './invitation-notifications.js';
@@ -45,6 +46,7 @@ export interface AgentListResponseDto {
   profileId: string;
   agents: AgentDto[];
   profileName?: string;
+  canTransferOwnership: boolean;
 }
 
 @Injectable()
@@ -73,12 +75,48 @@ export class AgentsService {
    * registered — invitation rows never expose the user_id even when the
    * invited username matches a registered account.
    */
-  async listAgents(profileId: string): Promise<AgentListResponseDto> {
-    const pool = getDbPool();
+  async listAgents(
+    profileId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<AgentListResponseDto> {
+    return readWithCurrentAccount(actor, (client) =>
+      this.readAgentRoster(client, profileId, actor.userId)
+    );
+  }
+
+  private async readAgentRoster(
+    client: PoolClient,
+    profileId: string,
+    userId: string
+  ): Promise<AgentListResponseDto> {
+    // Ownership and role writers lock the affected account before changing access.
+    // These reads use MVCC and never wait on the profile row while holding the account.
+    const profile = (
+      await client.query(
+        `SELECT p.user_id,COALESCE(lp.legal_name,NULLIF(p.title,''),'') AS name
+         FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id
+         WHERE p.id=$1 AND p.profile_type='LEGAL' AND NOT p.archived
+           AND (p.user_id=$2 OR EXISTS (
+             SELECT 1 FROM profile_agents pa
+             WHERE pa.profile_id=p.id AND pa.user_id=$2 AND pa.role='Manager'
+           ))`,
+        [profileId, userId]
+      )
+    ).rows[0];
+    if (!profile) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Only owner or manager can view agents',
+        },
+        403
+      );
+    }
     const agents: AgentDto[] = [];
 
     // Query active agents (joined users)
-    const agentsResult = await pool.query(
+    const agentsResult = await client.query(
       `SELECT pa.id, pa.user_id, pa.role, pa.joined_at, pa.created_at, pa.invited_at,
               personal.first_name, personal.last_name, u.username, u.last_login_at
        FROM profile_agents pa
@@ -116,7 +154,7 @@ export class AgentsService {
 
     // Query pending invitations
     // Do NOT join with users table — privacy: must not reveal registration status
-    const invitesResult = await pool.query(
+    const invitesResult = await client.query(
       `SELECT id, username, role, created_at, message
        FROM profile_invitations
        WHERE profile_id = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > clock_timestamp())
@@ -141,16 +179,17 @@ export class AgentsService {
       });
     }
 
-    const profile = await pool.query(
-      "SELECT COALESCE(lp.legal_name,NULLIF(p.title,''),'') AS name FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1",
-      [profileId]
-    );
-    return { profileId, agents, profileName: profile.rows[0]?.name ?? '' };
+    return {
+      profileId,
+      agents,
+      profileName: profile.name as string,
+      canTransferOwnership: profile.user_id === userId,
+    };
   }
 
   /**
    * Check whether a user is the owner or a manager of the given profile.
-   * Used by the controller to enforce agent-list permissions.
+   * The invitation write separately rechecks authority under locks.
    */
   async isOwnerOrManager(userId: string, profileId: string): Promise<boolean> {
     const pool = getDbPool();
@@ -1092,13 +1131,14 @@ export class AgentsService {
     return { id: transferId };
   }
 
-  async listOwnershipTransfers(userId: string) {
-    const result = await getDbPool().query(
+  async listOwnershipTransfers(userId: string, client: PoolClient) {
+    const result = await client.query(
       `SELECT t.id,t.profile_id,t.from_user_id,t.to_user_id,t.expires_at,
               COALESCE(l.legal_name,p.id::text) AS profile_name
        FROM profile_ownership_transfers t JOIN profiles p ON p.id=t.profile_id
        LEFT JOIN legal_profiles l ON l.id=p.id
-       WHERE t.status='Pending' AND t.expires_at>NOW() AND NOT p.archived
+       WHERE t.status='Pending' AND t.expires_at>statement_timestamp()
+         AND p.profile_type='LEGAL' AND NOT p.archived AND p.user_id=t.from_user_id
          AND (t.from_user_id=$1 OR t.to_user_id=$1) ORDER BY t.created_at DESC`,
       [userId]
     );

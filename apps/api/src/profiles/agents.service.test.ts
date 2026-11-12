@@ -77,8 +77,26 @@ describe('AgentsService', () => {
   });
 
   describe('listAgents', () => {
+    const actor = { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf' };
+    const roster = vi.fn();
+
+    beforeEach(() => {
+      roster.mockReset();
+      mockClient.query.mockImplementation((sql: string, values: unknown[]) => {
+        if (['BEGIN', 'COMMIT', 'ROLLBACK'].includes(sql)) return Promise.resolve({ rows: [] });
+        if (sql.startsWith('SELECT disabled_at FROM users'))
+          return Promise.resolve({ rows: [{ disabled_at: null }] });
+        if (sql.startsWith('SELECT session_id FROM sessions'))
+          return Promise.resolve({ rows: [{ session_id: actor.sessionId }] });
+        if (sql.startsWith('SELECT csrf_token, step_up_verified_at'))
+          return Promise.resolve({ rows: [{ active: true, csrf_token: actor.csrfToken }] });
+        return roster(sql, values);
+      });
+    });
+
     it('returns combined agent and invitation list', async () => {
-      mockPool.query.mockResolvedValueOnce({
+      roster.mockResolvedValueOnce({ rows: [{ name: 'Example company', user_id: actor.userId }] });
+      roster.mockResolvedValueOnce({
         rows: [
           {
             id: 'agent-1',
@@ -92,7 +110,7 @@ describe('AgentsService', () => {
           },
         ],
       });
-      mockPool.query.mockResolvedValueOnce({
+      roster.mockResolvedValueOnce({
         rows: [
           {
             id: 'inv-1',
@@ -103,9 +121,14 @@ describe('AgentsService', () => {
         ],
       });
 
-      mockPool.query.mockResolvedValueOnce({ rows: [{ name: 'Example company' }] });
-      const result = await service.listAgents('prof-1');
+      const result = await service.listAgents('prof-1', actor);
       expect(result.profileId).toBe('prof-1');
+      expect(result.canTransferOwnership).toBe(true);
+      expect(roster).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining("pa.user_id=$2 AND pa.role='Manager'"),
+        ['prof-1', actor.userId]
+      );
       expect(result.agents).toHaveLength(2);
 
       // Active agent
@@ -132,12 +155,22 @@ describe('AgentsService', () => {
     });
 
     it('returns empty list when no agents or invitations exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
-
-      mockPool.query.mockResolvedValueOnce({ rows: [{ name: 'Empty company' }] });
-      const result = await service.listAgents('prof-empty');
+      roster
+        .mockResolvedValueOnce({ rows: [{ name: 'Empty company', user_id: 'company-owner' }] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] });
+      const result = await service.listAgents('prof-empty', actor);
       expect(result.agents).toHaveLength(0);
+      expect(result.canTransferOwnership).toBe(false);
+    });
+
+    it('checks current ownership or Manager access before loading team data', async () => {
+      roster.mockResolvedValueOnce({ rows: [] });
+      await expect(service.listAgents('prof-private', actor)).rejects.toMatchObject({
+        status: 403,
+      });
+      expect(roster).toHaveBeenCalledTimes(1);
+      expect(mockPool.query).not.toHaveBeenCalled();
     });
   });
 

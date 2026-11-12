@@ -36261,6 +36261,12 @@
           "200": {
             "description": "Agent list."
           },
+          "400": {
+            "description": "Invalid profile identifier."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
           "403": {
             "description": "Not authorized — owner or manager role required."
           },
@@ -36332,6 +36338,9 @@
           },
           "400": {
             "description": "Invalid or wrong-scope cursor or identifier."
+          },
+          "401": {
+            "description": "Not authenticated."
           },
           "403": {
             "description": "Current owner or manager required."

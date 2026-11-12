@@ -2,7 +2,11 @@ import { HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { TEAM_ACTIVITY_EVENTS, type TeamActivityPage } from '@barghsa/shared/team-activity';
+import type { PoolClient } from 'pg';
 import { z } from 'zod';
+import type { ValidatedSession } from '../session/session.service.js';
+
+type ActivityActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 const invalid = () => new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
 const forbidden = () => new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
@@ -45,11 +49,26 @@ const history = `WITH candidates AS MATERIALIZED (
   ))
 )`;
 
+// Activity holds the profile and membership locks before reading history.
+// A fresh snapshot checks the session without taking account or session locks
+// that could block a writer waiting for those existing resource locks.
+async function requireLiveActivityActor(client: PoolClient, actor: ActivityActor) {
+  const { rows } = await client.query<{ csrf_token: string }>(
+    `SELECT s.csrf_token FROM sessions s JOIN users u ON u.user_id=s.user_id
+     WHERE s.session_id=$1 AND s.user_id=$2 AND u.disabled_at IS NULL AND s.revoked_at IS NULL
+       AND s.expires_at>clock_timestamp() AND s.idle_deadline>clock_timestamp()`,
+    [actor.sessionId, actor.userId]
+  );
+  if (!rows[0]) throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+  if (rows[0].csrf_token !== actor.csrfToken)
+    throw new HttpException({ error: ErrorCodes.AUTHZ_CSRF_INVALID.code }, 403);
+}
+
 /** A locked permission check and scoped, sanitized read in the same transaction. */
 export async function listAgentActivity(
   profileId: string,
   userId: string,
-  actorUserId: string,
+  actor: ActivityActor,
   cursor?: string
 ): Promise<TeamActivityPage> {
   if (!z.uuid().safeParse(profileId).success || !/^[a-zA-Z0-9_-]{1,100}$/.test(userId))
@@ -64,10 +83,10 @@ export async function listAgentActivity(
       )
     ).rows[0];
     if (!profile) throw forbidden();
-    if (profile.user_id !== actorUserId) {
+    if (profile.user_id !== actor.userId) {
       const manager = await client.query(
         "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
-        [profileId, actorUserId]
+        [profileId, actor.userId]
       );
       if (!manager.rows.length) throw forbidden();
     }
@@ -79,6 +98,7 @@ export async function listAgentActivity(
       if (!member.rows.length)
         throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
+    await requireLiveActivityActor(client, actor);
     let anchor: z.infer<typeof cursorSchema> | null = null;
     if (cursor !== undefined) {
       if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw invalid();
@@ -123,6 +143,7 @@ export async function listAgentActivity(
     );
     const rows = result.rows.slice(0, 50),
       last = rows.at(-1);
+    await requireLiveActivityActor(client, actor);
     await client.query('COMMIT');
     return {
       profileId,

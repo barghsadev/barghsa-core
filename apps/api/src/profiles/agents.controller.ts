@@ -42,6 +42,7 @@ export class AgentsController {
       'Profile and member scoped activity, newest first, up to 50 entries with an opaque nextCursor. No raw audit metadata.',
   })
   @ApiResponse({ status: 400, description: 'Invalid or wrong-scope cursor or identifier.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated.' })
   @ApiResponse({ status: 403, description: 'Current owner or manager required.' })
   @ApiResponse({ status: 404, description: 'Member no longer belongs to this profile.' })
   async activity(
@@ -52,7 +53,7 @@ export class AgentsController {
   ) {
     if (cursor !== undefined && typeof cursor !== 'string')
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    return this.agentsService.listAgentActivity(profileId, userId, req.session.userId, cursor);
+    return this.agentsService.listAgentActivity(profileId, userId, req.session, cursor);
   }
 
   /**
@@ -68,30 +69,18 @@ export class AgentsController {
   @RateLimit({ namespace: 'agents:list:profile', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List agents and pending invitations for a legal profile' })
   @ApiResponse({ status: 200, description: 'Agent list.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated.' })
   @ApiResponse({ status: 403, description: 'Not authorized — owner or manager role required.' })
   @ApiResponse({ status: 404, description: 'Profile not found or not a legal profile.' })
   async listAgents(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId;
-
-    // Permission check: owner or manager
-    const permitted = await this.agentsService.isOwnerOrManager(userId, profileId);
-    if (!permitted) {
-      throw new HttpException(
-        {
-          statusCode: 403,
-          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-          message: 'Only owner or manager can view agents',
-        },
-        403
-      );
-    }
-
-    const result = await this.agentsService.listAgents(profileId);
+    if (!z.uuid().safeParse(profileId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const result = await this.agentsService.listAgents(profileId, req.session);
     this.logger.debug(
-      `User ${privateLogId('actor', userId)} listed agents for profile ${privateLogId('profile', profileId)}: ${result.agents.length} entries`
+      `User ${privateLogId('actor', req.session.userId)} listed agents for profile ${privateLogId('profile', profileId)}: ${result.agents.length} entries`
     );
-    const roles = await this.agentsService.getAgentRoles(profileId, userId);
-    return { ...result, canTransferOwnership: roles.includes('Owner') };
+    return result;
   }
 
   /**
