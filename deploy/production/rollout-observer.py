@@ -278,6 +278,18 @@ def validate_synthetic(config):
                 and not info.st_mode & 0o022 and os.access(path, os.X_OK), 'unsafe_otp_reader')
 
 
+def verify_synthetic_account(browser, config):
+    require(customer_matches(browser.request('/api/auth/user'), config), 'unexpected_account_identity')
+    account = browser.request('/api/profiles')
+    profiles = account.get('profiles')
+    profile_id = config['profile_id']
+    # The profile list marks only an owned default profile as isDefault.
+    require(account.get('activeProfileId') == profile_id
+            and isinstance(profiles, list) and len(profiles) == 1
+            and isinstance(profiles[0], dict) and profiles[0].get('id') == profile_id
+            and profiles[0].get('isDefault') is True, 'fixture_profile_not_isolated')
+
+
 def synthetic(config):
     validate_synthetic(config)
     public = SyntheticBrowser(config['origin'], None)
@@ -313,9 +325,7 @@ def synthetic(config):
     if live and ready:
         try:
             login = check('login', browser, lambda: browser.login(config))
-            if login and check('account', browser, lambda: require(
-                customer_matches(browser.request('/api/auth/user'), config), 'unexpected_account_identity',
-            )):
+            if login and check('account', browser, lambda: verify_synthetic_account(browser, config)):
                 for name, (path, collection, key) in JOURNEYS.items():
                     def read_fixture():
                         value = browser.request(path + '?' + urlencode({'profileId': config['profile_id']}))

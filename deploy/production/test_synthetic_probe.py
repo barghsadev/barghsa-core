@@ -81,6 +81,11 @@ class SyntheticProbeTests(unittest.TestCase):
                         'operatingContext': 'customer',
                         'navigation': {'profileId': PROFILE if fixture.fault != 'wrong_profile' else USER},
                     })
+                if path == '/api/profiles':
+                    profiles = [{'id': PROFILE, 'isDefault': fixture.fault != 'delegated_profile'}]
+                    if fixture.fault == 'additional_profile':
+                        profiles.append({'id': USER, 'isDefault': False})
+                    return self.response({'activeProfileId': PROFILE, 'profiles': profiles})
                 for route, collection, key in JOURNEYS.values():
                     if path == route and parse_qs(parsed.query) == {'profileId': [PROFILE]}:
                         if fixture.fault == 'missing_fixture' and path == JOURNEYS['solar'][0]:
@@ -203,7 +208,8 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
         self.assertEqual(self.calls, [
             ('GET', '/api/health/live'), ('GET', '/api/health/ready'),
             ('GET', '/api/auth/csrf'), ('POST', '/api/auth/login'),
-            ('GET', '/api/auth/user'), *(('GET', route[0]) for route in JOURNEYS.values()),
+            ('GET', '/api/auth/user'), ('GET', '/api/profiles'),
+            *(('GET', route[0]) for route in JOURNEYS.values()),
             ('POST', '/api/auth/logout'),
         ])
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
@@ -262,6 +268,20 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 self.assertEqual(checks['electricity']['status'], 'skipped')
                 self.assertEqual(checks['logout']['status'], 'passed')
                 self.assertNotIn(('GET', JOURNEYS['electricity'][0]), self.calls)
+                self.assertNotIn('check="electricity"', self.metrics.read_text())
+
+    def test_rejects_an_account_with_multiple_profiles_or_delegated_access(self):
+        for fault in ('additional_profile', 'delegated_profile'):
+            with self.subTest(fault=fault):
+                self.fault = fault
+                self.calls.clear()
+                result = self.probe()
+                self.assertEqual(result.returncode, 1)
+                checks = self.check_report(result)
+                self.assertEqual(checks['account']['reason'], 'fixture_profile_not_isolated')
+                self.assertTrue(all(checks[name]['status'] == 'skipped' for name in JOURNEYS))
+                self.assertEqual(checks['logout']['status'], 'passed')
+                self.assertEqual(self.calls[-2:], [('GET', '/api/profiles'), ('POST', '/api/auth/logout')])
                 self.assertNotIn('check="electricity"', self.metrics.read_text())
 
     def test_read_failure_does_not_hide_other_journeys_or_skip_logout(self):

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:46:08+00:00",
+  "updated": "2026-11-12T22:53:01+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12325,7 +12325,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12582,6 +12582,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -19250,7 +19258,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19382,6 +19390,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -19453,7 +19469,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19585,6 +19601,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -31096,7 +31120,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -31460,6 +31484,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -33545,7 +33577,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             }
           ],
           "checks": [
@@ -33689,6 +33721,14 @@
                 "apps/api/src/health/health.controller.ts"
               ],
               "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -646421,7 +646461,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -646453,6 +646493,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -668500,7 +668548,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -668799,6 +668847,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -668921,7 +668977,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -669154,6 +669210,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -676204,11 +676268,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "f75a11b01b95d6556796dec8a71a5b8c1784fef4e6323f0dab816dd05792fae4"
+              "sha256": "eb5a5e5b6ff93802060a27efa52b6cf90e3da0092dcc80d9b74b562546505086"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -676384,6 +676448,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -685851,11 +685924,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "f75a11b01b95d6556796dec8a71a5b8c1784fef4e6323f0dab816dd05792fae4"
+              "sha256": "eb5a5e5b6ff93802060a27efa52b6cf90e3da0092dcc80d9b74b562546505086"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
@@ -686019,6 +686092,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -686339,7 +686421,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -686539,6 +686621,14 @@
                 "apps/api/src/health/health.controller.ts"
               ],
               "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
+            },
+            {
+              "batch": "release-0.6-synthetic-profile-isolation",
+              "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
             }
           ]
         }
@@ -686609,7 +686699,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the target environment uses a dedicated non-staff fixture profile and its four existing records. Retain the live identity, read-only requests and logout receipt without exposing credentials or fixture data."
+        "The probe now requires the configured fixture to be the only accessible profile and the owned active default. An additional owned or delegated profile stops all service reads and retains logout.",
+        "On the approved independent runner, configure the dedicated non-staff account, protected normal trusted-device or verified-contact OTP path and its four existing records. The documented protected config was absent on the staging and EU hosts at readback. Verify native live identity, scoped GETs and logout before accepting this task."
       ],
       "owner": null,
       "depends_on": [],
@@ -686623,7 +686714,8 @@
           "deploy/production/test_synthetic_probe.py"
         ],
         "batches": [
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-profile-isolation"
         ],
         "current_acceptance": null
       }
@@ -1191192,6 +1191284,106 @@
         {
           "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-inline-style/hosted-test-43315948494-failed.log",
           "sha256": "e72a29b19cfce6ed6c4acd36a45582774ce83711fe536e928412260cd501463a"
+        }
+      ]
+    },
+    "release-0.6-synthetic-profile-isolation": {
+      "batch": "release-0.6-synthetic-profile-isolation",
+      "base_commit": "4f700a5ac70cc1070801e4ee1c6d3e9448a7362b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_synthetic_probe.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/context-http.integration.test.ts",
+          "sha256": "05fe727437e54fe04fa4fa299b5359946f4a915f8f89f4d25e5af830952f7b66"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "c40ed001c911f3a80d3538d6536540f18d8bf0fc9d22c2e134e89b06015f3cbe"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "dde63634b770768f96f5d3d028011b0bfecc1e6829db356cb1e13fdebe7980d2"
+        },
+        {
+          "path": "deploy/monitoring/systemd/barghsa-synthetic.service",
+          "sha256": "1eb790c36bd371c871d97f1a4a6110d407204defd6ea323e416d19fc427ec63b"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "eb5a5e5b6ff93802060a27efa52b6cf90e3da0092dcc80d9b74b562546505086"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "392f14153d776f0b56f90b58d422fc32f64ecc925fb00ed70b643e0286aca115"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "d137d18e8c82d81504fe4ae16ebb690132a4db1c1c9557b384383e788afefd78"
+        }
+      ],
+      "checks": [
+        "The regression reproduced both unsafe fixture shapes before the change: a correct active profile accompanied by additional access and a sole delegated profile each completed the four service reads.",
+        "The normal authenticated profile list returns owner and delegated profiles. The API only reports isDefault for the actor's own default. Synthetic mode checks the exact non-staff identity, then the only accessible owned active default profile, before reading any service records. Rejection still logs out and publishes no success sample for skipped journeys.",
+        "All eight synthetic tests and eleven rollout-observer tests passed. The native PostgreSQL 17 mounted profile-list case passed. The first observer run hit ENOSPC before its fixtures started and passed after using an isolated temporary directory. Syntax, formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "Local source and fixture verification only. The approved independent runner, dedicated live identity and protected device or verified-contact route are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-profile-isolation",
+      "execution_receipts": [
+        {
+          "file": "negative-baseline.log",
+          "sha256": "e977813d84df00f391244b1a495d8006d99b8fb0ca04edd8b5ae237e6bace948"
+        },
+        {
+          "file": "probe-tests.log",
+          "sha256": "fda13da2388fee74ad325e895ff7a8215fdadc6e075404fcd42375bc9bc4dfae"
+        },
+        {
+          "file": "observer-tests.log",
+          "sha256": "8c0f7333bfe0330ad2e534180bf152a4afd419c405896980d71a453859806025"
+        },
+        {
+          "file": "observer-tests-final.log",
+          "sha256": "9c7f37908cd0915971b7434e042c006183602cd0fe8b679427da8c5b990e2f22"
+        },
+        {
+          "file": "profile-http.log",
+          "sha256": "b6b5fc7de487939fa460e93997e65777c98a5b4d2ac48ee8b25e5f5592967905"
+        },
+        {
+          "file": "postgres-control.log",
+          "sha256": "dd98fbcbd3cff2facf7741b2da19242c8399ecc6a98ac465fd36fdb569310225"
         }
       ]
     }
