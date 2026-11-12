@@ -7,6 +7,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard } from '../session/step-up.guard.js';
 
 const config = { providerId: 'test-adapter', enabled: false, settings: {} };
+const configStatus = { providerId: config.providerId, enabled: false, settingsConfigured: false };
 function request(permissions: string[]): AuthenticatedRequest {
   return { session: { userId: 'staff', permissions, isAdmin: false } } as AuthenticatedRequest;
 }
@@ -14,7 +15,7 @@ function fixture() {
   const service = {
     listProviders: vi.fn().mockReturnValue([]),
     getAdapter: vi.fn().mockReturnValue({ displayName: 'Test adapter' }),
-    getProviderConfig: vi.fn().mockResolvedValue(config),
+    getProviderConfigStatus: vi.fn().mockResolvedValue(configStatus),
     setProviderConfig: vi.fn(),
     resetCircuitBreaker: vi.fn().mockReturnValue(true),
     verify: vi.fn().mockResolvedValue({ status: 'unavailable' }),
@@ -90,10 +91,10 @@ it.each(['setProviderConfig', 'resetCircuitBreaker'] as const)(
 );
 it('defaults unconfigured adapters to disabled without creating configuration', async () => {
   const { controller, service } = fixture();
-  service.getProviderConfig.mockResolvedValue(null as never);
   expect(
     await controller.getProviderConfig(config.providerId, request(['admin:config:read']))
-  ).toEqual({ providerId: config.providerId, displayName: 'Test adapter', config });
+  ).toEqual({ providerId: config.providerId, displayName: 'Test adapter', config: configStatus });
+  expect(service.getProviderConfigStatus).toHaveBeenCalledWith(config.providerId);
   expect(service.setProviderConfig).not.toHaveBeenCalled();
 });
 it.each(['read', 'write', 'reset'])('returns 404 for unknown provider %s', async (action) => {

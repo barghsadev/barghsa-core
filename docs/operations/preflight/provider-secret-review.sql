@@ -18,3 +18,10 @@ WHERE ((p.transport = 'smtp' AND secret.key = 'password')
   AND secret.value #>> '{}' NOT LIKE 'v1:%'
   AND secret.value #>> '{}' NOT LIKE 'v2:%'
 ORDER BY p.channel, p.id, secret.key;
+
+-- Verification settings are opaque to admin reads. Review the count without exporting values.
+SELECT count(*) AS verification_configs_with_plaintext_settings
+FROM app_config
+WHERE starts_with(key, 'verification_provider_')
+  AND jsonb_typeof(value->'settings') = 'object'
+  AND value->'settings' <> '{}'::jsonb;

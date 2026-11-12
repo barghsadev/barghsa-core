@@ -75,7 +75,27 @@ export class VerificationProviderController {
   @Get('providers/:providerId/config')
   @ApiOperation({ summary: 'Get verification provider configuration' })
   @ApiParam({ name: 'providerId', description: 'Provider identifier (e.g. stub, national_id)' })
-  @ApiResponse({ status: 200, description: 'Provider configuration.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Provider configuration status. Setting names and values are write-only.',
+    schema: {
+      type: 'object',
+      required: ['providerId', 'displayName', 'config'],
+      properties: {
+        providerId: { type: 'string' },
+        displayName: { type: 'string' },
+        config: {
+          type: 'object',
+          required: ['providerId', 'enabled', 'settingsConfigured'],
+          properties: {
+            providerId: { type: 'string' },
+            enabled: { type: 'boolean' },
+            settingsConfigured: { type: 'boolean' },
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Provider not found' })
   async getProviderConfig(
@@ -102,11 +122,10 @@ export class VerificationProviderController {
       );
     }
 
-    const config = await this.verificationProviderService.getProviderConfig(providerId);
     return {
       providerId,
       displayName: adapter.displayName,
-      config: config ?? { providerId, settings: {}, enabled: false },
+      config: await this.verificationProviderService.getProviderConfigStatus(providerId),
     };
   }
 
@@ -125,11 +144,14 @@ export class VerificationProviderController {
     schema: {
       type: 'object',
       required: ['providerId', 'settings', 'enabled'],
+      additionalProperties: false,
       properties: {
         providerId: { type: 'string', description: 'Must match the URL providerId' },
         settings: {
           type: 'object',
-          description: 'Provider-specific settings (URL, API key, etc.)',
+          additionalProperties: { type: 'string' },
+          description: 'Replacement settings. The server seals this object and never returns it.',
+          writeOnly: true,
         },
         enabled: { type: 'boolean', description: 'Whether the provider is enabled' },
       },
@@ -139,6 +161,7 @@ export class VerificationProviderController {
   @ApiResponse({ status: 400, description: 'Validation error or providerId mismatch' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Provider not found' })
+  @ApiResponse({ status: 503, description: 'Provider settings encryption is unavailable' })
   async setProviderConfig(
     @Param('providerId') providerId: string,
     @Body() rawBody: unknown,
