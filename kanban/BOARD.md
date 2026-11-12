@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T23:48:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T00:14:15+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1231 | Accepted with unchanged source bindings. |
-| verify | 52 | Existing work may be complete; inspect evidence before building. |
-| partial | 77 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 49 | Existing work may be complete; inspect evidence before building. |
+| partial | 80 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1065,9 +1065,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.03.05` | partial | Earlier partial | Implement theme system with admin overrides |
 | `01-platform-infrastructure.md#T-06.03.06` | done | Earlier acceptance_verified | Create loading/empty/error state components |
 | `01-platform-infrastructure.md#T-06.04.01` | done | Earlier deferred | Create privacy-safe analytics abstraction with consent gate and redaction |
-| `01-platform-infrastructure.md#T-07.01.01` | verify | Earlier deferred | Create `pnpm setup:dev` convenience script |
-| `01-platform-infrastructure.md#T-07.01.02` | verify | Earlier deferred | Configure dev-mode OTP bypass and console printing |
-| `01-platform-infrastructure.md#T-07.01.03` | verify | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |
+| `01-platform-infrastructure.md#T-07.01.01` | partial | Earlier deferred | Create `pnpm setup:dev` convenience script |
+| `01-platform-infrastructure.md#T-07.01.02` | partial | Earlier deferred | Configure dev-mode OTP bypass and console printing |
+| `01-platform-infrastructure.md#T-07.01.03` | partial | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |
 | `01-platform-infrastructure.md#T-07.01.04` | done | Earlier deferred | Add environment indicator middleware |
 | `01-platform-infrastructure.md#T-07.02.01` | done | Earlier deferred | Create versioned configuration store in PostgreSQL |
 | `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |

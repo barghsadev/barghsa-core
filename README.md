@@ -1240,11 +1240,11 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 ### Local setup
 
 ```bash
-cp .env.example .env
-docker compose up -d postgres redis minio minio-init
-pnpm install --frozen-lockfile
+pnpm setup:dev
 pnpm dev
 ```
+
+`pnpm setup:dev` uses Node.js 20.12 or later. It creates the root `.env` from the example if needed, starts the local Compose PostgreSQL, Redis and MinIO services, waits for their health checks, and initializes the private buckets. It installs the locked dependencies, builds the database workspace and applies the committed migrations and idempotent seed. Existing environment files and named volumes are preserved. The database must be the local Compose `barghsa` database. Set the local secrets required by the features you use before starting the app.
 
 - Web: http://localhost:3000
 - API: http://localhost:4000/api
@@ -1257,6 +1257,8 @@ Local development may create a seeded admin using credentials supplied through d
 Set `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` explicitly for initial administrator creation. The identity may be an email or E.164 phone number. After creation, remove bootstrap credentials from the deployment environment. Staff login always requires a delivered OTP after the forced password change; configure a working delivery channel through the deployment procedure before handing over access. OTP values appear only in the local API debug console when both `NODE_ENV=development` and `OTP_CONSOLE=true`; turn the latter off to suppress them. Production never prints codes. The encrypted outbox still requires `AUTH_DELIVERY_ENCRYPTION_KEY` in local development; console output does not bypass challenge verification.
 
 In production, run migrations and the initial seed before admitting traffic; retain their successful exit results. Do not run `--force` as an automatic deployment step. Migration0134 preserves any legacy noncanonical electricity rows for explicit operator reconciliation; it does not silently delete or relabel referenced products. The seed refuses conflicting electricity identities. Green-rule reads recognize the canonical `green` key and the legacy `green_electricity` key, but reject an ambiguous pair. Reconcile legacy rows and validate the new nonnegative-limit constraint before declaring production data compliant.
+
+Use the committed migrations for the normal local application database. The pinned Drizzle schema push could not initialize an empty scratch database because a foreign key was emitted before its referenced unique key. Against the migrated baseline it attempted to recreate the existing `uq_notification_job_outbox_channel` index. These checks were performed on disposable databases.
 
 ### Docker-for-Mac file-watch polling
 
