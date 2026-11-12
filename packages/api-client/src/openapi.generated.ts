@@ -29741,6 +29741,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Invalid profile identifier. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -29876,6 +29883,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Invalid profile identifier. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -29883,7 +29897,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Verification not allowed */
+            /** @description Invalid CSRF token */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -29892,6 +29906,13 @@ export interface operations {
             };
             /** @description Profile not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Profile is already verified. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

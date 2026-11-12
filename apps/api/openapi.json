@@ -35801,6 +35801,9 @@
           "200": {
             "description": "Profile details."
           },
+          "400": {
+            "description": "Invalid profile identifier."
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -35956,14 +35959,20 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Invalid profile identifier."
+          },
           "401": {
             "description": "Not authenticated"
           },
           "403": {
-            "description": "Verification not allowed"
+            "description": "Invalid CSRF token"
           },
           "404": {
             "description": "Profile not found"
+          },
+          "409": {
+            "description": "Profile is already verified."
           },
           "503": {
             "description": "Identity verification provider unavailable."

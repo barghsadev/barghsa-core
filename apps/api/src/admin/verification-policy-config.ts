@@ -43,8 +43,10 @@ async function state(db: Pool | PoolClient) {
     baseVersion: draft?.value?.baseVersion,
   };
 }
-export async function readVerificationPolicyConfig(): Promise<VerificationPolicyView> {
-  return (await state(getDbPool())).view;
+export async function readVerificationPolicyConfig(
+  db: Pool | PoolClient = getDbPool()
+): Promise<VerificationPolicyView> {
+  return (await state(db)).view;
 }
 /** Business transactions hold this table lock through their final authority check/commit. */
 export async function lockVerificationPolicy(client: PoolClient): Promise<VerificationPolicy> {

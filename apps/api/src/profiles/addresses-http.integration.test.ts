@@ -114,6 +114,44 @@ it.each(['create', 'update', 'delete', 'main'] as const)(
     expect(before.find((row) => row.id === first.id).main_address).toBe(true);
   }
 );
+
+it('withholds an already-main address receipt if the manager session expires during the read', async () => {
+  const main = await create();
+  const auditBefore = (await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows;
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response>;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE addresses IN ACCESS EXCLUSIVE MODE');
+    const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id='manager'"
+    );
+    pending = request('POST', `/${main.id}/set-main`, 'manager');
+    await expect
+      .poll(async () => {
+        const { rows } = await http.pool.query(
+          'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+          [pid]
+        );
+        return rows[0].count;
+      })
+      .toBe(1);
+    await http.pool.query(
+      "SELECT pg_sleep(greatest(0,extract(epoch FROM expires_at-clock_timestamp()))) FROM sessions WHERE user_id='manager'"
+    );
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+  }
+  const response = await pending;
+  expect(response.status, await response.clone().text()).toBe(401);
+  expect(await response.json()).not.toHaveProperty('fullAddress');
+  expect((await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows).toEqual(auditBefore);
+  expect(
+    (await http.pool.query('SELECT main_address FROM addresses WHERE id=$1', [main.id])).rows
+  ).toEqual([{ main_address: true }]);
+});
 it('allows managers, automatically sets the first main address, and preserves order snapshots after edit/delete', async () => {
   const first = await create('manager'),
     second = await create('manager');

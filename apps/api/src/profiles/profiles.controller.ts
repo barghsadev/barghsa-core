@@ -281,7 +281,7 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getVerificationStatus(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    const result = await this.profilesService.getVerificationStatus(userId);
+    const result = await this.profilesService.getVerificationStatus(req.session);
 
     this.logger.debug(
       `User ${privateLogId('actor', userId)}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`
@@ -300,33 +300,16 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:verify:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Auto-verify a profile via API method' })
   @ApiResponse({ status: 503, description: 'Identity verification provider unavailable.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  @ApiResponse({ status: 403, description: 'Verification not allowed' })
+  @ApiResponse({ status: 403, description: 'Invalid CSRF token' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
+  @ApiResponse({ status: 409, description: 'Profile is already verified.' })
   async verifyProfile(
-    @Param('id') profileId: string,
+    @Param('id', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
-    const userId = req.session.userId;
-
-    // Verify this profile belongs to the user
-    const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    // Verify the profile is not already verified
-    if (profile.status === 'VERIFIED') {
-      throw new HttpException(
-        {
-          statusCode: 409,
-          error: ErrorCodes.CONFLICT_STATE.code,
-        },
-        409
-      );
-    }
-
-    return this.profilesService.verifyProfileApi(userId, profileId);
+    return this.profilesService.verifyProfileApi(req.session, profileId);
   }
 
   @Get('ownership-transfers')
@@ -410,40 +393,49 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:get:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Get profile details with addresses and legal info' })
   @ApiResponse({ status: 200, description: 'Profile details.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
-  async getProfile(@Param('id') profileId: string, @Req() req: AuthenticatedRequest) {
+  async getProfile(
+    @Param('id', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
     const userId = req.session.userId;
-
-    const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
+    const details = await readWithCurrentAccount(req.session, async (client) => {
+      const profile = await this.profilesService.getProfileById(profileId, client, userId);
+      if (!profile) return null;
+      const addresses = await this.profilesService.getProfileAddresses(profileId, client);
+      const legalInfo =
+        profile.profileType === 'LEGAL'
+          ? await this.profilesService.getLegalProfileInfo(profileId, client)
+          : null;
+      const canEditIdentity = await this.profilesService.canEditIndividualIdentity(
+        userId,
+        profile,
+        client
+      );
+      // A staff archive can close an individual profile without locking its owner.
+      if (!(await this.profilesService.getProfileById(profileId, client, userId))) return null;
+      return {
+        canEditIdentity,
+        id: profile.id,
+        profileType: profile.profileType,
+        isDefault: profile.isDefault,
+        status: profile.status,
+        title: profile.title,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        nationalId: profile.nationalId,
+        createdAt: profile.createdAt,
+        updatedAt: profile.updatedAt,
+        addresses,
+        legalInfo,
+      };
+    });
+    if (!details) {
       throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
-
-    // Fetch addresses
-    const addresses = await this.profilesService.getProfileAddresses(profileId);
-
-    // For legal profiles, fetch legal entity data
-    let legalInfo: Record<string, unknown> | null = null;
-    if (profile.profileType === 'LEGAL') {
-      legalInfo = await this.profilesService.getLegalProfileInfo(profileId);
-    }
-
-    return {
-      canEditIdentity: await this.profilesService.canEditIndividualIdentity(userId, profile),
-      id: profile.id,
-      profileType: profile.profileType,
-      isDefault: profile.isDefault,
-      status: profile.status,
-      title: profile.title,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      nationalId: profile.nationalId,
-      createdAt: profile.createdAt,
-      updatedAt: profile.updatedAt,
-      addresses,
-      legalInfo,
-    };
+    return details;
   }
 
   /**
@@ -518,10 +510,12 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    await this.profilesService.requireAddressEditor(userId, profileId);
-
-    const addresses = await this.profilesService.getProfileAddresses(profileId);
-    return { addresses };
+    return readWithCurrentAccount(req.session, async (client) => {
+      await this.profilesService.requireAddressEditor(userId, profileId, client, 'read');
+      const addresses = await this.profilesService.getProfileAddresses(profileId, client);
+      await this.profilesService.requireAddressEditor(userId, profileId, client, 'read');
+      return { addresses };
+    });
   }
 
   /**

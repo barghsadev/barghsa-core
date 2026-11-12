@@ -177,6 +177,13 @@ it('lists selectable agent profiles and switches without changing another user d
   expect(body.profiles.map((p) => p.id).sort()).toEqual([owned, finance, legal].sort());
   expect(body.profiles.find((p) => p.id === owned)?.displayName).toBe('Mr Ari Buyer');
   expect(body.profiles.find((p) => p.id === finance)?.displayName).toBe('Finance Buyer Ltd');
+  expect(await (await request(`profiles/${owned}`)).json()).toMatchObject({
+    id: owned,
+    lastName: 'Buyer',
+  });
+  expect((await request(`profiles/${finance}`)).status).toBe(404);
+  expect((await request(`profiles/${finance}/addresses`)).status).toBe(404);
+  expect((await request(`profiles/${finance}/verify`, 'POST')).status).toBe(404);
   expect(await (await request('profiles/verification-status')).json()).toMatchObject({
     activeProfileId: owned,
     activeProfileName: 'Mr Ari Buyer',
@@ -239,6 +246,9 @@ it('rolls back profile selection if the session expires while its audit is persi
 it.each([
   ['profiles', 'user_profile_contexts', 'profiles'],
   ['invitations/pending', 'profile_invitations', 'invitations'],
+  ['profiles/:id', 'addresses', 'addresses'],
+  ['profiles/:id/addresses', 'addresses', 'addresses'],
+  ['profiles/verification-status', 'in_app_notifications', 'activeProfileId'],
 ])(
   'keeps %s private if the session expires during the resource read',
   async (path, table, field) => {
@@ -252,7 +262,7 @@ it.each([
         "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
         [session]
       );
-      pending = request(path);
+      pending = request(path.replace(':id', owned));
       await expect
         .poll(async () => {
           const { rows } = await http.pool.query(
