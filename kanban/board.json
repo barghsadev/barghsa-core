@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T11:27:28+00:00",
+  "updated": "2026-11-12T11:40:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -616019,7 +616019,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             }
           ],
           "source_renewals": [
@@ -616062,6 +616062,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -616199,7 +616207,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -616324,6 +616332,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -616344,7 +616360,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify whole-trace sampling and retention at the deployed collector. API and worker currently make independent span export decisions and keep failed or slow spans."
+        "Verify deployed API and worker trace sampling on the final candidate, including normal traced requests, priority traces and delayed worker spans. The private Alloy pipeline now has native evidence for the 10% ordinary policy, complete same-window priority context and retention of late priority spans. Earlier companions can be unavailable after the decision window."
       ],
       "owner": null,
       "depends_on": [],
@@ -616358,15 +616374,21 @@
           "apps/api/src/metrics/database-telemetry.ts",
           "apps/api/src/metrics/http-request-metrics.ts",
           "apps/api/src/metrics/otlp-http-agent.ts",
+          "apps/api/src/metrics/outbox-trace.integration.test.ts",
           "apps/api/src/metrics/telemetry-http.integration.test.ts",
           "apps/api/src/test/http-fixture.ts",
-          "docs/operations/structured-logging.md",
-          "pnpm-lock.yaml",
-          "apps/api/src/metrics/outbox-trace.integration.test.ts",
           "apps/worker/package.json",
           "apps/worker/src/main.ts",
           "apps/worker/src/notifications/outbox-reader.ts",
           "apps/worker/src/notifications/outbox-runner.ts",
+          "deploy/monitoring/app-trace-retention.yml",
+          "deploy/monitoring/grafana-provisioning/tempo-retention.yml",
+          "deploy/monitoring/operator-tempo-overrides.yml",
+          "deploy/monitoring/operator-tempo.yml",
+          "deploy/monitoring/operator-traces.alloy",
+          "deploy/monitoring/staging-trace-retention-query.yml",
+          "deploy/monitoring/trace-retention.yml",
+          "docs/operations/structured-logging.md",
           "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
           "packages/db/drizzle/production/meta/0291_snapshot.json",
           "packages/db/drizzle/production/meta/_journal.json",
@@ -616377,11 +616399,13 @@
           "packages/db/src/transaction-pool.ts",
           "packages/shared/package.json",
           "packages/shared/src/operator-logging.ts",
-          "packages/shared/src/telemetry.ts"
+          "packages/shared/src/telemetry.ts",
+          "pnpm-lock.yaml"
         ],
         "batches": [
           "release-0.6-api-request-tracing",
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-tempo-retention"
         ],
         "current_acceptance": null
       }
@@ -616401,7 +616425,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Configure persistent protected exporter and operator access on the final candidate. The compiled API and worker reached the temporary loopback-only staging Jaeger service and its query API returned both traces. Web export and durable deployment remain open."
+        "Configure the persistent protected exporter and authenticated operator access on the final candidate. Native Alloy to Tempo OTLP and TLS S3 readback passed for both tenants. The compiled API and worker also reached the temporary staging Jaeger receiver. Web export, durable deployment and remaining external sink evidence stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -616415,15 +616439,21 @@
           "apps/api/src/metrics/database-telemetry.ts",
           "apps/api/src/metrics/http-request-metrics.ts",
           "apps/api/src/metrics/otlp-http-agent.ts",
+          "apps/api/src/metrics/outbox-trace.integration.test.ts",
           "apps/api/src/metrics/telemetry-http.integration.test.ts",
           "apps/api/src/test/http-fixture.ts",
-          "docs/operations/structured-logging.md",
-          "pnpm-lock.yaml",
-          "apps/api/src/metrics/outbox-trace.integration.test.ts",
           "apps/worker/package.json",
           "apps/worker/src/main.ts",
           "apps/worker/src/notifications/outbox-reader.ts",
           "apps/worker/src/notifications/outbox-runner.ts",
+          "deploy/monitoring/app-trace-retention.yml",
+          "deploy/monitoring/grafana-provisioning/tempo-retention.yml",
+          "deploy/monitoring/operator-tempo-overrides.yml",
+          "deploy/monitoring/operator-tempo.yml",
+          "deploy/monitoring/operator-traces.alloy",
+          "deploy/monitoring/staging-trace-retention-query.yml",
+          "deploy/monitoring/trace-retention.yml",
+          "docs/operations/structured-logging.md",
           "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
           "packages/db/drizzle/production/meta/0291_snapshot.json",
           "packages/db/drizzle/production/meta/_journal.json",
@@ -616434,12 +616464,14 @@
           "packages/db/src/transaction-pool.ts",
           "packages/shared/package.json",
           "packages/shared/src/operator-logging.ts",
-          "packages/shared/src/telemetry.ts"
+          "packages/shared/src/telemetry.ts",
+          "pnpm-lock.yaml"
         ],
         "batches": [
           "release-0.6-api-request-tracing",
           "release-0.6-notification-outbox-tracing",
-          "release-0.6-private-jaeger-readback-rehearsal"
+          "release-0.6-private-jaeger-readback-rehearsal",
+          "release-0.6-tempo-retention"
         ],
         "current_acceptance": null
       }
@@ -616593,7 +616625,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -616718,6 +616750,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -616923,7 +616963,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -617084,6 +617124,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -617289,7 +617337,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -617450,6 +617498,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -618130,7 +618186,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -618291,6 +618347,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -618333,7 +618397,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "deploy/monitoring/operator-logs.alloy",
@@ -618372,6 +618436,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -627796,7 +627868,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+              "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -627843,6 +627915,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-tempo-retention",
+              "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the private Tempo sampling and retention runbook. Existing log shipping, archiving, tracing and Grafana instructions retain their scope."
             }
           ]
         }
@@ -631191,17 +631271,25 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the deployed 7-day ordinary and 30-day error/slow trace policy and expiry. The temporary compatible Jaeger rehearsal configured seven days and verified persistence across restart. The retention split and deployed policy remain open."
+        "Activate on the approved persistent Tempo host and dedicated encrypted trace bucket. Verify actual tenant routing, 7-day and 30-day policy and expiry, and authenticated Grafana readback against the final candidate. The native TLS S3 rehearsal used disposable synthetic blocks."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "deploy/monitoring/app-trace-retention.yml",
+          "deploy/monitoring/grafana-provisioning/tempo-retention.yml",
+          "deploy/monitoring/operator-tempo-overrides.yml",
+          "deploy/monitoring/operator-tempo.yml",
+          "deploy/monitoring/operator-traces.alloy",
+          "deploy/monitoring/staging-trace-retention-query.yml",
+          "deploy/monitoring/trace-retention.yml",
           "docs/operations/structured-logging.md"
         ],
         "batches": [
-          "release-0.6-private-jaeger-readback-rehearsal"
+          "release-0.6-private-jaeger-readback-rehearsal",
+          "release-0.6-tempo-retention"
         ],
         "current_acceptance": null
       }
@@ -1094941,6 +1095029,116 @@
         {
           "file": "current-main.txt",
           "sha256": "919d7076bf7532f522f4556612ae96a36f14e34394e80afb45b2161292557112"
+        }
+      ]
+    },
+    "release-0.6-tempo-retention": {
+      "batch": "release-0.6-tempo-retention",
+      "base_commit": "3d7321b261451bdf41b5716422ec6bbbf7388e05",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.18.01.03",
+        "06-security-testing-observability.md#T-06.13.01.06",
+        "06-security-testing-observability.md#T-06.13.01.07",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.16.01.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md",
+        "deploy/monitoring/trace-retention.yml",
+        "deploy/monitoring/operator-traces.alloy",
+        "deploy/monitoring/operator-tempo.yml",
+        "deploy/monitoring/operator-tempo-overrides.yml",
+        "deploy/monitoring/app-trace-retention.yml",
+        "deploy/monitoring/staging-trace-retention-query.yml",
+        "deploy/monitoring/grafana-provisioning/tempo-retention.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "2f467493889a160dd17c025a4d6b37c050e4b33b9d0ef18c86bbddb06f5a8233"
+        },
+        {
+          "path": "deploy/monitoring/trace-retention.yml",
+          "sha256": "3b04c791059192b5306a6fc923734415d369c40d9df98c652e906d4a0cdbc42d"
+        },
+        {
+          "path": "deploy/monitoring/operator-traces.alloy",
+          "sha256": "d0dab467f7c92740e085c65cd8318579246947db679c832824e53c27d7bc5f2b"
+        },
+        {
+          "path": "deploy/monitoring/operator-tempo.yml",
+          "sha256": "d549c0513f913d9b45a97d9180c405559d122431ab588b62d207f510f26c1fba"
+        },
+        {
+          "path": "deploy/monitoring/operator-tempo-overrides.yml",
+          "sha256": "a76727b2903facd5a772d25ee666939467a21ace8eed52c74a671bf45899cb86"
+        },
+        {
+          "path": "deploy/monitoring/app-trace-retention.yml",
+          "sha256": "0794f31b988a613fb7573cac06d89c72944047f55236c2f4fbe8f29ec0118f60"
+        },
+        {
+          "path": "deploy/monitoring/staging-trace-retention-query.yml",
+          "sha256": "dfcf028bff5bbda0db3ce546be969d2252f8dff904ca2d1844735a0739019f84"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/tempo-retention.yml",
+          "sha256": "b5d0b46e3215836ef4a8550499807d23d8a3f9778eb28e006383270fe6a86551"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "4d0a4d05925520ae0356457d6d4864ded07db432fb834064dc70bcdb6e28849e"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "packages/shared/src/telemetry.ts",
+          "sha256": "6acc1efb29ac474acf1f4d95642f80f18d32dcc432a12d9ca397c4995e49d4f1"
+        }
+      ],
+      "checks": [
+        "Tempo 3.1.1 and Alloy 1.21.3 ran in a disposable native Compose stack with non-root and read-only process filesystems. The committed configuration publishes no ports and restricts sender, internal ingest and Grafana query networks. Native Tempo configuration verification, Alloy formatting and validation, YAML and whitespace checks passed.",
+        "Synthetic OTLP traces sent through the actual collector returned complete ordinary-sampled and timely priority trace fragments. The 30-second classifier retained the companions of an error and a 501 ms span without duplicate IDs. An exactly 500 ms span, forged priority marker and unapproved producer remained outside the priority tenant. A worker error received after the tail decision still reached the priority tenant. Tempo refused an unscoped trace query.",
+        "The ordinary sampler is configured at 10%. The fixed synthetic cohort yielded 12 of 200 ordinary traces. Native Tempo stored the fixtures in MinIO over verified TLS, then physically removed synthetic 8-day ordinary and 31-day priority block objects and preserved the 8-day priority block. Only fixture scheduler and flush intervals and synthetic block ages were accelerated. The committed 168h/720h durations governed the deletion.",
+        "Docker Compose resolved the staging and production sender overlays to API and worker only. Existing ports and service settings outside the trace fields matched the base configuration. The Grafana overlay retains the loopback binding and provisions separate read-only ordinary and priority data sources with exact tenant headers."
+      ],
+      "limitations": [
+        "All classification and expiry evidence is native but synthetic and disposable. The approved live S3 identity, persistent staging activation, authenticated Grafana readback and live expiry remain pending.",
+        "A critical span arriving after a tail decision is preserved through the direct priority branch. Earlier ordinary siblings can be unavailable in that case. No application or database runtime code changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-tempo-retention",
+      "execution_receipts": [
+        {
+          "file": "rehearse.py",
+          "sha256": "c7f189c779ab1d9547c22b0c39a77854d224ef6b4f9c25f1466b1a65fe2d681f"
+        },
+        {
+          "file": "rehearsal.log",
+          "sha256": "77a913bdde9e46c629a303e244dd18a9ebd654300333312a6a4cee94ac8b06fb"
+        },
+        {
+          "file": "verify-overlays.py",
+          "sha256": "2676abbe479e2a6156157ef26f36af9880db6d019ff4b7b9ca764f35bc42357f"
+        },
+        {
+          "file": "overlays.log",
+          "sha256": "ac63ca58b6301bbb5e2abf84298fdf03574cccfa1b53862ff1c11d9b832da6e6"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "d242743a2f37353fc0004508b1a21b03125be99e2e33bb0ca74c46d3a94fff11"
         }
       ]
     }

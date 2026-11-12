@@ -192,6 +192,48 @@ Persistent staging access and the 30-day error and slow-trace policy remain
 release checks.
 [Jaeger release](https://github.com/jaegertracing/jaeger/releases/tag/v2.23.0) · [Go security advisory](https://pkg.go.dev/vuln/GO-2026-6860)
 
+### Tempo trace retention
+
+Use `deploy/monitoring/trace-retention.yml` with verified immutable Alloy
+and Tempo images. Supply `BARGHSA_ALLOY_IMAGE`, `BARGHSA_TEMPO_IMAGE`,
+`BARGHSA_TRACE_INGEST_NETWORK`, `BARGHSA_TEMPO_QUERY_NETWORK` and
+`BARGHSA_TEMPO_STORAGE_ENV_FILE` in the operator's Compose environment.
+Create separate internal networks for approved API and worker senders and
+for authenticated Grafana query access. The service publishes no host ports.
+Tempo reaches its S3 endpoint through a separate network.
+
+Put `BARGHSA_TEMPO_S3_BUCKET`, `BARGHSA_TEMPO_S3_ENDPOINT`,
+`BARGHSA_TEMPO_S3_ACCESS_KEY` and `BARGHSA_TEMPO_S3_SECRET_KEY` in the
+protected storage environment file. Use a private, encrypted trace bucket
+dedicated to the environment and an HTTPS endpoint with a trusted certificate.
+Grant the Tempo identity only the bucket operations needed for block
+storage and retention. Keep the `tempo-data` volume for the WAL and
+scheduler state across service recreation. Validate the configuration with
+`docker compose config --quiet`.
+
+Use `deploy/monitoring/app-trace-retention.yml` for API and worker writers
+assigned to this collector. It connects those services to the sender network
+and sends their sanitized spans to Alloy for sampling. The collector selects
+10% of ordinary traces for the 7-day tenant. It preserves error spans and
+spans longer than 500 ms in the 30-day tenant, together with their companion
+spans seen during the 30-second trace decision window. A late error or slow
+span still reaches the 30-day tenant. Its earlier companions may already
+have been sampled or expired, so follow the shared trace ID across both
+data sources. The collector replaces any incoming priority marker with its
+own decision and routes each write to a fixed tenant.
+[Alloy tail sampling](https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.processor.tail_sampling/).
+
+Add `deploy/monitoring/staging-trace-retention-query.yml` to the Grafana
+monitoring configuration for this backend. In **Explore**, use **Barghsa
+Tempo Ordinary** for recent sampled traces and **Barghsa Tempo Priority**
+for longer-lived errors and slow operations. Verify both tenants by exact
+trace ID. Watch Alloy queue refusals and Tempo retention jobs after enabling
+the pipeline. Tempo expires blocks using their configured tenant retention
+period, then clears the marked block bytes after its compaction grace period.
+Confirm the deployed policy and bucket expiry with controlled trace records
+before accepting the environment.
+[Tempo tenant overrides](https://grafana.com/docs/tempo/latest/operations/manage-advanced-systems/multitenancy/) · [Tempo retention and block polling](https://grafana.com/docs/tempo/latest/configuration/polling/).
+
 ### Find a trace in Grafana Explore
 
 Add `deploy/monitoring/staging-trace-query.yml` after the existing staging

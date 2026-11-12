@@ -1,0 +1,53 @@
+name: barghsa-trace-retention
+services:
+  trace-collector:
+    image: ${BARGHSA_ALLOY_IMAGE:?Set the verified immutable Grafana Alloy image}
+    pull_policy: never
+    command:
+      [
+        run,
+        --storage.path=/tmp/alloy,
+        --server.http.listen-addr=127.0.0.1:12345,
+        /etc/alloy/operator-traces.alloy,
+      ]
+    user: '10001:10001'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ['/tmp:size=32m,mode=1777,nosuid,nodev,noexec']
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [trace-ingest, tempo-ingest]
+    volumes:
+      - ./operator-traces.alloy:/etc/alloy/operator-traces.alloy:ro
+
+  tempo:
+    image: ${BARGHSA_TEMPO_IMAGE:?Set the verified immutable Grafana Tempo image}
+    pull_policy: never
+    command: [-config.file=/etc/tempo/operator-tempo.yml, -config.expand-env=true]
+    env_file: ${BARGHSA_TEMPO_STORAGE_ENV_FILE:?Set the protected Tempo S3 environment file}
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ['/tmp:size=32m,mode=1777,nosuid,nodev,noexec']
+    restart: unless-stopped
+    mem_limit: 768m
+    networks: [tempo-ingest, trace-query, tempo-egress]
+    volumes:
+      - tempo-data:/var/tempo
+      - ./operator-tempo.yml:/etc/tempo/operator-tempo.yml:ro
+      - ./operator-tempo-overrides.yml:/etc/tempo/operator-tempo-overrides.yml:ro
+
+networks:
+  trace-ingest:
+    external: true
+    name: ${BARGHSA_TRACE_INGEST_NETWORK:?Set the dedicated internal trace sender network}
+  trace-query:
+    external: true
+    name: ${BARGHSA_TEMPO_QUERY_NETWORK:?Set the dedicated internal Tempo query network}
+  tempo-ingest:
+    internal: true
+  tempo-egress:
+
+volumes:
+  tempo-data:

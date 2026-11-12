@@ -1,0 +1,24 @@
+apiVersion: 1
+datasources:
+  - name: Barghsa Tempo Ordinary
+    uid: barghsa-tempo
+    type: tempo
+    access: proxy
+    url: $BARGHSA_TEMPO_QUERY_URL
+    isDefault: false
+    editable: false
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      httpHeaderValue1: barghsa-ordinary
+  - name: Barghsa Tempo Priority
+    uid: barghsa-tempo-priority
+    type: tempo
+    access: proxy
+    url: $BARGHSA_TEMPO_QUERY_URL
+    isDefault: false
+    editable: false
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      httpHeaderValue1: barghsa-priority

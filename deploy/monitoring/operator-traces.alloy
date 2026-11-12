@@ -1,0 +1,151 @@
+otelcol.receiver.otlp "private" {
+	http {
+		endpoint = "0.0.0.0:4318"
+	}
+
+	output {
+		traces = [otelcol.processor.memory_limiter.traces.input]
+	}
+}
+
+otelcol.processor.memory_limiter "traces" {
+	check_interval = "1s"
+	limit          = "256MiB"
+	spike_limit    = "48MiB"
+
+	output {
+		traces = [otelcol.processor.filter.producers.input]
+	}
+}
+
+otelcol.processor.filter "producers" {
+	error_mode = "propagate"
+
+	traces {
+		span = [
+			`resource.attributes["service.name"] != "barghsa-api" and resource.attributes["service.name"] != "barghsa-worker"`,
+			`resource.attributes["deployment.environment.name"] != "staging" and resource.attributes["deployment.environment.name"] != "production"`,
+		]
+	}
+
+	output {
+		traces = [otelcol.processor.transform.retention.input]
+	}
+}
+
+otelcol.processor.transform "retention" {
+	error_mode = "propagate"
+
+	trace_statements {
+		context    = "span"
+		statements = [
+			`set(attributes["barghsa.retention.priority"], false)`,
+			`set(attributes["barghsa.retention.priority"], true) where status.code == STATUS_CODE_ERROR or end_time_unix_nano - start_time_unix_nano > 500000000`,
+		]
+	}
+
+	output {
+		traces = [
+			otelcol.processor.tail_sampling.ordinary.input,
+			otelcol.processor.tail_sampling.priority_context.input,
+			otelcol.processor.filter.priority_spans.input,
+		]
+	}
+}
+
+otelcol.processor.tail_sampling "ordinary" {
+	decision_wait            = "30s"
+	num_traces               = 8192
+	maximum_trace_size_bytes = 1048576
+
+	policy {
+		name = "exclude-priority"
+		type = "drop"
+
+		drop {
+			drop_sub_policy {
+				name = "priority"
+				type = "boolean_attribute"
+
+				boolean_attribute {
+					key   = "barghsa.retention.priority"
+					value = true
+				}
+			}
+		}
+	}
+
+	policy {
+		name = "sample-ordinary"
+		type = "probabilistic"
+
+		probabilistic {
+			sampling_percentage = 10
+			hash_salt           = "barghsa-ordinary-v1"
+		}
+	}
+
+	output {
+		traces = [otelcol.exporter.otlphttp.ordinary.input]
+	}
+}
+
+otelcol.processor.tail_sampling "priority_context" {
+	decision_wait            = "30s"
+	num_traces               = 8192
+	maximum_trace_size_bytes = 1048576
+
+	policy {
+		name = "retain-priority-context"
+		type = "boolean_attribute"
+
+		boolean_attribute {
+			key   = "barghsa.retention.priority"
+			value = true
+		}
+	}
+
+	output {
+		traces = [otelcol.processor.filter.priority_companions.input]
+	}
+}
+
+// Send priority spans directly, including errors received after a tail decision.
+otelcol.processor.filter "priority_spans" {
+	error_mode = "propagate"
+
+	traces {
+		span = [`attributes["barghsa.retention.priority"] != true`]
+	}
+
+	output {
+		traces = [otelcol.exporter.otlphttp.priority.input]
+	}
+}
+
+// The direct branch already sends the priority spans.
+otelcol.processor.filter "priority_companions" {
+	error_mode = "propagate"
+
+	traces {
+		span = [`attributes["barghsa.retention.priority"] == true`]
+	}
+
+	output {
+		traces = [otelcol.exporter.otlphttp.priority.input]
+	}
+}
+
+otelcol.exporter.otlphttp "ordinary" {
+	client {
+		endpoint = "http://tempo:4318"
+		headers  = {"X-Scope-OrgID" = "barghsa-ordinary"}
+	}
+}
+
+otelcol.exporter.otlphttp "priority" {
+	client {
+		endpoint = "http://tempo:4318"
+		headers  = {"X-Scope-OrgID" = "barghsa-priority"}
+	}
+}

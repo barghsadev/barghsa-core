@@ -1,0 +1,17 @@
+x-tempo-trace-environment: &tempo-trace-environment
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://trace-collector:4318/v1/traces
+  OTEL_EXPORTER_OTLP_TRACES_HEADERS: ''
+  OTEL_TRACE_SUCCESS_SAMPLE_RATE: '1'
+
+services:
+  api:
+    environment: *tempo-trace-environment
+    networks: [trace-ingest]
+  worker:
+    environment: *tempo-trace-environment
+    networks: [trace-ingest]
+
+networks:
+  trace-ingest:
+    external: true
+    name: ${BARGHSA_TRACE_INGEST_NETWORK:?Set the dedicated internal trace sender network}

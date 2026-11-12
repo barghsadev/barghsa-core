@@ -1,0 +1,10 @@
+overrides:
+  barghsa-priority:
+    compaction:
+      block_retention: 720h
+    ingestion:
+      burst_size_bytes: 4000000
+      rate_limit_bytes: 2000000
+      max_traces_per_user: 10000
+    global:
+      max_bytes_per_trace: 1048576

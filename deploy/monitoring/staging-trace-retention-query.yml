@@ -1,0 +1,12 @@
+services:
+  grafana:
+    environment:
+      BARGHSA_TEMPO_QUERY_URL: http://tempo:3200
+    networks: [trace-query]
+    volumes:
+      - ./grafana-provisioning/tempo-retention.yml:/etc/grafana/provisioning/datasources/barghsa-tempo.yml:ro
+
+networks:
+  trace-query:
+    external: true
+    name: ${BARGHSA_TEMPO_QUERY_NETWORK:?Set the private Tempo query network}
