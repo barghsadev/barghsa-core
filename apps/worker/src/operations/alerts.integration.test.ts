@@ -209,6 +209,83 @@ it('retains the P2 credit priority in the authenticated receipt and private admi
   );
 });
 
+it.each([
+  ['ApplicationDatabasePoolSaturated', {}, 'barghsa-postgresql', undefined],
+  [
+    'CriticalApiRouteErrors',
+    { method: 'POST', route: '/api/saving/orders', availability_tier: 'pilot' },
+    'barghsa-api-health',
+    'POST /api/saving/orders',
+  ],
+] as const)(
+  'records the private P2 firing and recovery of %s',
+  async (alertname, route, dashboard, subject) => {
+    const event = envelope().alerts[0]!;
+    const labels = { ...event.labels, alertname, priority: 'P2', ...route };
+    for (const status of ['firing', 'resolved']) {
+      const input = { alerts: [{ ...event, labels, status }] };
+      const response = await request(input);
+      expect(response.status).toBe(200);
+      const body = (await response.json()) as { receipts: { id: string }[] };
+      const id = body.receipts[0]!.id;
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT alert_name,priority,status FROM operations_alert_receipts WHERE id=$1',
+            [id]
+          )
+        ).rows
+      ).toEqual([{ alert_name: alertname, priority: 'P2', status }]);
+      const intents = await ctx.pool.query(
+        "SELECT user_id,event_key,channels,payload FROM notification_outbox WHERE payload->>'alertReceiptId'=$1",
+        [id]
+      );
+      expect(intents.rows).toMatchObject([
+        {
+          user_id: 'ops-admin',
+          event_key: 'admin.operations_alert',
+          channels: ['in_app'],
+          payload: { priority: 'P2', alertStatus: status },
+        },
+      ]);
+      const payload = intents.rows[0].payload;
+      if (subject) expect(payload.details).toContain(subject);
+      expect(JSON.stringify(payload)).not.toContain('DO_NOT_COPY');
+      const links = operationsAlertLinks('admin.operations_alert', payload).map(({ href }) => href);
+      expect(links).toContain(`http://127.0.0.1:3009/d/${dashboard}`);
+      expect(links).toContain(
+        'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      );
+      expect(links.includes('http://127.0.0.1:3009/d/barghsa-executive-slo')).toBe(
+        Boolean(subject)
+      );
+    }
+  }
+);
+
+it.each([
+  { route: '/api/saving/orders/123' },
+  { route: 'unmatched' },
+  { method: 'PATCH' },
+  { availability_tier: 'unknown' },
+  { priority: 'P1' },
+  { database: 'other' },
+])('refuses invalid critical route alert labels %j', (overrides) => {
+  const event = envelope().alerts[0]!;
+  const labels = {
+    ...event.labels,
+    alertname: 'CriticalApiRouteErrors',
+    method: 'POST',
+    route: '/api/saving/orders',
+    availability_tier: 'pilot',
+    priority: 'P2',
+    ...overrides,
+  };
+  expect(() =>
+    parseOperationsAlerts({ alerts: [{ ...event, labels }] }, 'staging', 'core')
+  ).toThrow('scope or identity');
+});
+
 it('measures due backlog and expired leases separately from future and terminal work', async () => {
   const client = await ctx.pool.connect();
   try {

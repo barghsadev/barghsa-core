@@ -14,6 +14,8 @@ const alertResources = {
   PaymentIdempotencyConflict: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
   AiModelCircuitOpen: ['barghsa-ai-usage', 'ai-provider-outage'],
   WorkerUnavailable: ['barghsa-worker-health', 'notification-outage'],
+  ApplicationDatabasePoolSaturated: ['barghsa-postgresql', 'api-pressure'],
+  CriticalApiRouteErrors: ['barghsa-api-health', 'api-pressure'],
   JourneyErrorBudgetFastBurn: ['barghsa-executive-slo', 'journey-availability'],
   JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeFailed: ['barghsa-executive-slo', 'journey-availability'],
@@ -31,6 +33,7 @@ const availabilityBudgetAlerts = new Set([
   'NotificationOutboxBacklogCritical',
   'RefundObligationOverdue',
   'WalletReconciliationCritical',
+  'CriticalApiRouteErrors',
 ]);
 
 export function operationsDashboardOrigin(value: unknown): string | null {

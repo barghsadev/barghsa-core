@@ -1,0 +1,81 @@
+rule_files: [journey-slo-alerts.yml, api-pressure-alerts.yml]
+group_eval_order: [barghsa-journey-slo, barghsa-api-pressure]
+evaluation_interval: 1m
+tests:
+  - name: Pool pressure requires capacity and waiters on the same API replica
+    interval: 1m
+    input_series:
+      - series: 'pg_pool_connections{job="barghsa-api",environment="staging",database="core",instance="a",state="active"}'
+        values: '5+0x6'
+      - series: 'pg_pool_capacity{job="barghsa-api",environment="staging",database="core",instance="a"}'
+        values: '5+0x6'
+      - series: 'pg_pool_waiting_requests{job="barghsa-api",environment="staging",database="core",instance="a"}'
+        values: '0 0 1 1 1 0 0'
+      - series: 'pg_pool_connections{job="barghsa-api",environment="staging",database="core",instance="b",state="active"}'
+        values: '4+0x6'
+      - series: 'pg_pool_capacity{job="barghsa-api",environment="staging",database="core",instance="b"}'
+        values: '5+0x6'
+      - series: 'pg_pool_waiting_requests{job="barghsa-api",environment="staging",database="core",instance="b"}'
+        values: '3+0x6'
+      - series: 'pg_pool_connections{job="barghsa-api",environment="staging",database="other",instance="c",state="active"}'
+        values: '0+0x6'
+      - series: 'pg_pool_capacity{job="barghsa-api",environment="staging",database="other",instance="c"}'
+        values: '0+0x6'
+      - series: 'pg_pool_waiting_requests{job="barghsa-api",environment="staging",database="other",instance="c"}'
+        values: '3+0x6'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: ApplicationDatabasePoolSaturated
+        exp_alerts: []
+      - eval_time: 4m
+        alertname: ApplicationDatabasePoolSaturated
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: warning, priority: P2 }
+            exp_annotations:
+              summary: API database connections are at capacity with requests waiting
+              dashboard_uid: barghsa-postgresql
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md
+      - eval_time: 5m
+        alertname: ApplicationDatabasePoolSaturated
+        exp_alerts: []
+  - name: Sustained critical route failures exclude denials and require eligible traffic
+    interval: 1m
+    input_series:
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders",status="200"}'
+        values: '0+30x6 210+30x6'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders",status="500"}'
+        values: '0+6x6 36+0x6'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders",status="408"}'
+        values: '0+4x6 24+0x6'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders",status="403"}'
+        values: '0+400x13'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders/123",status="500"}'
+        values: '0+400x13'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",availability_tier="pilot",instance="a",method="GET",route="/api/electricity/orders/simple",status="500"}'
+        values: '0+400x13'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",availability_tier="pilot",instance="a",method="POST",route="/api/saving/orders",status="500"}'
+        values: '0+2x13'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="unknown",availability_tier="unknown",instance="a",method="POST",route="/api/saving/orders",status="500"}'
+        values: '0+400x13'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: CriticalApiRouteErrors
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: CriticalApiRouteErrors
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              availability_tier: pilot
+              method: POST
+              route: /api/saving/orders
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: POST /api/saving/orders has sustained server errors or request timeouts
+              dashboard_uid: barghsa-api-health
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md
+      - eval_time: 12m
+        alertname: CriticalApiRouteErrors
+        exp_alerts: []

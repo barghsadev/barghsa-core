@@ -1,0 +1,41 @@
+name: Verify API pressure alert delivery
+on:
+  push:
+    branches: ['codex/verify/v06-api-pressure-*']
+
+permissions:
+  contents: read
+
+jobs:
+  delivery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the worker and its dependencies
+        run: pnpm --filter '@barghsa/worker...' build
+      - name: Exercise the authenticated receiver and private delivery paths
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/worker exec vitest run --reporter=verbose src/operations/alerts.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/operations-alert-delivery.log"
+      - name: Preserve the isolated delivery test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operations-alert-delivery
+          path: ${{ runner.temp }}/operations-alert-delivery.log
+          retention-days: 14
