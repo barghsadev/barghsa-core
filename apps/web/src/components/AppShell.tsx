@@ -100,7 +100,9 @@ export function AppShell({
         area={area}
         locale={locale}
         isWide={!compact}
-        currentLabel={current?.label}
+        breadcrumbs={
+          <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
+        }
         actions={actions}
         profileBadge={profileBadge}
         menuOpen={menuOpen}
@@ -109,10 +111,10 @@ export function AppShell({
         onAccountOpen={closeMenu}
         navigationId={`${area}-navigation`}
       />
-      <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
       <div className="shell-body">
         <aside
           id={`${area}-navigation`}
+          data-area={area}
           data-expanded={menuOpen}
           className="group/sidebar app-shell-sidebar"
         >
@@ -129,7 +131,7 @@ export function AppShell({
               <Separator aria-hidden="true" className="mt-4" />
             </div>
           ) : null}
-          <nav aria-label={shellText('navigation', locale)} className="flex flex-col gap-5">
+          <nav aria-label={shellText('navigation', locale)} className="shell-sidebar-navigation">
             {navigationUnavailable && (
               <div className="rounded-lg border p-3 text-sm">
                 <p role="status">{shellText('navigationUnavailable', locale)}</p>
@@ -143,7 +145,7 @@ export function AppShell({
               </div>
             )}
             {groups.map((group) => (
-              <div key={group.label}>
+              <div key={group.label} className="shell-sidebar-group">
                 <p className="mb-2 px-3 text-xs font-medium text-muted-foreground shell-sidebar-panel">
                   {group.label}
                 </p>

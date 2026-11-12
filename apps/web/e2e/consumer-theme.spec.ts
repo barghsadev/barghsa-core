@@ -35,7 +35,7 @@ test('active staff navigation stays readable when the account theme changes', as
   await page.goto('/admin/agents');
   const theme = page.getByRole('combobox', { name: shellText('theme', 'en'), exact: true });
   const active = page
-    .getByTestId('admin-settings-layout')
+    .locator('#admin-navigation')
     .locator('.shell-navigation-link[aria-current="page"][href="/admin/agents"]');
   await expect(active).toBeVisible();
   await expect(theme).toHaveValue('light');

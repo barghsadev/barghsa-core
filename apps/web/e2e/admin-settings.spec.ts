@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { shellText } from '@barghsa/i18n/shell';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { electricityLimits } from '../src/test/contract-settings-fixtures';
 import { crmShell } from './crm-shell-fixture';
@@ -57,14 +58,26 @@ for (const width of [390, 1440]) {
           await page.goto('/admin/contract-limits');
           const layout = page.getByTestId('admin-settings-layout');
           const select = layout.getByRole('combobox');
-          const nav = layout.getByRole('navigation', {
-            name: t('admin.settings.navigation', locale),
+          const nav = page.locator('#admin-navigation').getByRole('navigation');
+          await expect(layout.locator('nav')).toHaveCount(0);
+          const topbar = page.locator('header.shell-topbar');
+          const breadcrumb = page.getByRole('navigation', {
+            name: shellText('breadcrumbs', locale),
           });
+          await expect(breadcrumb).toHaveCount(1);
+          await expect(
+            topbar.getByRole('navigation', { name: shellText('breadcrumbs', locale) })
+          ).toHaveCount(1);
+          await expect(
+            topbar.getByRole('combobox', { name: shellText('theme', locale) })
+          ).toHaveCount(0);
+          await expect(
+            topbar.getByText(shellText('themeManaged', locale), { exact: true })
+          ).toHaveCount(0);
           if (width < 1024) {
             await expect(select).toBeVisible();
             await expect(select.locator('optgroup')).toHaveCount(12);
             await expect(select.locator('option')).toHaveCount(25);
-            await expect(nav).toBeHidden();
             await select.focus();
             await expect(select).toBeFocused();
             await select.selectOption('/admin/verification');
@@ -75,10 +88,23 @@ for (const width of [390, 1440]) {
               'href',
               '/admin/contract-limits'
             );
-            await nav.locator('a[href="/admin/verification"]').click();
+            const verification = nav.locator('a[href="/admin/verification"]');
+            await expect(
+              page.getByRole('link').and(page.locator('a[href="/admin/verification"]'))
+            ).toHaveCount(1);
+            await verification.focus();
+            await expect(verification).toBeFocused();
+            await verification.press('Enter');
           }
           await expect(page).toHaveURL(/\/admin\/verification$/);
-          await expect(layout.locator(':scope > div > [role=region]')).toBeFocused();
+          if (width < 1024) {
+            await expect(layout.locator(':scope > div > [role=region]')).toBeFocused();
+          } else {
+            await expect(nav.locator('a[href="/admin/verification"]')).toHaveAttribute(
+              'aria-current',
+              'page'
+            );
+          }
           if (width < 1024) await select.selectOption('/admin/contract-limits');
           else await nav.locator('a[href="/admin/contract-limits"]').click();
           await expect(page).toHaveURL(/\/admin\/contract-limits$/);
@@ -137,7 +163,11 @@ for (const width of [390, 1440]) {
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)
           ).toBe(true);
-          if (locale === 'fa' && info.project.name === 'mobile-safari')
+          if (
+            locale === 'fa' &&
+            (info.project.name === 'mobile-safari' ||
+              (!darkMode && info.project.name === 'chromium'))
+          )
             await page.screenshot({
               path: info.outputPath(`admin-settings-${width}-${darkMode ? 'dark' : 'light'}.png`),
               fullPage: true,

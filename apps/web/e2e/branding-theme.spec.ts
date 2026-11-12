@@ -266,9 +266,9 @@ for (const locale of ['fa', 'en'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
-    let writes = 0;
+    let themeRequests = 0;
     await page.route('**/api/user/settings/theme', async (route) => {
-      if (route.request().method() === 'PUT') writes++;
+      themeRequests++;
       await route.fulfill({ json: { mode: 'light' } });
     });
     await page.route('**/api/public/branding/config', (route) =>
@@ -295,11 +295,10 @@ for (const locale of ['fa', 'en'] as const) {
     await page.goto('/app');
     await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
     const theme = page.getByRole('combobox', { name: shellText('theme', locale) });
-    await expect(theme).toBeDisabled();
-    await expect(theme).toHaveValue('dark');
-    await expect(theme).toHaveAccessibleDescription(shellText('themeManaged', locale));
+    await expect(theme).toHaveCount(0);
+    await expect(page.getByText(shellText('themeManaged', locale), { exact: true })).toHaveCount(0);
     await expect(page.locator('html')).toHaveClass(/dark/);
-    expect(writes).toBe(0);
+    expect(themeRequests).toBe(0);
   });
 }
 

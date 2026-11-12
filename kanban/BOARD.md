@@ -2,15 +2,15 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T17:18:54+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T18:48:41+00:00. First production launch: electricity, saving, solar and consultation.
 
-Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
+Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
 Counts describe evidence and task acceptance, not the percentage of product built.
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1249 | Accepted with unchanged source bindings. |
+| done | 1250 | Accepted with unchanged source bindings. |
 | verify | 3 | Existing work may be complete; inspect evidence before building. |
 | partial | 108 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
@@ -945,6 +945,14 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.15` | done | Recorded batch work | ServiceTargetsPage: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger. |
 | `07-ui-ux-design.md#T-07.30.02.16` | done | Recorded batch work | TeamAssignmentPage: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. |
 | `07-ui-ux-design.md#T-07.30.02.17` | done | Recorded batch work | EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. |
+
+## v0.5.1: Admin workspace polish
+
+Give stakeholders one clear admin navigation, a single page path and an uncluttered responsive header.
+
+| Qualified task | State | Build evidence | Required work |
+| --- | --- | --- | --- |
+| `release-readiness#R-04.03` | done | Recorded batch work | Polish the admin shell for stakeholder testing (P2 defect) |
 
 ## v0.6.0: Production readiness
 
