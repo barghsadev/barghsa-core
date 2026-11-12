@@ -27,6 +27,30 @@ scripts/check-flaky-tests.sh --promotion \
   --report /protected/release-evidence/flaky-test-report.json
 ```
 
+### Encrypted deployment configuration
+
+The same manifest accepts protected environment files supplied by the operator or a deployment secret manager. On Linux hosts with `systemd-creds`, use host-key-encrypted files when persisting the inputs to Compose. Generate them on the destination host from protected streams or files. Use a root-only directory and `umask 077`.
+
+```sh
+systemd-creds encrypt --with-key=host --name=barghsa-runtime \
+  /protected/runtime.env /protected/runtime.cred
+systemd-creds encrypt --with-key=host --name=barghsa-migration \
+  /protected/migration.env /protected/migration.cred
+```
+
+Keep the Compose interpolation file for image references, public settings and the CA path. Pass the two encrypted files separately to the same Compose commands used below.
+
+```sh
+python3 deploy/production/compose-with-credentials.py \
+  --env-file /protected/rehearsal-compose.env \
+  --runtime /protected/runtime.cred --migration /protected/migration.cred \
+  config --quiet
+```
+
+The launcher resolves the files into private, read-only memory for the local Compose invocation. It verifies that both files use the host-key encryption format and passes the expected names to `systemd-creds`. It uses the same service and migration separation as protected dotenv files. Provision the named credentials again on a replacement host. Protect the systemd host key and retire any plaintext provisioning copies under the deployment secret policy. [systemd credentials](https://systemd.io/CREDENTIALS/).
+
+Docker Engine stores the resolved container environment. Limit Docker access to authorized operators, use encrypted Docker storage and encrypted swap or disable swap, and keep full Compose configuration and container inspect output out of logs and release evidence. Apply rotations by replacing the protected source and recreating the affected services using the existing key-overlap procedure.
+
 ## Production release notes template
 
 Copy this outline into the protected production approval package for the exact candidate. Keep customer-facing release notes separate from protected links, contact details and evidence.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T09:45:52+00:00",
+  "updated": "2026-11-12T09:55:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11808,7 +11808,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12025,6 +12025,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -17942,7 +17950,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -18058,6 +18066,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -18129,7 +18145,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -18245,6 +18261,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -28789,7 +28813,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -29095,6 +29119,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -30846,7 +30878,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             }
           ],
           "checks": [
@@ -30974,6 +31006,14 @@
                 "apps/api/src/metrics/telemetry-http.integration.test.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -593056,19 +593096,48 @@
         "story": "06-security-testing-observability.md#spec-71227c352238"
       },
       "requirement": "| T-06.07.01.01 | Implement secrets resolution abstraction: env vars, AWS Secrets Manager / HashiCorp Vault / encrypted config file | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/compose-with-credentials.py",
+          "deploy/production/test_compose_with_credentials.py"
+        ],
+        "batches": [
+          "release-0.6-runtime-secret-resolution"
+        ],
+        "current_acceptance": {
+          "batch": "release-0.6-runtime-secret-resolution",
+          "checks": [
+            "The unchanged production Compose manifest accepts protected dotenv inputs and keeps runtime and migration roles separate. A Linux launcher resolves the encrypted file alternative at the deployment boundary. It uses separate host-key-encrypted, named systemd credentials and private sealed memory files.",
+            "Six tests passed on the authorized Linux staging host with systemd 255 and Docker Compose 2.40.3. Both protected dotenv and encrypted inputs resolved the runtime fixture only to API, worker and AI inference and the separate migration fixture only to the migration service. Web and scanner received neither.",
+            "Compose validation was quiet. Swapped named credentials, same-inode aliases, permissive files, directories, symlinks and the keyless credential format were refused. Memory file paths expired after the command. The host credential key path was untouched and only disposable fixture files were used. Documentation formatting and git diff --check passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+            },
+            {
+              "path": "deploy/production/compose-with-credentials.py",
+              "sha256": "89e06b96812560bc4ef8183d7ac9d74de2c9b13461e38709894a9a180b42383b"
+            },
+            {
+              "path": "deploy/production/test_compose_with_credentials.py",
+              "sha256": "b5c34e0055c17635750d339009dc53eb1ce77224a3851dbe10cd1451a7e3cf9b"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+            }
+          ]
+        }
       }
     },
     {
@@ -612856,7 +612925,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -613147,6 +613216,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -613269,7 +613346,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -613478,6 +613555,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -619879,7 +619964,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -620051,6 +620136,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -628478,7 +628571,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -628614,6 +628707,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -628926,7 +629027,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+              "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -629110,6 +629211,14 @@
                 "apps/api/src/metrics/telemetry-http.integration.test.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-runtime-secret-resolution",
+              "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
             }
           ]
         }
@@ -1091598,6 +1091707,66 @@
         {
           "file": "run-protected-audits.sh",
           "sha256": "451701f4c32fab2f140ab5bcc0f881ec967c9770da596bf18f4f49fe60a78222"
+        }
+      ]
+    },
+    "release-0.6-runtime-secret-resolution": {
+      "batch": "release-0.6-runtime-secret-resolution",
+      "base_commit": "fc404d1837f5260252b468a58d49d7d3f8ebc88f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/compose-with-credentials.py",
+        "deploy/production/test_compose_with_credentials.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "7fad312dc19244303b65a4ca96131f33c4a5fd3af9ce041d9baf707a456f29ec"
+        },
+        {
+          "path": "deploy/production/compose-with-credentials.py",
+          "sha256": "89e06b96812560bc4ef8183d7ac9d74de2c9b13461e38709894a9a180b42383b"
+        },
+        {
+          "path": "deploy/production/test_compose_with_credentials.py",
+          "sha256": "b5c34e0055c17635750d339009dc53eb1ce77224a3851dbe10cd1451a7e3cf9b"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+        }
+      ],
+      "checks": [
+        "The unchanged production Compose manifest accepts protected dotenv inputs and keeps runtime and migration roles separate. A Linux launcher resolves the encrypted file alternative at the deployment boundary. It uses separate host-key-encrypted, named systemd credentials and private sealed memory files.",
+        "Six tests passed on the authorized Linux staging host with systemd 255 and Docker Compose 2.40.3. Both protected dotenv and encrypted inputs resolved the runtime fixture only to API, worker and AI inference and the separate migration fixture only to the migration service. Web and scanner received neither.",
+        "Compose validation was quiet. Swapped named credentials, same-inode aliases, permissive files, directories, symlinks and the keyless credential format were refused. Memory file paths expired after the command. The host credential key path was untouched and only disposable fixture files were used. Documentation formatting and git diff --check passed."
+      ],
+      "limitations": [
+        "Only configuration resolution ran. No service was started or reconfigured. The protected dotenv input contract can accept externally provisioned files, without a provider-specific runtime client.",
+        "Docker Engine storage encryption, protected swap, deployment host-key custody, and production topology still require operational verification. The separate API/UI masking and telemetry-exclusion tasks are outside this evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-runtime-secret-resolution",
+      "execution_receipts": [
+        {
+          "file": "linux-compose.log",
+          "sha256": "adda3d203a5cbedc09f3ef72f8da5ab43d094205bcf585758a901755c7a2d6ae"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "2eecdc1eefd31d1c8f3379a2b08ff9c7b3a91ff6d9cda46465ec71b975b0ccdb"
         }
       ]
     }
