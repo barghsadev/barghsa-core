@@ -21,6 +21,20 @@ export interface MaintenanceSetting {
   version: number;
   updatedAt: string | null;
 }
+export interface MaintenanceHistoryEntry {
+  id: string;
+  setting: MaintenanceSetting;
+}
+export interface MaintenanceRecoveryDraft extends MaintenanceHistoryEntry {
+  sourceId: string;
+  baseVersion: number;
+}
+export interface MaintenanceHistory {
+  baseVersion: number;
+  items: MaintenanceHistoryEntry[];
+  nextBeforeVersion: number | null;
+  draft: MaintenanceRecoveryDraft | null;
+}
 export interface MaintenanceDraft {
   active: boolean;
   publishReason: boolean;
@@ -83,15 +97,60 @@ export function maintenanceErrors(
   if (!until || !(Date.parse(until) > now)) invalid.push('deadline');
   return invalid;
 }
-export function maintenancePayload(value: MaintenanceDraft, zone: string, expectedVersion: number) {
+export function maintenancePayload(
+  value: MaintenanceDraft,
+  zone: string,
+  expectedVersion: number,
+  rollbackDraftId?: string
+) {
   return {
     active: value.active,
     reason: value.active ? { fa: value.reasonFa.trim(), en: value.reasonEn.trim() } : null,
     owner: value.active ? value.owner.trim() : null,
     estimatedUntil: value.active ? maintenanceDeadline(value.deadline, zone) : null,
     expectedVersion,
+    ...(rollbackDraftId ? { rollbackDraftId } : {}),
     ...(value.active && !value.publishReason ? { publishReason: false } : {}),
   };
+}
+
+const revisionId = (value: unknown): value is string =>
+  typeof value === 'string' && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value);
+const version = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 2147483647;
+
+function isHistoryEntry(value: unknown): value is MaintenanceHistoryEntry {
+  if (!value || typeof value !== 'object') return false;
+  const row = value as MaintenanceHistoryEntry;
+  return revisionId(row.id) && isMaintenanceSetting(row.setting) && row.setting.version > 0;
+}
+
+export function isMaintenanceRecoveryDraft(value: unknown): value is MaintenanceRecoveryDraft {
+  if (!isHistoryEntry(value)) return false;
+  const row = value as MaintenanceRecoveryDraft;
+  return (
+    revisionId(row.sourceId) && version(row.baseVersion) && row.setting.version < row.baseVersion
+  );
+}
+
+export function isMaintenanceHistory(value: unknown): value is MaintenanceHistory {
+  if (!value || typeof value !== 'object') return false;
+  const history = value as MaintenanceHistory;
+  return (
+    version(history.baseVersion) &&
+    Array.isArray(history.items) &&
+    history.items.length <= 20 &&
+    history.items.every(
+      (row) => isHistoryEntry(row) && row.setting.version < history.baseVersion
+    ) &&
+    (history.nextBeforeVersion === null ||
+      (version(history.nextBeforeVersion) &&
+        history.nextBeforeVersion > 0 &&
+        history.nextBeforeVersion < history.baseVersion)) &&
+    (history.draft === null ||
+      (isMaintenanceRecoveryDraft(history.draft) &&
+        history.draft.baseVersion === history.baseVersion))
+  );
 }
 export function isMaintenanceSetting(value: unknown): value is MaintenanceSetting {
   if (!value || typeof value !== 'object') return false;

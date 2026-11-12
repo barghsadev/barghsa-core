@@ -2,6 +2,10 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { MaintenanceService } from './maintenance.service.js';
+
+type MaintenanceHistory = Awaited<ReturnType<MaintenanceService['rollbackHistory']>>;
+type RecoveryDraft = Awaited<ReturnType<MaintenanceService['stageRollback']>>;
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 
@@ -224,7 +228,115 @@ it('requires staff authority and step-up, versions changes, and records the audi
     privateReason,
   });
   expect((await put(privateInput)).status).toBe(409);
+
+  const resumed = await put({
+    active: false,
+    reason: null,
+    owner: null,
+    estimatedUntil: null,
+    expectedVersion: 2,
+  });
+  expect(resumed.status, http.logs()).toBe(200);
+  expect(await resumed.json()).toMatchObject({ active: false, version: 3 });
+
+  expect((await fetch(`${path}/history`)).status).toBe(401);
+  const readHistory = (query = '') => fetch(`${path}/history${query}`, { headers });
+  const revisions = await readHistory();
+  expect(revisions.status, http.logs()).toBe(200);
+  expect(revisions.headers.get('cache-control')).toContain('no-store');
+  const history = (await revisions.json()) as MaintenanceHistory;
+  expect(history).toMatchObject({
+    baseVersion: 3,
+    items: [
+      { setting: { active: true, version: 2, reason: standardMaintenanceNotice } },
+      { setting: { active: true, version: 1, reason: body.reason } },
+    ],
+    draft: null,
+  });
+  expect(JSON.stringify(history)).not.toContain(privateReason.en);
+  expect(
+    ((await (await readHistory('?beforeVersion=2')).json()) as MaintenanceHistory).items
+  ).toHaveLength(1);
+  expect((await readHistory('?beforeVersion=invalid')).status).toBe(400);
+
+  const stage = (input: unknown, base = path) =>
+    fetch(`${base}/rollback-draft`, { method: 'POST', headers, body: JSON.stringify(input) });
+  const command = { sourceId: history.items[0]!.id, expectedVersion: 3 };
+  expect((await stage({ ...command, expectedVersion: 2 })).status).toBe(409);
+  expect((await stage({ ...command, injected: true })).status).toBe(400);
+  expect(
+    (
+      await stage(
+        { ...command, expectedVersion: 0 },
+        `${http.base}/api/admin/maintenance/solar_requests`
+      )
+    ).status
+  ).toBe(404);
+  const staged = await Promise.all([stage(command), stage(command)]);
+  expect(
+    staged.map(({ status }) => status),
+    http.logs()
+  ).toEqual([201, 201]);
+  const [draft, repeated] = (await Promise.all(staged.map((response) => response.json()))) as [
+    RecoveryDraft,
+    RecoveryDraft,
+  ];
+  expect(repeated).toEqual(draft);
+  expect(draft).toMatchObject({
+    sourceId: command.sourceId,
+    baseVersion: 3,
+    setting: { active: true, version: 2, reason: standardMaintenanceNotice },
+  });
+  expect(JSON.stringify(draft)).not.toContain(privateReason.en);
+  expect(((await (await readHistory()).json()) as MaintenanceHistory).draft).toEqual(draft);
+  const availability = (await (await fetch(`${http.base}/api/maintenance`)).json()) as {
+    capabilities: unknown[];
+  };
+  expect(availability.capabilities).toContainEqual({
+    capability: 'saving_orders',
+    active: false,
+    reason: null,
+    estimatedUntil: null,
+  });
+  const rollback = {
+    ...privateInput,
+    expectedVersion: 3,
+    rollbackDraftId: draft.id,
+  };
+  expect((await put({ ...rollback, estimatedUntil: '2000-01-01T00:00:00.000Z' })).status).toBe(400);
+  expect((await put({ ...rollback, rollbackDraftId: randomUUID() })).status).toBe(409);
+  const activation = await Promise.all([put(rollback), put(rollback)]);
+  expect(activation.map(({ status }) => status).sort()).toEqual([200, 409]);
+  expect(await activation.find(({ status }) => status === 200)!.json()).toMatchObject({
+    active: true,
+    version: 4,
+    reason: standardMaintenanceNotice,
+  });
+  expect(((await (await readHistory()).json()) as MaintenanceHistory).draft).toBeNull();
+  const rollbackAudit = (
+    await http.pool.query(
+      "SELECT event,metadata::jsonb AS metadata FROM audit_log WHERE id=$1 OR metadata::jsonb->>'rollbackDraftId'=$1 ORDER BY created_at",
+      [draft.id]
+    )
+  ).rows;
+  expect(rollbackAudit).toHaveLength(2);
+  expect(rollbackAudit[0]).toMatchObject({
+    event: 'maintenance.rollback_draft',
+    metadata: { key: 'maintenance.saving_orders', sourceId: command.sourceId, baseVersion: 3 },
+  });
+  expect(rollbackAudit[1]).toMatchObject({
+    event: 'config_change',
+    metadata: {
+      previous: { version: 3 },
+      next: { version: 4 },
+      rollbackDraftId: draft.id,
+      restoredFromVersion: 2,
+    },
+  });
+
   await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='test-maintenance'");
+  expect((await readHistory()).status).toBe(403);
+  expect((await stage({ ...command, expectedVersion: 4 })).status).toBe(403);
   const forbidden = await put({ ...body, reason: null });
   expect(forbidden.status).toBe(403);
   expect(await forbidden.json()).not.toHaveProperty('error.fields');

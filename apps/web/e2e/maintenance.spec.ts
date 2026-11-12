@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
+import { tSolar } from '@barghsa/i18n/solar';
 
 const settings = [
   {
@@ -55,6 +56,9 @@ test('paused checkout shows a bilingual reason and support while other intake st
   await page.reload();
   await expect(page.getByText('Checkout is being checked')).toBeVisible();
   await page.goto('/solar/requests/new');
+  await expect(
+    page.getByRole('heading', { name: tSolar('title', 'en'), exact: true })
+  ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Service temporarily unavailable' })).toHaveCount(
     0
   );

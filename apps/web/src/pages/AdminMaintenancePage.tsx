@@ -14,6 +14,7 @@ import {
 } from '@barghsa/ui/form';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { MaintenanceRecovery } from '../components/MaintenanceRecovery.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -24,6 +25,7 @@ import {
   maintenancePayload,
   matchesMaintenanceReceipt,
   type MaintenanceDraft,
+  type MaintenanceRecoveryDraft,
   type MaintenanceSetting,
 } from '../lib/maintenance-form.js';
 
@@ -33,6 +35,8 @@ export default function AdminMaintenancePage() {
   const copy = (key: string) => tMaintenance(key, locale);
   const [settings, setSettings] = useState<MaintenanceSetting[]>([]);
   const [selected, setSelected] = useState<MaintenanceSetting | null>(null);
+  const [recoveryOpen, setRecoveryOpen] = useState(false);
+  const [recoveryDraft, setRecoveryDraft] = useState<MaintenanceRecoveryDraft | null>(null);
   const [draftZone, setDraftZone] = useState(time.timezone);
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
@@ -84,6 +88,8 @@ export default function AdminMaintenancePage() {
     captured.current = null;
     errorFocus.current = null;
     setSelected(null);
+    setRecoveryOpen(false);
+    setRecoveryDraft(null);
     form.reset(maintenanceDraft(null, time.timezone));
     setAction(null);
     setUncertain(false);
@@ -136,8 +142,26 @@ export default function AdminMaintenancePage() {
     if (owned.current || reading.current || state !== 'ready' || time.status !== 'ready') return;
     ++generation.current;
     setSelected(setting);
+    setRecoveryOpen(false);
+    setRecoveryDraft(null);
     setDraftZone(time.timezone);
     form.reset(maintenanceDraft(setting, time.timezone));
+    setSaved(false);
+  }
+  function loadRecovery(draft: MaintenanceRecoveryDraft) {
+    if (
+      !selected ||
+      !canEdit ||
+      owned.current ||
+      reading.current ||
+      draft.baseVersion !== selected.version ||
+      draft.setting.capability !== selected.capability
+    )
+      return;
+    ++generation.current;
+    setRecoveryDraft(draft);
+    setRecoveryOpen(false);
+    form.reset(maintenanceDraft(draft.setting, draftZone));
     setSaved(false);
   }
   function closeAction() {
@@ -156,11 +180,11 @@ export default function AdminMaintenancePage() {
     try {
       await form.handleSubmit((value) => {
         if (current !== generation.current) return;
-        const body = maintenancePayload(value, draftZone, selected.version);
+        const body = maintenancePayload(value, draftZone, selected.version, recoveryDraft?.id);
         captured.current = { capability: selected.capability, body, generation: current };
         setAction({
           ...(value.active ? { risk: 'destructive' as const } : {}),
-          title: copy('save'),
+          title: copy(recoveryDraft ? 'activateRecovery' : 'save'),
           description: copy('confirm'),
           path: `/api/admin/maintenance/${selected.capability}`,
           method: 'PUT',
@@ -276,6 +300,31 @@ export default function AdminMaintenancePage() {
         </div>
       )}
       {selected && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-expanded={recoveryOpen}
+          disabled={locked || !canEdit}
+          onClick={() => setRecoveryOpen((open) => !open)}
+        >
+          {copy('history')}
+        </Button>
+      )}
+      {selected && recoveryOpen && (
+        <MaintenanceRecovery
+          key={`${selected.capability}:${selected.version}`}
+          setting={selected}
+          disabled={locked || !canEdit}
+          formatTime={time.format}
+          onLoad={loadRecovery}
+          onDenied={() => {
+            setSettings([]);
+            clearPrivate();
+            setState('denied');
+          }}
+        />
+      )}
+      {selected && (
         <Form {...form}>
           <form
             onSubmit={submit}
@@ -289,6 +338,7 @@ export default function AdminMaintenancePage() {
             className="max-w-2xl space-y-4 rounded-lg border bg-card p-5 text-card-foreground"
           >
             <h2 className="text-lg font-semibold">{copy(selected.capability)}</h2>
+            {recoveryDraft && <p className="text-sm">{copy('recoveryEditing')}</p>}
             {uncertain && (
               <div role="alert" className="space-y-3">
                 <p>{copy('unconfirmed')}</p>
@@ -302,6 +352,7 @@ export default function AdminMaintenancePage() {
                     ++generation.current;
                     captured.current = null;
                     owned.current = false;
+                    if (latest.version !== selected.version) setRecoveryDraft(null);
                     setSelected(latest);
                     setUncertain(false);
                     form.clearErrors();
@@ -445,7 +496,7 @@ export default function AdminMaintenancePage() {
                 <p role="alert">{form.formState.errors.root.validation.message}</p>
               )}
               <FormSubmit loading={validating} disabled={locked || !canEdit}>
-                {copy('save')}
+                {copy(recoveryDraft ? 'activateRecovery' : 'save')}
               </FormSubmit>
             </fieldset>
           </form>

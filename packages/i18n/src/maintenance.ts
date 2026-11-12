@@ -50,6 +50,21 @@ const en: Record<string, string> = {
   reset: 'Replace draft with saved settings',
   zoneChanged:
     'Your account time zone changed. Review and reload the saved settings before editing the deadline.',
+  history: 'Maintenance history',
+  loadingHistory: 'Loading maintenance history…',
+  historyError: 'Maintenance history could not be loaded.',
+  emptyHistory: 'No earlier published revisions.',
+  revision: 'Version {version}',
+  restoreRevision: 'Restore version {version} as draft',
+  restoreConfirm: 'Copy this version to a recovery draft and load it into the editor?',
+  resumeRecovery: 'Load recovery draft from version {version}',
+  activateRecovery: 'Activate recovery draft',
+  recoveryEditing:
+    'Review this draft. Update any expired return time and enter any required private rationale before activation.',
+  unconfirmedDraft:
+    'The draft save could not be confirmed. Review the refreshed history before trying again.',
+  olderRevisions: 'Older revisions',
+  latestRevisions: 'Latest revisions',
 };
 
 const fa: Record<string, string> = {
@@ -101,6 +116,21 @@ const fa: Record<string, string> = {
   reset: 'جایگزینی پیش‌نویس با تنظیمات ذخیره‌شده',
   zoneChanged:
     'منطقه زمانی حساب تغییر کرده است. پیش از ویرایش زمان بازگشت، تنظیمات ذخیره‌شده را بررسی و دوباره بارگذاری کنید.',
+  history: 'تاریخچه توقف موقت',
+  loadingHistory: 'در حال بارگذاری تاریخچه توقف موقت…',
+  historyError: 'تاریخچه توقف موقت بارگذاری نشد.',
+  emptyHistory: 'نسخه منتشرشده قبلی وجود ندارد.',
+  revision: 'نسخه {version}',
+  restoreRevision: 'بازیابی نسخه {version} به‌صورت پیش‌نویس',
+  restoreConfirm: 'این نسخه به پیش‌نویس بازیابی کپی و در ویرایشگر بارگذاری شود؟',
+  resumeRecovery: 'بارگذاری پیش‌نویس بازیابی از نسخه {version}',
+  activateRecovery: 'فعال‌سازی پیش‌نویس بازیابی',
+  recoveryEditing:
+    'پیش‌نویس را بررسی کنید. پیش از فعال‌سازی، زمان بازگشت گذشته را اصلاح و در صورت نیاز دلیل داخلی را وارد کنید.',
+  unconfirmedDraft:
+    'ذخیره پیش‌نویس تأیید نشد. پیش از تلاش دوباره تاریخچه بازخوانی‌شده را بررسی کنید.',
+  olderRevisions: 'نسخه‌های قدیمی‌تر',
+  latestRevisions: 'آخرین نسخه‌ها',
 };
 
 export function tMaintenance(key: string, locale: 'fa' | 'en'): string {
