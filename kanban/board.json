@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T16:15:19+00:00",
+  "updated": "2026-11-12T16:21:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -30610,7 +30610,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -30722,7 +30722,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "packages/db/drizzle/production/0288_storage_cleanup_operation_claim.sql",
@@ -30774,11 +30774,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -31400,6 +31400,17 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -68350,7 +68361,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -69114,6 +69125,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -84695,7 +84714,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -84711,7 +84730,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -85569,6 +85588,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -85992,7 +86020,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -86008,7 +86036,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -86866,6 +86894,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -87289,7 +87326,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -87305,7 +87342,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -88163,6 +88200,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -92056,7 +92102,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -92566,6 +92612,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -101210,11 +101264,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -103687,6 +103741,15 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -133497,7 +133560,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -133513,7 +133576,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -134371,6 +134434,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -134726,7 +134798,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -134742,7 +134814,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -135600,6 +135672,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -135961,7 +136042,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -135977,7 +136058,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -136835,6 +136916,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -258112,7 +258202,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -259051,6 +259141,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -259267,7 +259365,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -260206,6 +260304,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -260440,7 +260546,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -261497,6 +261603,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -261816,7 +261930,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -263793,6 +263907,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -264157,7 +264279,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -266134,6 +266256,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -266394,7 +266524,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -267333,6 +267463,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -567623,7 +567761,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -568018,6 +568156,14 @@
                 "apps/api/src/wallet/customer-wallet-receipt.controller.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -568134,7 +568280,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -568500,6 +568646,14 @@
                 "apps/api/src/wallet/customer-wallet-receipt.controller.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -580182,7 +580336,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -580630,6 +580784,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -580836,7 +580998,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -581284,6 +581446,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -581492,7 +581662,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -581961,6 +582131,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -582201,7 +582379,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -582788,6 +582966,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -583006,7 +583192,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -583454,6 +583640,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -603661,7 +603855,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604020,6 +604214,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -604174,7 +604376,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604557,6 +604759,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -604711,7 +604921,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605070,6 +605280,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -605225,7 +605443,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605608,6 +605826,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -616311,7 +616537,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -616613,6 +616839,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -618475,8 +618709,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, and eight current and legacy notification inbox method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with customer support ticket resource loading and the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, and 19 customer and staff support-ticket method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with ticket privacy requests, export and closure, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -618578,6 +618812,9 @@
           "apps/api/src/solar/solar-progress.service.ts",
           "apps/api/src/solar/solar-request.integration.test.ts",
           "apps/api/src/solar/solar-request.service.ts",
+          "apps/api/src/storage/verified-attachments.service.ts",
+          "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "apps/api/src/tickets/tickets.service.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/bank-receipt-topup.service.ts",
           "apps/api/src/wallet/chargeback-alert.integration.test.ts",
@@ -618607,6 +618844,7 @@
           "apps/worker/src/contracts/electricity-increase-runner.test.ts",
           "apps/worker/src/contracts/electricity-increase-runner.ts",
           "docs/operations/notification-delivery-recovery.md",
+          "docs/operations/storage-retention.md",
           "docs/security/authorization.md",
           "packages/db/drizzle/production/0293_electricity_increase_automation_scope.sql",
           "packages/db/drizzle/production/0294_saving_invoice_automation_scope.sql",
@@ -618643,7 +618881,8 @@
           "release-0.6-legacy-electricity-refund-authority",
           "release-0.6-failed-notification-authority",
           "release-0.6-notification-history-corrections",
-          "release-0.6-inbox-session-authority"
+          "release-0.6-inbox-session-authority",
+          "release-0.6-ticket-attachment-authority"
         ],
         "current_acceptance": null
       }
@@ -622432,7 +622671,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
@@ -622479,6 +622718,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -622585,7 +622832,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -622745,6 +622992,14 @@
                 "apps/api/src/wallet/wallet-history.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -628291,7 +628546,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
@@ -628749,6 +629004,14 @@
                 "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -629148,7 +629411,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -629588,6 +629851,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -647204,7 +647475,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -647499,6 +647770,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -669388,7 +669667,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
@@ -669528,6 +669807,14 @@
                 "apps/api/src/wallet/chargeback-alert.integration.test.ts"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         }
@@ -731366,7 +731653,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -732498,6 +732785,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -732641,7 +732936,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -733773,6 +734068,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -733916,7 +734219,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -735048,6 +735351,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -735191,7 +735502,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -736323,6 +736634,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -736466,7 +736785,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -737598,6 +737917,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -737741,7 +738068,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -738873,6 +739200,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -739016,7 +739351,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -740148,6 +740483,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -740291,7 +740634,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -741423,6 +741766,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -741566,7 +741917,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -742698,6 +743049,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -742841,7 +743200,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -743973,6 +744332,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -744116,7 +744483,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -745248,6 +745615,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -745391,7 +745766,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -746523,6 +746898,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -746666,7 +747049,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -747798,6 +748181,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -747941,7 +748332,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -749073,6 +749464,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -749216,7 +749615,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -750348,6 +750747,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -750491,7 +750898,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -751623,6 +752030,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -751766,7 +752181,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -752898,6 +753313,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -753041,7 +753464,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -754173,6 +754596,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -754316,7 +754747,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -755448,6 +755879,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -755591,7 +756030,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -756723,6 +757162,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ]
         },
@@ -925461,7 +925908,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -925477,7 +925924,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -925934,6 +926381,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -926153,7 +926609,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -926169,7 +926625,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -926626,6 +927082,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -926849,7 +927314,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -926865,7 +927330,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -927322,6 +927787,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -927542,7 +928016,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -927558,7 +928032,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -928015,6 +928489,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -928234,7 +928717,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -928250,7 +928733,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -928707,6 +929190,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -928928,7 +929420,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -928944,7 +929436,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -929401,6 +929893,15 @@
                 "apps/api/src/tickets/tickets.controller.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -960090,7 +960591,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "90862fa5ef17575e7054482de1e900ede7865223777111e926394744bd77c861"
+              "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -960599,6 +961100,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -975099,7 +975608,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -975115,7 +975624,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -980067,6 +980576,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -981554,11 +982072,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -982750,7 +983268,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -985358,6 +985876,16 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -986799,11 +987327,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "f10b07c65c20bddc04b28aec3c15eed2751acbe28e507483319861eb9add324e"
+              "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -987975,7 +988503,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -990483,6 +991011,16 @@
                 "apps/api/src/notifications/unified-inbox.integration.test.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-authority",
+              "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1151954,6 +1152492,217 @@
         {
           "file": "inbox-routes.json",
           "sha256": "e44b9e5d73bc21cb67e007ff49296938751aa876caf16f8a7f8a46bdebdd5f15"
+        }
+      ]
+    },
+    "release-0.6-ticket-attachment-authority": {
+      "batch": "release-0.6-ticket-attachment-authority",
+      "base_commit": "005761a57688bfd9268f38bb2db5e36c8d43ee9b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-09.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.18.01.04",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.23.01.01",
+        "07-ui-ux-design.md#T-07.23.01.02",
+        "07-ui-ux-design.md#T-07.23.01.03",
+        "07-ui-ux-design.md#T-07.23.01.04",
+        "07-ui-ux-design.md#T-07.23.01.05",
+        "07-ui-ux-design.md#T-07.23.01.06",
+        "07-ui-ux-design.md#T-07.30.02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/storage/verified-attachments.service.ts",
+        "apps/api/src/tickets/tickets-http.integration.test.ts",
+        "apps/api/src/tickets/tickets.service.ts",
+        "docs/operations/storage-retention.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/brand-config.service.test.ts",
+          "sha256": "8ed2cc558f7cc6c67299c0dadac6961ed71314d623570596dd94220562f3e6d9"
+        },
+        {
+          "path": "apps/api/src/documents/document-preview.ts",
+          "sha256": "ba6a76358a44594cb1eac60dd7012dd26709d13c06c98f7b090ae8d9d10d112d"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "af60a9ca1bda412f65e7192c228a6cb7a9739054b4dd38ecf62dc17f20f6c205"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/storage/storage-copy-transaction.ts",
+          "sha256": "8110e6fd57934a04d78239a0bb862588acc3b8bde4a4897dc67f11f826e17c90"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-related-records.ts",
+          "sha256": "7de190e16f4e64321becba967007933445a919a7dca53ff90c5aa892c664d786"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "a4d723c79c8a761555001e209d0bbe2dd296fa38702ae855b8d97cea59f3e6a6"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.ts",
+          "sha256": "b5e0108f2b1a94c6337445b771d87ae88e82b03a58c3900cda9345d8785f2c5e"
+        },
+        {
+          "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
+          "sha256": "04c20376dc4973dec634bbbd3ac61aadd5dc00af395e4d11c5949de258581b9a"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+          "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+          "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.test.tsx",
+          "sha256": "912f3186b44de63a56a77c4e15954b9fcf79cee49605bb6efeea0537e25519cb"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed 19 normal customer and staff support routes for creation, list, related-record options, detail, assignment, status, comments and attachment preview. Customer account ownership, optional active-profile filter, current staff and assignment authority, and visible comments remain enforced.",
+        "New root copies carry the exact ticket ID and new reply copies carry both ticket and comment IDs. File projection and preview check the sealed parent and uploader. Native checks retain matching legacy attachments and withhold ambiguous or mismatched provenance even after a preview has been cached.",
+        "Retained current-session and assignment checks, immutable copies, stable file indices, idempotent submission, internal-note isolation and audited rollback. Existing conversation identity and branding attachment callers passed on the unchanged shared copy implementation.",
+        "85 final native ticket cases, 26 shared copy caller cases and 48 web caller tests passed. API build, typecheck, generated contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ticket-attachment-authority",
+      "execution_receipts": [
+        {
+          "file": "api-final.log",
+          "sha256": "84de38abd37e67539af645dc650f6460a06c8127d6f96172cab71b4d0b642254"
+        },
+        {
+          "file": "api.log",
+          "sha256": "3c9b3051affe89b045d7b4db6ed3c66b409d3734cc8be5aabf83cb60fed871be"
+        },
+        {
+          "file": "web.log",
+          "sha256": "5a127fadd1e6dbeba36a117863bde22b4c718897b95e1a41b0a6e84fa811ff4f"
+        },
+        {
+          "file": "types-final.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "26d3af34263244ad2816058ad2b7a9221795f47fb2ebb5bbb7591e888a098fe1"
+        },
+        {
+          "file": "format-final.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint-final.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "ead28fae125006a7e69ff2df239d666b7eec027a7d89a9dfc055bed120ced68f"
+        },
+        {
+          "file": "support-ticket-routes.json",
+          "sha256": "604e43047192d868a4a02c67def7941b21999f982e82694eb895fbb754458f1a"
         }
       ]
     }

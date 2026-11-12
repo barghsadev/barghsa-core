@@ -172,6 +172,10 @@ the copy is prepared. Other requests with that key wait for the receipt. The
 ticket, profile and staff permission locks are acquired again for publication.
 If ownership, assignment or ticket state changes during upload, the next
 transaction applies the current rules and leaves rejected copies for cleanup.
+New ticket files record the ticket ID and reply files also record the comment
+ID. Downloads and previews check the recorded parent and uploader. Older files
+without the new IDs remain available when their existing provenance matches
+and a single ticket or reply owns the reference.
 
 Identity corrections, profile verification and lost-contact recovery use the
 same provisional copy workflow. Publication rechecks the current staff grant

@@ -1714,6 +1714,44 @@ it('projects and previews original ticket files with stable indices and current 
     expect((await read(user)).status, http.logs()).toBe(200);
   }
   expect((await read('assigned')).status).toBe(404);
+  const key = row.attachments[0]!;
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata->>'ticketId' AS parent FROM storage_records WHERE storage_key=$1",
+        [key]
+      )
+    ).rows
+  ).toEqual([{ parent: row.id }]);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata-'ticketId' WHERE storage_key=$1",
+    [key]
+  );
+  expect((await read('customer')).status).toBe(200);
+  const ambiguous = await ticket();
+  await http.pool.query('UPDATE tickets SET attachments=$2::jsonb WHERE id=$1', [
+    ambiguous,
+    JSON.stringify([key]),
+  ]);
+  expect((await read('customer')).status).toBe(404);
+  await http.pool.query('DELETE FROM tickets WHERE id=$1', [ambiguous]);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{ticketId}',to_jsonb($2::text)) WHERE storage_key=$1",
+    [key, randomUUID()]
+  );
+  const mismatched = await fetch(`${http.base}/api/tickets/${row.id}`, {
+    headers: headers.customer!,
+  });
+  expect(mismatched.status).toBe(200);
+  expect(await mismatched.json()).toMatchObject({
+    attachmentFiles: [],
+    attachmentDownloadUrls: [],
+  });
+  expect((await read('customer')).status).toBe(404);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{ticketId}',to_jsonb($2::text)) WHERE storage_key=$1",
+    [key, row.id]
+  );
   await http.pool.query(
     "UPDATE tickets SET assigned_to='assigned',attachments=$2::jsonb WHERE id=$1",
     [row.id, JSON.stringify(['ticket-attachments/missing', row.attachments[0]])]
@@ -1859,6 +1897,43 @@ it('never serves internal, cross-ticket, unavailable or unbound reply bytes, eve
   expect((await previewReply(id, randomUUID(), 0, 'staff')).status).toBe(404);
   expect((await previewReply(id, reply.id, 1, 'staff')).status).toBe(404);
   const key = reply.attachments[0]!.key;
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata->>'commentId' AS parent FROM storage_records WHERE storage_key=$1",
+        [key]
+      )
+    ).rows
+  ).toEqual([{ parent: reply.id }]);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata-'commentId' WHERE storage_key=$1",
+    [key]
+  );
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(200);
+  const ambiguous = randomUUID();
+  await http.pool.query(
+    `INSERT INTO ticket_comments(id,ticket_id,author_id,body,visibility,attachments)
+     VALUES ($1,$2,'staff','Legacy reference','internal',$3::jsonb)`,
+    [ambiguous, id, JSON.stringify([key])]
+  );
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(404);
+  await http.pool.query('DELETE FROM ticket_comments WHERE id=$1', [ambiguous]);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{commentId}',to_jsonb($2::text)) WHERE storage_key=$1",
+    [key, randomUUID()]
+  );
+  const staffThread = await fetch(`${http.base}/api/staff/tickets/${id}/comments`, {
+    headers: headers.staff!,
+  });
+  expect(staffThread.status).toBe(200);
+  expect(await staffThread.json()).toEqual(
+    expect.arrayContaining([expect.objectContaining({ id: reply.id, attachments: [] })])
+  );
+  expect((await previewReply(id, reply.id, 0, 'staff')).status).toBe(404);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=jsonb_set(metadata,'{commentId}',to_jsonb($2::text)) WHERE storage_key=$1",
+    [key, reply.id]
+  );
   await http.pool.query(
     "UPDATE storage_records SET metadata=jsonb_set(metadata,'{ticketId}',to_jsonb($2::text)) WHERE storage_key=$1",
     [key, other]

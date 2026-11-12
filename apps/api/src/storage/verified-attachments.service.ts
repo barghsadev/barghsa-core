@@ -32,6 +32,7 @@ type AttachmentBinding = {
   profileId: string | null;
   purpose: AttachmentPurpose;
   ticketId?: string | undefined;
+  commentId?: string | undefined;
 };
 type AttachmentSource = {
   key: string;
@@ -115,12 +116,12 @@ export class VerifiedAttachmentsService {
     actorId: string,
     profileId: string | null,
     purpose: AttachmentPurpose = 'ticket_attachment',
-    ticketId?: string
+    ticket?: Pick<AttachmentBinding, 'ticketId' | 'commentId'>
   ): Promise<AttachmentPlan> {
     if (!keys.length || keys.length > 5 || new Set(keys).size !== keys.length)
       throw new BadRequestException('One to five distinct attachment files are required');
     this.storageProvider();
-    const binding = { actorId, profileId, purpose, ticketId };
+    const binding = { actorId, profileId, purpose, ...ticket };
     const sources = new Map<string, AttachmentSource>();
     for (const key of [...keys].sort()) sources.set(key, await this.source(client, key, binding));
     return {
@@ -155,7 +156,7 @@ export class VerifiedAttachmentsService {
   }
 
   private copyMetadata(binding: AttachmentBinding, source: AttachmentSource, digest: string) {
-    const { purpose, profileId, actorId, ticketId } = binding;
+    const { purpose, profileId, actorId, ticketId, commentId } = binding;
     return {
       purpose,
       profileId,
@@ -163,6 +164,7 @@ export class VerifiedAttachmentsService {
       sourceKey: source.key,
       sha256: digest,
       ...(ticketId ? { ticketId } : {}),
+      ...(commentId ? { commentId } : {}),
     };
   }
 

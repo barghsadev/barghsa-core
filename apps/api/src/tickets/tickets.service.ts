@@ -1134,6 +1134,7 @@ export class TicketsService {
       throw new HttpException('Related records require their type, identifier and profile', 400);
     }
     const attachmentKeys = data.attachments ?? [];
+    const id = randomUUID();
     const kind = 'ticket_create';
     const request = data.idempotencyKey
       ? {
@@ -1188,7 +1189,9 @@ export class TicketsService {
             client,
             attachmentKeys,
             userId,
-            data.profileId ?? null
+            data.profileId ?? null,
+            'ticket_attachment',
+            { ticketId: id }
           );
           if (actor) await requireCurrentSession(client, actor);
           return { plan };
@@ -1198,7 +1201,6 @@ export class TicketsService {
       }
       return withCopyTransaction(async (client) => {
         const work = async () => {
-          const id = randomUUID();
           const assignment = await this.assignmentService.choose(
             client,
             'ticket',
@@ -1580,26 +1582,22 @@ export class TicketsService {
     const comment = commentId
       ? (
           await client.query(
-            `SELECT attachments FROM ticket_comments WHERE id=$1 AND ticket_id=$2
+            `SELECT id,ticket_id,author_id,attachments FROM ticket_comments WHERE id=$1 AND ticket_id=$2
        AND ($3::boolean OR visibility='public') FOR SHARE`,
             [commentId, ticketId, staff]
           )
         ).rows[0]
       : ticket;
-    const purpose = commentId ? 'ticket_reply_attachment' : 'ticket_attachment';
     const prefix = commentId ? 'ticket-reply-attachments/' : 'ticket-attachments/';
     const key: unknown = Array.isArray(comment?.attachments)
       ? comment.attachments[fileIndex]
       : null;
     if (typeof key !== 'string' || !key.startsWith(prefix))
       throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    const record = (
-      await client.query(
-        `SELECT content_type FROM storage_records WHERE storage_key=$1 AND status='immutable'
-       AND metadata->>'purpose'=$3 AND ($3='ticket_attachment' OR metadata->>'ticketId'=$2) FOR SHARE`,
-        [key, ticketId, purpose]
-      )
-    ).rows[0];
+    const records = commentId
+      ? await this.replyAttachmentRecords([{ ...comment, attachments: [key] }], client)
+      : await this.initialAttachmentRecords(ticket, [key], client);
+    const record = records[0];
     if (!record) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     try {
       const previewKey = await ensureDocumentPreview(
@@ -1614,19 +1612,33 @@ export class TicketsService {
     }
   }
 
+  private async initialAttachmentRecords(
+    ticket: TicketRow,
+    keys: string[],
+    client: Pick<PoolClient, 'query'>
+  ) {
+    if (!keys.length) return [];
+    return (
+      await client.query(
+        `SELECT s.storage_key,s.file_name,s.content_type FROM storage_records s
+         WHERE s.storage_key=ANY($1::text[]) AND s.status='immutable'
+           AND s.metadata->>'purpose'='ticket_attachment' AND s.metadata->>'uploadedBy'=$3
+           AND (s.metadata->>'ticketId'=$2 OR (NOT (s.metadata ? 'ticketId')
+             AND (s.metadata->>'profileId' IS NOT DISTINCT FROM $4::text OR ($4 IS NULL
+               AND NOT EXISTS (SELECT 1 FROM profiles p WHERE p.id::text=s.metadata->>'profileId')))
+             AND NOT EXISTS (SELECT 1 FROM tickets other WHERE other.user_id=$3 AND other.id<>$2::uuid
+               AND other.attachments ? s.storage_key)))
+         FOR SHARE OF s`,
+        [keys, ticket.id, ticket.userId, ticket.profileId]
+      )
+    ).rows;
+  }
+
   private async initialAttachmentFiles(ticket: TicketRow, client: Pick<PoolClient, 'query'>) {
     const keys = ticket.attachments.filter(
       (key) => typeof key === 'string' && key.startsWith('ticket-attachments/')
     );
-    const records = keys.length
-      ? (
-          await client.query(
-            `SELECT storage_key,file_name,content_type FROM storage_records WHERE storage_key=ANY($1::text[])
-       AND status='immutable' AND metadata->>'purpose'='ticket_attachment'`,
-            [keys]
-          )
-        ).rows
-      : [];
+    const records = await this.initialAttachmentRecords(ticket, keys, client);
     const details = new Map(records.map((row) => [row.storage_key, row]));
     const available = keys.filter((key) => details.has(key));
     const urls = await this.attachmentService.downloadUrls(available);
@@ -1649,6 +1661,36 @@ export class TicketsService {
           : [];
       }),
     };
+  }
+
+  private async replyAttachmentRecords(
+    rows: Record<string, unknown>[],
+    client: Pick<PoolClient, 'query'>
+  ) {
+    const requested = rows.flatMap((row) => {
+      const keys = Array.isArray(row.attachments) ? row.attachments : [];
+      return [...new Set(keys)].flatMap((key) =>
+        typeof key === 'string' && key.startsWith('ticket-reply-attachments/')
+          ? [{ key, comment_id: row.id, ticket_id: row.ticket_id, author_id: row.author_id }]
+          : []
+      );
+    });
+    if (!requested.length) return [];
+    return (
+      await client.query(
+        `SELECT s.storage_key,s.file_name,s.content_type,r.comment_id
+         FROM jsonb_to_recordset($1::jsonb) AS r(key text,comment_id text,ticket_id text,author_id text)
+         JOIN storage_records s ON s.storage_key=r.key AND s.status='immutable'
+         WHERE s.metadata->>'purpose'='ticket_reply_attachment'
+           AND s.metadata->>'ticketId'=r.ticket_id AND s.metadata->>'uploadedBy'=r.author_id
+           AND (s.metadata->>'commentId'=r.comment_id OR (NOT (s.metadata ? 'commentId')
+             AND NOT EXISTS (SELECT 1 FROM ticket_comments other
+               WHERE other.ticket_id=r.ticket_id::uuid AND other.id<>r.comment_id::uuid
+                 AND other.attachments ? s.storage_key)))
+         FOR SHARE OF s`,
+        [JSON.stringify(requested)]
+      )
+    ).rows;
   }
 
   private async commentRecords(
@@ -1690,29 +1732,14 @@ export class TicketsService {
         },
       ])
     );
-    const keys = rows.flatMap((row) =>
-      Array.isArray(row.attachments)
-        ? row.attachments.filter(
-            (key): key is string =>
-              typeof key === 'string' && key.startsWith('ticket-reply-attachments/')
-          )
-        : []
-    );
-    const files = keys.length
-      ? (
-          await client.query(
-            `SELECT storage_key,file_name,content_type FROM storage_records WHERE storage_key=ANY($1::text[]) AND status='immutable' AND metadata->>'purpose'='ticket_reply_attachment' AND metadata->>'ticketId'=ANY($2::text[])`,
-            [keys, rows.map((row) => row.ticket_id)]
-          )
-        ).rows
-      : [];
+    const files = await this.replyAttachmentRecords(rows, client);
     const urls = await this.attachmentService.downloadUrls(
       files.map((file) => file.storage_key as string),
       'ticket_reply_attachment'
     );
     const details = new Map(
       files.map((file, index) => [
-        file.storage_key,
+        `${file.comment_id}:${file.storage_key}`,
         {
           key: file.storage_key as string,
           fileName: file.file_name as string,
@@ -1726,7 +1753,7 @@ export class TicketsService {
       author: authors.get(row.author_id) ?? null,
       attachments: (Array.isArray(row.attachments) ? row.attachments : []).flatMap(
         (key, fileIndex) => {
-          const file = details.get(key);
+          const file = details.get(`${row.id}:${key}`);
           return file?.url
             ? [{ ...file, fileIndex } as TicketCommentRow['attachments'][number]]
             : [];
@@ -1748,6 +1775,7 @@ export class TicketsService {
     const input = ticketReply({ body, visibility, ...options });
     const bodyFormat = input.bodyFormat ?? 'plain';
     const attachmentKeys = input.attachments ?? [];
+    const commentId = uuidv7();
     const authorContext = ownerId ? 'customer' : 'staff';
     const hash = createHash('sha256')
       .update(
@@ -1809,7 +1837,7 @@ export class TicketsService {
             actorId,
             ticket.profile_id ?? null,
             'ticket_reply_attachment',
-            ticketId
+            { ticketId, commentId }
           );
           if (actor) await requireCurrentSession(client, actor);
           return { plan };
@@ -1826,8 +1854,8 @@ export class TicketsService {
           throw new HttpException('Ticket profile changed; reload and retry', 409);
         const sealed = prepared ? await this.attachmentService.publish(client, prepared) : [];
         const result = await client.query(
-          `INSERT INTO ticket_comments(ticket_id,author_id,body,visibility,body_format,author_context,attachments,submission_id,submission_hash)
-         VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9) RETURNING *`,
+          `INSERT INTO ticket_comments(ticket_id,author_id,body,visibility,body_format,author_context,attachments,submission_id,submission_hash,id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10) RETURNING *`,
           [
             ticketId,
             actorId,
@@ -1838,6 +1866,7 @@ export class TicketsService {
             JSON.stringify(sealed),
             input.submissionId ?? null,
             input.submissionId ? hash : null,
+            commentId,
           ]
         );
         const status =
