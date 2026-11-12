@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T09:24:15+00:00",
+  "updated": "2026-11-12T09:34:05+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -611368,7 +611368,17 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -611506,7 +611516,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -611575,6 +611585,14 @@
                 "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
               ],
               "scope": "Validate the new trace-parent constraint during the unpublished additive migration so PostgreSQL matches the production schema snapshot. Existing NULL rows, insert validation, immutable trace metadata and worker behavior passed."
+            },
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -611652,7 +611670,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Configure and verify the protected Tempo or Jaeger collector and extend export to the web. API and notification worker spans reached the isolated OTLP HTTP receiver."
+        "Configure persistent protected exporter and operator access on the final candidate. The compiled API and worker reached the temporary loopback-only staging Jaeger service and its query API returned both traces. Web export and durable deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -611689,7 +611707,8 @@
         ],
         "batches": [
           "release-0.6-api-request-tracing",
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-private-jaeger-readback-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -611843,7 +611862,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -611912,6 +611931,14 @@
                 "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
               ],
               "scope": "Validate the new trace-parent constraint during the unpublished additive migration so PostgreSQL matches the production schema snapshot. Existing NULL rows, insert validation, immutable trace metadata and worker behavior passed."
+            },
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -612117,7 +612144,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -612230,6 +612257,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -612435,7 +612470,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -612548,6 +612583,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -613228,7 +613271,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "171dcc81cb1a1be43233355d3e3e6a2ceae77e23feb4af07361b1d6136646fc6"
+              "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -613341,6 +613384,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-private-jaeger-readback-rehearsal",
+              "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds exact operational evidence for private Jaeger readback, including the tested artifact and remaining release gates. The API, worker, schema, tracing configuration and authorization code are unchanged."
             }
           ]
         }
@@ -622606,7 +622657,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the actual protected Tempo or Jaeger path, deployed retention, role access and readback. Local OTLP verification covers the API and notification worker."
+        "Select the maintained, scanned artifact and configure the persistent protected backend and access roles. The Jaeger v3 API read back the API and worker traces over authenticated SSH in a disposable staging rehearsal. The upstream Jaeger 2.23.0 image has four high-severity findings. The source rebuild passed the exact image scan and rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -622643,7 +622694,8 @@
         ],
         "batches": [
           "release-0.6-api-request-tracing",
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-private-jaeger-readback-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -622710,18 +622762,22 @@
         "story": "06-security-testing-observability.md#spec-4321834970e2"
       },
       "requirement": "| T-06.16.01.03 | Configure retention: sampled traces 7 days, error/slow 30 days | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify deployed retention for both trace classes. The disposable Jaeger service configured a 168-hour Badger TTL. The test verified persistence after restart, while actual expiry and 30-day error/slow trace retention remain open."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "docs/operations/structured-logging.md"
+        ],
+        "batches": [
+          "release-0.6-private-jaeger-readback-rehearsal"
+        ],
         "current_acceptance": null
       }
     },
@@ -622766,7 +622822,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back one complete HTTP, domain, PostgreSQL outbox and worker trace from the configured backend on the final candidate. The exact operation and failure rollback pass with a local receiver."
+        "Repeat trace readback against the configured backend with the final deployed candidate and operator access. The temporary staging backend returned a complete HTTP, domain, PostgreSQL outbox and worker trace and a separate rolled-back trace. Local readback survived restart."
       ],
       "owner": null,
       "depends_on": [],
@@ -622802,7 +622858,8 @@
         "batches": [
           "release-0.6-notification-outbox-tracing",
           "release-0.6-domain-postgresql-tracing",
-          "release-0.6-validated-outbox-trace-constraint"
+          "release-0.6-validated-outbox-trace-constraint",
+          "release-0.6-private-jaeger-readback-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -626042,18 +626099,22 @@
         "story": "06-security-testing-observability.md#spec-00143cf280c7"
       },
       "requirement": "| T-06.18.01.03 | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the deployed 7-day ordinary and 30-day error/slow trace policy and expiry. The temporary compatible Jaeger rehearsal configured seven days and verified persistence across restart. The retention split and deployed policy remain open."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "docs/operations/structured-logging.md"
+        ],
+        "batches": [
+          "release-0.6-private-jaeger-readback-rehearsal"
+        ],
         "current_acceptance": null
       }
     },
@@ -943932,7 +943993,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-alert-delivery-watchdog",
-          "release-0.6-sealed-clamav-lifecycle"
+          "release-0.6-sealed-clamav-lifecycle",
+          "release-0.6-private-jaeger-readback-rehearsal"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1087411,6 +1087473,132 @@
         {
           "file": "run-api.sh",
           "sha256": "ba927bdbd4418dec53dccea0e01c502e1748ed736317e6cf05f1128d2983091a"
+        }
+      ]
+    },
+    "release-0.6-private-jaeger-readback-rehearsal": {
+      "batch": "release-0.6-private-jaeger-readback-rehearsal",
+      "base_commit": "00a1f5ebb42c5e138e80e24c1b1c56bd0773b5e2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.01.07",
+        "06-security-testing-observability.md#T-06.16.01.01",
+        "06-security-testing-observability.md#T-06.16.01.03",
+        "06-security-testing-observability.md#T-06.16.01.05",
+        "06-security-testing-observability.md#T-06.18.01.03",
+        "release-readiness#R-05.03",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "8a6efb9e9e1d871fe92559ac8b62d4731976d1bc78876f007af3d77696c99e74"
+        }
+      ],
+      "checks": [
+        "Staging unused build-cache maintenance under the release lock raised available Docker space from 3,151 MiB to 3,606 MiB. Image tags and IDs, named volumes, running containers, deployed version and app/monitoring health passed their readback.",
+        "Trivy scanned official Jaeger 2.23.0 amd64 manifest sha256:1d157a0fa25fb0e1588427522031bce7aad80152800df62772511b8b4916140e and reported four high findings in three OS package entries and x/net. The same upstream commit rebuilt with Go 1.27.4, x/net v0.62.0 and x/crypto v0.59.0 plus its required module updates. The exact scratch runtime scan found zero high, critical or unknown findings in 333 Go package entries.",
+        "The compiled API and worker sent a successful and a rolled-back password-change trace through the loopback receiver to the patched Jaeger API. Local Badger returned identical stored traces after a container restart. The staging service received synthetic traffic through SSH-only loopback bindings and returned the same expected trace graph. The remote temporary image, container and volume were removed, and staging remained healthy on v0.5.0."
+      ],
+      "limitations": [
+        "The staging Jaeger instance was disposable. The local image is an API-only proof using a patched upstream build. A supported permanent image, actual final deployed workload and operator access, browser UI, other processes, whole-trace retention and production topology remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-trace-backend",
+      "execution_receipts": [
+        {
+          "file": "documentation.sha256",
+          "sha256": "822ec8f1bf827f9248981c625f8c9914ba84b630e7d191b9b288b6daf7f11da6"
+        },
+        {
+          "file": "cache-inventory-before.log",
+          "sha256": "346cc25daa1e97cef857bc075f15b56bb182ebc17289d57dee6b2834a35fbfb5"
+        },
+        {
+          "file": "cache-recovery.log",
+          "sha256": "3778cd95af646c8eceb1067a802b7014779d6ea5a9a9bd342657632169d052a6"
+        },
+        {
+          "file": "jaeger-amd64-manifest.json",
+          "sha256": "1d157a0fa25fb0e1588427522031bce7aad80152800df62772511b8b4916140e"
+        },
+        {
+          "file": "jaeger-vulnerabilities.json",
+          "sha256": "005102d69479496db7b0bfc2d83a19f7b7d486e8698ef5146b5ae5e663312d36"
+        },
+        {
+          "file": "jaeger-patched-vulnerabilities.json",
+          "sha256": "72ef27ae700fc6dff84daeca5cb505fc90598d1a573868d5f4c3ff5a143fa3f6"
+        },
+        {
+          "file": "jaeger-source.sha256",
+          "sha256": "28c0e682dc003625e0cb3d86605bc001edf0e33d667d54b76c53f800493455e9"
+        },
+        {
+          "file": "jaeger-go.mod.patch",
+          "sha256": "bb51a54e50c7f39f4f9b7da9076ca2dcf6076f5dda34fa6a423582670ce974ee"
+        },
+        {
+          "file": "jaeger-go.sum.patch",
+          "sha256": "520159ac36101aacfbcb466822eeb509bfcb4cf941b39e5e47e8913707ba9431"
+        },
+        {
+          "file": "jaeger-patched-buildinfo.log",
+          "sha256": "135c358e7550f77473474f1e4adc3fc881e6a6f48c53f173f1c663f1d9e43f6e"
+        },
+        {
+          "file": "jaeger-patched-binary.sha256",
+          "sha256": "9b88f1df016b233494b7b8908c67ac6027f71904197e67a09ee90389ab7bdeba"
+        },
+        {
+          "file": "jaeger-stage-archive.sha256",
+          "sha256": "e2c10d3d31d011a432c05386084bbbeb9d5ce26181649e1bb785e8da42901ed9"
+        },
+        {
+          "file": "jaeger-runtime-identity.txt",
+          "sha256": "7c98bdc712c014db533dece22206a0e6acbdfe450143c7aa6f5b74789d43a415"
+        },
+        {
+          "file": "jaeger-proof-source.sha256",
+          "sha256": "20b7894a501295f49822540af798d4b05e2667adf95eda95ba67d6d009164b4f"
+        },
+        {
+          "file": "jaeger-application-trace.log",
+          "sha256": "28b300658a72e5b0466fd3d1b4af45416e354c3e712eed7ba43c0f97cd2ffe99"
+        },
+        {
+          "file": "jaeger-persistence-proof.json",
+          "sha256": "898fc00d3000ade3d693e6032b9781824f4f95da3d80a27cff6914dc8ddeb917"
+        },
+        {
+          "file": "jaeger-stage-proof.json",
+          "sha256": "e42cc9d9209459366083b19b6f6f7faa4761433ae0dbaf8e5a2ea6541f08ce17"
+        },
+        {
+          "file": "stage-jaeger-start.log",
+          "sha256": "524c442aa66325ea09008afeeab0fba33339a012fafd8509fb038163fa743bbb"
+        },
+        {
+          "file": "stage-jaeger-application-trace.log",
+          "sha256": "cd11c914baf2cee938773a61f9156a15dbef81f65cd34e18da494c17c1c83e9d"
+        },
+        {
+          "file": "stage-jaeger-stop.log",
+          "sha256": "192b65815de7f499b0fe45bfc4b55dc64072c151838a52f4fb35061be7cbdcef"
+        },
+        {
+          "file": "staging-jaeger-rehearsal.sh",
+          "sha256": "2bb4ddc1e8130c335e5a40f4b76ffb1b71f81b98b38ee5c0ef4e19b7441b2fc5"
+        },
+        {
+          "file": "run-stage-jaeger-proof.sh",
+          "sha256": "73c89a38faccff0f8d5d08b8d58eef3cc6b913663d7e46264249cb2a11445dd7"
         }
       ]
     }

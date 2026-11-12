@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T09:24:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T09:34:05+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1241 | Accepted with unchanged source bindings. |
-| verify | 21 | Existing work may be complete; inspect evidence before building. |
-| partial | 98 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 19 | Existing work may be complete; inspect evidence before building. |
+| partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1410,7 +1410,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.03.07` | done | Recorded batch work | Write integration test: outbox replay produces no duplicate deliveries, respects idempotency keys |
 | `06-security-testing-observability.md#T-06.16.01.01` | partial | Recorded batch work | Configure OTel trace exporter to Tempo/Jaeger via OTLP |
 | `06-security-testing-observability.md#T-06.16.01.02` | partial | Recorded batch work | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
-| `06-security-testing-observability.md#T-06.16.01.03` | verify | Inventory needed | Configure retention: sampled traces 7 days, error/slow 30 days |
+| `06-security-testing-observability.md#T-06.16.01.03` | partial | Recorded batch work | Configure retention: sampled traces 7 days, error/slow 30 days |
 | `06-security-testing-observability.md#T-06.16.01.04` | verify | Inventory needed | Create Grafana Explore / Tempo search UI integration for trace discovery |
 | `06-security-testing-observability.md#T-06.16.01.05` | partial | Recorded batch work | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
 | `06-security-testing-observability.md#T-06.16.02.01` | partial | Recorded batch work | Integrate Sentry SDK (or open-source alternative) into API, worker, and web processes |
@@ -1438,7 +1438,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.17.03.04` | partial | Recorded batch work | Configure alert on synthetic check failure → on-call |
 | `06-security-testing-observability.md#T-06.18.01.01` | verify | Inventory needed | Configure Loki log retention: 30 days searchable, longer-term archive to cold storage |
 | `06-security-testing-observability.md#T-06.18.01.02` | partial | Recorded batch work | Configure Prometheus metric retention: 13 months at downsampled resolution |
-| `06-security-testing-observability.md#T-06.18.01.03` | verify | Inventory needed | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow |
+| `06-security-testing-observability.md#T-06.18.01.03` | partial | Recorded batch work | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow |
 | `06-security-testing-observability.md#T-06.18.01.04` | verify | Inventory needed | Ensure audit/security/financial evidence follows legal retention (10 years default) and cannot be shortened via operational settings |
 | `06-security-testing-observability.md#T-06.18.01.05` | verify | Inventory needed | Admin UI: view and change operational retention (with warning about audit retention) |
 | `06-security-testing-observability.md#T-06.18.02.01` | partial | Recorded batch work | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |

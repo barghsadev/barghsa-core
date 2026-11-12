@@ -77,3 +77,15 @@ logs. The API span uses the registered route template. The worker starts a
 new trace when a row has no parent. Web instrumentation and other worker
 queues require separate verification.
 [W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)
+
+The Jaeger rehearsal used the v2.23.0 source with Go 1.27.4 and the
+`golang.org/x/net` and `golang.org/x/crypto` security updates. The upstream
+container had four high-severity package findings. The rebuilt container
+passed the vulnerability scan and ran as a non-root user with loopback-only
+host ports. Its Jaeger v3 API returned the same successful and rolled-back
+traces after restart. A temporary staging instance also returned both
+synthetic traces over SSH. Its cleanup verified staging health and the
+previous release metadata. Badger used a seven-day TTL in the rehearsal.
+Persistent staging access, the 30-day error and slow-trace policy, and
+operator UI verification remain release checks.
+[Jaeger release](https://github.com/jaegertracing/jaeger/releases/tag/v2.23.0) · [Go security advisory](https://pkg.go.dev/vuln/GO-2026-6860)
