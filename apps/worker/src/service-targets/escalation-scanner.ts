@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -193,10 +194,7 @@ export interface EscalationScanOptions {
   batchSize?: number;
 }
 
-const defaultLogger: Pick<Console, 'warn' | 'info'> = {
-  warn: (msg: unknown) => console.warn(`[worker:escalation-scan] ${String(msg)}`),
-  info: (msg: unknown) => console.log(`[worker:escalation-scan] ${String(msg)}`),
-};
+const defaultLogger = createWorkerLogger('service_escalation_scan');
 
 /** A recipient profile resolved for notification delivery. */
 interface RecipientProfile {

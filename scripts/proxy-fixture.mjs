@@ -77,6 +77,9 @@ for (const [port, service] of [
       res.writeHead(200, {
         'Content-Type': 'application/json',
         'Cache-Control': service === 'api' ? 'private, no-cache' : 'no-cache',
+        ...(service === 'api' && req.method === 'PATCH'
+          ? { 'X-Correlation-ID': '01900000-0000-7000-8000-000000000001' }
+          : {}),
       });
       res.end(JSON.stringify({ service, path: req.url, headers: req.headers, receivedBytes }));
     });

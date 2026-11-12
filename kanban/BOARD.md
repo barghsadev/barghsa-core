@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T06:02:40+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T06:24:40+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1233 | Accepted with unchanged source bindings. |
-| verify | 42 | Existing work may be complete; inspect evidence before building. |
+| done | 1236 | Accepted with unchanged source bindings. |
+| verify | 39 | Existing work may be complete; inspect evidence before building. |
 | partial | 85 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1359,10 +1359,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.01.07` | verify | Inventory needed | Configure OTel exporter: OTLP to Grafana Tempo / Jaeger-compatible backend |
 | `06-security-testing-observability.md#T-06.13.01.08` | verify | Inventory needed | Ensure trace context logged in all structured log entries |
 | `06-security-testing-observability.md#T-06.13.01.09` | verify | Inventory needed | Write integration test: verify trace context propagation across HTTP → service → DB → outbox → worker |
-| `06-security-testing-observability.md#T-06.13.02.01` | verify | Inventory needed | Implement structured JSON logger (pino or winston) with consistent schema across all processes |
-| `06-security-testing-observability.md#T-06.13.02.02` | verify | Inventory needed | Add correlation ID to every log entry (from request header or generate) |
+| `06-security-testing-observability.md#T-06.13.02.01` | done | Recorded batch work | Implement structured JSON logger (pino or winston) with consistent schema across all processes |
+| `06-security-testing-observability.md#T-06.13.02.02` | done | Recorded batch work | Add correlation ID to every log entry (from request header or generate) |
 | `06-security-testing-observability.md#T-06.13.02.03` | partial | Recorded batch work | Add pseudonymous actor/profile IDs to logs (never raw national IDs, secrets, tokens) |
-| `06-security-testing-observability.md#T-06.13.02.04` | verify | Inventory needed | Implement environment-aware log level: debug in dev, info in staging, warn+ in production |
+| `06-security-testing-observability.md#T-06.13.02.04` | done | Recorded batch work | Implement environment-aware log level: debug in dev, info in staging, warn+ in production |
 | `06-security-testing-observability.md#T-06.13.02.05` | verify | Inventory needed | Configure Loki log shipping agent (Promtail / Grafana Alloy) |
 | `06-security-testing-observability.md#T-06.13.02.06` | partial | Recorded batch work | Ensure secrets, PII, payment details, and tokens are redacted from all log output |
 | `06-security-testing-observability.md#T-06.13.02.07` | partial | Recorded batch work | Write integration test: log format compliance, redaction, correlation ID presence |

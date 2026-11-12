@@ -1,6 +1,9 @@
 import { closeDbPools, createDbPool } from '@barghsa/db';
 import { reportServerError } from '@barghsa/shared/error-reporting';
+import { createOperatorLogger } from '@barghsa/shared/operator-logging';
 import { createAiInferenceServer } from './server.js';
+
+const log = createOperatorLogger('ai-inference');
 
 async function main(): Promise<void> {
   const secret = process.env.AI_INFERENCE_SHARED_SECRET ?? '';
@@ -17,7 +20,7 @@ async function main(): Promise<void> {
     server.once('error', reject);
     server.listen(port, process.env.AI_INFERENCE_HOST ?? '127.0.0.1', resolve);
   });
-  process.stdout.write(`AI inference server listening on port ${port}\n`);
+  log('info', `AI inference server listening on port ${port}`);
 
   let stopping = false;
   const shutdown = () => {
@@ -37,7 +40,7 @@ async function main(): Promise<void> {
 }
 
 void main().catch(async () => {
-  process.stderr.write('AI inference process failed\n');
+  log('error', 'AI inference process failed');
   process.exitCode = 1;
   await reportServerError('AI_INFERENCE_STARTUP_FAILED');
 });

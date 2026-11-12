@@ -11,6 +11,7 @@ import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { logDelivery } from '../delivery-log.js';
+import { workerLog } from '../operator-log.js';
 
 interface Claim {
   id: string;
@@ -88,17 +89,15 @@ export async function runAiModelTest(
       createdAt: new Date(),
     };
     await recordAuthorizationDenial(pool, event).catch(() => {
-      console.error(
-        JSON.stringify({
-          event: 'authorization.denial.persistence_failed',
-          actorRef: privateLogId('actor', event.actorId),
-          resource: event.resource,
-          action: event.action,
-          reason: event.reason,
-          correlationId: event.correlationId,
-          createdAt: event.createdAt,
-        })
-      );
+      workerLog('error', 'Authorization denial could not be recorded', {
+        event: 'authorization.denial.persistence_failed',
+        actorRef: privateLogId('actor', event.actorId),
+        resource: event.resource,
+        action: event.action,
+        reason: event.reason,
+        correlationId: event.correlationId,
+        createdAt: event.createdAt,
+      });
     });
     return finish(null, 'AUTHZ:FORBIDDEN');
   }

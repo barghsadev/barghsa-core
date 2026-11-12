@@ -28,6 +28,7 @@ import { scanStoredUpload } from './documents/upload-scan-job.js';
 import { collectStorageScanBacklog } from './documents/storage-scan-metrics.js';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
 import { reportServerError } from '@barghsa/shared/error-reporting';
+import { workerLogger as logger } from './operator-log.js';
 import {
   DOCUMENT_DESTRUCTION_JOB_TYPE,
   DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS,
@@ -118,12 +119,6 @@ const GRACE_PERIOD_MS = (() => {
   const parsed = Number.parseInt(raw, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
 })();
-
-const logger = {
-  info: (msg: string): void => console.log(`[worker] ${msg}`),
-  warn: (msg: string): void => console.warn(`[worker] ${msg}`),
-  error: (msg: string): void => console.error(`[worker] ${msg}`),
-};
 
 /**
  * Barghsa background worker process.

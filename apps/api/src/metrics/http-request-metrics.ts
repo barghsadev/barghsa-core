@@ -1,8 +1,11 @@
 import type { RequestHandler } from 'express';
 import promClient from 'prom-client';
+import { createOperatorLogger, operatorLogCorrelation } from '@barghsa/shared/operator-logging';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 const apiPath = /^\/api(?:\/|$)/i;
+const logRequest = createOperatorLogger('api');
 const customerServicePath = /^\/api\/(?:electricity|saving|solar|consultations)(?:\/|$)/i;
 const duration = new promClient.Histogram({
   name: 'barghsa_http_request_duration_seconds',
@@ -84,6 +87,7 @@ if (validRevision) {
 export const observeHttpRequest: RequestHandler = (request, response, next) => {
   if (apiPath.test(request.path)) {
     const started = performance.now();
+    const correlationId = operatorLogCorrelation.getStore();
     function recordJourney(route: string, outcome: 'success' | 'failure') {
       if (
         !journeyAttempts ||
@@ -98,10 +102,23 @@ export const observeHttpRequest: RequestHandler = (request, response, next) => {
       const template: unknown = request.route?.path;
       const route = typeof template === 'string' && apiPath.test(template) ? template : 'unmatched';
       if (route === '/api/health/live' || route === '/api/health/ready') return;
+      const durationMs = performance.now() - started;
       duration.observe(
         { route, method: request.method, status: String(response.statusCode) },
-        (performance.now() - started) / 1000
+        durationMs / 1000
       );
+      const status = response.statusCode;
+      const userId = (request as Partial<AuthenticatedRequest>).session?.userId;
+      logRequest(status >= 500 ? 'error' : 'info', 'HTTP request completed', {
+        event: 'http.request',
+        correlationId,
+        route,
+        method: request.method,
+        status,
+        durationMs,
+        outcome: status >= 400 ? 'failure' : 'success',
+        ...(userId ? { actorRef: privateLogId('actor', userId) } : {}),
+      });
       if (response.statusCode >= 500 || response.statusCode === 408) {
         recordJourney(route, 'failure');
       } else if (

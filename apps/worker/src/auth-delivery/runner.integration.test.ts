@@ -127,7 +127,7 @@ it('retains request correlation across retry and secret erasure without logging 
     id,
     correlationId,
   ]);
-  const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+  const output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
   const send = vi
     .fn()
     .mockRejectedValueOnce(new Error('private-provider-failure'))
@@ -151,9 +151,18 @@ it('retains request correlation across retry and secret erasure without logging 
       status: 'sent',
     });
     const logs = output.mock.calls.map(([message]) => JSON.parse(String(message)));
+    const record = {
+      event: 'auth.delivery',
+      outboxId: id,
+      correlationId,
+      service: 'worker',
+      environment: 'test',
+      message: 'Delivery outcome',
+      timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+    };
     expect(logs).toEqual([
-      { event: 'auth.delivery', outboxId: id, correlationId, status: 'retry' },
-      { event: 'auth.delivery', outboxId: id, correlationId, status: 'sent' },
+      { ...record, level: 'warn', status: 'retry' },
+      { ...record, level: 'info', status: 'sent' },
     ]);
     expect(JSON.stringify(logs)).not.toContain(destination);
     expect(JSON.stringify(logs)).not.toContain('private-provider-failure');

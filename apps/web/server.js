@@ -13,7 +13,7 @@
  */
 
 import { createServer } from 'node:http';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +22,29 @@ import { addEnvironmentIndicator } from './environment-indicator.js';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 const DEFAULT_DIST_DIR = resolve(__dirname, 'dist');
+const lifecycleCorrelationId = randomUUID();
+
+function webEnvironment() {
+  const configured = process.env['BARGHSA_DEPLOYMENT_ENV'] ?? process.env['NODE_ENV'];
+  return configured === 'development' || configured === 'staging' ? configured : 'production';
+}
+
+/** @param {'info' | 'warn' | 'error'} level @param {string} message */
+function logLifecycle(level, message) {
+  const environment = webEnvironment();
+  if (environment === 'production' && level === 'info') return;
+  process.stderr.write(
+    JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level,
+      service: 'web',
+      environment,
+      correlationId: lifecycleCorrelationId,
+      event: 'web.lifecycle',
+      message,
+    }) + '\n'
+  );
+}
 const COMPONENT_STYLE_SOURCES = [
   "'sha256-StEaX+se6YS7pqjzrzMIA0KaX9zF/8zAhvQXZAe5epY='", // Sonner 2.0.8 toast styling
   "'sha256-kLmvWqfziFavKtqHqRsb90f006UAK2Dmd0It5Iz2KFA='", // Base UI 1.7.0 scrollbar styling
@@ -137,11 +160,7 @@ function preferredEncodings(header) {
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
-  const configuredEnvironment = process.env['BARGHSA_DEPLOYMENT_ENV'] ?? process.env['NODE_ENV'];
-  const environment =
-    configuredEnvironment === 'development' || configuredEnvironment === 'staging'
-      ? configuredEnvironment
-      : 'production';
+  const environment = webEnvironment();
   const historyPreloads = readFile(join(distDir, '.vite', 'history-preloads.json'), 'utf8')
     .then((content) => JSON.parse(content))
     .catch(() => ({}));
@@ -316,17 +335,17 @@ export function createStaticServer(options = {}) {
       return Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
     })();
 
-    const log = (msg) => {
-      process.stderr.write(`[web-shutdown] ${msg}\n`);
-    };
-
-    log(
+    logLifecycle(
+      'warn',
       `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${gracePeriodMs / 1_000}s deadline)`
     );
 
     // Safety-net timer — force exit if the deadline expires
     const forceExitTimer = setTimeout(() => {
-      log('Graceful shutdown deadline exceeded — destroying remaining connections');
+      logLifecycle(
+        'error',
+        'Graceful shutdown deadline exceeded — destroying remaining connections'
+      );
       for (const socket of activeConnections) {
         socket.destroy();
       }
@@ -339,9 +358,9 @@ export function createStaticServer(options = {}) {
     server.close((err) => {
       // Ignore ERR_SERVER_NOT_RUNNING — it's a no-op
       if (err && /** @type {NodeJS.ErrnoException} */ (err).code !== 'ERR_SERVER_NOT_RUNNING') {
-        log(`Error closing HTTP server: ${err.message}`);
+        logLifecycle('error', 'Error closing HTTP server');
       } else {
-        log('HTTP server closed — no longer accepting requests');
+        logLifecycle('info', 'HTTP server closed — no longer accepting requests');
       }
 
       // Drain remaining keep-alive connections
@@ -350,7 +369,7 @@ export function createStaticServer(options = {}) {
       }
 
       clearTimeout(forceExitTimer);
-      log('Graceful shutdown complete');
+      logLifecycle('info', 'Graceful shutdown complete');
       process.exit(0);
     });
 
@@ -379,6 +398,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
 
   const HOST = process.env['HOST'] ?? '0.0.0.0';
   server.listen(PORT, HOST, () => {
-    process.stderr.write(`Barghsa web server listening on http://${HOST}:${PORT}\n`);
+    logLifecycle('info', 'Barghsa web server listening');
   });
 }

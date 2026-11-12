@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import { randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -101,14 +102,7 @@ export interface OnlineTopUpExpiryOptions {
   newId?: () => string;
 }
 
-const defaultLogger = {
-  warn: (msg: string): void => {
-    console.warn(`[worker] ${msg}`);
-  },
-  info: (msg: string): void => {
-    console.log(`[worker] ${msg}`);
-  },
-};
+const defaultLogger = createWorkerLogger(ONLINE_TOPUP_EXPIRY_JOB_TYPE);
 
 /**
  * Candidate selector. `wallet_transactions.state`/`type` are TEXT with

@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import type { Pool, PoolClient, QueryResult } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -155,14 +156,7 @@ export interface ReminderScheduleOptions {
   now?: Date;
 }
 
-const defaultLogger = {
-  warn: (msg: string): void => {
-    console.warn(`[worker] ${msg}`);
-  },
-  info: (msg: string): void => {
-    console.log(`[worker] ${msg}`);
-  },
-};
+const defaultLogger = createWorkerLogger(INVOICE_REMINDER_JOB_TYPE);
 
 /**
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
