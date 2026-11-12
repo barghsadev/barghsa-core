@@ -151,11 +151,17 @@ it('customer internal replies remain forbidden without owned metadata', async ()
   }
   expect(f.work).not.toHaveBeenCalled();
 });
-it('legacy customer status ignores extra body fields and captures only the optional key', async () => {
+it('rejects undeclared customer status fields and retains the optional command key', async () => {
   const work = vi.fn().mockResolvedValue({ original: true });
   const controller = new TicketsController({ updateTicketStatus: work } as never);
-  const raw = { status: 'open', reason: 'PRIVATE', ignored: 'legacy', idempotencyKey: key };
-  await controller.updateTicketStatus(id, raw, req);
+  const command = { status: 'open', idempotencyKey: key };
+  const error = await rejection(
+    controller.updateTicketStatus(id, { ...command, reason: 'PRIVATE', ignored: 'legacy' }, req)
+  );
+  expect(error.getStatus()).toBe(400);
+  expect(JSON.stringify(error.getResponse())).not.toContain('PRIVATE');
+  expect(work).not.toHaveBeenCalled();
+  await controller.updateTicketStatus(id, command, req);
   expect(work).toHaveBeenCalledExactlyOnceWith(
     id,
     req.session.userId,

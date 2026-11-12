@@ -8,6 +8,40 @@ export interface BrandConfigDto {
   createdAt: string;
   updatedAt: string;
 }
+
+const brandCommandFields: Record<keyof BrandConfig, true> = {
+  appTitle: true,
+  appTitleFa: true,
+  supportEmail: true,
+  supportPhone: true,
+  supportMobile: true,
+  slogan: true,
+  primaryColor: true,
+  secondaryColor: true,
+  accentColor: true,
+  darkPrimaryColor: true,
+  darkSecondaryColor: true,
+  darkAccentColor: true,
+  backgroundColor: true,
+  darkBackgroundColor: true,
+  fontFamily: true,
+  borderRadiusRem: true,
+  spacingScale: true,
+  logoUrl: true,
+  logoDarkUrl: true,
+  faviconUrl: true,
+  darkMode: true,
+  themeMode: true,
+  themeDefault: true,
+  numberStyle: true,
+};
+
+export function brandConfigCommand(config: BrandConfig): BrandConfig {
+  return Object.fromEntries(
+    Object.entries(config).filter(([key]) => Object.hasOwn(brandCommandFields, key))
+  ) as unknown as BrandConfig;
+}
+
 export function parseConfigDto(value: unknown): BrandConfigDto {
   if (!value || typeof value !== 'object' || Array.isArray(value))
     throw new Error('Invalid branding response');

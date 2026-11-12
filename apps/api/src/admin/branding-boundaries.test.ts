@@ -47,7 +47,11 @@ describe('branding authority and version boundaries', () => {
   it('binds activation to the saved draft/version and current actor', async () => {
     const { controller, activate } = fixture();
     const req = request();
-    await controller.activateBrandConfig(req, { draftId, expectedVersion: 3, actor: 'forged' });
+    await expect(
+      controller.activateBrandConfig(req, { draftId, expectedVersion: 3, actor: 'forged' })
+    ).rejects.toMatchObject({ status: 400 });
+    expect(activate).not.toHaveBeenCalled();
+    await controller.activateBrandConfig(req, { draftId, expectedVersion: 3 });
     expect(activate).toHaveBeenCalledWith('trusted-actor', draftId, 3);
     req.session.permissions = [];
     await expect(
@@ -88,16 +92,24 @@ describe('branding authority and version boundaries', () => {
     `/api/public/branding/assets/${draftId}/${'a'.repeat(64)}`,
   ])('accepts persistent asset URLs without caller authority fields', async (logoUrl) => {
     const { controller, save } = fixture();
-    await controller.upsertBrandConfig(
-      {
-        expectedVersion: 2,
-        logoUploadKey: 'upload-key',
-        config: { appTitle: 'Reviewed title', logoUrl },
-        actor: 'forged',
-        status: 'active',
-      },
-      request()
-    );
+    const body = {
+      expectedVersion: 2,
+      logoUploadKey: 'upload-key',
+      config: { appTitle: 'Reviewed title', logoUrl },
+    };
+    for (const invalid of [
+      { ...body, actor: 'forged', status: 'active' },
+      { ...body, config: { ...body.config, privateField: 'private-value' } },
+    ]) {
+      const error: unknown = await controller
+        .upsertBrandConfig(invalid, request())
+        .catch((cause: unknown) => cause);
+      expect(error).toMatchObject({ status: 400 });
+      expect(JSON.stringify(error)).not.toContain('privateField');
+      expect(JSON.stringify(error)).not.toContain('private-value');
+    }
+    expect(save).not.toHaveBeenCalled();
+    await controller.upsertBrandConfig(body, request());
     expect(save).toHaveBeenCalledWith(
       expect.objectContaining({ appTitle: 'Reviewed title', logoUrl }),
       request().session,
@@ -161,7 +173,7 @@ describe('branding authority and version boundaries', () => {
 it('forwards a favicon upload with the trusted actor and validates its type and bound', async () => {
   const { controller, save } = fixture();
   await controller.upsertBrandConfig(
-    { expectedVersion: 2, faviconUploadKey: 'verified-favicon', config: {}, actor: 'forged' },
+    { expectedVersion: 2, faviconUploadKey: 'verified-favicon', config: {} },
     request()
   );
   expect(save).toHaveBeenCalledWith(
@@ -210,7 +222,6 @@ it('forwards only validated dark branding and the trusted editor to the existing
         darkSecondaryColor: '#234567',
         darkAccentColor: '#567890',
       },
-      actor: 'forged',
     },
     request()
   );

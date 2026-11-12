@@ -39,6 +39,7 @@ import {
   validBrandHistory,
   coherentBrandHistory,
   brandingBasis,
+  brandConfigCommand,
   acceptBrandRevision,
   type BrandConfigDto,
 } from '../lib/branding-settings.js';
@@ -327,7 +328,7 @@ export default function AdminBrandingConfig() {
       path: '/api/admin/branding/config',
       method: 'PUT',
       body: {
-        config: { ...config },
+        config: brandConfigCommand(config),
         expectedVersion: activeConfig.version,
         ...(logoUploadKey ? { logoUploadKey } : {}),
         ...(logoDarkUploadKey ? { logoDarkUploadKey } : {}),
@@ -629,7 +630,10 @@ export default function AdminBrandingConfig() {
               ),
               path: '/api/admin/branding/config',
               method: 'PUT',
-              body: { config: { ...source.config }, expectedVersion: activeConfig.version },
+              body: {
+                config: brandConfigCommand(source.config),
+                expectedVersion: activeConfig.version,
+              },
               conflictMessage: text('changed'),
             })
           }

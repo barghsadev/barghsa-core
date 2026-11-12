@@ -884,6 +884,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "draftId": {
                     "format": "uuid",
@@ -994,24 +995,85 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "config": {
-                    "description": "Brand config JSON (appTitle, colors, etc.)",
+                    "additionalProperties": false,
+                    "description": "Brand configuration",
                     "properties": {
-                      "darkAccentColor": {
-                        "pattern": "^#[a-fA-F0-9]{6}$",
+                      "accentColor": {
+                        "default": "#d6a74e",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
+                      "appTitle": {
+                        "default": "Barghsa",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "appTitleFa": {
+                        "default": "برقسا",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "backgroundColor": {
+                        "default": "#f6f7f4",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "borderRadiusRem": {
+                        "default": 0.75,
+                        "maximum": 1.5,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "darkAccentColor": {
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "darkBackgroundColor": {
+                        "default": "#15201c",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "darkMode": {
+                        "default": false,
+                        "type": "boolean"
+                      },
                       "darkPrimaryColor": {
-                        "pattern": "^#[a-fA-F0-9]{6}$",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
                         "type": "string"
                       },
                       "darkSecondaryColor": {
-                        "pattern": "^#[a-fA-F0-9]{6}$",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "faviconUrl": {
+                        "default": null,
+                        "maxLength": 2048,
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "fontFamily": {
+                        "default": "vazirmatn",
+                        "enum": [
+                          "vazirmatn",
+                          "tahoma"
+                        ],
                         "type": "string"
                       },
                       "logoDarkUrl": {
+                        "default": null,
                         "description": "Persistent HTTPS or owned sealed branding image; absent uses the light logo",
+                        "maxLength": 2048,
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "logoUrl": {
+                        "default": null,
+                        "maxLength": 2048,
                         "nullable": true,
                         "type": "string"
                       },
@@ -1024,8 +1086,54 @@
                         ],
                         "type": "string"
                       },
+                      "primaryColor": {
+                        "default": "#176b5b",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "secondaryColor": {
+                        "default": "#547467",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "type": "string"
+                      },
+                      "slogan": {
+                        "default": "",
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      "spacingScale": {
+                        "default": 1,
+                        "maximum": 1.25,
+                        "minimum": 0.875,
+                        "type": "number"
+                      },
+                      "supportEmail": {
+                        "default": "info@barghsa.com",
+                        "format": "email",
+                        "maxLength": 254,
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                        "type": "string"
+                      },
+                      "supportMobile": {
+                        "default": "09002550292",
+                        "pattern": "^\\+?[0-9 ()-]{7,25}$",
+                        "type": "string"
+                      },
+                      "supportPhone": {
+                        "default": "021-26658042",
+                        "pattern": "^\\+?[0-9 ()-]{7,25}$",
+                        "type": "string"
+                      },
                       "themeDefault": {
                         "description": "Fallback when the theme policy permits user choice and no preference is set",
+                        "enum": [
+                          "light",
+                          "dark",
+                          "system"
+                        ],
+                        "type": "string"
+                      },
+                      "themeMode": {
                         "enum": [
                           "light",
                           "dark",
@@ -1038,26 +1146,29 @@
                   },
                   "expectedVersion": {
                     "description": "Last observed saved version",
+                    "maximum": 2147483647,
                     "minimum": 0,
                     "type": "integer"
                   },
                   "faviconUploadKey": {
-                    "description": "Verified branding_logo image upload for the favicon, owned by the editor",
+                    "description": "Verified favicon upload owned by the editor",
+                    "maxLength": 255,
                     "type": "string"
                   },
                   "logoDarkUploadKey": {
-                    "description": "Verified branding_logo image upload for dark mode, owned by the editor",
+                    "description": "Verified dark-mode logo upload owned by the editor",
                     "maxLength": 255,
                     "type": "string"
                   },
                   "logoUploadKey": {
-                    "description": "Verified branding_logo image upload owned by the editor",
+                    "description": "Verified branding logo upload owned by the editor",
+                    "maxLength": 255,
                     "type": "string"
                   }
                 },
                 "required": [
-                  "config",
-                  "expectedVersion"
+                  "expectedVersion",
+                  "config"
                 ],
                 "type": "object"
               }
@@ -44628,7 +44739,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": true,
+                "additionalProperties": false,
                 "properties": {
                   "idempotencyKey": {
                     "format": "uuid",

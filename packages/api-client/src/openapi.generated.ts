@@ -11709,31 +11709,76 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    /** @description Brand config JSON (appTitle, colors, etc.) */
+                    /** @description Brand configuration */
                     config: {
+                        /** @default #d6a74e */
+                        accentColor?: string;
+                        /** @default Barghsa */
+                        appTitle?: string;
+                        /** @default برقسا */
+                        appTitleFa?: string;
+                        /** @default #f6f7f4 */
+                        backgroundColor?: string;
+                        /** @default 0.75 */
+                        borderRadiusRem?: number;
                         darkAccentColor?: string;
+                        /** @default #15201c */
+                        darkBackgroundColor?: string;
+                        /** @default false */
+                        darkMode?: boolean;
                         darkPrimaryColor?: string;
                         darkSecondaryColor?: string;
-                        /** @description Persistent HTTPS or owned sealed branding image; absent uses the light logo */
+                        /** @default null */
+                        faviconUrl?: string | null;
+                        /**
+                         * @default vazirmatn
+                         * @enum {string}
+                         */
+                        fontFamily?: "vazirmatn" | "tahoma";
+                        /**
+                         * @description Persistent HTTPS or owned sealed branding image; absent uses the light logo
+                         * @default null
+                         */
                         logoDarkUrl?: string | null;
+                        /** @default null */
+                        logoUrl?: string | null;
                         /**
                          * @default locale
                          * @enum {string}
                          */
                         numberStyle?: "locale" | "persian" | "western";
+                        /** @default #176b5b */
+                        primaryColor?: string;
+                        /** @default #547467 */
+                        secondaryColor?: string;
+                        /** @default  */
+                        slogan?: string;
+                        /** @default 1 */
+                        spacingScale?: number;
+                        /**
+                         * Format: email
+                         * @default info@barghsa.com
+                         */
+                        supportEmail?: string;
+                        /** @default 09002550292 */
+                        supportMobile?: string;
+                        /** @default 021-26658042 */
+                        supportPhone?: string;
                         /**
                          * @description Fallback when the theme policy permits user choice and no preference is set
                          * @enum {string}
                          */
                         themeDefault?: "light" | "dark" | "system";
+                        /** @enum {string} */
+                        themeMode?: "light" | "dark" | "system";
                     };
                     /** @description Last observed saved version */
                     expectedVersion: number;
-                    /** @description Verified branding_logo image upload for the favicon, owned by the editor */
+                    /** @description Verified favicon upload owned by the editor */
                     faviconUploadKey?: string;
-                    /** @description Verified branding_logo image upload for dark mode, owned by the editor */
+                    /** @description Verified dark-mode logo upload owned by the editor */
                     logoDarkUploadKey?: string;
-                    /** @description Verified branding_logo image upload owned by the editor */
+                    /** @description Verified branding logo upload owned by the editor */
                     logoUploadKey?: string;
                 };
             };
@@ -34533,8 +34578,6 @@ export interface operations {
                     idempotencyKey?: string;
                     /** @enum {string} */
                     status: "open";
-                } & {
-                    [key: string]: unknown;
                 };
             };
         };

@@ -99,6 +99,9 @@ const title = () => host.querySelector<HTMLInputElement>('#adminbrandingconfig-f
 const save = () =>
   [...host.querySelectorAll('button')].find((node) => node.textContent?.trim() === 'Save Draft')!;
 it('saves an independent immutable draft while retaining the published version and metadata', async () => {
+  const older = { ...publishedBrand, config: { ...publishedBrand.config, legacyNote: 'retired' } };
+  current = older;
+  history = [older, previousBrand];
   await render();
   expect(title()!.matches(':disabled')).toBe(true);
   await click('Edit');
@@ -134,6 +137,10 @@ it('saves an independent immutable draft while retaining the published version a
   expect(host.textContent).toContain('Saved draft');
 });
 it('copies a superseded version into a new draft and requires a separate exact activation', async () => {
+  history = [
+    publishedBrand,
+    { ...previousBrand, config: { ...previousBrand.config, legacyNote: 'retired' } },
+  ];
   await render();
   await click('View history');
   await click('Restore as draft');

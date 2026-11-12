@@ -2585,7 +2585,19 @@ it('replays original staff and customer status receipts without reverting later 
   expect(
     (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
   ).toBe('closed');
-  const customer = { status: 'open', ignored: 'legacy body', idempotencyKey: body.idempotencyKey };
+  const customer = { status: 'open', idempotencyKey: body.idempotencyKey };
+  const invalidCustomer = await durableTicketCommand(
+    `/api/tickets/${id}/status`,
+    'PATCH',
+    { ...customer, ignored: 'private-value' },
+    headers.customer!
+  );
+  expect(invalidCustomer.status).toBe(400);
+  expect(await invalidCustomer.text()).not.toContain('private-value');
+  expect(await durableTicketEffects(id)).toEqual(effects);
+  expect(
+    (await http.pool.query('SELECT status FROM tickets WHERE id=$1', [id])).rows[0].status
+  ).toBe('closed');
   const customerSend = () =>
     durableTicketCommand(`/api/tickets/${id}/status`, 'PATCH', customer, headers.customer!);
   const opened = await customerSend();

@@ -1,6 +1,6 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { TicketReplySchema, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
-import { parseTicketFormInput, optionalTicketCommandKey } from './ticket-form-input-fields.js';
+import { parseTicketFormInput } from './ticket-form-input-fields.js';
 import {
   Body,
   Controller,
@@ -29,6 +29,11 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
+
+const customerTicketStatusCommand = z.strictObject({
+  status: z.string().min(1).max(16),
+  idempotencyKey: z.uuid().optional(),
+});
 
 @ApiTags('Tickets')
 @Controller('api/tickets')
@@ -300,7 +305,7 @@ export class TicketsController {
     schema: {
       type: 'object',
       required: ['status'],
-      additionalProperties: true,
+      additionalProperties: false,
       properties: {
         status: { type: 'string', enum: ['open'] },
         idempotencyKey: { type: 'string', format: 'uuid' },
@@ -313,16 +318,18 @@ export class TicketsController {
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: { status: string; idempotencyKey?: unknown },
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
+    const parsed = customerTicketStatusCommand.safeParse(body);
+    if (!parsed.success) throw new HttpException('Invalid ticket command', 400);
     return this.ticketsService.updateTicketStatus(
       id,
       req.session.userId,
-      body?.status,
+      parsed.data.status,
       false,
       req.session,
-      optionalTicketCommandKey(body?.idempotencyKey)
+      parsed.data.idempotencyKey
     );
   }
 

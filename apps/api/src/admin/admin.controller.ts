@@ -24,6 +24,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { z } from 'zod';
 import {
   AdminService,
@@ -203,13 +204,25 @@ const readableBackground = (text: string) => (background: string) => {
   return (light + 0.05) / (dark + 0.05) >= 4.5;
 };
 
-export const UpsertBrandConfigSchema = z.object({
-  expectedVersion: z.number().int().min(0).max(2147483647),
-  logoUploadKey: z.string().max(255).optional(),
-  faviconUploadKey: z.string().max(255).optional(),
-  logoDarkUploadKey: z.string().max(255).optional(),
+export const UpsertBrandConfigSchema = z.strictObject({
+  expectedVersion: z.number().int().min(0).max(2147483647).describe('Last observed saved version'),
+  logoUploadKey: z
+    .string()
+    .max(255)
+    .optional()
+    .describe('Verified branding logo upload owned by the editor'),
+  faviconUploadKey: z
+    .string()
+    .max(255)
+    .optional()
+    .describe('Verified favicon upload owned by the editor'),
+  logoDarkUploadKey: z
+    .string()
+    .max(255)
+    .optional()
+    .describe('Verified dark-mode logo upload owned by the editor'),
   config: z
-    .object({
+    .strictObject({
       appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
       appTitleFa: z.string().trim().min(1).max(100).optional().default('برقسا'),
       supportEmail: z.email().max(254).optional().default('info@barghsa.com'),
@@ -258,17 +271,25 @@ export const UpsertBrandConfigSchema = z.object({
       borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
       spacingScale: z.number().min(0.875).max(1.25).optional().default(1),
       logoUrl: assetUrl.nullable().optional().default(null),
-      logoDarkUrl: assetUrl.nullable().optional().default(null),
+      logoDarkUrl: assetUrl
+        .nullable()
+        .optional()
+        .default(null)
+        .describe('Persistent HTTPS or owned sealed branding image; absent uses the light logo'),
       faviconUrl: assetUrl.nullable().optional().default(null),
       darkMode: z.boolean().optional().default(false),
       themeMode: z.enum(['light', 'dark', 'system']).optional(),
-      themeDefault: z.enum(['light', 'dark', 'system']).optional(),
+      themeDefault: z
+        .enum(['light', 'dark', 'system'])
+        .optional()
+        .describe('Fallback when the theme policy permits user choice and no preference is set'),
       numberStyle: z.enum(['locale', 'persian', 'western']).optional().default('locale'),
     })
     .transform((config) => ({
       ...config,
       ...(config.themeMode ? { darkMode: config.themeMode === 'dark' } : {}),
-    })),
+    }))
+    .describe('Brand configuration'),
 });
 export interface BrandConfigDto {
   id: string;
@@ -1086,58 +1107,7 @@ export class AdminController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Upsert draft brand configuration' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['config', 'expectedVersion'],
-      properties: {
-        expectedVersion: {
-          type: 'integer',
-          minimum: 0,
-          description: 'Last observed saved version',
-        },
-        logoUploadKey: {
-          type: 'string',
-          description: 'Verified branding_logo image upload owned by the editor',
-        },
-        faviconUploadKey: {
-          type: 'string',
-          description: 'Verified branding_logo image upload for the favicon, owned by the editor',
-        },
-        logoDarkUploadKey: {
-          type: 'string',
-          maxLength: 255,
-          description: 'Verified branding_logo image upload for dark mode, owned by the editor',
-        },
-        config: {
-          type: 'object',
-          description: 'Brand config JSON (appTitle, colors, etc.)',
-          properties: {
-            darkPrimaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
-            darkSecondaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
-            darkAccentColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
-            logoDarkUrl: {
-              type: 'string',
-              nullable: true,
-              description:
-                'Persistent HTTPS or owned sealed branding image; absent uses the light logo',
-            },
-            themeDefault: {
-              type: 'string',
-              enum: ['light', 'dark', 'system'],
-              description:
-                'Fallback when the theme policy permits user choice and no preference is set',
-            },
-            numberStyle: {
-              type: 'string',
-              enum: ['locale', 'persian', 'western'],
-              default: 'locale',
-            },
-          },
-        },
-      },
-    },
-  })
+  @ApiZodBody(UpsertBrandConfigSchema)
   @ApiResponse({ status: 200, description: 'Draft config updated.', schema: { type: 'object' } })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
@@ -1164,7 +1134,10 @@ export class AdminController {
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: firstIssue?.message ?? 'Invalid brand config',
+          message:
+            firstIssue?.code === 'unrecognized_keys'
+              ? 'Invalid brand config'
+              : (firstIssue?.message ?? 'Invalid brand config'),
         },
         400
       );
@@ -1195,6 +1168,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['draftId', 'expectedVersion'],
+      additionalProperties: false,
       properties: {
         draftId: { type: 'string', format: 'uuid' },
         expectedVersion: { type: 'integer', minimum: 1 },
@@ -1219,7 +1193,7 @@ export class AdminController {
       );
     }
     const parsed = z
-      .object({
+      .strictObject({
         draftId: z.string().uuid(),
         expectedVersion: z.number().int().min(1).max(2147483647),
       })

@@ -110,6 +110,46 @@ async function saved(response: Response) {
     })
     .parse(await response.json());
 }
+it('rejects undeclared branding fields before a draft save or activation', async () => {
+  const draft = await saved(
+    await request('admin/branding/config', 'PUT', {
+      expectedVersion: 0,
+      config: { appTitle: 'Reviewed draft' },
+    })
+  );
+  const revisions = () => http.pool.query('SELECT * FROM brand_config ORDER BY version');
+  const audits = () =>
+    http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'branding.%' ORDER BY id");
+  const before = { revisions: (await revisions()).rows, audits: (await audits()).rows };
+  for (const [path, method, body] of [
+    [
+      'config',
+      'PUT',
+      { expectedVersion: draft.version, config: { appTitle: 'Extra field' }, status: 'active' },
+    ],
+    [
+      'config',
+      'PUT',
+      { expectedVersion: draft.version, config: { privateField: 'private-value' } },
+    ],
+    [
+      'activate',
+      'POST',
+      { draftId: draft.id, expectedVersion: draft.version, privateField: 'private-value' },
+    ],
+  ] as const) {
+    const rejected = await request(`admin/branding/${path}`, method, body);
+    expect(rejected.status).toBe(400);
+    const payload: unknown = await rejected.json();
+    expect(payload).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(JSON.stringify(payload)).not.toContain('privateField');
+    expect(JSON.stringify(payload)).not.toContain('private-value');
+  }
+  expect((await revisions()).rows).toEqual(before.revisions);
+  expect((await audits()).rows).toEqual(before.audits);
+  expect(await publicConfig()).toMatchObject({ appTitle: 'Barghsa' });
+});
+
 it('does not publish the first draft and still lets staff preview it', async () => {
   const draft = await request('admin/branding/config', 'PUT', {
     expectedVersion: 0,
