@@ -104,12 +104,28 @@ it('saves an independent immutable draft while retaining the published version a
   await click('Edit');
   expect(save().disabled).toBe(true);
   await fill('Saved draft');
+  await act(async () => {
+    const policy = host.querySelector<HTMLSelectElement>('select[aria-label="Appearance policy"]')!;
+    policy.value = 'system';
+    policy.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await act(async () => {
+    const defaultMode = host.querySelector<HTMLSelectElement>('#branding-theme-default')!;
+    defaultMode.value = 'dark';
+    defaultMode.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  const config = {
+    ...draftBrand.config,
+    themeMode: 'system',
+    themeDefault: 'dark',
+    logoDarkUrl: null,
+  };
   await click('Save Draft');
   expect(capture.action?.body).toEqual({
-    config: { ...draftBrand.config, logoDarkUrl: null },
+    config,
     expectedVersion: 2,
   });
-  await act(async () => capture.success!(draftBrand));
+  await act(async () => capture.success!({ ...draftBrand, config }));
   expect(title()!.matches(':disabled')).toBe(true);
   expect(host.textContent).toContain('Published brand');
   expect(host.textContent).toContain('staff-editor');

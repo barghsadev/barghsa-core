@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T03:21:36+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T03:33:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1232 | Accepted with unchanged source bindings. |
+| done | 1233 | Accepted with unchanged source bindings. |
 | verify | 45 | Existing work may be complete; inspect evidence before building. |
-| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1062,7 +1062,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.03.02` | done | Earlier acceptance_verified | Create themed component set with RTL support |
 | `01-platform-infrastructure.md#T-06.03.03` | done | Earlier acceptance_verified | Implement WCAG 2.2 AA accessibility in all shared components |
 | `01-platform-infrastructure.md#T-06.03.04` | done | Earlier acceptance_verified | Create localized DatePicker component |
-| `01-platform-infrastructure.md#T-06.03.05` | partial | Earlier partial | Implement theme system with admin overrides |
+| `01-platform-infrastructure.md#T-06.03.05` | done | Earlier partial | Implement theme system with admin overrides |
 | `01-platform-infrastructure.md#T-06.03.06` | done | Earlier acceptance_verified | Create loading/empty/error state components |
 | `01-platform-infrastructure.md#T-06.04.01` | done | Earlier deferred | Create privacy-safe analytics abstraction with consent gate and redaction |
 | `01-platform-infrastructure.md#T-07.01.01` | partial | Earlier deferred | Create `pnpm setup:dev` convenience script |

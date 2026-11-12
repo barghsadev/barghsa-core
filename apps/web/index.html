@@ -45,10 +45,11 @@
         language ??= languages.map(supported).find((value) => value !== null) ?? 'fa';
         document.documentElement.lang = language;
         document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
-        let preference, policy;
+        let preference, policy, themeDefault;
         try {
           preference = localStorage.getItem('barghsa.theme.v1');
           policy = localStorage.getItem('barghsa.theme-policy.v1');
+          themeDefault = localStorage.getItem('barghsa.theme-default.v1');
           if (localStorage.getItem('barghsa.contrast') === 'more')
             document.documentElement.dataset.contrast = 'more';
         } catch {}
@@ -57,9 +58,11 @@
             ? policy
             : preference === 'light' || preference === 'dark'
               ? preference
-              : matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light';
+              : themeDefault === 'light' || themeDefault === 'dark'
+                ? themeDefault
+                : matchMedia('(prefers-color-scheme: dark)').matches
+                  ? 'dark'
+                  : 'light';
         document.documentElement.classList.toggle('dark', mode === 'dark');
       })();
     </script>

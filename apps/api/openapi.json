@@ -1022,6 +1022,15 @@
                           "western"
                         ],
                         "type": "string"
+                      },
+                      "themeDefault": {
+                        "description": "Fallback when the theme policy permits user choice and no preference is set",
+                        "enum": [
+                          "light",
+                          "dark",
+                          "system"
+                        ],
+                        "type": "string"
                       }
                     },
                     "type": "object"
@@ -36200,6 +36209,14 @@
                       "nullable": true,
                       "type": "string"
                     },
+                    "themeDefault": {
+                      "enum": [
+                        "light",
+                        "dark",
+                        "system"
+                      ],
+                      "type": "string"
+                    },
                     "themeMode": {
                       "enum": [
                         "light",
@@ -36211,13 +36228,14 @@
                   },
                   "required": [
                     "themeMode",
+                    "themeDefault",
                     "darkMode"
                   ],
                   "type": "object"
                 }
               }
             },
-            "description": "Active branding. A fixed theme overrides user preference; system permits user/device choice. Legacy darkMode remains available."
+            "description": "Active branding. A fixed theme overrides user preference. With system policy, the configured default applies when no user preference is set."
           },
           "500": {
             "description": "Internal server error"

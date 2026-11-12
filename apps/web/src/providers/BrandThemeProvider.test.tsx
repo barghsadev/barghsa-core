@@ -2,7 +2,11 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useTheme } from '../hooks/useTheme.js';
-import { THEME_STORAGE_KEY, THEME_POLICY_STORAGE_KEY } from '../lib/theme.js';
+import {
+  THEME_DEFAULT_STORAGE_KEY,
+  THEME_STORAGE_KEY,
+  THEME_POLICY_STORAGE_KEY,
+} from '../lib/theme.js';
 import { BrandThemeProvider, getBrandTextColor, useBrandConfig } from './BrandThemeProvider.js';
 import { BrandMark } from '../components/BrandMark.js';
 let root: Root, host: HTMLDivElement;
@@ -356,6 +360,26 @@ it('follows device changes, persists explicit choice and resumes device mode', a
   await choose('system');
   expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system');
   expect(currentTheme()).toBe('light');
+});
+it('applies the published default when a user clears their preference', async () => {
+  deviceTheme(false);
+  await themeControls('system');
+  expect(currentTheme()).toBe('light');
+  await choose('light');
+  vi.mocked(fetch).mockResolvedValue(
+    new Response(JSON.stringify({ ...config, themeMode: 'system', themeDefault: 'dark' }))
+  );
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(localStorage.getItem(THEME_DEFAULT_STORAGE_KEY)).toBe('dark');
+  expect(currentTheme()).toBe('light');
+  await choose('system');
+  expect(currentTheme()).toBe('dark');
+  vi.mocked(fetch).mockResolvedValue(
+    new Response(JSON.stringify({ ...config, themeMode: 'system' }))
+  );
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(currentTheme()).toBe('light');
+  expect(localStorage.getItem(THEME_DEFAULT_STORAGE_KEY)).toBe('system');
 });
 it('restores a saved browser preference and synchronizes another tab without changing admin authority', async () => {
   deviceTheme(true);

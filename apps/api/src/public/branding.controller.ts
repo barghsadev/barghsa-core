@@ -32,6 +32,7 @@ export interface PublicBrandConfigDto {
   faviconUrl: string | null;
   darkMode: boolean;
   themeMode: 'light' | 'dark' | 'system';
+  themeDefault: 'light' | 'dark' | 'system';
   numberStyle: NumberStyle;
 }
 
@@ -61,12 +62,13 @@ export class PublicBrandingController {
   @ApiResponse({
     status: 200,
     description:
-      'Active branding. A fixed theme overrides user preference; system permits user/device choice. Legacy darkMode remains available.',
+      'Active branding. A fixed theme overrides user preference. With system policy, the configured default applies when no user preference is set.',
     schema: {
       type: 'object',
-      required: ['themeMode', 'darkMode'],
+      required: ['themeMode', 'themeDefault', 'darkMode'],
       properties: {
         themeMode: { type: 'string', enum: ['light', 'dark', 'system'] },
+        themeDefault: { type: 'string', enum: ['light', 'dark', 'system'] },
         darkMode: { type: 'boolean' },
         darkPrimaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
         darkSecondaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
@@ -122,6 +124,10 @@ export class PublicBrandingController {
               ? 'dark'
               : 'light'
             : 'system',
+      themeDefault:
+        brandConfig.themeDefault === 'light' || brandConfig.themeDefault === 'dark'
+          ? brandConfig.themeDefault
+          : 'system',
       numberStyle:
         brandConfig.numberStyle === 'persian' || brandConfig.numberStyle === 'western'
           ? brandConfig.numberStyle
