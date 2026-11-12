@@ -7,6 +7,7 @@ import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { checkRoutePresentation } from './route-presentation';
+import { scanCriticalMain } from './critical-accessibility';
 import {
   setupConsultationForms,
   consultationProfile,
@@ -46,6 +47,22 @@ async function closeSettledDialog(dialog: Locator, locale: 'en' | 'fa') {
 
 for (const [locale, theme] of settings) {
   const copy = (key: string) => tConsultation(key, locale);
+  test(
+    `consultation product intake is accessible (${locale}, ${theme})`,
+    { tag: '@a11y-critical' },
+    async ({ page }) => {
+      const { state } = await setupConsultationForms(page, locale, theme === 'dark', true);
+      await page.goto('/consultations');
+      await expect(
+        page.getByRole('radiogroup', { name: copy('available'), exact: true })
+      ).toBeVisible();
+      await expect(page.locator(`#consultation-product-${consultationProduct}`)).toBeEnabled();
+      await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      await scanCriticalMain(page);
+      expect(state.intakeWrites).toEqual([]);
+    }
+  );
+
   test(`consultation intake validates lazily and retries the same captured submission (${locale}, ${theme})`, async ({
     page,
   }, info) => {

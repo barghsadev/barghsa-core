@@ -10,10 +10,13 @@ The focused workspace pane handles Arrow Up and Arrow Down so it scrolls
 in Safari. Its child controls keep their own keyboard behavior.
 
 The production browser cases tagged `@a11y-critical` cover login, the customer
-dashboard, service histories, the wallet and contract details. Fast CI runs
+dashboard, service histories, the wallet, contract details and the populated
+customer intake forms for electricity, saving, solar and consultation. The
+intake checks cover both electricity modes in English and Persian. They scan
+the rendered forms without creating a real order or request. Fast CI runs
 these cases against the production web build and fails on a violation. The
-full browser suite already includes them. Making the job a required merge
-check is controlled by the repository rules.
+full browser suite also runs them. Making the job a required merge check is
+controlled by the repository rules.
 
 Fast CI also scans customer media pages and staff failed-notification triage.
 Full CI adds the same Axe scan to populated route presentation checks outside

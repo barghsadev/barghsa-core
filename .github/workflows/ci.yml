@@ -194,6 +194,9 @@ jobs:
             e2e/customer-service-history-views.spec.ts \
             e2e/wallet-receipt-timeline.spec.ts \
             e2e/contract-quantity-increase.spec.ts \
+            e2e/electricity-wizard-navigation.spec.ts \
+            e2e/service-wizard-navigation.spec.ts \
+            e2e/consultation-forms.spec.ts \
             --grep @a11y-critical
         env:
           BARGHSA_TEST_PREBUILT: '1'

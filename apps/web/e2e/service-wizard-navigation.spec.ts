@@ -6,6 +6,7 @@ import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSolar } from '@barghsa/i18n/solar';
 import { fullNavigation } from './navigation-fixture';
+import { scanCriticalMain } from './critical-accessibility';
 
 type Mode = 'saving' | 'solar';
 type Locale = 'en' | 'fa';
@@ -611,6 +612,33 @@ test('saving distinguishes blocked and acknowledged duplicates and allows manual
 
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
+    test(
+      `${mode} intake is accessible with its saved fields (${locale})`,
+      { tag: '@a11y-critical' },
+      async ({ page }) => {
+        const step = mode === 'saving' ? 2 : 1;
+        const state = await fixture(page, mode, locale, step);
+        await page.goto(`${path(mode)}?step=${step}`);
+        if (mode === 'saving') {
+          await expect(
+            page.getByRole('radio', { name: locale === 'fa' ? /دستگاه/ : /Device/ })
+          ).toBeChecked();
+          const confirmation = page.getByRole('checkbox', {
+            name: tSaving('confirmHardware', locale),
+            exact: true,
+          });
+          await expect(confirmation).toBeEnabled();
+          await expect(confirmation).not.toBeChecked();
+        } else {
+          await expect(input(page, mode, locale)).toHaveValue(solarData.usableAreaSqm);
+        }
+        await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+        await scanCriticalMain(page);
+        expect(state.saves).toEqual([]);
+        expect(state.orders).toEqual([]);
+      }
+    );
+
     test(`${mode} links localized field feedback and retains a corrected partial draft (${locale})`, async ({
       page,
     }) => {

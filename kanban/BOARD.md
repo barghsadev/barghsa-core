@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T04:15:04+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T04:22:54+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1233 | Accepted with unchanged source bindings. |
-| verify | 45 | Existing work may be complete; inspect evidence before building. |
-| partial | 82 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 44 | Existing work may be complete; inspect evidence before building. |
+| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1306,7 +1306,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.15` | done | Recorded batch work | Ensure E2E never calls production payment, SMS, email, storage, bill-data, or AI providers |
 | `06-security-testing-observability.md#T-06.10.03.16` | done | Recorded batch work | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
 | `06-security-testing-observability.md#T-06.10.03.17` | done | Recorded batch work | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
-| `06-security-testing-observability.md#T-06.11.01.01` | verify | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
+| `06-security-testing-observability.md#T-06.11.01.01` | partial | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
 | `06-security-testing-observability.md#T-06.11.01.02` | done | Recorded batch work | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | done | Recorded batch work | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |

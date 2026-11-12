@@ -8,6 +8,7 @@ import { t } from '@barghsa/i18n/app';
 import { t as fundingText } from '@barghsa/i18n/workspace';
 import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
+import { scanCriticalMain } from './critical-accessibility';
 import { expectNoticeBelowPageHeader } from './notice-placement';
 
 type Mode = 'simple' | 'advanced';
@@ -336,6 +337,19 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
 
 for (const locale of ['en', 'fa'] as const) {
   for (const mode of ['simple', 'advanced'] as const) {
+    test(
+      `${mode} electricity quantity intake is accessible (${locale})`,
+      { tag: '@a11y-critical' },
+      async ({ page }) => {
+        const state = await fixture(page, mode, locale);
+        await page.goto(`${path(mode)}?step=2`);
+        await expect(field(page, mode)).toHaveValue('100');
+        await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+        await scanCriticalMain(page);
+        expect(state.orders).toEqual([]);
+      }
+    );
+
     test(`${mode} delivery address rejects mixed profiles and retries without writing (${locale})`, async ({
       page,
     }) => {
