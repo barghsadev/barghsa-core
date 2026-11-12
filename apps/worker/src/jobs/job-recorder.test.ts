@@ -85,16 +85,26 @@ describe('job-recorder (T-09.09.02)', () => {
   it('never throws when the DB write fails (best-effort)', async () => {
     const { mockQuery, pool } = makePool();
     mockQuery.mockRejectedValue(new Error('duplicate value PRIVATE_JOB_LEDGER_FIXTURE'));
-    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const error = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     try {
       await expect(
         recordJobFailure({ jobType: 'service_breach_scan', error: 'x' }, pool)
       ).resolves.toBeUndefined();
       await expect(recordJobSuccess('service_breach_scan', pool)).resolves.toBeUndefined();
-      expect(error.mock.calls).toEqual([
-        ['[worker] failed to record job failure: service_breach_scan'],
-        ['[worker] failed to record job success: service_breach_scan'],
+      const record = {
+        level: 'error',
+        service: 'worker',
+        environment: 'test',
+        timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+        correlationId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/),
+        job: 'service_breach_scan',
+        outcome: 'failure',
+      };
+      expect(error.mock.calls.map(([line]) => JSON.parse(String(line)))).toEqual([
+        { ...record, message: 'Failed to record job failure' },
+        { ...record, message: 'Failed to record job success' },
       ]);
+      expect(JSON.stringify(error.mock.calls)).not.toContain('PRIVATE_JOB_LEDGER_FIXTURE');
     } finally {
       error.mockRestore();
     }

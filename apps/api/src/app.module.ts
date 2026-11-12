@@ -1,9 +1,9 @@
 import { ContractModule } from './contract/contract.module.js';
 import { DocumentModule } from './documents/document.module.js';
 import { RefundModule } from './refund/refund.module.js';
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller.js';
-import { CorrelationIdMiddleware, CorrelationIdProvider, ShutdownService } from './common/index.js';
+import { CorrelationIdProvider, ShutdownService } from './common/index.js';
 import { HealthModule } from './health/health.module.js';
 import { MetricsModule } from './metrics/metrics.module.js';
 import { ConfigCacheModule } from './config-cache/index.js';
@@ -84,8 +84,4 @@ import { TelegramModule } from './telegram/telegram.module.js';
   controllers: [AppController, RouteErrorsController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(CorrelationIdMiddleware).forRoutes('/*');
-  }
-}
+export class AppModule {}

@@ -49,7 +49,11 @@ server.listen(0, '127.0.0.1', () => process.send({ port: server.address().port }
       throw new Error(`Static server exited ${code}: ${output}`);
     }),
   ]);
-  return { port: (message as { port: number }).port, exited: once(child, 'exit') };
+  return {
+    port: (message as { port: number }).port,
+    exited: once(child, 'exit'),
+    logs: () => output,
+  };
 }
 async function pauseDownload(port: number) {
   response = await new Promise<IncomingMessage>((resolve, reject) => {
@@ -70,6 +74,19 @@ it('forces an unfinished static response closed at the deadline', async () => {
   await pauseDownload(server.port);
   child!.kill('SIGTERM');
   expect(await server.exited).toEqual([1, null]);
+  const [shutdownStarted, deadline] = server
+    .logs()
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+  expect(shutdownStarted).toMatchObject({ service: 'web', event: 'web.lifecycle', level: 'warn' });
+  expect(deadline).toMatchObject({
+    service: 'web',
+    event: 'web.lifecycle',
+    level: 'error',
+    correlationId: shutdownStarted.correlationId,
+  });
+  expect(shutdownStarted.correlationId).toMatch(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/);
 });
 it('drains an accepted static response before exiting cleanly', async () => {
   const server = await start(3000);

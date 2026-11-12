@@ -1,6 +1,7 @@
 import { getDbPool } from '@barghsa/db';
 import { BACKGROUND_JOB_TYPES, type BackgroundJobType } from '@barghsa/shared/admin';
 import { sanitizeError } from '../notifications/error-redact.js';
+import { workerLog } from '../operator-log.js';
 
 /**
  * Default retry budget before a job is dead-lettered (T-09.09.02).
@@ -117,7 +118,7 @@ export async function recordJobFailure(
     );
   } catch {
     // A ledger failure must never crash the worker loop.
-    console.error(`[worker] failed to record job failure: ${input.jobType}`);
+    workerLog('error', 'Failed to record job failure', { job: input.jobType, outcome: 'failure' });
   }
 }
 
@@ -145,7 +146,7 @@ export async function recordJobSuccess(
       [jobType, now]
     );
   } catch {
-    console.error(`[worker] failed to record job success: ${jobType}`);
+    workerLog('error', 'Failed to record job success', { job: jobType, outcome: 'failure' });
   }
 }
 

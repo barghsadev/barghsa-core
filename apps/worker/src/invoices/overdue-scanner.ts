@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import { randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -84,14 +85,7 @@ export interface OverdueScanOptions {
   newId?: () => string;
 }
 
-const defaultLogger = {
-  warn: (msg: string): void => {
-    console.warn(`[worker] ${msg}`);
-  },
-  info: (msg: string): void => {
-    console.log(`[worker] ${msg}`);
-  },
-};
+const defaultLogger = createWorkerLogger(INVOICE_OVERDUE_JOB_TYPE);
 
 /**
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;

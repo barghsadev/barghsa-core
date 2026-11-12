@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -92,14 +93,7 @@ export interface ReminderSendOptions {
   enqueue?: EnqueueFn;
 }
 
-const defaultLogger = {
-  warn: (msg: string): void => {
-    console.warn(`[worker] ${msg}`);
-  },
-  info: (msg: string): void => {
-    console.log(`[worker] ${msg}`);
-  },
-};
+const defaultLogger = createWorkerLogger(INVOICE_REMINDER_SEND_JOB_TYPE);
 
 /**
  * Candidate selector: one row per due (invoice, offset) whose invoice

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { isCorrelationId, operatorLogCorrelation } from '@barghsa/shared/operator-logging';
 import { PollerGroup } from './poller-group.js';
 
 afterEach(() => vi.useRealTimers());
@@ -41,16 +42,22 @@ describe('worker poller shutdown', () => {
 
   it('contains failures and allows later attempts before draining', async () => {
     vi.useFakeTimers();
-    const report = vi.fn();
+    const report = vi.fn(() => operatorLogCorrelation.getStore());
     const group = new PollerGroup(report);
-    const job = vi
-      .fn()
-      .mockRejectedValueOnce(new Error('database unavailable'))
-      .mockResolvedValue(undefined);
+    const jobIds: Array<string | undefined> = [];
+    const job = vi.fn(async () => {
+      await Promise.resolve();
+      jobIds.push(operatorLogCorrelation.getStore());
+      if (jobIds.length === 1) throw new Error('database unavailable');
+    });
     group.every(job, 1000);
     await vi.advanceTimersByTimeAsync(2000);
     expect(job).toHaveBeenCalledTimes(2);
     expect(report).toHaveBeenCalledOnce();
+    expect(jobIds.every(isCorrelationId)).toBe(true);
+    expect(jobIds[0]).not.toBe(jobIds[1]);
+    expect(report.mock.results[0]?.value).toBe(jobIds[0]);
+    expect(operatorLogCorrelation.getStore()).toBeUndefined();
     await group.drain();
   });
 });

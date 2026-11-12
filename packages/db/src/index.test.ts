@@ -140,8 +140,8 @@ describe('@barghsa/db', () => {
     });
   });
 
-  it('logs only the event and level when either production pool reports an error', async () => {
-    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  it('logs only safe event metadata when either production pool reports an error', async () => {
+    const log = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     vi.stubEnv('NODE_ENV', 'production');
     const shared = createDbPool();
     const direct = createDirectDbPool({}, { shared: false });
@@ -150,9 +150,17 @@ describe('@barghsa/db', () => {
       shared.emit('error', error);
       direct.emit('error', error);
 
-      expect(log.mock.calls).toEqual([
-        [JSON.stringify({ level: 'error', event: 'pool_error' })],
-        [JSON.stringify({ level: 'error', event: 'direct_pool_error' })],
+      const record = {
+        level: 'error',
+        service: 'database',
+        environment: 'test',
+        message: 'Database diagnostic',
+        timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+        correlationId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/),
+      };
+      expect(log.mock.calls.map(([line]) => JSON.parse(String(line)))).toEqual([
+        { ...record, event: 'pool_error' },
+        { ...record, event: 'direct_pool_error' },
       ]);
     } finally {
       await direct.end();

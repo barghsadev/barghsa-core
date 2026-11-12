@@ -3,6 +3,7 @@
 from pathlib import Path
 import argparse
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -90,11 +91,21 @@ function request(method, extraHeaders) {
         logs = subprocess.run(['docker', 'logs', proxy], check=True, capture_output=True, text=True)
         if 'barghsa-private-log-probe' in logs.stdout + logs.stderr:
             raise RuntimeError('Proxy logs exposed the private request marker')
-        records = [json.loads(line) for line in logs.stdout.splitlines() if line.startswith('{"time":')]
+        records = [json.loads(line) for line in logs.stdout.splitlines() if line.startswith('{"timestamp":')]
         outcomes = {(row['method'], row['route'], row['status']) for row in records}
         if not {('PATCH', '/api', '200'), ('POST', '/api', '413')} <= outcomes:
             raise RuntimeError('Proxy logs omitted a privacy probe outcome')
-        print('PASS private proxy logs retain success and request-rejection outcomes')
+        expected_environment = 'production' if profile == 'pilot' else 'staging'
+        for row in records:
+            if row['service'] != 'web' or row['environment'] != expected_environment:
+                raise RuntimeError('Proxy log service or deployment environment is invalid')
+        accepted = next(row for row in records if row['method'] == 'PATCH' and row['status'] == '200')
+        rejected = next(row for row in records if row['method'] == 'POST' and row['status'] == '413')
+        if accepted['level'] != 'info' or accepted['correlationId'] != '01900000-0000-7000-8000-000000000001':
+            raise RuntimeError('Proxy log lost the API correlation ID')
+        if rejected['level'] != 'warn' or not re.fullmatch(r'[0-9a-f]{32}', rejected['correlationId']):
+            raise RuntimeError('Proxy log lost the generated ID for a rejected edge request')
+        print('PASS private proxy logs retain correlated success and request-rejection outcomes')
         hostname = 'barghsa.example.com' if profile == 'pilot' else 'stg.barghsa.com'
         print(run('docker', 'exec', backend, 'node', '/tls-check.mjs', hostname, 'default'), end='')
         if profile == 'pilot':
