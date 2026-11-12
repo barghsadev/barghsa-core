@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:36:41+00:00",
+  "updated": "2026-11-12T10:37:47+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20189,9 +20189,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
-        "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and receipt at the mailbox on the first scheduled execution, then repeat invalidated checks on the exact accepted candidate.",
-        "Reconcile scheduled run 42990347003 on the final candidate. Current exact-source proof covers the provider, ownership and registration fixture corrections, the WebKit branding transport repair and eight retry-disabled repeats of the transient contrast case. Retain the original failed measurement and verify a clean scheduled 40-shard rollup."
+        "Verify a successful scheduled 40-shard run on current release source and its seven-day history. Run 43190340052 reported all 40 shards, with one failure and one flake. Preserve earlier failed and unavailable detailed receipts in the history.",
+        "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
+        "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -20229,7 +20229,8 @@
           "scripts/email-nightly-browser-report.py",
           "scripts/report-nightly-browser.py",
           "scripts/test_email_nightly_browser_report.py",
-          "scripts/test_report_nightly_browser.py"
+          "scripts/test_report_nightly_browser.py",
+          "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
@@ -20273,7 +20274,8 @@
           "release-0.6-scheduled-browser-fixture-contracts",
           "release-0.6-webkit-fixture-idle-connection",
           "release-0.6-webkit-contrast-readback",
-          "release-0.6-nightly-email-receipts"
+          "release-0.6-nightly-email-receipts",
+          "release-0.6-price-dialog-opening"
         ],
         "current_acceptance": null
       }
@@ -239026,7 +239028,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -239700,6 +239702,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -239872,7 +239882,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -240546,6 +240556,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -240718,7 +240736,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -241392,6 +241410,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -241564,7 +241590,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -242238,6 +242264,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -242410,7 +242444,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -243084,6 +243118,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -243221,7 +243263,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -243785,6 +243827,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -422040,7 +422090,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -422454,6 +422504,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -423197,7 +423255,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -423871,6 +423929,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -424043,7 +424109,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -424717,6 +424783,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -424890,7 +424964,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -425564,6 +425638,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -682044,7 +682126,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
@@ -683614,6 +683696,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ]
         }
@@ -749080,7 +749170,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
@@ -751908,6 +751998,14 @@
                 "apps/web/src/pages/AdminStorageConfig.tsx"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ]
         }
@@ -925701,7 +925799,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -927801,6 +927899,14 @@
                 "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -929490,7 +929596,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+              "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -932920,6 +933026,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-price-dialog-opening",
+              "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+              "paths": [
+                "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+              ],
+              "scope": "Makes opacity sampling independent of one browser event. Normal and suppressed-event runs passed and the transparent-frame regression was still refused."
             }
           ],
           "presentation_renewals": [
@@ -1093331,6 +1093445,87 @@
         {
           "file": "source.sha256",
           "sha256": "f8557d62d269f0a14ae32ec284d0a4355df3e55b01be4cea3b1778678e6ff9ec"
+        }
+      ]
+    },
+    "release-0.6-price-dialog-opening": {
+      "batch": "release-0.6-price-dialog-opening",
+      "base_commit": "9b18834a96344a96d279285297e3e459e9ae685e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "04-invoices-wallet-contracts.md#T-04.6.02.06",
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+          "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        }
+      ],
+      "checks": [
+        "Scheduled run 43190340052 returned 40 of 40 browser shards. Mobile Safari shard 3 recorded one failed and one flaky Persian credit-dialog calculation case. Both cases timed out on the animation observer before the later assertions. Failed DOM traces show the open dialog and focused close button. The scheduled email job was skipped.",
+        "The observer now samples the actual CSS enter animation when the popup is inserted as well as at animationstart. It still requires a real KeyframeEffect, computed opacity of one and no fading keyframes. The dialog implementation, calculations, financial scope checks and Axe assertions are unchanged.",
+        "Eight retry-disabled cases passed on Mobile Safari and Chromium across Persian and English, light and dark. A controlled missing-event probe made the old observer fail and the new observer pass. A transparent opening-frame probe still failed at the unchanged opacity assertion. ESLint, Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The failed scheduled run is retained. The local targeted checks do not certify a clean subsequent scheduled execution or email delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-price-dialog-opening",
+      "execution_receipts": [
+        {
+          "file": "nightly-browser-summary.json",
+          "sha256": "c05a0e38c210f3adc61d226683215b853fb2c56e881240f3c2a915c4e2216ac7"
+        },
+        {
+          "file": "current.log",
+          "sha256": "77a8e85daab3260466bbfae6ba15570a85991118e57ccfe0783ab354fde047ea"
+        },
+        {
+          "file": "probe-missed-event.py",
+          "sha256": "be510637ba465a1e619afa3fbe9b7c152257c80b5f1fe2d899bae1e1bba79680"
+        },
+        {
+          "file": "original-missed-event.log",
+          "sha256": "76df741626935fcd4a5025ef660d26a394db823c45e79fb4d22e5eccb66568e2"
+        },
+        {
+          "file": "current-missed-event.log",
+          "sha256": "cb3a1ad398b9bcacf000b761c2f460582f237dabd2514168240d5e6e3a495bd1"
+        },
+        {
+          "file": "current-fade-regression.log",
+          "sha256": "a9687197539dbfb145793ded6ab02a49f5d39ea18521936ac6c28b5133f06713"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "2776e1d55c13baae28b4f0ce98315a3134f6ab8c996c646bd8f54147ed6ae472"
         }
       ]
     }

@@ -182,30 +182,39 @@ for (const locale of ['en', 'fa'] as const)
       ).toBeGreaterThanOrEqual(44);
       const opening = await page.evaluateHandle(() => {
         let evidence: { opacity: string; keyframes: (string | number | undefined)[] } | null = null;
-        const listen = (event: AnimationEvent) => {
-          const popup = event.target;
-          if (
-            !(popup instanceof HTMLElement) ||
-            !popup.matches('[data-slot="dialog-content"][data-open]')
-          )
-            return;
+        const capture = () => {
+          if (evidence) return;
+          const popup = document.querySelector('[data-slot="dialog-content"][data-open]');
+          if (!popup) return;
+          const opacity = getComputedStyle(popup).opacity;
           const effect = popup
             .getAnimations()
             .find(
               (animation) =>
-                animation instanceof CSSAnimation && animation.animationName === event.animationName
+                animation instanceof CSSAnimation && animation.animationName === 'enter'
             )?.effect;
           if (effect instanceof KeyframeEffect) {
             evidence = {
-              opacity: getComputedStyle(popup).opacity,
+              opacity,
               keyframes: effect.getKeyframes().map((frame) => frame.opacity),
             };
           }
         };
-        document.addEventListener('animationstart', listen);
+        // Observe the popup's insertion before waiting for the browser's animation event.
+        const observer = new MutationObserver(capture);
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['data-open'],
+        });
+        document.addEventListener('animationstart', capture);
         return {
           read: () => evidence,
-          release: () => document.removeEventListener('animationstart', listen),
+          release: () => {
+            observer.disconnect();
+            document.removeEventListener('animationstart', capture);
+          },
         };
       });
       try {
