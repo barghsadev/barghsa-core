@@ -17,3 +17,26 @@ The protected staging `freshclam.conf` uses `PrivateMirror http://<private-bridg
 Before changing the scanner image, prewarm a disposable signature volume from the mirror and test it with the candidate image. Preserve the previous image and a signature-volume backup for rollback. Apply the new scanner configuration during scanner maintenance because normal application deploys retain the existing scanner container. Check that the live container runs FreshClam at the configured frequency and that its first check reaches the private feed. Check ClamD's loaded version after startup because the first FreshClam notification can precede the ClamD socket. After rollout, record the running image ID and signature version, test clean and EICAR inputs through the application, and verify the pending and retry behavior when the scanner is unavailable.
 
 Use each image's normal startup when testing a disposable copy of the signature volume. The startup assigns ownership to the image's ClamAV user. Verify both directions when the user or group ID differs between images. Compare the resolved Compose service graph and recreate only the scanner. Promote the protected active-image manifest after the scanner is healthy and the worker can stream a clean file, the standard EICAR fixture and a 100 MiB file to it. For rollback, restore the previous manifest, recreate the scanner with the retained image and read back its image, loaded signatures and health.
+
+## Sealed upload rehearsal
+
+Start the candidate scanner in a disposable container and publish its TCP
+port only on loopback. For an offline CI rehearsal with a preloaded signature
+database, use `CLAMAV_NO_FRESHCLAMD=true`. Record the image ID and ClamD
+`VERSION` response after the health check. [ClamAV container configuration](https://docs.clamav.net/manual/Installing/Docker.html#controlling-the-container)
+
+With the candidate scanner listening at `127.0.0.1:13310`, run the focused
+case against the integration suite's disposable PostgreSQL and object store.
+
+```sh
+pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
+BARGHSA_TEST_PREBUILT=1 BARGHSA_TEST_CLAMD_PORT=13310 \
+  pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+  src/documents/document-http.integration.test.ts -t 'actual ClamAV clean verdict'
+```
+
+The case seals a clean text document and the standard EICAR fixture through
+the document API. A separate loopback listener closes the connection to
+exercise retry. Verify the case actually ran, retain its verdicts and
+download results, and record the final deployment's loaded signature version
+and mirror freshness separately.

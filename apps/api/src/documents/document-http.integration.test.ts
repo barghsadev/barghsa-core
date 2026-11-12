@@ -183,11 +183,11 @@ async function create(
   expect(response.status, (await response.clone().text()) + fixture.logs()).toBe(201);
   return (await response.json()) as Created;
 }
-async function upload(created: Created) {
+async function upload(created: Created, bytes = pdf, contentType = 'application/pdf') {
   const result = await fetch(created.upload.presignedUrl, {
     method: 'PUT',
-    headers: { ...created.upload.headers, 'Content-Type': 'application/pdf' },
-    body: pdf,
+    headers: { ...created.upload.headers, 'Content-Type': contentType },
+    body: bytes,
   });
   expect(result.status, await result.text()).toBe(200);
 }
@@ -764,6 +764,115 @@ const generatedPdfScanner = requireWorker(
   './dist/documents/scan-runner.js'
 ) as typeof import('../../../worker/dist/documents/scan-runner.js');
 const generatedScanEndpoint = { host: '127.0.0.1', port: 3310 };
+
+it.runIf(process.env['BARGHSA_TEST_CLAMD_PORT'] !== undefined)(
+  'holds sealed documents through scanner failure, then releases only the actual ClamAV clean verdict',
+  async () => {
+    const port = Number(process.env['BARGHSA_TEST_CLAMD_PORT']);
+    expect(Number.isInteger(port) && port > 0 && port <= 65535).toBe(true);
+    await generatedPdfScanFixture(async () => {
+      const { user } = await owner();
+      const clean = Buffer.from('Clean document for the ClamAV release rehearsal.\n');
+      const eicar = Buffer.from(
+        'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'
+      );
+      const contentType = 'text/plain';
+      const seal = async (bytes: Buffer) => {
+        const created = await create(user, {
+          fileName: 'scan-fixture.txt',
+          contentType,
+          fileSize: bytes.length,
+        });
+        await upload(created, bytes, contentType);
+        const id = created.document.id;
+        const response = await send(`documents/${id}/confirm`, user, 'POST', command(1));
+        expect(response.status, await response.clone().text()).toBe(200);
+        expect(await response.json()).toMatchObject({
+          state: 'PendingScan',
+          scanState: 'Pending',
+          checksum: createHash('sha256').update(bytes).digest('hex'),
+        });
+        expect((await send(`documents/${id}/download`, user)).status).toBe(409);
+        return id;
+      };
+      const job = async (id: string) =>
+        (
+          await http.pool.query(
+            `SELECT attempts,verdict,completed_at,next_attempt_at>NOW() AS delayed
+               FROM document_scan_jobs WHERE document_id=$1`,
+            [id]
+          )
+        ).rows[0];
+      const cleanId = await seal(clean);
+      const interrupted = createServer((socket) => socket.destroy());
+      await new Promise<void>((ready) => interrupted.listen(0, '127.0.0.1', ready));
+      try {
+        const address = interrupted.address();
+        if (!address || typeof address === 'string') throw new Error('Missing scanner fault port');
+        expect(
+          await generatedPdfScanner.runDocumentScans(http.pool, generatedPdfStorage, {
+            host: '127.0.0.1',
+            port: address.port,
+          })
+        ).toEqual({ clean: 0, infected: 0, retrying: 1 });
+      } finally {
+        await new Promise<void>((closed) => interrupted.close(() => closed()));
+      }
+      expect(await job(cleanId)).toMatchObject({
+        attempts: 1,
+        verdict: null,
+        completed_at: null,
+        delayed: true,
+      });
+      expect((await send(`documents/${cleanId}/download`, user)).status).toBe(409);
+      const quarantinedId = await seal(eicar);
+      await http.pool.query(
+        "UPDATE document_scan_jobs SET next_attempt_at=NOW()-INTERVAL '1 second' WHERE document_id=$1",
+        [cleanId]
+      );
+      expect(
+        await generatedPdfScanner.runDocumentScans(http.pool, generatedPdfStorage, {
+          host: '127.0.0.1',
+          port,
+        })
+      ).toEqual({ clean: 1, infected: 1, retrying: 0 });
+      expect(await job(cleanId)).toMatchObject({
+        attempts: 2,
+        verdict: 'clean',
+        completed_at: expect.any(Date),
+      });
+      expect(await job(quarantinedId)).toMatchObject({
+        attempts: 1,
+        verdict: 'infected',
+        completed_at: expect.any(Date),
+      });
+      for (const [id, state] of [
+        [cleanId, 'Available'],
+        [quarantinedId, 'Quarantined'],
+      ]) {
+        const detail = await send(`documents/${id}`, user);
+        expect(detail.status).toBe(200);
+        expect(await detail.json()).toMatchObject({ state, scanState: state });
+      }
+      const download = await send(`documents/${cleanId}/download`, user);
+      expect(download.status).toBe(200);
+      const { url } = (await download.json()) as DocumentDownload;
+      const original = await fetch(url);
+      expect(original.status).toBe(200);
+      expect(Buffer.from(await original.arrayBuffer())).toEqual(clean);
+      expect((await send(`documents/${quarantinedId}/download`, user)).status).toBe(409);
+      expect(
+        (
+          await http.pool.query(
+            'SELECT document_id FROM document_access_log WHERE document_id=ANY($1::uuid[])',
+            [[cleanId, quarantinedId]]
+          )
+        ).rows
+      ).toEqual([{ document_id: cleanId }]);
+    });
+  },
+  60_000
+);
 
 it('holds the initial generated electricity PDF behind the configured scanner before review', async () => {
   await generatedPdfScanFixture(async () => {

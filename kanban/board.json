@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T04:22:54+00:00",
+  "updated": "2026-11-12T04:34:05+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14586,7 +14586,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -14754,6 +14754,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -26442,7 +26450,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -27069,6 +27077,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -71552,7 +71568,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -72695,6 +72711,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -89523,7 +89547,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -91627,6 +91651,14 @@
                 "apps/api/src/profiles/invitation-mutation-http.integration.test.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -210689,7 +210721,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -211454,6 +211486,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -211608,7 +211648,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -212373,6 +212413,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -212524,7 +212572,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -213289,6 +213337,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -213439,7 +213495,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -214204,6 +214260,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -214356,7 +214420,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -215121,6 +215185,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -434334,7 +434406,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -435279,6 +435351,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -435440,7 +435520,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -436385,6 +436465,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -436545,7 +436633,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -437490,6 +437578,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -481364,7 +481460,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -482960,6 +483056,14 @@
                 "README.md"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -501944,7 +502048,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -502260,6 +502364,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -502352,7 +502464,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -502639,6 +502751,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -504401,7 +504521,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -505166,6 +505286,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -505300,7 +505428,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -505767,6 +505895,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -505897,7 +506033,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -506359,6 +506495,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -506527,7 +506671,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -506716,6 +506860,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -506836,7 +506988,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -507298,6 +507450,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -507433,7 +507593,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.ts",
@@ -507962,6 +508122,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -508130,7 +508298,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -508319,6 +508487,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -508437,7 +508613,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -508899,6 +509075,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -509028,7 +509212,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -509514,6 +509698,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -509643,7 +509835,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -510129,6 +510321,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -510258,7 +510458,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -510744,6 +510944,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -510873,7 +511081,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -511359,6 +511567,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -511487,7 +511703,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -511949,6 +512165,14 @@
                 "apps/worker/src/documents/clamav.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -512117,7 +512341,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -512330,6 +512554,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -512480,7 +512712,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -512883,6 +513115,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -513033,7 +513273,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -513436,6 +513676,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -513588,7 +513836,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -514012,6 +514260,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -514196,7 +514452,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -514695,6 +514951,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -514845,7 +515109,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -515248,6 +515512,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -543207,7 +543479,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -543355,6 +543627,14 @@
                 "apps/api/src/orders/order-access-http.integration.test.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -543816,7 +544096,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -543908,6 +544188,14 @@
                 "apps/api/src/orders/order-access-http.integration.test.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -545034,7 +545322,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -545111,6 +545399,14 @@
                 "apps/api/src/orders/orders.controller.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -550604,14 +550900,15 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The reviewed staging scanner now loads current signed databases and accepts clean, EICAR and 100 MiB streams through the running worker library. In the immutable v0.6.0 rehearsal, repeat sealed application uploads with durable clean/quarantined state and unavailable-scanner retry. Verify pending download denial until a clean verdict. Read back the image ID and loaded signatures on the v0.6.0 deployment."
+        "On the exact immutable v0.6.0 application and scanner deployment, rerun the documented sealed document rehearsal with current signatures and retain health, download denial, quarantine and recovered retry receipts. Hosted preflight verified the actual ClamAV lifecycle in an isolated migrated database and object store. The running v0.5.0 staging scanner separately matched signed EU mirror daily 28180."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "docs/operations/clamav-signatures.md"
+          "docs/operations/clamav-signatures.md",
+          "apps/api/src/documents/document-http.integration.test.ts"
         ],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
@@ -550625,7 +550922,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-live-clamav-mirror",
-          "release-0.6-staging-scanner-ceiling"
+          "release-0.6-staging-scanner-ceiling",
+          "release-0.6-sealed-clamav-lifecycle"
         ],
         "current_acceptance": null
       }
@@ -550695,7 +550993,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -550860,6 +551158,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -551061,7 +551367,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -551218,6 +551524,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -551311,7 +551625,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -551631,6 +551945,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -551694,7 +552016,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -551858,6 +552180,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -551937,7 +552267,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -552236,6 +552566,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -561173,7 +561511,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -561273,6 +561611,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -564778,7 +565124,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
@@ -564928,6 +565274,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -565910,7 +566264,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -566110,6 +566464,14 @@
                 "deploy/pilot/nginx.conf"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ]
         }
@@ -827197,7 +827559,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -827714,6 +828076,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -827890,7 +828260,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -828407,6 +828777,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -828582,7 +828960,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -829099,6 +829477,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -829276,7 +829662,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -829793,6 +830179,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -829968,7 +830362,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -830485,6 +830879,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -830660,7 +831062,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -831177,6 +831579,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -860774,7 +861184,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -863095,6 +863505,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -864028,7 +864446,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -868090,6 +868508,14 @@
                 "apps/web/e2e/consultation-forms.spec.ts"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -868985,7 +869411,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -872887,6 +873313,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -873740,7 +874174,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "93aa703b2d41e43e0ec3ee8a1e85c7c95314aad6063f0818a5e9f51ce59d53c7"
+              "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -877516,6 +877950,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-sealed-clamav-lifecycle",
+              "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+              "paths": [
+                "apps/api/src/documents/document-http.integration.test.ts"
+              ],
+              "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -882658,7 +883100,8 @@
           "release-0.6-maintenance-recovery",
           "release-0.6-nightly-email-receipts",
           "release-0.6-strict-customer-commands",
-          "release-0.6-critical-intake-accessibility"
+          "release-0.6-critical-intake-accessibility",
+          "release-0.6-sealed-clamav-lifecycle"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882783,7 +883226,9 @@
           "apps/web/e2e/consultation-forms.spec.ts",
           "apps/web/e2e/electricity-wizard-navigation.spec.ts",
           "apps/web/e2e/service-wizard-navigation.spec.ts",
-          "docs/design/accessibility.md"
+          "docs/design/accessibility.md",
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "docs/operations/clamav-signatures.md"
         ]
       }
     },
@@ -882809,7 +883254,7 @@
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "The live staging CSP reports and public branding response identify the cross-origin favicon. An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation. Complete the full reviewed observation window before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
-        "Staging runs the reviewed 100 MiB scanner sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with recurring private-mirror checks and signed daily 28180. Live worker clean, standard EICAR and full-size streams passed. Verify signature freshness, sealed-upload receipts and outage recovery on the final operational topology and immutable application candidate.",
+        "The current v0.5.0 staging scanner remains healthy at image sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with a 100 MiB stream limit and daily 28180 matching the verified EU archive and detached signature. Hosted preflight also proved the sealed document lifecycle against a real ClamAV daemon. Verify signature freshness, sealed application receipts and outage recovery on the final application and operational topology.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts."
       ],
       "owner": null,
@@ -882842,7 +883287,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-alert-delivery-watchdog"
+          "release-0.6-alert-delivery-watchdog",
+          "release-0.6-sealed-clamav-lifecycle"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -882873,7 +883319,11 @@
           "review_batch": "release-0.6-grafana-supported-images-and-provisioning",
           "provisioned_in_fixture": 10,
           "live_operator_receipt": null
-        }
+        },
+        "changed_paths": [
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "docs/operations/clamav-signatures.md"
+        ]
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
     },
@@ -1016188,6 +1016638,184 @@
         {
           "file": "actionlint.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-sealed-clamav-lifecycle": {
+      "batch": "release-0.6-sealed-clamav-lifecycle",
+      "base_commit": "10de0d6767d20998665c583b26fbdf6f5d87a4c2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.04.01",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02",
+        "04-invoices-wallet-contracts.md#T-04.5.04.03",
+        "04-invoices-wallet-contracts.md#T-04.5.04.04",
+        "04-invoices-wallet-contracts.md#T-04.5.04.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "03-core-business.md#T-03.90.03",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.11.01",
+        "05-notifications-documents-ai.md#T-05.11.02",
+        "05-notifications-documents-ai.md#T-05.11.03",
+        "05-notifications-documents-ai.md#T-05.11.04",
+        "05-notifications-documents-ai.md#T-05.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.11.07",
+        "05-notifications-documents-ai.md#T-05.12.01",
+        "05-notifications-documents-ai.md#T-05.12.02",
+        "05-notifications-documents-ai.md#T-05.12.03",
+        "05-notifications-documents-ai.md#T-05.13.01",
+        "05-notifications-documents-ai.md#T-05.13.02",
+        "05-notifications-documents-ai.md#T-05.13.03",
+        "05-notifications-documents-ai.md#T-05.13.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.08",
+        "06-security-testing-observability.md#T-06.03.02.04",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.10.02.05",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "07-ui-ux-design.md#T-07.25.01.01",
+        "07-ui-ux-design.md#T-07.25.01.02",
+        "07-ui-ux-design.md#T-07.25.01.03",
+        "07-ui-ux-design.md#T-07.25.01.04",
+        "07-ui-ux-design.md#T-07.25.01.05",
+        "07-ui-ux-design.md#T-07.25.01.06",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/documents/document-http.integration.test.ts",
+        "docs/operations/clamav-signatures.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "2f55910cdcd9ec777d9ae15a4e280f4f55078eebe49c41f15afcdb3e5c382640"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "07b87c2bf92d105f0cd11cdc7aa4c3d9fca91e66ad63b10e513a8c961265cc4d"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "940583ea7f6f550b013f67a4032195c0d4a6ff25cb3503ca623ae31d5448a5ae"
+        },
+        {
+          "path": "packages/db/drizzle/production/0205_document_scanning.sql",
+          "sha256": "68b6b006c01ba170f3019713d45db8125a8adf90af7dac2e7d7d63a490bf7fc5"
+        },
+        {
+          "path": "packages/shared/src/storage/clamav.ts",
+          "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "Hosted run 43155188445 at c3a6bf91c2ba0f1b8c503e87fb5a28108bcc03c4 built the pinned scanner and ran three selected PostgreSQL and object-store HTTP cases. ClamAV 1.5.4 loaded bundled daily 28177. The filter skipped 44 unselected cases.",
+        "The application sealed clean text and standard EICAR and recorded the SHA-256 of each. An interrupted scanner connection persisted a delayed retry with downloads blocked. The real daemon cleared the clean document and quarantined EICAR. The clean download returned the original bytes and was the only signed URL and access receipt.",
+        "Read-only staging and EU checks confirmed the healthy running scanner, 100 MiB stream limit, active private tunnel and daily 28180. The EU archive and detached signature still match the previously verified digests. Public release metadata remains v0.5.0 at b0dce58c.",
+        "API typecheck, test lint, formatting, actionlint and whitespace checks passed. The runbook documents the real-scanner rehearsal and signature readback."
+      ],
+      "limitations": [
+        "The hosted run used a disposable scanner with bundled signatures. Staging readback covers the current integrated preview. Final v0.6.0 deployment and acceptance receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sealed-clamav-lifecycle",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "5d90a0cce178780dd3324e308267786841f208e07a708a2aaa30ef43e5043945"
+        },
+        {
+          "file": "diagnostic.json",
+          "sha256": "c595f2ecc4bc10e97281c4a37853f9eefa7066c034128be97b2647e8b2c8ab42"
+        },
+        {
+          "file": "verify-sealed-clamav.yml",
+          "sha256": "231be603334ddfcc3c618494dc88e5744616958717208b8721d47892b8898b59"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "2f8116a948451a6a52d1815072b2028e89986c918794aa472a5f6098690ad45a"
+        },
+        {
+          "file": "sealed-clamav.log",
+          "sha256": "a3234407429f3abe6dfb9d966e7767ed9223a94347d0e1e6ec52455527db488f"
+        },
+        {
+          "file": "clamav-image-id.txt",
+          "sha256": "e738fffe3dd284bc5fbf82e904ec020e06d8ea96ffc38c2dfa73fde10164c9e2"
+        },
+        {
+          "file": "clamav-version.txt",
+          "sha256": "06e1cd9087ef65fdc4c5491e8c0936b707ac56badb4ea82024cde6bc40c3adac"
+        },
+        {
+          "file": "clamav-daemon.log",
+          "sha256": "d8e7804dcd0db3eafeb041cd7e11c13850a7ba9641ed9af44bd16a98c20bd573"
+        },
+        {
+          "file": "staging-scanner-readback.log",
+          "sha256": "f0fae093b50659ddaa88a4c697b827f7a7575b42c2540389bf9ee188f7ef667d"
+        },
+        {
+          "file": "mirror-readback.log",
+          "sha256": "d080c4fe1b14e0bb2db4accc242c48c91147eca5eefc2f9b8423615e93981d3a"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }
