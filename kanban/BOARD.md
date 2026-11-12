@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T01:31:24+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T01:39:01+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1231 | Accepted with unchanged source bindings. |
+| done | 1232 | Accepted with unchanged source bindings. |
 | verify | 45 | Existing work may be complete; inspect evidence before building. |
-| partial | 84 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1273,7 +1273,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.03.08` | done | Recorded batch work | Write RTL tests for admin pages: configuration, role management, product/settings CRUD |
 | `06-security-testing-observability.md#T-06.09.03.09` | verify | Recorded batch work | Ensure every critical form preserves valid input after server validation/provider error |
 | `06-security-testing-observability.md#T-06.09.03.10` | done | Recorded batch work | Write RTL tests for permission-dependent UI: elements hidden/disabled per role |
-| `06-security-testing-observability.md#T-06.10.01.01` | partial | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
+| `06-security-testing-observability.md#T-06.10.01.01` | done | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
 | `06-security-testing-observability.md#T-06.10.01.02` | done | Recorded batch work | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
 | `06-security-testing-observability.md#T-06.10.01.03` | done | Recorded batch work | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
 | `06-security-testing-observability.md#T-06.10.01.04` | done | Recorded batch work | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
