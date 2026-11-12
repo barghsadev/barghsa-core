@@ -3,7 +3,9 @@ import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 function request(permissions: string[]): AuthenticatedRequest {
-  return { session: { userId: 'reader', permissions, isAdmin: false } } as AuthenticatedRequest;
+  return {
+    session: { operatingContext: 'staff', userId: 'reader', permissions, isAdmin: false },
+  } as AuthenticatedRequest;
 }
 function fixture() {
   const logs = vi.fn().mockResolvedValue({ logs: [], total: 0 });

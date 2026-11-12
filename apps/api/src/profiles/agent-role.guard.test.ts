@@ -62,6 +62,12 @@ describe('AgentRoleGuard', () => {
     expect(result).toBe(true);
   });
 
+  it('denies an unrecognized permission even to the current profile owner', async () => {
+    vi.mocked(mockReflector.get).mockReturnValue('not-a-capability');
+    vi.mocked(mockAgentsService.getAgentRoles).mockResolvedValue(['Owner']);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(ForbiddenException);
+  });
+
   it('throws ForbiddenException when the user role lacks the required permission', async () => {
     vi.mocked(mockReflector.get).mockReturnValue('orders:create');
     vi.mocked(mockAgentsService.getAgentRoles).mockResolvedValue(['Finance']);

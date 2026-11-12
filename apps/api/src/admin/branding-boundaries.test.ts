@@ -6,6 +6,7 @@ const draftId = '11111111-2222-4333-8444-555555555555';
 function request(permissions = ['admin:branding:edit']): AuthenticatedRequest {
   return {
     session: {
+      operatingContext: 'staff',
       userId: 'trusted-actor',
       sessionId: '22222222-3333-4444-8555-666666666666',
       csrfToken: 'fixture-csrf',

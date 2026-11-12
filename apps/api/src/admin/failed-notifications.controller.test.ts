@@ -8,6 +8,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 
 const adminReq = {
   session: {
+    operatingContext: 'staff',
     isAdmin: true,
     userId: 'admin-1',
     sessionId: '11111111-1111-4111-8111-111111111111',
@@ -17,7 +18,7 @@ const adminReq = {
 } as unknown as AuthenticatedRequest;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'staff-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'staff-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 

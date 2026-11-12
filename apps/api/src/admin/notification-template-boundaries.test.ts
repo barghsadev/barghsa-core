@@ -12,6 +12,7 @@ const template = {
 function request(permissions = [permission], isAdmin = false): AuthenticatedRequest {
   return {
     session: {
+      operatingContext: 'staff',
       userId: 'trusted-actor',
       sessionId: 'trusted-session',
       csrfToken: 'trusted-csrf',

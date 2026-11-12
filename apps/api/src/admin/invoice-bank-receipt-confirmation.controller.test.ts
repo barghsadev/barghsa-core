@@ -36,6 +36,7 @@ const DTO = {
 
 const adminReq = {
   session: {
+    operatingContext: 'staff',
     isAdmin: true,
     userId: 'admin-1',
     sessionId: 'staff-session',
@@ -45,7 +46,7 @@ const adminReq = {
 } as unknown as AuthenticatedRequest;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'staff-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'staff-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 

@@ -9,7 +9,9 @@ import { StepUpGuard } from '../session/step-up.guard.js';
 const config = { providerId: 'test-adapter', enabled: false, settings: {} };
 const configStatus = { providerId: config.providerId, enabled: false, settingsConfigured: false };
 function request(permissions: string[]): AuthenticatedRequest {
-  return { session: { userId: 'staff', permissions, isAdmin: false } } as AuthenticatedRequest;
+  return {
+    session: { operatingContext: 'staff', userId: 'staff', permissions, isAdmin: false },
+  } as AuthenticatedRequest;
 }
 function fixture() {
   const service = {

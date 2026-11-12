@@ -8,7 +8,7 @@ const target = '11111111-2222-4333-8444-555555555555';
 const revision = 'a'.repeat(64);
 function request(permissions: string[], isAdmin = false): AuthenticatedRequest {
   return {
-    session: { userId: 'actor', permissions, isAdmin },
+    session: { operatingContext: 'staff', userId: 'actor', permissions, isAdmin },
     ip: '127.0.0.1',
   } as AuthenticatedRequest;
 }

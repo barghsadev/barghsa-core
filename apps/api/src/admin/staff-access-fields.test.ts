@@ -6,7 +6,13 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 const request = (isAdmin: boolean) =>
   ({
-    session: { isAdmin, userId: 'actor', sessionId: 'session', csrfToken: 'csrf' },
+    session: {
+      operatingContext: 'staff',
+      isAdmin,
+      userId: 'actor',
+      sessionId: 'session',
+      csrfToken: 'csrf',
+    },
     ip: '127.0.0.1',
   }) as unknown as AuthenticatedRequest;
 function fixture() {

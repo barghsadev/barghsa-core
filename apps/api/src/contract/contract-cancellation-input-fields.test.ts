@@ -13,11 +13,11 @@ import { cancellationInputFields } from './contract-cancellation-input-fields.js
 const id = randomUUID(),
   version = randomUUID();
 const staff = {
-  session: { isAdmin: true, userId: 'staff' },
+  session: { operatingContext: 'staff', isAdmin: true, userId: 'staff' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const denied = {
-  session: { isAdmin: false, userId: 'staff' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'staff' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const request = () => ({

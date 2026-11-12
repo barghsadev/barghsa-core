@@ -12,12 +12,12 @@ import {
 } from '@barghsa/shared/finance';
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: true, userId: 'admin-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'staff-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'staff-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -104,6 +104,7 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
   it('rejects set without a fresh step-up and allows it after verification', () => {
     const guard = new StepUpGuard(new Reflector());
     const session = {
+      operatingContext: 'staff' as const,
       sessionId: 'sid-1',
       csrfToken: 'csrf-1',
       userId: 'admin-1',

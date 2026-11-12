@@ -8,7 +8,7 @@ import { solarContractSchema } from './solar-contract.validation.js';
 const id = '11111111-1111-4111-8111-111111111111';
 const profileId = '22222222-2222-4222-8222-222222222222';
 const req = {
-  session: { userId: 'opaque-staff', permissions: ['contracts:write'] },
+  session: { operatingContext: 'staff', userId: 'opaque-staff', permissions: ['contracts:write'] },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 function input() {

@@ -5,12 +5,12 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: true, userId: 'admin-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'admin-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 

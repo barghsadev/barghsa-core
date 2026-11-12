@@ -6,12 +6,12 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ChargebackAlertController } from './chargeback-alert.controller.js';
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: true, userId: 'admin-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'staff-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'staff-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 

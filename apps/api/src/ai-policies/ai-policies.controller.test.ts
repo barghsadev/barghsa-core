@@ -33,6 +33,7 @@ const mockService = {
 } as unknown as AiPoliciesService;
 
 const adminSession = {
+  operatingContext: 'staff' as const,
   isAdmin: true,
   userId: 'admin-1',
   sessionId: 'test-session',
@@ -45,7 +46,7 @@ const adminReq = {
 } as never;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'admin-1' },
   ip: '10.0.0.8',
 } as never;
 

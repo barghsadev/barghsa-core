@@ -2,6 +2,8 @@
 
 PostgreSQL supplies current account, session, ownership and role authority. The session guard checks expiry, revocation and operating context and loads current staff grants. The endpoint identifies the resource and action, applies its domain capability and checks the object's authorized scope before it returns private data or accepts a command. UI navigation only presents the actions available to the current context. [Session controls](session-lifetime.md).
 
+The API's `AuthorizationService` resolves staff and profile capabilities. Staff decisions require an explicit staff operating context and an exact grant, explicit wildcard or current administrator authority. The agent guard and active-profile selector use the same capability matrix. The database still supplies current roles, verifies profile ownership and scopes resource reads and locks.
+
 ## Customer profiles
 
 - Use the authenticated account's server-owned active profile preference or the endpoint's explicit profile ID. In either case, authorize that profile using its current owner or active agent membership. Switching profiles changes a preference. The same account must prove authority to use the new selection. [Owner decision on profile context](../decisions/profile-workspace-navigation.md).

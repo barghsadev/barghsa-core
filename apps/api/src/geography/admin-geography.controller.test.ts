@@ -6,7 +6,9 @@ import { InputFieldException } from '../common/input-field.exception.js';
 const id = '11111111-2222-4333-8444-555555555555';
 const names = { nameFa: 'تهران', nameEn: 'Tehran' };
 function request(permissions: string[]): AuthenticatedRequest {
-  return { session: { userId: 'staff', permissions, isAdmin: false } } as AuthenticatedRequest;
+  return {
+    session: { operatingContext: 'staff', userId: 'staff', permissions, isAdmin: false },
+  } as AuthenticatedRequest;
 }
 function fixture() {
   const call = vi.fn().mockResolvedValue({ id, ...names });

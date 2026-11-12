@@ -4,8 +4,8 @@ import { AdminController } from './admin.controller.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { DEFAULT_GREEN_ELECTRICITY_CONFIG } from '@barghsa/shared/finance';
-const admin = { session: { isAdmin: true } } as AuthenticatedRequest;
-const denied = { session: { isAdmin: false } } as AuthenticatedRequest;
+const admin = { session: { operatingContext: 'staff', isAdmin: true } } as AuthenticatedRequest;
+const denied = { session: { operatingContext: 'staff', isAdmin: false } } as AuthenticatedRequest;
 const controller = new AdminController(
   {} as never,
   {} as never,

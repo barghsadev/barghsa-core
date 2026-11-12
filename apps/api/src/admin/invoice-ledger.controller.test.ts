@@ -3,7 +3,12 @@ import { InvoiceLedgerController } from './invoice-ledger.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 const ID = '11111111-1111-7111-8111-111111111111';
-const session = { userId: 'staff', sessionId: 'session', csrfToken: 'csrf' };
+const session = {
+  operatingContext: 'staff' as const,
+  userId: 'staff',
+  sessionId: 'session',
+  csrfToken: 'csrf',
+};
 const allowed = {
   session: { ...session, permissions: ['invoices:read'] },
 } as unknown as AuthenticatedRequest;

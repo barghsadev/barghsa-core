@@ -6,7 +6,7 @@ import { StaffConsultationWorkflowController } from './consultation-workflow.con
 
 const id = '11111111-1111-4111-8111-111111111111';
 const req = {
-  session: { userId: 'opaque-staff', permissions: ['orders:write'] },
+  session: { operatingContext: 'staff', userId: 'opaque-staff', permissions: ['orders:write'] },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const contexts = [

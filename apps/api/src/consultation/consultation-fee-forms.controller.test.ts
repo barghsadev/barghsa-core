@@ -7,6 +7,7 @@ import { StaffConsultationWorkflowController } from './consultation-workflow.con
 const id = '11111111-1111-4111-8111-111111111111';
 const req = {
   session: {
+    operatingContext: 'staff',
     userId: 'opaque-staff',
     permissions: ['orders:write', 'invoices:write', 'admin:financial:edit'],
   },

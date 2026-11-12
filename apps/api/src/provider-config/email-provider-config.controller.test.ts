@@ -19,6 +19,7 @@ const mockService = {
 } as unknown as EmailProviderConfigService;
 
 const adminSession = {
+  operatingContext: 'staff' as const,
   isAdmin: true,
   userId: 'admin-1',
   sessionId: 'provider-session',
@@ -29,7 +30,7 @@ const adminReq = {
 } as never;
 
 const nonAdminReq = {
-  session: { isAdmin: false, userId: 'admin-1' },
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'admin-1' },
 } as never;
 
 function baseResult(over: Partial<Record<string, unknown>> = {}) {

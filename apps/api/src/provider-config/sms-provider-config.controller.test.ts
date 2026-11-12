@@ -25,13 +25,16 @@ const mockService = {
 } as unknown as SmsProviderConfigService;
 
 const adminSession = {
+  operatingContext: 'staff' as const,
   isAdmin: true,
   userId: 'admin-1',
   sessionId: 'provider-session',
   csrfToken: 'provider-csrf',
 };
 const adminReq = { session: adminSession } as never;
-const nonAdminReq = { session: { isAdmin: false, userId: 'admin-1' } } as never;
+const nonAdminReq = {
+  session: { operatingContext: 'staff', isAdmin: false, userId: 'admin-1' },
+} as never;
 
 function baseResult(over: Partial<Record<string, unknown>> = {}) {
   return {

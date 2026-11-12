@@ -12,7 +12,9 @@ const draft = {
   evidenceUrls: ['uploads/document/evidence.pdf'],
 };
 function request(permissions: string[] = [], isAdmin = false): AuthenticatedRequest {
-  return { session: { userId: 'reviewer', permissions, isAdmin } } as AuthenticatedRequest;
+  return {
+    session: { operatingContext: 'staff', userId: 'reviewer', permissions, isAdmin },
+  } as AuthenticatedRequest;
 }
 function fixture() {
   const service = {

@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import type { AgentPermission } from '@barghsa/shared/agent-permissions';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { activeProfileSql } from './profile-context.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>,
   owned: string,
@@ -68,6 +70,23 @@ function request(path: string, method = 'GET', body?: unknown) {
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+
+it('resolves owner and delegated capabilities through the same current profile selector', async () => {
+  const resolve = async (permission: AgentPermission) =>
+    (await http.pool.query(activeProfileSql(permission), ['viewer'])).rows;
+  expect(await resolve('wallet:charge')).toEqual([{ id: owned, is_owner: true, roles: [] }]);
+  expect(await resolve('undefined-capability' as AgentPermission)).toEqual([]);
+  expect((await request(`profiles/default/${finance}`, 'POST')).status).toBe(200);
+  expect(await resolve('wallet:charge')).toEqual([
+    { id: finance, is_owner: false, roles: ['Finance'] },
+  ]);
+  expect(await resolve('contracts:sign')).toEqual([]);
+  expect((await request(`profiles/default/${legal}`, 'POST')).status).toBe(200);
+  expect(await resolve('wallet:charge')).toEqual([]);
+  expect(await resolve('contracts:sign')).toEqual([
+    { id: legal, is_owner: false, roles: ['Legal'] },
+  ]);
+});
 it('saves the required default endpoint for owner and agent profiles across sessions', async () => {
   for (const id of [owned, finance, legal]) {
     const response = await request(`profiles/default/${id}`, 'POST');

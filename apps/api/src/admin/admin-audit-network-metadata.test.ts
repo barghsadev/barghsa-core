@@ -62,6 +62,7 @@ for (const [method, invoke] of operations) {
         {} as never
       );
       const session = {
+        operatingContext: 'staff' as const,
         userId: 'admin',
         sessionId: 'current',
         csrfToken: 'current-csrf',

@@ -8,7 +8,13 @@ import { SavingFulfillmentController } from './saving-fulfillment.controller.js'
 const id = '11111111-1111-4111-8111-111111111111';
 const addressId = '22222222-2222-4222-8222-222222222222';
 const request = {
-  session: { userId: 'staff', sessionId: id, csrfToken: 'csrf', permissions: ['contracts:write'] },
+  session: {
+    operatingContext: 'staff',
+    userId: 'staff',
+    sessionId: id,
+    csrfToken: 'csrf',
+    permissions: ['contracts:write'],
+  },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const contexts = [

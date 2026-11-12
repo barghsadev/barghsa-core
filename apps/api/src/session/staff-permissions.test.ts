@@ -17,7 +17,7 @@ it('unions valid roles and rejects invalid role data', () => {
 
 it('accepts exact capabilities or explicit wildcard authority without granting prefix matches', () => {
   const request = {
-    session: { isAdmin: false, permissions: ['tickets:read'] },
+    session: { operatingContext: 'staff', isAdmin: false, permissions: ['tickets:read'] },
   } as AuthenticatedRequest;
   expect(hasStaffPermission(request, 'tickets:read')).toBe(true);
   expect(hasStaffPermission(request, 'tickets:write')).toBe(false);
@@ -28,4 +28,20 @@ it('accepts exact capabilities or explicit wildcard authority without granting p
   request.session.permissions = [];
   request.session.isAdmin = true;
   expect(hasStaffPermission(request, 'tickets:write')).toBe(true);
+});
+
+it('denies missing or malformed authority and customer context even with privileged claims', () => {
+  expect(hasStaffPermission({} as AuthenticatedRequest, 'tickets:read')).toBe(false);
+  for (const operatingContext of [undefined, 'unknown', 'customer']) {
+    const request = {
+      session: { operatingContext, isAdmin: true, permissions: ['*'] },
+    } as AuthenticatedRequest;
+    expect(hasStaffPermission(request, 'tickets:read')).toBe(false);
+  }
+  const admin = { session: { operatingContext: 'staff', isAdmin: true } } as AuthenticatedRequest;
+  expect(hasStaffPermission(admin, '')).toBe(false);
+  const malformedGrant = {
+    session: { operatingContext: 'staff', permissions: 'tickets:write' },
+  } as unknown as AuthenticatedRequest;
+  expect(hasStaffPermission(malformedGrant, 'tickets:write')).toBe(false);
 });

@@ -9,8 +9,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { hasAnyRolePermission } from '@barghsa/shared/agent-permissions';
 import type { AgentPermission } from '@barghsa/shared/agent-permissions';
+import { authorizationService } from '../session/authorization.service.js';
 import { AGENT_PERMISSION_KEY } from './agent-permission.decorator.js';
 import { AgentsService } from './agents.service.js';
 
@@ -98,7 +98,7 @@ export class AgentRoleGuard implements CanActivate {
     }
 
     // Check if any of the user's roles grant the required permission
-    if (!hasAnyRolePermission(roles, requiredPermission)) {
+    if (!authorizationService.allowsProfile(roles, requiredPermission)) {
       this.logger.warn(
         `AgentRoleGuard: user ${privateLogId('actor', userId)} role(s) [${roles.join(', ')}] ` +
           `lack permission '${requiredPermission}' for profile ${privateLogId('profile', profileId)}`

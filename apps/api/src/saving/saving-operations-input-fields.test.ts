@@ -7,6 +7,7 @@ import { SavingFulfillmentController } from './saving-fulfillment.controller.js'
 const id = '11111111-1111-4111-8111-111111111111';
 const request = {
   session: {
+    operatingContext: 'staff',
     userId: 'opaque-staff',
     sessionId: id,
     csrfToken: 'csrf',

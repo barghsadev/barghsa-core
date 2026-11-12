@@ -8,7 +8,7 @@ const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const profileId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const versionId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 const req = {
-  session: { userId: 'opaque-staff', permissions: ['contracts:write'] },
+  session: { operatingContext: 'staff', userId: 'opaque-staff', permissions: ['contracts:write'] },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 const routes = ['create', 'update', 'amendment'] as const;
