@@ -379,6 +379,20 @@ export class UploadService {
       throw new ForbiddenException('Upload belongs to another operating context');
   }
 
+  private async requireCurrentUploadScope(
+    metadata: Record<string, unknown>,
+    actor: AuthenticatedRequest
+  ) {
+    const reserved = metadata.uploadContext as Record<string, unknown> | undefined;
+    const context = UploadContextSchema.safeParse({
+      purpose: reserved?.purpose ?? metadata.purpose,
+      profileId: reserved?.profileId ?? metadata.profileId,
+      ticketId: reserved?.ticketId ?? metadata.ticketId,
+    });
+    if (!context.success) throw new ConflictException('Upload authorization is unavailable');
+    await requireUploadContext(this.profilesService, actor, context.data);
+  }
+
   private async ownedMultipart(
     id: string,
     actor: AuthenticatedRequest,
@@ -413,9 +427,16 @@ export class UploadService {
       throw new ConflictException('Multipart upload is no longer active');
     if (!Number.isSafeInteger(number) || number < 1 || number > count)
       throw new BadRequestException('Invalid multipart part number');
+    await this.requireCurrentUploadScope(row.metadata, actor);
+    const url = await storage.presignedUploadPartUrl!(
+      row.storage_key,
+      multipart.providerId,
+      number
+    );
+    await this.requireCurrentUploadScope(row.metadata, actor);
     return {
       partNumber: number,
-      url: await storage.presignedUploadPartUrl!(row.storage_key, multipart.providerId, number),
+      url,
       expiresIn: DEFAULT_EXPIRES_IN,
     };
   }
@@ -432,15 +453,18 @@ export class UploadService {
   }> {
     const storage = this.requireMultipartStorage();
     const { row, multipart } = await this.ownedMultipart(id, actor);
+    await this.requireCurrentUploadScope(row.metadata, actor);
+    const parts =
+      multipart.status === 'in_progress'
+        ? await storage.listMultipartParts!(row.storage_key, multipart.providerId)
+        : [];
+    await this.requireCurrentUploadScope(row.metadata, actor);
     return {
       key: row.storage_key,
       partSize: MULTIPART_PART_SIZE,
       partCount: Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE),
       status: multipart.status === 'starting' ? 'in_progress' : multipart.status,
-      parts:
-        multipart.status === 'in_progress'
-          ? await storage.listMultipartParts!(row.storage_key, multipart.providerId)
-          : [],
+      parts,
     };
   }
 
@@ -449,6 +473,7 @@ export class UploadService {
     const owned = await this.ownedMultipart(id, actor, undefined, ['completing']);
     return this.runMultipartOperation(owned.row.storage_key, async (client) => {
       const { row, multipart } = await this.ownedMultipart(id, actor, client, ['completing']);
+      await this.requireCurrentUploadScope(row.metadata, actor);
       if (multipart.status === 'completed') return { key: row.storage_key, status: 'completed' };
       if (!['in_progress', 'completing'].includes(multipart.status))
         throw new ConflictException('Multipart upload was aborted');
@@ -467,6 +492,7 @@ export class UploadService {
       }
       if (parts && !validMultipartParts(parts, Number(row.file_size)))
         throw new ConflictException('Multipart parts do not match the authorized file size');
+      await this.requireCurrentUploadScope(row.metadata, actor);
       const claimed = await client.query(
         `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart}',$3::jsonb),updated_at=NOW()
          WHERE storage_key=$1 AND metadata->'multipart'->>'id'=$2
@@ -493,6 +519,7 @@ export class UploadService {
         ))
       )
         throw new ConflictException('Upload reservation changed during completion');
+      await this.requireCurrentUploadScope(row.metadata, actor);
       return { key: row.storage_key, status: 'completed' };
     });
   }
@@ -573,8 +600,10 @@ export class UploadService {
 
     const issued = await requireOwnedUpload(key, actor.session.userId);
     this.requireReservationContext(issued.metadata, actor);
+    await this.requireCurrentUploadScope(issued.metadata, actor);
     try {
       const inspected = await this.inspectUploadedObject(key, category);
+      await this.requireCurrentUploadScope(issued.metadata, actor);
 
       if (inspected.kind === 'confirmed') {
         const size = parseTrustedContentLength(inspected.contentLength);
@@ -609,6 +638,7 @@ export class UploadService {
       };
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
+        await this.requireCurrentUploadScope(issued.metadata, actor);
         return {
           key,
           exists: false,

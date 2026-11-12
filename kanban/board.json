@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:42:31+00:00",
+  "updated": "2026-11-12T20:51:33+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16798,7 +16798,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/upload.controller.ts",
@@ -16806,7 +16806,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/web/src/components/FileUpload.test.tsx",
@@ -17023,6 +17023,15 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -31112,7 +31121,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -31120,7 +31129,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/web/src/lib/document-upload-progress.test.ts",
@@ -31988,6 +31997,15 @@
                 "apps/api/src/profiles/onboarding.controller.ts"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -147849,7 +147867,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -148186,6 +148204,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -151830,7 +151856,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -152302,6 +152328,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -152743,7 +152777,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -153214,6 +153248,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -156166,7 +156208,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -156637,6 +156679,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -572566,7 +572616,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -572965,6 +573015,14 @@
                 "apps/api/src/tickets/tickets-http.integration.test.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -573085,7 +573143,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -573455,6 +573513,14 @@
                 "apps/api/src/tickets/tickets-http.integration.test.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -576511,7 +576577,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -577029,6 +577095,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -577231,7 +577305,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -577744,6 +577818,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -578365,7 +578447,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -578878,6 +578960,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -579081,7 +579171,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
@@ -579681,6 +579771,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -580300,7 +580398,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -580813,6 +580911,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -581014,7 +581120,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -581551,6 +581657,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -581752,7 +581866,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -582289,6 +582403,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -582490,7 +582612,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -583027,6 +583149,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -583228,7 +583358,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -583765,6 +583895,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -583965,7 +584103,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -584478,6 +584616,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -585085,7 +585231,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -585093,7 +585239,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -585593,6 +585739,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts",
+                "apps/api/src/upload/multipart-http.integration.test.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -585747,7 +585902,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -585755,7 +585910,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -586255,6 +586410,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts",
+                "apps/api/src/upload/multipart-http.integration.test.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -586411,7 +586575,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -586419,7 +586583,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -586940,6 +587104,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts",
+                "apps/api/src/upload/multipart-http.integration.test.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -587128,7 +587301,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -587136,7 +587309,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -587783,6 +587956,15 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts",
+                "apps/api/src/upload/multipart-http.integration.test.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -587949,7 +588131,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -587957,7 +588139,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -588457,6 +588639,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts",
+                "apps/api/src/upload/multipart-http.integration.test.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -591521,7 +591712,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -591858,6 +592049,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -592129,7 +592328,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -592466,6 +592665,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -592739,7 +592946,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -593076,6 +593283,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -593348,7 +593563,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -593685,6 +593900,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -620049,7 +620272,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -620398,6 +620621,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -620764,7 +620995,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -621002,6 +621233,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -621076,7 +621315,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -621305,6 +621544,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -621402,7 +621649,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -621650,6 +621897,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -621809,7 +622064,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -622141,6 +622396,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -622191,7 +622454,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -622540,6 +622803,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -622713,7 +622984,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -623079,6 +623350,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -624107,8 +624386,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, and 12 onboarding method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with customer upload authorization, asset and upload receipt routes, then the remaining domains. Reuse source-bound checks for intact routes and verify demonstrated authority gaps defensively."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, and 10 upload policy, preview, reservation, verification, record and multipart method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with branding asset, storage record and remaining receipt authority routes, then the remaining domains. Reuse source-bound checks for intact routes and verify demonstrated authority gaps defensively."
       ],
       "owner": null,
       "depends_on": [],
@@ -624330,7 +624609,8 @@
           "release-0.6-profile-selection-authority",
           "release-0.6-profile-read-authority",
           "release-0.6-team-authority",
-          "release-0.6-onboarding-authority"
+          "release-0.6-onboarding-authority",
+          "release-0.6-upload-reservation-authority"
         ],
         "current_acceptance": null
       }
@@ -624406,7 +624686,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -624648,6 +624928,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -624994,7 +625282,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -625380,6 +625668,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -626003,7 +626299,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -626338,6 +626634,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -633414,7 +633718,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -633434,7 +633738,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -633628,6 +633932,15 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -633687,7 +634000,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -633816,6 +634129,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -634851,7 +635172,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -634871,7 +635192,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -635064,6 +635385,15 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -635171,11 +635501,11 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -635603,6 +635933,15 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -635708,7 +636047,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -635830,6 +636169,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -640275,7 +640622,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
             },
             {
               "path": "docs/threat-model.md",
@@ -640527,6 +640874,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ]
         }
@@ -996200,7 +996555,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -996224,7 +996579,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -1000076,6 +1000431,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "presentation_renewals": [
@@ -1001541,7 +1001905,7 @@
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
-              "sha256": "84acdf5061e34bfcc3748e6635aa709b8e4c50fd3a7d5632d29411b4feb80475"
+              "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -1001565,7 +1001929,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "e0e5da3aa8064d89aa4223ce54f14c99fa322c1f7feb41c8cb7dea94d518dd2d"
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -1005298,6 +1005662,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
+            },
+            {
+              "batch": "release-0.6-upload-reservation-authority",
+              "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+              "paths": [
+                "apps/api/src/upload/multipart-http.integration.test.ts",
+                "apps/api/src/upload/upload.service.ts"
+              ],
+              "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1171309,6 +1171682,174 @@
         {
           "file": "staging-health-after-pair.json",
           "sha256": "4eed01c862bd0037f3fcfb6a31e8980157f2e178ecc1f36f1ae17ddede0375bc"
+        }
+      ]
+    },
+    "release-0.6-upload-reservation-authority": {
+      "batch": "release-0.6-upload-reservation-authority",
+      "base_commit": "54165d78ff3fcad40eeb99ce9bbe28ca174a191b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.11.02",
+        "05-notifications-documents-ai.md#T-05.11.03",
+        "05-notifications-documents-ai.md#T-05.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.12.01",
+        "05-notifications-documents-ai.md#T-05.12.02",
+        "05-notifications-documents-ai.md#T-05.12.03",
+        "05-notifications-documents-ai.md#T-05.13.01",
+        "05-notifications-documents-ai.md#T-05.13.02",
+        "05-notifications-documents-ai.md#T-05.13.03",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.06.01.08",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/upload/multipart-http.integration.test.ts",
+        "apps/api/src/upload/upload.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+          "sha256": "e7fd4d3df3b0b8ea289cf14c4f8257d97392d15e1c14eb0a205d986a2a4caf44"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+        },
+        {
+          "path": "apps/api/src/upload/multipart-upload.controller.ts",
+          "sha256": "3f16d0acfe2e658b46e6ca1c2e881cac38969075be43769d8911309afeecdf1f"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.ts",
+          "sha256": "b5e0108f2b1a94c6337445b771d87ae88e82b03a58c3900cda9345d8785f2c5e"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "c312bd43444195a65c9da9384ad7825ac040fe2395006d51322ffd8bb1786d36"
+        },
+        {
+          "path": "apps/api/src/upload/upload.types.ts",
+          "sha256": "c2cea5154f4ff21f34749a7ee08b0765191d400eafa92264e613a74943b8c2d8"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.test.ts",
+          "sha256": "8bc3a9de9ee9d213c5869f811e4f3ea41ce8e28df14dbf82b2f1a2cac060a2d7"
+        },
+        {
+          "path": "apps/api/src/upload/upload-admission.test.ts",
+          "sha256": "7451a9256e8dfc5d57aaad622e33df2648fd296ac8abd9d94703d8ebf2e20db3"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "39315428e51aaedb52d760c9e49f987bcce8312daf81cf4496ddceca85eb4c08"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "26d55f5ec33501443e2863ac57fab73c76dd44a5540dbc7da35791d6f9b71677"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "2b781d04d464468dad9a1248b92c5f951eb0730755ed485258514a0abf7640b1"
+        },
+        {
+          "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
+          "sha256": "5b8ce04f9d417dfd891f5abcad16a59ecc86b75fd7f8d68822c6d04f5641dc05"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+        }
+      ],
+      "checks": [
+        "Reviewed ten route pairs across the session-guarded upload and multipart controllers. Ownership and operating-context checks remain in force.",
+        "Direct verification and multipart part signing, listing and completion check the profile, ticket and purpose bound at admission. The service rechecks current scope after storage work before returning upload details.",
+        "A native PostgreSQL and MinIO regression removes a Finance grant while listing is blocked on storage. The listing withholds parts. Part signing, completion, direct verification and recording deny the former agent. Only the reservation owner can abort the unfinished multipart upload.",
+        "Nine affected suites passed 246 cases. Existing document, ticket, storage and account-image callers passed. API typecheck, lint, formatting, generated OpenAPI and API-client checks passed."
+      ],
+      "limitations": [
+        "One opt-in real ClamAV case was skipped because this run did not configure the scanner fixture. Its earlier receipt remains separate.",
+        "The remaining route inventory and exact deployed-candidate acceptance are open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-upload-reservation-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "a3031f6aa74ed8d38a53dba1935b3b6adae84b9666221729aebbaf109759a72a"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "73f8e4650f1961cef7d369e23c68a02ea35c3e4057e361b210be0200e99670d0"
+        },
+        {
+          "file": "lint-format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "routes.json",
+          "sha256": "57dce7c2eed653760a6e0fcb3d67e32b6b6f61049145e54713998ba86a568d01"
         }
       ]
     }

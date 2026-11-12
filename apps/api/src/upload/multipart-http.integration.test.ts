@@ -124,12 +124,13 @@ function api(path: string, method: string, headers = actorHeaders, body?: object
   });
 }
 
-async function start(size = partSize + 91) {
+async function start(size = partSize + 91, profileId?: string) {
   const response = await api('/api/v1/files/upload/start', 'POST', actorHeaders, {
     fileName: 'large.pdf',
     contentType: 'application/pdf',
     fileSize: size,
     category: 'document',
+    ...(profileId ? { profileId, purpose: 'bank_receipt' } : {}),
   });
   expect(response.status, http.logs()).toBe(201);
   return (await response.json()) as {
@@ -189,6 +190,60 @@ it('aborts an owned upload and refuses later part URLs', async () => {
   expect(
     (await api(`/api/v1/files/upload/${upload.uploadId}/part?partNumber=1`, 'PUT')).status
   ).toBe(409);
+});
+
+it('rechecks the reservation profile before disclosing or completing an upload', async () => {
+  const profile = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('multipart-other','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0];
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'multipart-owner','Finance')",
+    [profile.id]
+  );
+  const direct = await api('/api/upload/presigned-url', 'POST', actorHeaders, {
+    fileName: 'receipt.pdf',
+    contentType: 'application/pdf',
+    fileSize: 128,
+    category: 'document',
+    purpose: 'bank_receipt',
+    profileId: profile.id,
+  });
+  expect(direct.status, http.logs()).toBe(200);
+  const key = encodeURIComponent(((await direct.json()) as { key: string }).key);
+  const verify = await api(`/api/upload/${key}/verify`, 'POST');
+  expect(verify.status, http.logs()).toBe(200);
+  expect(await verify.json()).toMatchObject({ status: 'not_found' });
+
+  const upload = await start(partSize + 91, profile.id);
+  const path = `/api/v1/files/upload/${upload.uploadId}`;
+  expect((await api(`${path}/part?partNumber=1`, 'PUT')).status, http.logs()).toBe(200);
+  const pause = pauseStorage('GET', 'uploadId');
+  const pending = api(`${path}/parts`, 'GET');
+  try {
+    await Promise.race([
+      pause.entered,
+      pending.then((response) => {
+        throw new Error(`Expected provider list request, got ${response.status}`);
+      }),
+    ]);
+    await http.pool.query(
+      "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='multipart-owner'",
+      [profile.id]
+    );
+  } finally {
+    pause.release();
+  }
+  const listed = await pending;
+  expect(listed.status, http.logs()).toBe(404);
+  expect(await listed.json()).not.toHaveProperty('parts');
+  expect((await api(`${path}/part?partNumber=1`, 'PUT')).status).toBe(404);
+  expect((await api(`${path}/complete`, 'POST')).status).toBe(404);
+  expect((await api(`/api/upload/${key}/verify`, 'POST')).status).toBe(404);
+  expect((await api(`/api/upload/${key}/record`, 'POST', actorHeaders, {})).status).toBe(404);
+  expect((await api(`${path}/abort`, 'POST', otherHeaders)).status).toBe(409);
+  expect((await api(`${path}/abort`, 'POST')).status).toBe(200);
 });
 
 it('commits the document and its idempotent reservation before initializing S3', async () => {
