@@ -1,0 +1,44 @@
+name: Verify strict profile command receipts
+on:
+  push:
+    branches: ['codex/verify/v06-profile-receipts-*']
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
+      - name: Verify profile normalization, receipts and unknown-field rejection
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm check:contract
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/profiles/profile-form-input-fields.test.ts \
+            src/profiles/profile-write-http.integration.test.ts \
+            src/profiles/addresses-http.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/native-profile-receipts.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-profile-receipts
+          path: ${{ runner.temp }}/native-profile-receipts.log
+          retention-days: 14
