@@ -34167,6 +34167,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "cityId": {
                     "format": "uuid",
@@ -34897,8 +34898,10 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "address": {
+                    "additionalProperties": false,
                     "properties": {
                       "cityId": {
                         "format": "uuid",
@@ -35441,6 +35444,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "cityId": {
                     "format": "uuid",
@@ -35628,6 +35632,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "cityId": {
                     "format": "uuid",
@@ -35752,6 +35757,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "cityId": {
                     "format": "uuid",
@@ -36074,6 +36080,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "transferId": {
                     "format": "uuid",
@@ -36145,6 +36152,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "transferId": {
                     "format": "uuid",
@@ -36216,6 +36224,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "transferId": {
                     "format": "uuid",
@@ -44562,6 +44571,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "versionId": {
                     "description": "The UUID of the TOS version being accepted",

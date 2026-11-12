@@ -151,7 +151,7 @@ export class LegalProfilesService {
     }
 
     const parsed = z
-      .object({
+      .strictObject({
         documents: z.array(z.string().min(1).max(512)).max(5).optional(),
         draftVersion: z.number().int().min(0).max(2147483647).optional(),
         legalName: z.string().trim().min(1).max(200),

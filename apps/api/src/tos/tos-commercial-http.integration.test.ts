@@ -64,6 +64,8 @@ const request = (path: string, method = 'GET', body?: unknown) =>
 const accept = () => request(`tos/accept/${versionId}`, 'POST');
 
 it('requires current consent across all four commercial entrypoints while existing records remain accessible', async () => {
+  expect((await request('tos/accept', 'POST', { versionId, accepted: true })).status).toBe(400);
+  expect((await http.pool.query('SELECT id FROM tos_acceptances')).rows).toEqual([]);
   const commercial = [
     () =>
       request('orders', 'POST', {

@@ -122,7 +122,7 @@ export class AgentsController {
     @Req() req: AuthenticatedRequest
   ) {
     const parsed = z
-      .object({
+      .strictObject({
         username: z.string().min(1).max(254),
         role: z.enum(['Manager', 'Finance', 'Legal']),
         message: z
@@ -199,7 +199,7 @@ export class AgentsController {
     @Req() req: AuthenticatedRequest
   ) {
     const parsed = z
-      .object({
+      .strictObject({
         roles: z
           .array(z.enum(['Manager', 'Finance', 'Legal']))
           .min(1)

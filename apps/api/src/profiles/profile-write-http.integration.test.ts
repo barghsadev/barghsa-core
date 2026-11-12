@@ -478,6 +478,8 @@ it('rejects malformed onboarding bodies and route IDs with validation responses'
       headers,
       body: JSON.stringify(body),
     });
+  const before = await snapshot();
+  const profilesBefore = (await http.pool.query('SELECT id FROM profiles')).rows;
   for (const body of [
     null,
     [],
@@ -485,6 +487,7 @@ it('rejects malformed onboarding bodies and route IDs with validation responses'
     { profileType: [] },
     { profileType: 123 },
     { profileType: 'unknown' },
+    { profileType: 'INDIVIDUAL', status: 'VERIFIED' },
   ]) {
     expect((await send('start', body)).status).toBe(400);
   }
@@ -509,12 +512,15 @@ it('rejects malformed onboarding bodies and route IDs with validation responses'
     { ...valid, fullAddress: ' ' },
     { ...valid, postalCode: 123 },
     { ...valid, nationalId: 123 },
+    { ...valid, status: 'VERIFIED' },
   ]) {
     expect((await send(`individual/${profileId}`, body)).status).toBe(400);
   }
   for (const route of ['individual', 'legal', 'complete'])
     expect((await send(`${route}/bad`, valid)).status).toBe(400);
   expect((await snapshot()).status).toBe('DRAFT');
+  expect(await snapshot()).toEqual(before);
+  expect((await http.pool.query('SELECT id FROM profiles')).rows).toEqual(profilesBefore);
   expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
   expect((await send(`individual/${profileId}`, valid)).status).toBe(200);
 });
@@ -547,6 +553,7 @@ it('validates representative identity, preserves both addresses and rolls back o
   }
   expect((await submit({ ...body, representativeNationalId: '1111111111' })).status).toBe(400);
   expect((await submit({ ...body, representativeCityId: randomUUID() })).status).toBe(400);
+  expect((await submit({ ...body, status: 'VERIFIED' })).status).toBe(400);
   await http.pool.query(
     "CREATE FUNCTION reject_legal_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test legal audit failure'; END $$; CREATE TRIGGER reject_legal_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='legal_profile_saved') EXECUTE FUNCTION reject_legal_audit()"
   );
@@ -1176,6 +1183,7 @@ it('profile forms expose only current-authorized owned string feedback after ide
     error: { code: 'VALIDATION:INPUT:INVALID', fields: ['title'] },
   });
   for (const body of [
+    { title: 'Would write', profileId: 'PRIVATE' },
     { title: invalidTitle, profileId: 'PRIVATE' },
     { title: invalidTitle, idempotencyKey: 'PRIVATE' },
     { firstName: [] },
