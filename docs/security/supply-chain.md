@@ -6,7 +6,14 @@ Static analysis, secret scanning and image scanning run independently of the app
 
 Semgrep checks production app, worker and shared source for direct request data in SQL text, outbound URLs and redirects, unsafe HTML, and literal credentials. The SQL rule includes typed Nest request parameters and Drizzle `sql.raw`. Keep values bound through Drizzle's SQL templates or driver placeholders. The rules do not replace review of cross-file data flows or dynamically chosen identifiers.
 
-The shared ESLint configuration requires static SQL text at Drizzle `sql.raw` calls. It recognizes literal text, compositions of literals and local constants, and the direct named and namespace imports used by the project. Bind runtime values with the Drizzle SQL tag. Review the input to identifier builders and existing node-postgres query builders separately.
+The shared ESLint configuration requires static SQL text at Drizzle `sql.raw` and PostgreSQL `query` calls. It recognizes literal text, compositions of literals and local constants, and choices between static statements. Bind runtime values with the Drizzle SQL tag or PostgreSQL placeholders.
+
+The PostgreSQL rule records exact source digests for reviewed query builders,
+driver adapters and shared fragments. A source change invalidates its digest.
+Review the changed SQL text and its inputs before renewing an entry. Remove the
+entry when the file no longer requires review. The rule checks query syntax and
+known aliases. Follow imported fragments, data flows and migration SQL in source
+review.
 
 Gitleaks scans all Git history and verifies its own redaction with a synthetic credential. Its reports must never contain recovered secrets. When changing web build inputs, scan the built frontend separately for unintentionally embedded credentials.
 

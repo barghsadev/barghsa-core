@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T18:48:41+00:00",
+  "updated": "2026-11-12T19:13:34+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -28870,7 +28870,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -29094,6 +29094,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -29511,7 +29519,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -29739,6 +29747,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -627990,7 +628006,7 @@
           "source_evidence": [
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -628042,7 +628058,7 @@
             },
             {
               "path": "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
-              "sha256": "4cd453e5b67546ca41f229b432f326a557d8730c2f5e03e006b5899f71e45fa6"
+              "sha256": "67d3b5224dec4c0aac8ccac65ed92c1efd36e347fa3586f9ad0903c07a1a08c3"
             },
             {
               "path": "packages/db/drizzle/0019_create_invoice_state_enum.sql",
@@ -628094,6 +628110,15 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md",
+                "packages/eslint-config/no-dynamic-drizzle-raw.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -628392,12 +628417,10 @@
         "story": "06-security-testing-observability.md#spec-2bcfd5883d56"
       },
       "requirement": "| T-06.04.02.03 | Add lint rule: forbid raw SQL interpolation of non-literal strings | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Add equivalent lint protection for node-postgres SQL text after separating reviewed, bounded grammar fragments and internal query forwarding from runtime values. Preserve bound values and existing behavior."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -628408,13 +628431,59 @@
           "packages/db/src/domain-checks.ts",
           "packages/eslint-config/index.mjs",
           "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
-          "packages/eslint-config/no-dynamic-drizzle-raw.test.mjs"
+          "packages/eslint-config/no-dynamic-drizzle-raw.test.mjs",
+          "packages/eslint-config/no-dynamic-postgres-query.mjs",
+          "packages/eslint-config/no-dynamic-postgres-query.test.mjs",
+          "packages/eslint-config/reviewed-postgres-sql.json"
         ],
         "batches": [
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-node-postgres-lint"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "batch": "release-0.6-node-postgres-lint",
+          "checks": [
+            "The required root lint enables the node-postgres static text rule for API, worker, database, shared and operational JavaScript and TypeScript sources. It checks query calls, direct local aliases, driver constructors and inline query configuration. Drizzle sql.raw retains the existing static checks.",
+            "The inventory identified 176 complex SQL or forwarding reports in 96 files. Reused the prior data-flow review for 61 exact source hashes. Reviewed current changes in the remaining 35 and checked 10 shared SQL fragment and policy sources. The recorded digests require another review when any of those files changes.",
+            "Reviewed the remaining SQL choices and forwarding paths. Identifiers, lock modes, operators, projections and placeholder counters come from bounded source choices. Query values remain in driver parameters. The lint change leaves runtime query text, authorization and transactions unchanged.",
+            "All three shared ESLint test files passed, including static compositions, parameterized query configurations, indirect methods, supported constructors and a regression proving that a changed reviewed driver adapter fails. Scoped lint passed with zero warnings. Formatting and the existing production suppression checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
+            },
+            {
+              "path": "eslint.config.mjs",
+              "sha256": "2b09dd7fc63ebe8e3965d7e41f63c8214107e773e336b48f4b9f66a07c89096a"
+            },
+            {
+              "path": "packages/eslint-config/index.mjs",
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
+            },
+            {
+              "path": "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
+              "sha256": "67d3b5224dec4c0aac8ccac65ed92c1efd36e347fa3586f9ad0903c07a1a08c3"
+            },
+            {
+              "path": "packages/eslint-config/no-dynamic-postgres-query.mjs",
+              "sha256": "b77e8e60636421c9568cde182159b7f36d70971f7c83f87fc52ff91256588e69"
+            },
+            {
+              "path": "packages/eslint-config/no-dynamic-postgres-query.test.mjs",
+              "sha256": "0420cbe965bb7187198a34c5ec68cbf0f93810fdf9d92017f4585a2be1de3abf"
+            },
+            {
+              "path": "packages/eslint-config/reviewed-postgres-sql.json",
+              "sha256": "fea3646bcb4adadab2b617926716fb52fdc9e25fd1ea3fde8417b63157aa1fad"
+            }
+          ]
+        }
       }
     },
     {
@@ -628893,7 +628962,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -628979,6 +629048,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -636652,7 +636729,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -636913,6 +636990,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -637846,7 +637931,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -638041,6 +638126,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -638420,7 +638513,7 @@
           "source_evidence": [
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -638583,6 +638676,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -640566,7 +640667,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             }
           ],
           "checks": [
@@ -640648,6 +640749,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -640774,7 +640883,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             }
           ],
           "checks": [
@@ -640856,6 +640965,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -652143,7 +652260,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             },
             {
               "path": "scripts/check-sast.py",
@@ -652308,6 +652425,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -655937,7 +656062,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
             }
           ],
           "checks": [
@@ -656020,6 +656145,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -702908,7 +703041,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -703499,6 +703632,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -703833,7 +703974,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -704424,6 +704565,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -704758,7 +704907,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -705349,6 +705498,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -705683,7 +705840,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -706274,6 +706431,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -706608,7 +706773,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -707199,6 +707364,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -707533,7 +707706,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -708124,6 +708297,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -708458,7 +708639,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -709049,6 +709230,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -709383,7 +709572,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -709974,6 +710163,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -710308,7 +710505,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -710899,6 +711096,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -711233,7 +711438,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -711824,6 +712029,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -712158,7 +712371,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -712749,6 +712962,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -713083,7 +713304,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -713674,6 +713895,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -714008,7 +714237,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -714599,6 +714828,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -714933,7 +715170,7 @@
             },
             {
               "path": "packages/eslint-config/index.mjs",
-              "sha256": "5ef2835d68cd813a2d3dc5de95d969a96d290e72ab16f18f2d9bd63e17e18edb"
+              "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
             },
             {
               "path": "packages/eslint-config/no-literal-colors.mjs",
@@ -715524,6 +715761,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-node-postgres-lint",
+              "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+              "paths": [
+                "packages/eslint-config/index.mjs"
+              ],
+              "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
             }
           ]
         }
@@ -1008665,7 +1008910,8 @@
           "release-0.6-otlp-connection-deadline",
           "release-0.6-reuse-affected-preflight",
           "release-0.6-validated-outbox-trace-constraint",
-          "release-0.6-pilot-rollout"
+          "release-0.6-pilot-rollout",
+          "release-0.6-node-postgres-lint"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1168280,6 +1168526,130 @@
         "release-readiness#R-02.02",
         "release-readiness#R-04.02"
       ]
+    },
+    "release-0.6-node-postgres-lint": {
+      "batch": "release-0.6-node-postgres-lint",
+      "base_commit": "736bcb0cca45ad85f46e58f70037d5df0b047d68",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.04.03.03",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03"
+      ],
+      "changed_paths": [
+        "docs/security/supply-chain.md",
+        "packages/eslint-config/index.mjs",
+        "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
+        "packages/eslint-config/no-dynamic-postgres-query.mjs",
+        "packages/eslint-config/no-dynamic-postgres-query.test.mjs",
+        "packages/eslint-config/reviewed-postgres-sql.json"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
+        },
+        {
+          "path": "eslint.config.mjs",
+          "sha256": "2b09dd7fc63ebe8e3965d7e41f63c8214107e773e336b48f4b9f66a07c89096a"
+        },
+        {
+          "path": "packages/eslint-config/index.mjs",
+          "sha256": "93689bd10b76714249096e8dafc7d9a25beccb76b4cd0c35779b266ec022af49"
+        },
+        {
+          "path": "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
+          "sha256": "67d3b5224dec4c0aac8ccac65ed92c1efd36e347fa3586f9ad0903c07a1a08c3"
+        },
+        {
+          "path": "packages/eslint-config/no-dynamic-postgres-query.mjs",
+          "sha256": "b77e8e60636421c9568cde182159b7f36d70971f7c83f87fc52ff91256588e69"
+        },
+        {
+          "path": "packages/eslint-config/no-dynamic-postgres-query.test.mjs",
+          "sha256": "0420cbe965bb7187198a34c5ec68cbf0f93810fdf9d92017f4585a2be1de3abf"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "fea3646bcb4adadab2b617926716fb52fdc9e25fd1ea3fde8417b63157aa1fad"
+        }
+      ],
+      "checks": [
+        "The required root lint enables the node-postgres static text rule for API, worker, database, shared and operational JavaScript and TypeScript sources. It checks query calls, direct local aliases, driver constructors and inline query configuration. Drizzle sql.raw retains the existing static checks.",
+        "The inventory identified 176 complex SQL or forwarding reports in 96 files. Reused the prior data-flow review for 61 exact source hashes. Reviewed current changes in the remaining 35 and checked 10 shared SQL fragment and policy sources. The recorded digests require another review when any of those files changes.",
+        "Reviewed the remaining SQL choices and forwarding paths. Identifiers, lock modes, operators, projections and placeholder counters come from bounded source choices. Query values remain in driver parameters. The lint change leaves runtime query text, authorization and transactions unchanged.",
+        "All three shared ESLint test files passed, including static compositions, parameterized query configurations, indirect methods, supported constructors and a regression proving that a changed reviewed driver adapter fails. Scoped lint passed with zero warnings. Formatting and the existing production suppression checks passed."
+      ],
+      "limitations": [
+        "The source rule covers direct calls and known local aliases. Cross-file application data flows and migration SQL retain their separate source review.",
+        "The exact protected push is recorded separately. This closes a source criterion within v0.6.0. Strict license, deployed security and operational release gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-node-postgres-lint",
+      "execution_receipts": [
+        {
+          "file": "rule-tests.log",
+          "sha256": "44a2ed7af951b0b16b0eec2b4042df47a3c6872a712af9027dd58444f1444fad"
+        },
+        {
+          "file": "suppression-check.log",
+          "sha256": "25422d8b4b1c6e6d09bddd72e26bcdc701c14f49e50ab221f192f80655fb235f"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "lint.inventory-final-rule.json",
+          "sha256": "a13c914f1063cee7cbe042fef24f101bd6ed6d5782e4507046fe688da66a8b6e"
+        },
+        {
+          "file": "reviewed-sites.json",
+          "sha256": "cf9f0fcd36fc60379fd7a3be009c0d18b575c81ddbe3bb8de8d1743f827e6bc2"
+        },
+        {
+          "file": "changed-query-review.json",
+          "sha256": "f157190073d4fb31f51155c253c4cff63da789e83789896aec595d94f079b51b"
+        },
+        {
+          "file": "sql-source-inventory.json",
+          "sha256": "7719b0d54764fbc5e6da99841fe2a6e29efb37c3efa879cdfce051105193c928"
+        },
+        {
+          "file": "review-current.diff",
+          "sha256": "ad5ef4493141b59c3b440cd7af65abfd32d7cb6a4b2b64468d33bb73cb7d9e90"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -1168334,7 +1168704,7 @@
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open. GitHub verified main at de6e5374 after a successful exact preflight. The targeted WebKit branding and team journeys passed with the repaired test fixture. The final scheduled rollup and legal dispositions remain open. The next exact protected preflight 43099755916 passed on 256a0d1c, and GitHub confirmed that SHA on main. The Drizzle raw SQL guard passed locally; driver coverage remains open."
+    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open. GitHub verified main at de6e5374 after a successful exact preflight. The targeted WebKit branding and team journeys passed with the repaired test fixture. The final scheduled rollup and legal dispositions remain open. The next exact protected preflight 43099755916 passed on 256a0d1c, and GitHub confirmed that SHA on main. The Drizzle and node-postgres SQL lint criteria now have source-bound passing checks."
   },
   "capabilities": [
     {

@@ -1,9 +1,9 @@
-function propertyName(key, computed) {
+export function propertyName(key, computed) {
   if (key.type === 'Literal') return key.value;
   if (!computed && key.type === 'Identifier') return key.name;
 }
 
-function binding(source, identifier) {
+export function binding(source, identifier) {
   for (let scope = source.getScope(identifier); scope; scope = scope.upper) {
     const variable = scope.set.get(identifier.name);
     if (variable) return variable.defs.length === 1 ? variable.defs[0] : undefined;
@@ -48,7 +48,7 @@ function drizzleModule(name) {
   return name === 'drizzle-orm' || name === 'drizzle-orm/sql';
 }
 
-function staticText(source, node, visiting = new Set()) {
+export function staticText(source, node, visiting = new Set()) {
   if (!node) return false;
   switch (node.type) {
     case 'Literal':

@@ -5,6 +5,7 @@ import hooks from 'eslint-plugin-react-hooks';
 import a11y from 'eslint-plugin-jsx-a11y';
 import globals from 'globals';
 import noDynamicDrizzleRaw from './no-dynamic-drizzle-raw.mjs';
+import noDynamicPostgresQuery from './no-dynamic-postgres-query.mjs';
 import noLiteralColors from './no-literal-colors.mjs';
 
 export default tseslint.config(
@@ -31,7 +32,15 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx,mts,cts}'],
   })),
   {
-    plugins: { '@typescript-eslint': tseslint.plugin },
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      'barghsa-db': {
+        rules: {
+          'no-dynamic-drizzle-raw': noDynamicDrizzleRaw,
+          'no-dynamic-postgres-query': noDynamicPostgresQuery,
+        },
+      },
+    },
     languageOptions: { globals: { ...globals.node } },
     linterOptions: { reportUnusedDisableDirectives: 'error' },
   },
@@ -77,8 +86,16 @@ export default tseslint.config(
       'scripts/**/*.{js,mjs,cjs,ts,mts,cts}',
     ],
     ignores: ['**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs,mts,cts}', '**/src/test/**'],
-    plugins: { 'barghsa-db': { rules: { 'no-dynamic-drizzle-raw': noDynamicDrizzleRaw } } },
     rules: { 'barghsa-db/no-dynamic-drizzle-raw': 'error' },
+  },
+  {
+    files: [
+      'apps/{api,worker}/{src,scripts}/**/*.{js,ts,mjs,cjs,mts,cts}',
+      'packages/{db,shared}/{src,scripts}/**/*.{js,ts,mjs,cjs,mts,cts}',
+      '{deploy,scripts}/**/*.{js,mjs,cjs,ts,mts,cts}',
+    ],
+    ignores: ['**/*.{test,spec}.{js,ts,mjs,cjs,mts,cts}', '**/{e2e,test,fixtures}/**'],
+    rules: { 'barghsa-db/no-dynamic-postgres-query': 'error' },
   },
   {
     files: ['apps/web/src/**/*.{jsx,tsx}', 'packages/ui/src/**/*.{jsx,tsx}'],
