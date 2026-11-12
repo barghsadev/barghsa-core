@@ -99,6 +99,8 @@ it cannot block later deployments after those required confirmations pass. Unkno
 image outcomes remain unconfirmed in the notification receipts. It serializes releases
 through the required Telegram confirmation, so a newer rollout cannot replace an older release mid-post.
 The caller's branch, working files and subsequent commits do not affect the release.
+The job directory stays private. Git creates tracked files with their usual
+read and execute permissions so the non-root container user can load them.
 
 Queue jobs, frozen screenshots, worker code and logs live outside the checkout in
 `~/.local/state/barghsa-staging-queue`. Run `python3 deploy/staging/release-queue.py status`

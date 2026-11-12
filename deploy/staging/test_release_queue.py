@@ -89,6 +89,12 @@ class ReleaseQueueTests(unittest.TestCase):
 set -eu
 git rev-parse HEAD > "$QUEUE_CAPTURE/deployed-head"
 test -z "$(git status --porcelain)"
+python3 - <<'PYTHON'
+from pathlib import Path
+assert Path("package.json").stat().st_mode & 0o777 == 0o644
+assert Path("deploy/staging/deploy.sh").stat().st_mode & 0o777 == 0o755
+assert Path("..").stat().st_mode & 0o777 == 0o700
+PYTHON
 if [ "$#" -gt 1 ]; then
     printf '%s\\n' "$2" "$3" > "$QUEUE_CAPTURE/image-bundle"
 fi
@@ -232,8 +238,12 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         queue.enqueue(self.repo, self.state, self.commit, [self.image])
         newer = self.publish("0.1.4")
         (self.repo / "next-batch.txt").write_text("unfinished builder draft")
-        with self.live():
-            self.assertEqual(queue.work(self.state), 0)
+        original_umask = os.umask(0o077)
+        try:
+            with self.live():
+                self.assertEqual(queue.work(self.state), 0)
+        finally:
+            os.umask(original_umask)
         self.assertEqual((self.capture / "deployed-head").read_text().strip(), self.commit)
         self.assertEqual(queue.command(self.repo, "git", "rev-parse", "HEAD", capture=True), newer)
         self.assertTrue((self.repo / "next-batch.txt").exists())

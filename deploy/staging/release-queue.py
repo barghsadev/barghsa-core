@@ -15,10 +15,10 @@ import time
 import urllib.request
 
 
-def command(repo, *args, capture=False):
+def command(repo, *args, capture=False, umask=-1):
     result = subprocess.run(["rtk", "proxy", *args], cwd=repo, check=True,
                             stdout=subprocess.PIPE if capture else None,
-                            text=capture)
+                            text=capture, umask=umask)
     return result.stdout.strip() if capture else None
 
 
@@ -200,7 +200,10 @@ def deploy(job, state):
     directory = state / "jobs" / job["commit"]
     checkout = directory / "checkout"
     if not checkout.exists():
-        command(repo, "git", "worktree", "add", "--detach", str(checkout), job["commit"])
+        # The parent job directory stays private. Docker copies the tracked
+        # file modes and the packaged application runs as a non-root user.
+        command(repo, "git", "worktree", "add", "--detach", str(checkout), job["commit"],
+                umask=0o022)
     if command(checkout, "git", "rev-parse", "HEAD", capture=True) != job["commit"]:
         raise ValueError("Release checkout no longer matches its queued commit")
     # The token remains in the ignored source secret file, excluded by .dockerignore.

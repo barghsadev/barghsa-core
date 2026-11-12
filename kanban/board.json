@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T18:11:23+00:00",
+  "updated": "2026-11-12T18:48:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10,14 +10,14 @@
     "consultation"
   ],
   "latest_release": {
-    "version": "0.5.0",
-    "commit": "dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c",
+    "version": "0.5.1",
+    "commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
     "staging_status": "completed",
-    "completed_at": "2026-11-09T11:24:20.908948+00:00",
+    "completed_at": "2026-11-12T18:45:51.417545+00:00",
     "telegram_messages": [
-      97,
-      98,
-      99
+      100,
+      101,
+      102
     ]
   },
   "migration": {
@@ -3672,7 +3672,7 @@
       "version": "0.5.1",
       "title": "Admin workspace polish",
       "goal": "Give stakeholders one clear admin navigation, a single page path and an uncluttered responsive header.",
-      "status": "accepted",
+      "status": "released",
       "depends_on": [
         "0.5.0"
       ],
@@ -3682,11 +3682,40 @@
         "Responsive, keyboard, RTL, contrast, authority and saved settings journeys pass.",
         "The production web build and all original route budgets pass."
       ],
-      "published_commit": null,
-      "staging_receipt": null,
-      "telegram_receipt": null,
-      "push_receipt": null,
-      "deployment_job": null,
+      "published_commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+      "staging_receipt": {
+        "job": "/Users/majid/.local/state/barghsa-staging-queue/jobs/2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840/job.json",
+        "live_verification": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/live-release.json",
+        "completed_at": "2026-11-12T18:45:51.417545+00:00",
+        "version": "0.5.1",
+        "commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+        "health": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/live-health.json",
+        "browser_smoke": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/staging-browser.log",
+        "login_version": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/staging-login-version.log",
+        "retained_runtime_configuration": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/live-runtime.after.txt",
+        "rollback_runner_recovery": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/rollback-fix.log",
+        "active_image_ids": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/live-image-ids.txt"
+      },
+      "telegram_receipt": {
+        "summary": "/Users/majid/.local/state/barghsa-staging-releases/05db24b446efb63a28e71d8b744dd52a28d20f888fc01f561bd5b220f7be085f.json",
+        "album": "/Users/majid/.local/state/barghsa-staging-releases/album-05db24b446efb63a28e71d8b744dd52a28d20f888fc01f561bd5b220f7be085f.json",
+        "chat_id": -1004467450624,
+        "message_ids": [
+          100,
+          101,
+          102
+        ],
+        "media_group_id": "14356073202527057",
+        "summary_sha256": "4e4a2da07e40b52945097920dc53240a8e72e67ab1fcddd7c01d97dcc4720090",
+        "album_sha256": "32324ec1e28ef6c9d0551e285f580f87907cd5ae96f871d156ab4238b40b1755"
+      },
+      "push_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell/publish.log",
+      "deployment_job": {
+        "commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+        "phase": "completed",
+        "status_path": "/Users/majid/.local/state/barghsa-staging-queue/jobs/2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840/job.json",
+        "scanned_images": "/Users/majid/.local/state/barghsa-staging-queue/jobs/2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840/image-scan.DNg0mTDS"
+      },
       "acceptance": {
         "accepted_at": "2026-11-12T18:10:50+00:00",
         "evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
@@ -17797,7 +17826,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -17905,6 +17934,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ]
         }
@@ -27445,7 +27482,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -27618,6 +27655,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ]
         }
@@ -29930,7 +29975,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -30245,6 +30290,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ]
         }
@@ -147306,7 +147359,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -148208,6 +148261,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -596459,7 +596520,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -597385,6 +597446,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -623618,7 +623687,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -623735,6 +623804,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ]
         }
@@ -970427,7 +970504,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
+              "sha256": "d2d1dacc0b05678fea55937794226568a36c4a5853f312ce794d32ce5f79c2b1"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -970435,7 +970512,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "61b46486819d65b096b8f01acd3c5bd707462d41b93369a406052da0d5ee4b60"
+              "sha256": "b781e9c3bc637c6e03d47bcfc424854a68802a93f45ee797ac22b61ff679894c"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -970484,6 +970561,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ]
         },
@@ -983144,7 +983230,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -983164,7 +983250,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
+              "sha256": "d2d1dacc0b05678fea55937794226568a36c4a5853f312ce794d32ce5f79c2b1"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -985782,6 +985868,15 @@
                 "apps/web/e2e/form-accessibility.spec.ts"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ],
           "presentation_renewals": [
@@ -988343,7 +988438,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -988363,7 +988458,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
+              "sha256": "d2d1dacc0b05678fea55937794226568a36c4a5853f312ce794d32ce5f79c2b1"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -990882,6 +990977,15 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-staging-recovery",
+              "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Release checkout permissions preserve non-root image access and private job storage."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1152650,6 +1152754,81 @@
         "07-ui-ux-design.md#T-07.30.02.01",
         "release-readiness#R-02.02",
         "release-readiness#R-04.02"
+      ]
+    },
+    "release-0.5.1-staging-recovery": {
+      "batch": "release-0.5.1-staging-recovery",
+      "base_commit": "a02501a1a846f21174f2b7a4e2383f63aaf2cb34",
+      "task_keys": [
+        "release-readiness#R-04.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "d2d1dacc0b05678fea55937794226568a36c4a5853f312ce794d32ce5f79c2b1"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "b781e9c3bc637c6e03d47bcfc424854a68802a93f45ee797ac22b61ff679894c"
+        }
+      ],
+      "checks": [
+        "The first staging attempt stopped before migrations because a private checkout umask made packaged scripts unreadable by the container user.",
+        "Restored the previous staging app and web images with the active manifest and verified the v0.5.0 readiness endpoint. Patched the installed staging runner to clear exported candidate values during rollback and checked that Compose resolves the active images.",
+        "Restored tracked modes in the private job checkout, verified both rebuilt images as the non-root user, and retried the exact release with no existing notification receipts.",
+        "The release worker now sets normal Git modes for the isolated worktree while keeping the parent private. All 51 staging script tests passed, including the restrictive umask regression."
+      ],
+      "limitations": [
+        "The recovery changed only the installed staging rollback command. The staging Compose, proxy, and stateful image settings match the pre-release baseline."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
+      "execution_receipts": [
+        {
+          "file": "restore-v050.log",
+          "sha256": "62a3ba0f4d4b4cfc75cab70ab2314d82bea702b47280b9c853a0fefe688400d4"
+        },
+        {
+          "file": "rollback-fix.log",
+          "sha256": "b974013392ecb463ddd3ab76f4ff6d36a92277068f04ca402b22f8e04d335d0e"
+        },
+        {
+          "file": "retry.json",
+          "sha256": "5385a46f3bb4f9b71c8e1e5aca91f208003e7e0019a935ffb21cc3eaa75385c9"
+        },
+        {
+          "file": "normalized-app-node.log",
+          "sha256": "21ef52d082bffcb89995cde42be7cde1cb17262f0aa0b85d5593919958fc9822"
+        },
+        {
+          "file": "normalized-web-node.log",
+          "sha256": "35190f4609af45d78bf943893e13107fafe0e0bff074811935e372583c5abd27"
+        },
+        {
+          "file": "release-worker-tests.log",
+          "sha256": "9e062d3903368b865e47d75bd59d8ceb38aad2fd7ed2a475e85b889f11511d56"
+        },
+        {
+          "file": "live-runtime.after.txt",
+          "sha256": "73c536661c7726c03c7334b1f3fdb9ea535ed468d00ea85b26f748e1699daef6"
+        }
       ]
     }
   },
