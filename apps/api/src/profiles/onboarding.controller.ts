@@ -34,7 +34,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
-const individualOnboardingInputSchema = z.object({
+const individualOnboardingInputSchema = z.strictObject({
   draftVersion: z.number().int().min(0).max(2147483647).optional(),
   title: z.string().trim().max(50).optional(),
   firstName: z.string().trim().min(1).max(100),
@@ -243,7 +243,7 @@ export class OnboardingController {
     @Req() req: AuthenticatedRequest
   ): Promise<{ profileId: string; profileType: 'INDIVIDUAL' | 'LEGAL'; isDefault: boolean }> {
     const parsed = z
-      .object({
+      .strictObject({
         profileType: z
           .string()
           .transform((value) => value.toUpperCase())

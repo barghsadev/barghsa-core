@@ -31,7 +31,7 @@ import {
   validateLegalNationalIdentifier,
 } from '@barghsa/shared/validation';
 
-const addressFields = z.object({
+const addressFields = z.strictObject({
   provinceId: z.string().trim().uuid(),
   cityId: z.string().trim().uuid(),
   fullAddress: z.string().trim().min(1).max(500),
@@ -76,7 +76,7 @@ const profileFieldNames = [
   'nationalIdentifier',
 ];
 
-const ownershipDecisionInput = z.object({ transferId: z.uuid() });
+const ownershipDecisionInput = z.strictObject({ transferId: z.uuid() });
 const ownershipDecisionResponse = (status: 'Completed' | 'Declined' | 'Cancelled') =>
   ApiResponse({
     status: 200,
@@ -730,7 +730,9 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    const parsed = z.object({ newOwnerUserId: z.string().trim().min(1).max(128) }).safeParse(body);
+    const parsed = z
+      .strictObject({ newOwnerUserId: z.string().trim().min(1).max(128) })
+      .safeParse(body);
     if (!parsed.success || !z.uuid().safeParse(profileId).success) {
       throw new HttpException(
         {

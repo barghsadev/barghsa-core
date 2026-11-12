@@ -297,6 +297,7 @@ it('validates an address selection again after concurrent geography deactivation
 
 it('rejects malformed address fields and route IDs as client errors', async () => {
   const original = await create();
+  const auditBefore = (await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows;
   const valid = { provinceId, cityId, fullAddress: 'Street', postalCode: '1234567890' };
   for (const body of [
     null,
@@ -305,6 +306,7 @@ it('rejects malformed address fields and route IDs as client errors', async () =
     { ...valid, provinceId: 'invalid' },
     { ...valid, fullAddress: '   ' },
     { ...valid, mainAddress: 'yes' },
+    { ...valid, profileId: randomUUID() },
   ]) {
     expect((await request('POST', '', 'owner', body)).status).toBe(400);
   }
@@ -314,6 +316,7 @@ it('rejects malformed address fields and route IDs as client errors', async () =
     { fullAddress: ' ' },
     { postalCode: 123 },
     { cityId: 'invalid' },
+    { fullAddress: 'Would write', mainAddress: true },
   ]) {
     expect((await request('PUT', `/${original.id}`, 'owner', body)).status).toBe(400);
   }
@@ -322,12 +325,16 @@ it('rejects malformed address fields and route IDs as client errors', async () =
   const response = await request('GET');
   expect(response.status).toBe(200);
   const listed = (await response.json()) as { addresses: Record<string, unknown>[] };
+  expect(listed.addresses).toHaveLength(1);
   expect(listed.addresses[0]).toMatchObject({
+    id: original.id,
+    fullAddress: 'Original address',
     provinceNameFa: 'استان',
     provinceNameEn: 'Province',
     cityNameFa: 'شهر',
     cityNameEn: 'City',
   });
+  expect((await http.pool.query('SELECT id FROM audit_log ORDER BY id')).rows).toEqual(auditBefore);
 });
 
 it.each(['en', 'fa'])(

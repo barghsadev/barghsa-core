@@ -15,7 +15,7 @@ import { persistElectricitySubmissionSnapshot } from '../electricity/electricity
 import { VatCalculationRepository } from '../invoice/vat-calculation.repository.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
-let body: Record<string, unknown>;
+let body: Record<string, unknown> & { address: Record<string, string> };
 const headers: Record<string, Record<string, string>> = {};
 beforeEach(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
@@ -267,6 +267,14 @@ it('persists the calculated submission snapshot once with the exact period', asy
   }
 });
 it('allows the owner and Manager while excluding financial, legal and stale Owner memberships', async () => {
+  for (const input of [
+    { ...body, status: 'submitted' },
+    { ...body, address: { ...body.address, mainAddress: true } },
+  ]) {
+    expect((await request('manager', 'POST', '', input)).status).toBe(400);
+  }
+  expect((await http.pool.query('SELECT id FROM orders')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT id FROM electricity_orders')).rows).toEqual([]);
   const id = await create('manager');
   const electricity = await http.pool.query(
     'SELECT status, settings_snapshot FROM electricity_orders WHERE id=$1',
@@ -537,7 +545,7 @@ it.each(['profile', 'policy'])(
 );
 
 it('keeps copied order addresses and existing-order access after saved-address removal and verification enforcement', async () => {
-  const address = body.address as Record<string, string>;
+  const address = body.address;
   const saved = async () => {
     const response = await fetch(http.base + '/api/profiles/' + profileId + '/addresses', {
       method: 'POST',
