@@ -119,6 +119,7 @@ it.each([false, true])(
     expect(write ? h.review : h.mutation).not.toHaveBeenCalled();
     expect(f.client.query).toHaveBeenCalledWith(expect.stringContaining('FOR SHARE OF s,o,c,i'), [
       id,
+      profileId,
     ]);
     noEffects(f.client);
   }

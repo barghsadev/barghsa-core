@@ -28,7 +28,10 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
-import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
+import {
+  savingHardwareUpgradeInvoiceScope,
+  savingHardwareUpgrades,
+} from './saving-hardware-upgrades.js';
 import { savingFulfillmentHistory } from './saving-fulfillment-history.js';
 import { calculateSavingTotals } from './saving-calculation.js';
 
@@ -76,6 +79,7 @@ interface ReviewRow {
   pending_refund_amount: string;
   activation_invoice_id: string | null;
   cancellation_pending: boolean;
+  hardware_upgrade_pending: boolean;
 }
 interface HardwareAmendmentInput {
   idempotencyKey: string;
@@ -118,6 +122,7 @@ interface HardwareUpgradeCancellationRow {
   state: string;
   total_amount: string;
   paid_amount: string;
+  status: string;
 }
 export interface StageRow {
   stage: SavingStage;
@@ -143,15 +148,19 @@ const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hard
   i.refunded_amount::text AS refunded_amount,ar.initial_invoice_id AS activation_invoice_id,
   EXISTS(SELECT 1 FROM contract_cancellation_requests cr
     WHERE cr.contract_id=c.id AND cr.status='Pending') AS cancellation_pending,
+  EXISTS(SELECT 1 FROM saving_hardware_upgrade_requests u
+    WHERE u.order_id=s.id AND u.status='awaiting_payment') AS hardware_upgrade_pending,
   COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
     AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
-  FROM saving_orders s JOIN orders o ON o.id=s.order_id
+  FROM saving_orders s
+  JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
   JOIN products h ON h.id=s.hardware_product_id
   JOIN profiles p ON p.id=s.profile_id JOIN users u ON u.user_id=p.user_id
-  JOIN contracts c ON c.order_id=o.id AND c.service_type='savings'
-  JOIN contract_versions v ON v.id=c.current_version_id
-  JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
-  JOIN invoices i ON i.order_id=o.id AND i.type='auto'
+  JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
+  JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
+  JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id AND ar.contract_id=c.id
+  JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+    AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
     AND i.adjustment_for_invoice_id IS NULL AND i.replaces_invoice_id IS NULL`;
 
 @Injectable()
@@ -168,8 +177,8 @@ export class SavingFulfillmentService {
       const cursor = after
         ? (
             await client.query<{ id: string; submitted_at: string; status: string }>(
-              `SELECT id,submitted_at::text AS submitted_at,status FROM saving_orders
-             WHERE id=$1 AND status IN ('awaiting_staff_review','approved','in_progress')`,
+              `SELECT s.id,s.submitted_at::text AS submitted_at,s.status FROM (${reviewQuery}) s
+             WHERE s.id=$1 AND s.status IN ('awaiting_staff_review','approved','in_progress')`,
               [after]
             )
           ).rows[0]
@@ -231,9 +240,6 @@ export class SavingFulfillmentService {
       const addressAmendments = await savingAddressAmendments(client, id);
       const hardwareAmendments = await savingHardwareAmendments(client, id);
       const hardwareUpgrades = await savingHardwareUpgrades(client, id);
-      const pendingHardwareUpgrade = hardwareUpgrades.find(
-        (upgrade) => upgrade.status === 'awaiting_payment'
-      );
       const addressOptions = (
         await client.query(
           `SELECT id,full_address AS "fullAddress",postal_code AS "postalCode"
@@ -261,7 +267,7 @@ export class SavingFulfillmentService {
               'process_completion',
             ].includes(stage.stage) && stage.status !== 'pending'
         );
-      const hardwareOptions = pendingHardwareUpgrade
+      const hardwareOptions = row.hardware_upgrade_pending
         ? []
         : await this.hardwareOptions(client, row, allowHardwarePriceAdjustment);
       const canAmendHardware =
@@ -272,7 +278,7 @@ export class SavingFulfillmentService {
         BigInt(row.pending_refund_amount) === 0n &&
         ['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) &&
         !row.cancellation_pending &&
-        !pendingHardwareUpgrade &&
+        !row.hardware_upgrade_pending &&
         stages.some(
           (stage: StageRow) => stage.stage === 'product_delivery' && stage.status === 'in_progress'
         ) &&
@@ -457,10 +463,14 @@ export class SavingFulfillmentService {
   private async lockRow(
     client: PoolClient,
     id: string,
+    profileId: string,
     lock: 'SHARE' | 'UPDATE' = 'UPDATE'
   ): Promise<ReviewRow> {
     const row = (
-      await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1 FOR ${lock} OF s,o,c,i`, [id])
+      await client.query<ReviewRow>(
+        `${reviewQuery} WHERE s.id=$1 AND s.profile_id=$2 FOR ${lock} OF s,o,c,i`,
+        [id, profileId]
+      )
     ).rows[0];
     if (!row) throw new NotFoundException('Saving order not found');
     return row;
@@ -635,7 +645,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     const check = async (client: PoolClient, archived: boolean) => {
       if (archived) throw new ConflictException('Profile is archived');
-      await this.lockRow(client, id, 'SHARE');
+      await this.lockRow(client, id, target.profile_id, 'SHARE');
     };
     if (write) {
       if (fulfillment)
@@ -654,7 +664,7 @@ export class SavingFulfillmentService {
     if (!profile) throw new NotFoundException('Saving order not found');
     return staffContractFinancialReview(profile.profile_id, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      const row = await this.lockRow(client, id, 'SHARE');
+      const row = await this.lockRow(client, id, profile.profile_id, 'SHARE');
       return this.decisionReviewForRow(row, action, reason.trim());
     });
   }
@@ -687,7 +697,7 @@ export class SavingFulfillmentService {
           actor,
           async () => {
             if (archived) throw new ConflictException('Profile is archived');
-            const row = await this.lockRow(client, id);
+            const row = await this.lockRow(client, id, profile.profile_id);
             if (row.version_id !== input.expectedVersionId)
               throw new ConflictException('Saving order review changed; reload before deciding');
             const reason = input.reason?.trim() ?? '';
@@ -949,7 +959,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     const check = async (client: PoolClient, archived: boolean) => {
       if (archived) throw new ConflictException('Profile is archived');
-      await this.lockRow(client, id, 'SHARE');
+      await this.lockRow(client, id, target.profile_id, 'SHARE');
     };
     if (write)
       await staffContractMutation(target.profile_id, actor, check, { financialReview: true });
@@ -973,7 +983,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      const row = await this.lockRow(client, id, 'SHARE');
+      const row = await this.lockRow(client, id, target.profile_id, 'SHARE');
       return (await this.addressAmendmentReviewForRow(client, row, input)).review;
     });
   }
@@ -997,7 +1007,7 @@ export class SavingFulfillmentService {
           actor,
           async () => {
             if (archived) throw new ConflictException('Profile is archived');
-            const row = await this.lockRow(client, id);
+            const row = await this.lockRow(client, id, target.profile_id);
             const { review, address } = await this.addressAmendmentReviewForRow(client, row, input);
             this.reviews.assertConfirmed(review, input.expectedReviewHash);
             const amendmentId = uuidv7();
@@ -1179,7 +1189,7 @@ export class SavingFulfillmentService {
     id: string,
     actor: Actor,
     write: boolean,
-    read: (client: PoolClient) => Promise<void>
+    read: (client: PoolClient, profileId: string) => Promise<void>
   ): Promise<void> {
     const target = (
       await getDbPool().query<{ profile_id: string }>(
@@ -1190,7 +1200,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     const check = async (client: PoolClient, archived: boolean) => {
       if (archived) throw new ConflictException('Profile is archived');
-      await read(client);
+      await read(client, target.profile_id);
     };
     if (write)
       await staffContractMutation(target.profile_id, actor, check, { financialReview: true });
@@ -1204,8 +1214,8 @@ export class SavingFulfillmentService {
     body: unknown,
     allowPriceAdjustment: boolean
   ): Promise<void> {
-    await this.hardwareInputAuthority(id, actor, write, async (client) => {
-      const row = await this.lockRow(client, id, 'SHARE');
+    await this.hardwareInputAuthority(id, actor, write, async (client, profileId) => {
+      const row = await this.lockRow(client, id, profileId, 'SHARE');
       const targetId =
         body && typeof body === 'object' && 'hardwareProductId' in body
           ? body.hardwareProductId
@@ -1227,27 +1237,12 @@ export class SavingFulfillmentService {
     write: boolean,
     body: unknown
   ): Promise<void> {
-    await this.hardwareInputAuthority(id, actor, write, async (client) => {
+    await this.hardwareInputAuthority(id, actor, write, async (client, profileId) => {
       await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       const upgradeId =
         body && typeof body === 'object' && 'upgradeId' in body ? body.upgradeId : undefined;
-      const invoiceId = (
-        await client.query<{ adjustment_invoice_id: string }>(
-          'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
-          [upgradeId, id]
-        )
-      ).rows[0]?.adjustment_invoice_id;
-      if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
-      await client.query('SELECT id FROM invoices WHERE id=$1 FOR SHARE', [invoiceId]);
-      const upgrade = (
-        await client.query<{ contract_id: string }>(
-          `SELECT contract_id FROM saving_hardware_upgrade_requests
-            WHERE id=$1 AND order_id=$2 AND adjustment_invoice_id=$3 FOR SHARE`,
-          [upgradeId, id, invoiceId]
-        )
-      ).rows[0];
-      if (!upgrade) throw new ConflictException('Hardware upgrade was not found');
-      const row = await this.lockRow(client, id, 'SHARE');
+      const upgrade = await this.lockHardwareUpgrade(client, id, profileId, upgradeId, 'SHARE');
+      const row = await this.lockRow(client, id, profileId, 'SHARE');
       if (row.contract_id !== upgrade.contract_id)
         throw new ConflictException('Hardware upgrade contract has changed');
     });
@@ -1271,7 +1266,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      const row = await this.lockRow(client, id, 'SHARE');
+      const row = await this.lockRow(client, id, target.profile_id, 'SHARE');
       return (
         await this.hardwareAmendmentReviewForRow(client, row, input, allowPriceAdjustment, 'SHARE')
       ).review;
@@ -1304,7 +1299,7 @@ export class SavingFulfillmentService {
             actor,
             async () => {
               if (archived) throw new ConflictException('Profile is archived');
-              const row = await this.lockRow(client, id);
+              const row = await this.lockRow(client, id, target.profile_id);
               const { review, basis, hardware } = await this.hardwareAmendmentReviewForRow(
                 client,
                 row,
@@ -1511,40 +1506,54 @@ export class SavingFulfillmentService {
     }
   }
 
+  private async lockHardwareUpgrade(
+    client: PoolClient,
+    id: string,
+    profileId: string,
+    upgradeId: unknown,
+    lock: 'SHARE' | 'UPDATE'
+  ) {
+    const scopedUpgrade = `FROM saving_hardware_upgrade_requests u
+      JOIN saving_orders s ON s.id=u.order_id
+      ${savingHardwareUpgradeInvoiceScope}
+      WHERE u.id=$1 AND s.id=$2 AND s.profile_id=$3`;
+    const scope = [upgradeId, id, profileId];
+    // Payment owns the invoice lock before its settlement trigger locks the request.
+    const invoiceId = (
+      await client.query<{ id: string }>(
+        `SELECT charge.id ${scopedUpgrade} FOR ${lock} OF charge`,
+        scope
+      )
+    ).rows[0]?.id;
+    if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
+    const upgrade = (
+      await client.query<HardwareUpgradeCancellationRow>(
+        `SELECT u.id,u.contract_id,u.contract_version_id,charge.id AS adjustment_invoice_id,u.status,
+                u.previous_snapshot,u.hardware_snapshot,u.stock_reserved,
+                u.price_delta_irr::text,charge.state,charge.total_amount::text,charge.paid_amount::text
+          ${scopedUpgrade} AND charge.id=$4 FOR ${lock} OF u`,
+        [...scope, invoiceId]
+      )
+    ).rows[0];
+    if (!upgrade) throw new ConflictException('Hardware upgrade was not found');
+    return upgrade;
+  }
+
   private async hardwareUpgradeCancellationReviewForRow(
     client: PoolClient,
     id: string,
+    profileId: string,
     input: Pick<HardwareUpgradeCancellationInput, 'upgradeId' | 'reason'>,
     lock: 'SHARE' | 'UPDATE'
   ) {
-    const invoiceId = (
-      await client.query<{ adjustment_invoice_id: string }>(
-        'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
-        [input.upgradeId, id]
-      )
-    ).rows[0]?.adjustment_invoice_id;
-    if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
-    // Payment owns the invoice lock before its settlement trigger locks the request.
-    await client.query(`SELECT id FROM invoices WHERE id=$1 FOR ${lock}`, [invoiceId]);
-    const upgrade = (
-      await client.query<HardwareUpgradeCancellationRow>(
-        `SELECT u.id,u.contract_id,u.contract_version_id,u.adjustment_invoice_id,
-                u.previous_snapshot,u.hardware_snapshot,u.stock_reserved,
-                u.price_delta_irr::text,i.state,i.total_amount::text,i.paid_amount::text
-           FROM saving_hardware_upgrade_requests u
-           JOIN invoices i ON i.id=u.adjustment_invoice_id
-          WHERE u.id=$1 AND u.order_id=$2 AND u.status='awaiting_payment'
-          FOR ${lock} OF u`,
-        [input.upgradeId, id]
-      )
-    ).rows[0];
+    const upgrade = await this.lockHardwareUpgrade(client, id, profileId, input.upgradeId, lock);
     if (
-      !upgrade ||
+      upgrade.status !== 'awaiting_payment' ||
       !['Unpaid', 'Overdue'].includes(upgrade.state) ||
       BigInt(upgrade.paid_amount) !== 0n
     )
       throw new ConflictException('Resolve the charge payment before cancelling');
-    const row = await this.lockRow(client, id, lock);
+    const row = await this.lockRow(client, id, profileId, lock);
     if (row.contract_id !== upgrade.contract_id)
       throw new ConflictException('Hardware upgrade contract has changed');
     const reason = input.reason.trim();
@@ -1599,8 +1608,15 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      return (await this.hardwareUpgradeCancellationReviewForRow(client, id, input, 'SHARE'))
-        .review;
+      return (
+        await this.hardwareUpgradeCancellationReviewForRow(
+          client,
+          id,
+          target.profile_id,
+          input,
+          'SHARE'
+        )
+      ).review;
     });
   }
 
@@ -1631,6 +1647,7 @@ export class SavingFulfillmentService {
             const { upgrade, review } = await this.hardwareUpgradeCancellationReviewForRow(
               client,
               id,
+              target.profile_id,
               input,
               'UPDATE'
             );
@@ -1788,7 +1805,7 @@ export class SavingFulfillmentService {
     if (!target) throw new NotFoundException('Saving order not found');
     return staffContractFinancialReview(target.profile_id, actor, async (client, archived) => {
       if (archived) throw new ConflictException('Profile is archived');
-      const row = await this.lockRow(client, id, 'SHARE');
+      const row = await this.lockRow(client, id, target.profile_id, 'SHARE');
       return (await this.advanceReviewForRow(client, row, stage, action, input, 'SHARE')).review;
     });
   }
@@ -1819,7 +1836,7 @@ export class SavingFulfillmentService {
           actor,
           async () => {
             if (archived) throw new ConflictException('Profile is archived');
-            const row = await this.lockRow(client, id);
+            const row = await this.lockRow(client, id, profile.profile_id);
             const { review, explanation, handover, nextStatus, nextStage, commercialStatus } =
               await this.advanceReviewForRow(client, row, stage, action, input, 'UPDATE');
             this.reviews.assertConfirmed(review, input.expectedReviewHash);

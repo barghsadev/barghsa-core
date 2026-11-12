@@ -55,6 +55,7 @@ export class SavingCommentsService {
       const order = (
         await client.query<OrderRow>(
           `SELECT s.id,s.profile_id,p.user_id AS customer_id FROM saving_orders s
+         JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
          JOIN profiles p ON p.id=s.profile_id WHERE s.id=$1`,
           [id]
         )

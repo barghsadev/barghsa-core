@@ -46,8 +46,10 @@ export class SavingCancellationController {
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     const row = (
       await getDbPool().query<{ contract_id: string }>(
-        `SELECT c.id AS contract_id FROM saving_orders s JOIN contracts c ON c.order_id=s.order_id AND c.profile_id=s.profile_id AND c.service_type='savings'
-       WHERE s.id=$1`,
+        `SELECT c.id AS contract_id FROM saving_orders s
+         JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
+         JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
+         WHERE s.id=$1`,
         [parse(contractUuid, raw)]
       )
     ).rows[0];

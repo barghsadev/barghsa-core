@@ -30,7 +30,10 @@ import { BillVerificationProvider } from './bill-verification.provider.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
-import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
+import {
+  savingHardwareUpgradeInvoiceScope,
+  savingHardwareUpgrades,
+} from './saving-hardware-upgrades.js';
 import { savingFulfillmentHistory } from './saving-fulfillment-history.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -489,7 +492,7 @@ export class SavingOrderService {
         ? (
             await client.query<{ submitted_at: string; id: string }>(
               `SELECT s.submitted_at::text AS submitted_at,s.id FROM saving_orders s
-               JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
+               JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
                JOIN products p ON p.id=s.saving_plan_id JOIN products h ON h.id=s.hardware_product_id
                WHERE s.id=$1 AND s.profile_id=$2
                  AND (NOT $3::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
@@ -516,20 +519,23 @@ export class SavingOrderService {
                 p.title AS plan_title,h.title AS hardware_title,
                 i.id AS invoice_id,i.state AS invoice_state,i.total_amount::text AS total_amount,
                 c.id AS contract_id,c.state AS contract_state,
-                (SELECT charge.id FROM saving_hardware_upgrade_requests u
-                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id AND charge.profile_id=s.profile_id
-                  WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_id,
-                (SELECT charge.state FROM saving_hardware_upgrade_requests u
-                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id AND charge.profile_id=s.profile_id
-                  WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_state,
+                pending_upgrade.id AS pending_upgrade_invoice_id,
+                pending_upgrade.state AS pending_upgrade_invoice_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
            FROM saving_orders s
-           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
+           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
            JOIN products p ON p.id=s.saving_plan_id
            JOIN products h ON h.id=s.hardware_product_id
-           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
+           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+             AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
+             AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
+           LEFT JOIN LATERAL (
+             SELECT charge.id,charge.state FROM saving_hardware_upgrade_requests u
+             ${savingHardwareUpgradeInvoiceScope}
+             WHERE u.order_id=s.id AND u.status='awaiting_payment'
+           ) pending_upgrade ON true
             WHERE s.profile_id=$1
               AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id) ${comparison}($2::timestamptz,$3::uuid))
               AND (NOT $4::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
@@ -566,6 +572,7 @@ export class SavingOrderService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
+      const profileId = await this.authorizedSavingProfile(client, actor, savingOrderId, false);
       const row = (
         await client.query<{
           id: string;
@@ -608,18 +615,19 @@ export class SavingOrderService {
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending,
                   COALESCE((${customerChangeEligibility}),false) AS can_edit
              FROM saving_orders s
-             JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
+             JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
              JOIN saving_plan_agreement_versions accepted_agreement
                ON accepted_agreement.id=s.agreement_version_id
              JOIN products h ON h.id=s.hardware_product_id
-           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
-          WHERE s.id=$1`,
-          [savingOrderId]
+           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+             AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
+             AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
+          WHERE s.id=$1 AND s.profile_id=$2`,
+          [savingOrderId, profileId]
         )
       ).rows[0];
-      if (!row || !(await this.orders.mayManageOrders(client, actor.userId, row.profile_id)))
-        throw new NotFoundException('Saving order not found');
+      if (!row) throw new NotFoundException('Saving order not found');
       const stages = (
         await client.query(
           `SELECT stage,status,started_at,completed_at,explanation,handover_description FROM saving_fulfillment_stages
@@ -654,9 +662,31 @@ export class SavingOrderService {
     }
   }
 
-  private async changeContext(
+  private async authorizedSavingProfile(
     client: PoolClient,
     actor: Actor,
+    savingOrderId: string,
+    commercial: boolean
+  ): Promise<string> {
+    const target = (
+      await client.query<{ profile_id: string }>(
+        `SELECT s.profile_id FROM saving_orders s
+         JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
+         WHERE s.id=$1`,
+        [savingOrderId]
+      )
+    ).rows[0];
+    if (
+      !target ||
+      !(await this.orders.mayManageOrders(client, actor.userId, target.profile_id, commercial))
+    )
+      throw new NotFoundException('Saving order not found');
+    return target.profile_id;
+  }
+
+  private async changeContext(
+    client: PoolClient,
+    profileId: string,
     savingOrderId: string,
     lock: boolean
   ): Promise<ChangeContext> {
@@ -671,17 +701,17 @@ export class SavingOrderService {
                 v.version_number,
                   (${customerChangeEligibility}) AS can_edit
            FROM saving_orders s
-           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
-           JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
-             AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
+           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
            JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
-           JOIN contract_versions v ON v.id=c.current_version_id
-          WHERE s.id=$1 ${lock ? 'FOR UPDATE OF s,i,c NOWAIT' : ''}`,
-        [savingOrderId]
+           JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+             AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
+             AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
+           JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
+          WHERE s.id=$1 AND s.profile_id=$2 ${lock ? 'FOR UPDATE OF s,i,c NOWAIT' : ''}`,
+        [savingOrderId, profileId]
       )
     ).rows[0];
-    if (!row || !(await this.orders.mayManageOrders(client, actor.userId, row.profile_id, true)))
-      throw new NotFoundException('Saving order not found');
+    if (!row) throw new NotFoundException('Saving order not found');
     if (!row.can_edit)
       throw new ConflictException('This order can no longer be changed by the customer');
     return row;
@@ -717,7 +747,8 @@ export class SavingOrderService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      await this.changeContext(client, actor, savingOrderId, false);
+      const profileId = await this.authorizedSavingProfile(client, actor, savingOrderId, true);
+      await this.changeContext(client, profileId, savingOrderId, false);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
     } catch (error) {
@@ -733,7 +764,8 @@ export class SavingOrderService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      const context = await this.changeContext(client, actor, savingOrderId, false);
+      const profileId = await this.authorizedSavingProfile(client, actor, savingOrderId, true);
+      const context = await this.changeContext(client, profileId, savingOrderId, false);
       const { quote } = await this.changedQuote(client, context, input);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -763,6 +795,7 @@ export class SavingOrderService {
         await client.query<{ request_hash: string; response: unknown; profile_id: string }>(
           `SELECT r.request_hash,r.response,s.profile_id FROM saving_order_revisions r
            JOIN saving_orders s ON s.id=r.order_id
+           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
            WHERE r.user_id=$1 AND r.idempotency_key=$2`,
           [actor.userId, input.idempotencyKey]
         )
@@ -786,26 +819,19 @@ export class SavingOrderService {
       }
       // Payment paths lock the invoice before syncing saving order state.
       // Take that lock first and fail promptly when a payment is in flight.
-      const target = (
-        await client.query<{ profile_id: string }>(
-          'SELECT profile_id FROM saving_orders WHERE id=$1',
-          [savingOrderId]
-        )
-      ).rows[0];
-      if (
-        !target ||
-        !(await this.orders.mayManageOrders(client, actor.userId, target.profile_id, true))
-      )
-        throw new NotFoundException('Saving order not found');
+      const profileId = await this.authorizedSavingProfile(client, actor, savingOrderId, true);
       await client.query(
-        `SELECT i.id FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id
-           AND i.profile_id=s.profile_id
+        `SELECT i.id FROM saving_orders s
+         JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id AND o.order_type='savings'
+         JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
+         JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id
+           AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
            AND i.type='auto' AND i.replaces_invoice_id IS NULL
            AND i.adjustment_for_invoice_id IS NULL
-         WHERE s.id=$1 FOR UPDATE OF i NOWAIT`,
-        [savingOrderId]
+         WHERE s.id=$1 AND s.profile_id=$2 FOR UPDATE OF i NOWAIT`,
+        [savingOrderId, profileId]
       );
-      const context = await this.changeContext(client, actor, savingOrderId, true);
+      const context = await this.changeContext(client, profileId, savingOrderId, true);
       await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [
         context.saving_plan_id,
       ]);

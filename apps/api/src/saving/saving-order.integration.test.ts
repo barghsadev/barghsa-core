@@ -5147,7 +5147,7 @@ it('holds the current private owner and rejects mismatched saving status notices
   }
 });
 
-it('excludes foreign financial links from saving reads and customer changes', async () => {
+it('excludes foreign financial links from saving reads, changes and staff decisions', async () => {
   const foreignProfile = (
     await http.pool.query<{ id: string }>(
       "INSERT INTO profiles(user_id,profile_type,status) VALUES('saving-change-outsider','INDIVIDUAL','ACTIVE') RETURNING id"
@@ -5242,6 +5242,29 @@ it('excludes foreign financial links from saving reads and customer changes', as
     orders: [expect.objectContaining(scoped)],
     nextBefore: null,
   });
+  const staffBase = '/api/staff/saving/orders';
+  const staffList = await request(staffBase, 'GET', undefined, staffHeaders);
+  expect(staffList.status, http.logs()).toBe(200);
+  const staffQueue = (await staffList.json()) as { orders: Array<{ id: string }> };
+  expect(staffQueue.orders.map((order) => order.id)).not.toContain(savingId);
+  expect(JSON.stringify(staffQueue)).not.toContain(contractId);
+  expect(JSON.stringify(staffQueue)).not.toContain(invoiceId);
+  expect(
+    (await request(`${staffBase}?after=${savingId}`, 'GET', undefined, staffHeaders)).status
+  ).toBe(404);
+  expect((await request(`${staffBase}/${savingId}`, 'GET', undefined, staffHeaders)).status).toBe(
+    404
+  );
+  expect(
+    (
+      await request(
+        `${staffBase}/${savingId}/financial-review`,
+        'POST',
+        { action: 'approve' },
+        staffHeaders
+      )
+    ).status
+  ).toBe(404);
   const change = {
     hardwareProductId: input.hardwareProductId,
     installationAddressId: input.installationAddressId,
