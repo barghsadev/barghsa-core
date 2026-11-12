@@ -128,6 +128,7 @@ function paymentQueries(
     invoice?: Record<string, unknown> | null;
     wallet?: Record<string, unknown> | null;
     ledger?: Record<string, unknown>[];
+    cachedEvidence?: Record<string, unknown> | null;
     paidOk?: boolean;
     /** Rows returned by INSERT … ON CONFLICT DO NOTHING RETURNING. Default: claimed. */
     idempotencyInsert?: Record<string, unknown>[];
@@ -168,6 +169,14 @@ function paymentQueries(
     }
     if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
       return { rows: wallet ? [wallet] : [] };
+    }
+    if (sql.includes('AS debit_id')) {
+      return {
+        rows:
+          opts.cachedEvidence === null
+            ? []
+            : [opts.cachedEvidence ?? { debit_id: TX_ID, metadata: {} }],
+      };
     }
     if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
       return { rows: invoice ? [invoice] : [] };
@@ -340,6 +349,18 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     });
   });
 
+  it('rejects cached payment readback after the invoice leaves the profile scope', async () => {
+    paymentQueries({
+      idempotencyInsert: [],
+      idempotencySelect: [{ entity_id: INVOICE_ID, response: cachedResponse() }],
+      cachedEvidence: null,
+    });
+    await expect(pay()).rejects.toMatchObject({ status: 404 });
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
+
   it('SELECT … FOR UPDATE locks the wallet before the invoice', async () => {
     paymentQueries();
 
@@ -468,6 +489,10 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(result.toState).toBe('Paid');
     expect(result.remainingPaid).toBe(1_000_000n);
     expect(result.walletTransaction.id).toBe(TX_ID);
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('WHERE i.id=$1 AND i.profile_id=$2 FOR SHARE OF i'),
+      [INVOICE_ID, PROFILE_ID, TX_ID, '-1000000', IDEMPOTENCY_KEY]
+    );
     expect(walletService.debit).not.toHaveBeenCalled();
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
     expect(mockClient.query).not.toHaveBeenCalledWith(

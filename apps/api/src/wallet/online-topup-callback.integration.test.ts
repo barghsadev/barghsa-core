@@ -351,6 +351,22 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       ['evt-int-1']
     );
     expect(events.rows).toHaveLength(1);
+    await expect(
+      service.handle(
+        signed(
+          {
+            merchantOrderId: pendingId,
+            merchantId: MERCHANT,
+            authority: AUTHORITY,
+            amountIrR: AMOUNT.toString(),
+            status: 'paid',
+            providerRefId: 'different-delivery-reference',
+          },
+          'evt-int-1'
+        )
+      )
+    ).rejects.toMatchObject({ status: 401 });
+    expect(await fetchWallet()).toEqual(after);
   });
 
   it('preserves a paid legacy intent and retry claim when profile archival prevents credit', async () => {
@@ -551,7 +567,7 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
         PROFILE_A,
         AMOUNT.toString(),
         'online-topup-callback-int-zarinpal',
-        AUTHORITY,
+        null,
         'Online wallet top-up',
         JSON.stringify({
           channel: 'online',
@@ -588,12 +604,17 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     expect(event.rows[0]?.status).toBe('credited');
 
     const replay = await service.handleZarinpalReturn({
-      orderId: zarinpalPendingId,
+      orderId: zarinpalPendingId.toUpperCase(),
       authority: AUTHORITY,
       status: 'OK',
     });
     expect(replay.processed).toBe(false);
     expect(replay.credited).toBe(true);
+    const retainedAuthority = await ctx.pool.query(
+      "SELECT metadata#>>'{gateway,authority}' AS authority FROM wallet_transactions WHERE id=$1",
+      [zarinpalPendingId]
+    );
+    expect(retainedAuthority.rows).toEqual([{ authority: AUTHORITY }]);
     const afterReplay = await fetchWallet();
     expect(afterReplay.posted_balance).toBe(after.posted_balance);
   });

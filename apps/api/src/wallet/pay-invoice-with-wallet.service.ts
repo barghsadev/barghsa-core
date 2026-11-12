@@ -10,7 +10,8 @@ import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-r
  *   1. Validates UUIDs and a non-blank idempotency key.
  *   2. Opens one DB transaction and claims
  *      `idempotency_keys (idempotencyKey, entityType)` first. A retry
- *      that finds a cached JSON response returns it and never debits.
+ *      that finds a cached JSON response checks the current invoice
+ *      and original ledger evidence before returning it.
  *      An in-flight NULL response is rejected (409) unless `expires_at`
  *      has passed, in which case the row is reclaimed.
  *   3. `SELECT … FOR UPDATE OF wallets` then `… OF invoices` (stable
@@ -194,14 +195,14 @@ export class PayInvoiceWithWalletService {
         this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId, key);
         const result = resultFromCache(parsed);
         this.assertExpectedAmount(result.remainingPaid, options.expectedRemainingAmount, true);
+        const evidence = await this.readCachedPaymentEvidence(client, parsed);
         if (options.expectedReviewHash !== undefined)
-          reviews.assertStored(
-            result.walletTransaction.metadata,
-            options.expectedReviewHash,
-            reviewScope
-          );
+          reviews.assertStored(evidence.metadata, options.expectedReviewHash, reviewScope);
         if (!options.client) await client.query('COMMIT');
-        return result;
+        return {
+          ...result,
+          walletTransaction: { ...result.walletTransaction, metadata: evidence.metadata },
+        };
       }
       if (claim.kind === 'in_flight') {
         throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT());
@@ -210,7 +211,7 @@ export class PayInvoiceWithWalletService {
       assertWalletProfileWritable(profile);
       // Lock profile, then wallet, then invoice to coordinate with archival.
       const wallet = await this.lockWallet(client, ids.profileId);
-      const invoice = await this.lockInvoice(client, ids.invoiceId);
+      const invoice = await this.lockInvoice(client, ids.invoiceId, ids.profileId);
       if (invoice.profile_id.toLowerCase() !== ids.profileId) {
         throw new NotFoundException(`Invoice not found: ${ids.invoiceId}`);
       }
@@ -445,6 +446,28 @@ export class PayInvoiceWithWalletService {
     }
   }
 
+  private async readCachedPaymentEvidence(
+    client: WalletQueryClient,
+    cached: PayInvoiceWithWalletCachedResponse
+  ) {
+    const tx = cached.walletTransaction;
+    const result = await client.query(
+      `SELECT debit.id AS debit_id,debit.metadata FROM invoices i
+       LEFT JOIN wallet_transactions debit ON debit.id=$3 AND debit.wallet_id=i.profile_id
+         AND debit.type='payment' AND debit.state='Completed' AND debit.amount::text=$4
+         AND lower(debit.ref_id)=i.id::text AND debit.idempotency_key=$5
+       WHERE i.id=$1 AND i.profile_id=$2 FOR SHARE OF i`,
+      [cached.invoiceId, cached.profileId, tx.id, tx.amount, tx.idempotencyKey]
+    );
+    const row = result.rows[0] as { debit_id: string | null; metadata: unknown } | undefined;
+    if (!row) throw new NotFoundException(`Invoice not found: ${cached.invoiceId}`);
+    if (!row.debit_id) {
+      observePaymentKeyConflict('wallet_invoice');
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
+    }
+    return row;
+  }
+
   private async replayOrReject(input: {
     commit: boolean;
     client: WalletQueryClient;
@@ -649,15 +672,16 @@ export class PayInvoiceWithWalletService {
 
   private async lockInvoice(
     client: WalletQueryClient,
-    invoiceId: string
+    invoiceId: string,
+    profileId: string
   ): Promise<LockedInvoiceRow> {
     const result = await client.query(
       `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount,
               adjustment_kind, payable_from
          FROM invoices
-        WHERE id = $1
+        WHERE id = $1 AND profile_id = $2
         FOR UPDATE OF invoices`,
-      [invoiceId]
+      [invoiceId, profileId]
     );
     const row = (result.rows as LockedInvoiceRow[])[0];
     if (!row) {

@@ -128,6 +128,24 @@ it('requires an exact review and persists it through cache and durable-ledger re
   expect(ledger.metadata.financialReview).toEqual(quote.review);
   expect((await pay(f, body)).status).toBe(200);
   expect((await pay(f, { ...body, expectedReviewHash: 'f'.repeat(64) })).status).toBe(409);
+  const cached = (await snapshot(f)).cache[0]!.response;
+  const missingDebit = randomUUID();
+  await http.pool.query(
+    "UPDATE idempotency_keys SET response=jsonb_set(response,'{walletTransaction,id}',to_jsonb($2::text)) WHERE entity_id=$1",
+    [f.invoiceId, missingDebit]
+  );
+  try {
+    const damaged = await snapshot(f);
+    const conflict = await pay(f, body);
+    expect(conflict.status).toBe(409);
+    expect(await conflict.text()).not.toContain(missingDebit);
+    expect(await snapshot(f)).toEqual(damaged);
+  } finally {
+    await http.pool.query('UPDATE idempotency_keys SET response=$2::jsonb WHERE entity_id=$1', [
+      f.invoiceId,
+      JSON.stringify(cached),
+    ]);
+  }
   await http.pool.query('DELETE FROM idempotency_keys WHERE entity_id=$1', [f.invoiceId]);
   const replay = await pay(f, body);
   expect(replay.status).toBe(200);

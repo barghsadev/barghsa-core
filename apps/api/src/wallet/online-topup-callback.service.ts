@@ -80,6 +80,7 @@ interface CallbackEventRow {
   pendingTransactionId: string;
   walletId: string;
   status: CallbackEventStatus;
+  payloadSha256: string | null;
 }
 
 interface QueryClient {
@@ -100,6 +101,15 @@ const CallbackBodySchema = z
   })
   .strict();
 
+const pendingIntentScopeSql = `
+  AND wallet_id=$3 AND type='topup' AND metadata->>'channel'='online'
+  AND NOT (metadata ? 'pendingTransactionId')
+  AND COALESCE(NULLIF(ref_id,''),metadata#>>'{gateway,authority}')=$4
+  AND amount=$5::bigint`;
+const mergeGatewayMetadataSql = `jsonb_set(metadata, '{gateway}',
+  CASE WHEN jsonb_typeof(metadata->'gateway')='object' THEN metadata->'gateway' ELSE '{}'::jsonb END
+    || ($2::jsonb->'gateway'))`;
+
 /**
  * Authenticated payment-provider callback handler (T-04.2.02.02).
  *
@@ -112,7 +122,7 @@ const CallbackBodySchema = z
  * Shared steps after authentication:
  *   1. Claims the provider event id before any business side effect
  *      (atomic INSERT … ON CONFLICT DO NOTHING RETURNING). Duplicate
- *      event ids stop here, including replays bound to another order.
+ *      events check their original order, wallet and signed payload digest.
  *      A terminal unpaid claim for the same order is reopened when a
  *      later paid delivery arrives so browser NOK cannot suppress
  *      server-side verify.
@@ -209,7 +219,7 @@ export class OnlineTopUpCallbackService {
     return this.processVerifiedPayload({
       authenticatedWebhook: true,
       eventId,
-      merchantOrderId: parsed.data.merchantOrderId,
+      merchantOrderId: parsed.data.merchantOrderId.toLowerCase(),
       authority: parsed.data.authority,
       amountIrR,
       status: parsed.data.status,
@@ -229,7 +239,7 @@ export class OnlineTopUpCallbackService {
     input: HandleZarinpalReturnInput,
     browserActor?: FinancialSubmissionActor
   ): Promise<HandleProviderCallbackResult> {
-    const orderId = input.orderId.trim();
+    const orderId = input.orderId.trim().toLowerCase();
     const authority = input.authority.trim();
     const statusRaw = input.status.trim();
     if (!z.string().uuid().safeParse(orderId).success) {
@@ -323,6 +333,17 @@ export class OnlineTopUpCallbackService {
           const resumeCrash = sameOrder && existing.status === 'processing';
           const resumeUnpaidForPaid =
             sameOrder && existing.status === 'unpaid' && input.status === 'paid';
+          if (
+            existing.payloadSha256 !== null &&
+            (!input.payloadSha256 ||
+              (existing.payloadSha256 !== input.payloadSha256 && !resumeUnpaidForPaid))
+          ) {
+            if (input.authenticatedWebhook) observePaymentCallbackAnomaly('topup', 'event_replay');
+            httpError(
+              ErrorCodes.PROVIDER_CALLBACK_INVALID,
+              'Payment callback event payload changed'
+            );
+          }
           if (!resumeCrash && !resumeUnpaidForPaid) {
             if (input.authenticatedWebhook) observePaymentCallbackAnomaly('topup', 'event_replay');
             // Keep the session lock and connection until the duplicate ledger read finishes.
@@ -341,7 +362,7 @@ export class OnlineTopUpCallbackService {
         const alreadyCredited = await this.findExistingCredit(client, pending);
         if (alreadyCredited) {
           if (isOnlineTopUpIntentReleasable(pending.state)) {
-            await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId);
+            await this.releasePendingIntent(client, pending, alreadyCredited.id, input.eventId);
           }
           await this.finalizeEvent(client, input.eventId, 'duplicate');
           return {
@@ -355,7 +376,7 @@ export class OnlineTopUpCallbackService {
 
         if (input.status !== 'paid') {
           if (pending.state === 'Pending')
-            await this.markPendingFailed(client, pending.id, input.status);
+            await this.markPendingFailed(client, pending, input.status);
           await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
@@ -383,7 +404,7 @@ export class OnlineTopUpCallbackService {
 
         if (!verified.paid) {
           if (pending.state === 'Pending')
-            await this.markPendingFailed(client, pending.id, 'verify_unpaid');
+            await this.markPendingFailed(client, pending, 'verify_unpaid');
           await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
@@ -394,7 +415,7 @@ export class OnlineTopUpCallbackService {
           };
         }
 
-        const providerRef = input.providerRefId ?? verified.providerRefId ?? input.authority;
+        const providerRef = verified.providerRefId ?? input.providerRefId ?? input.authority;
         const credit = await this.walletService.credit(
           pending.walletId,
           amountIrR,
@@ -412,7 +433,7 @@ export class OnlineTopUpCallbackService {
           onlineTopUpCreditIdempotencyKey(pending.id)
         );
 
-        await this.releasePendingIntent(client, pending.id, credit.id, input.eventId);
+        await this.releasePendingIntent(client, pending, credit.id, input.eventId);
         await this.finalizeEvent(client, input.eventId, 'credited');
 
         this.logger.log(
@@ -502,7 +523,12 @@ export class OnlineTopUpCallbackService {
     authority: string,
     amountIrR: bigint
   ): void {
-    if (pending.type !== 'topup' || readOnlineTopUpChannel(pending.metadata) !== 'online') {
+    if (
+      pending.type !== 'topup' ||
+      readOnlineTopUpChannel(pending.metadata) !== 'online' ||
+      (pending.metadata as { pendingTransactionId?: unknown } | null)?.pendingTransactionId !==
+        undefined
+    ) {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
         'Payment callback merchant order is not an online top-up'
@@ -555,7 +581,7 @@ export class OnlineTopUpCallbackService {
            (event_id, pending_transaction_id, wallet_id, status, raw, payload_sha256)
          VALUES ($1, $2, $3, 'processing', $4::jsonb, $5)
          ON CONFLICT (event_id) DO NOTHING
-         RETURNING event_id, pending_transaction_id, wallet_id, status`,
+         RETURNING event_id, pending_transaction_id, wallet_id, status, payload_sha256`,
         [
           input.eventId,
           input.pendingId,
@@ -580,7 +606,7 @@ export class OnlineTopUpCallbackService {
 
   private async loadEvent(client: QueryClient, eventId: string): Promise<CallbackEventRow | null> {
     const result = await client.query(
-      `SELECT event_id, pending_transaction_id, wallet_id, status
+      `SELECT event_id, pending_transaction_id, wallet_id, status, payload_sha256
          FROM wallet_topup_callback_events
         WHERE event_id = $1`,
       [eventId]
@@ -607,7 +633,7 @@ export class OnlineTopUpCallbackService {
     if (!credit)
       httpError(ErrorCodes.INTERNAL_DATABASE, 'Payment callback credit could not be confirmed');
     if (isOnlineTopUpIntentReleasable(pending.state)) {
-      await this.releasePendingIntent(client, pending.id, credit.id, existing.eventId);
+      await this.releasePendingIntent(client, pending, credit.id, existing.eventId);
     }
     return {
       ok: true,
@@ -651,20 +677,20 @@ export class OnlineTopUpCallbackService {
 
   private async releasePendingIntent(
     client: QueryClient,
-    pendingId: string,
+    pending: TransactionRow,
     creditTransactionId: string,
     eventId: string
   ): Promise<void> {
     const result = await client.query(
       `UPDATE wallet_transactions
        SET state = 'Released',
-           metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
+           metadata = ${mergeGatewayMetadataSql}
        WHERE id = $1
-         AND type = 'topup'
+         ${pendingIntentScopeSql}
          AND state IN ('Pending', 'Failed', 'Rejected')
        RETURNING state`,
       [
-        pendingId,
+        pending.id,
         JSON.stringify({
           gateway: {
             creditedTransactionId: creditTransactionId,
@@ -672,6 +698,9 @@ export class OnlineTopUpCallbackService {
             creditedAt: new Date().toISOString(),
           },
         }),
+        pending.walletId,
+        readStoredAuthority(pending),
+        pending.amount.toString(),
       ]
     );
     const row = result.rows[0] as Record<string, unknown> | undefined;
@@ -682,25 +711,28 @@ export class OnlineTopUpCallbackService {
 
   private async markPendingFailed(
     client: QueryClient,
-    pendingId: string,
+    pending: TransactionRow,
     reason: string
   ): Promise<void> {
     const result = await client.query(
       `UPDATE wallet_transactions
        SET state = 'Failed',
-           metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
+           metadata = ${mergeGatewayMetadataSql}
        WHERE id = $1
-         AND type = 'topup'
+         ${pendingIntentScopeSql}
          AND state = 'Pending'
        RETURNING state`,
       [
-        pendingId,
+        pending.id,
         JSON.stringify({
           gateway: {
             callbackStatus: reason,
             failedAt: new Date().toISOString(),
           },
         }),
+        pending.walletId,
+        readStoredAuthority(pending),
+        pending.amount.toString(),
       ]
     );
     const row = result.rows[0] as Record<string, unknown> | undefined;
@@ -776,7 +808,7 @@ export function zarinpalReturnEventId(
 
 export function onlineTopUpCallbackLockKeys(merchantOrderId: string): [number, number] {
   const digest = createHash('sha256')
-    .update(`wallet-online-topup-callback:${merchantOrderId}`)
+    .update(`wallet-online-topup-callback:${merchantOrderId.toLowerCase()}`)
     .digest();
   return [digest.readInt32BE(0), digest.readInt32BE(4)];
 }
@@ -796,12 +828,14 @@ function mapEvent(row: {
   pending_transaction_id: string;
   wallet_id: string;
   status: string;
+  payload_sha256?: string | null;
 }): CallbackEventRow {
   return {
     eventId: row.event_id,
     pendingTransactionId: row.pending_transaction_id,
     walletId: row.wallet_id,
     status: row.status as CallbackEventStatus,
+    payloadSha256: row.payload_sha256 ?? null,
   };
 }
 

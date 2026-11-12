@@ -252,7 +252,10 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   it('credits via WalletService.credit with a stable idempotency key', async () => {
     scriptClient({ pending: makePendingRow() });
     const { service, credit, verifyPayment } = makeService();
-    const rawBody = ` ${payload()}\n`;
+    const rawBody = ` ${payload({
+      merchantOrderId: TX_ID.toUpperCase(),
+      providerRefId: 'webhook-reference',
+    })}\n`;
     const result = await service.handle(signedInput(rawBody));
     expect(result).toMatchObject({
       ok: true,
@@ -280,6 +283,8 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes("SET state = 'Released'")
     );
     expect(updates).toHaveLength(1);
+    expect(String(updates[0]![0])).toContain('AND wallet_id=$3');
+    expect(updates[0]![1]?.slice(2)).toEqual([PROFILE_ID, AUTHORITY, String(AMOUNT)]);
     const claim = mockClient.query.mock.calls.find((call) =>
       String(call[0]).includes('INSERT INTO wallet_topup_callback_events')
     );
@@ -386,14 +391,18 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   });
 
   it('replays a duplicate event id after credit without calling credit again', async () => {
+    const original = payload();
     scriptClient({
       pending: makePendingRow({ state: 'Released' }),
       existingCredit: { id: CREDIT_ID },
       claimInserted: false,
-      existingEvent: claimedEventRow({ status: 'credited' }),
+      existingEvent: claimedEventRow({
+        status: 'credited',
+        payload_sha256: createHash('sha256').update(original).digest('hex'),
+      }),
     });
     const { service, credit, verifyPayment } = makeService();
-    const result = await service.handle(signedInput(payload()));
+    const result = await service.handle(signedInput(original));
     expect(result).toMatchObject({
       processed: false,
       credited: true,
