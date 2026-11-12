@@ -95,6 +95,37 @@ it('honors the configured age, aborts a provider upload and records its outcome'
   ).toBe('aborted');
 });
 
+it('stops before provider calls when the saved cleanup age is invalid', async () => {
+  const saved = (
+    await pool.query("SELECT value FROM app_config WHERE key='storage.multipart_orphan_hours'")
+  ).rows[0];
+  const list = vi.spyOn(provider, 'listMultipartUploads');
+  const abort = vi.spyOn(provider, 'abortMultipartUpload');
+  try {
+    for (const invalid of [{}, null, { hours: null }, { hours: '1' }, { hours: 0 }]) {
+      await pool.query(
+        `INSERT INTO app_config(key,value) VALUES('storage.multipart_orphan_hours',$1::jsonb)
+         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`,
+        [JSON.stringify(invalid)]
+      );
+      await expect(cleanupMultipartOrphans(pool, provider)).rejects.toThrow(
+        'Invalid multipart orphan cleanup policy'
+      );
+    }
+    expect(list).not.toHaveBeenCalled();
+    expect(abort).not.toHaveBeenCalled();
+  } finally {
+    list.mockRestore();
+    abort.mockRestore();
+    if (saved)
+      await pool.query(
+        "UPDATE app_config SET value=$1::jsonb WHERE key='storage.multipart_orphan_hours'",
+        [JSON.stringify(saved.value)]
+      );
+    else await pool.query("DELETE FROM app_config WHERE key='storage.multipart_orphan_hours'");
+  }
+});
+
 it('records a provider failure and retries the same upload on a later scan', async () => {
   const key = `uploads/document/${randomUUID()}.pdf`;
   await provider.createMultipartUpload(key, 'application/pdf');

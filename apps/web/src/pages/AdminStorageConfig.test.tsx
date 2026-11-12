@@ -16,8 +16,10 @@ vi.mock('../components/TeamActionDialog.js', () => ({
 
 let container: HTMLDivElement;
 let root: Root;
+let cleanupPolicy: { hours: number | null; version: number };
 beforeEach(() => {
   harness.action = null;
+  cleanupPolicy = { hours: 24, version: 0 };
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -28,7 +30,7 @@ beforeEach(() => {
         new Response(
           JSON.stringify(
             url.endsWith('/multipart-cleanup-policy')
-              ? { hours: 24, version: 0 }
+              ? cleanupPolicy
               : {
                   endpoint: '',
                   region: 'us-east-1',
@@ -51,10 +53,15 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-it('submits a changed multipart cleanup age with its configuration version', async () => {
+it.each([
+  { hours: 24, version: 0 },
+  { hours: null, version: 7 },
+])('submits a changed multipart cleanup age from policy $hours (v$version)', async (policy) => {
+  cleanupPolicy = policy;
   await act(async () => root.render(<QueryProvider>{<AdminStorageConfig />}</QueryProvider>));
   const hours = container.querySelector<HTMLInputElement>('#storage-cleanup-hours')!;
-  expect(hours.value).toBe('24');
+  expect(hours.value).toBe(String(policy.hours ?? ''));
+  expect(container.textContent?.includes('Cleanup is paused')).toBe(policy.hours === null);
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(hours, '48');
     hours.dispatchEvent(new Event('input', { bubbles: true }));
@@ -68,7 +75,7 @@ it('submits a changed multipart cleanup age with its configuration version', asy
     expect(harness.action).toMatchObject({
       method: 'PUT',
       path: '/api/admin/storage/multipart-cleanup-policy',
-      body: { hours: 48, version: 0 },
+      body: { hours: 48, version: policy.version },
     })
   );
 });

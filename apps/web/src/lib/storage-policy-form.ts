@@ -18,7 +18,7 @@ export type StorageDraft = Omit<StorageConfigView, 'hasSecretKey' | 'version'> &
   secretAccessKey: string;
   clearSecret: boolean;
 };
-export type CleanupPolicyView = { hours: number; version: number };
+export type CleanupPolicyView = { hours: number | null; version: number };
 export type CleanupDraft = { hours: string };
 export type UploadLimit = { category: string; allowedExtensions: string[]; maxSizeBytes: number };
 export type UploadPolicyDraft = { extensions: string[]; size: string };
@@ -38,7 +38,9 @@ export function validStorageConfig(value: unknown): value is StorageConfigView {
 }
 export function validCleanupPolicy(value: unknown): value is CleanupPolicyView {
   return (
-    record(value) && integer(value.version, 0) && integer(value.hours, 1) && value.hours <= 168
+    record(value) &&
+    integer(value.version, 0) &&
+    (value.hours === null || (integer(value.hours, 1) && value.hours <= 168))
   );
 }
 export const emptyStorageDraft = (): StorageDraft => ({

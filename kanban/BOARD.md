@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T07:12:28+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T07:27:04+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1238 | Accepted with unchanged source bindings. |
-| verify | 37 | Existing work may be complete; inspect evidence before building. |
-| partial | 85 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 36 | Existing work may be complete; inspect evidence before building. |
+| partial | 86 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1070,7 +1070,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.01.03` | partial | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |
 | `01-platform-infrastructure.md#T-07.01.04` | done | Earlier deferred | Add environment indicator middleware |
 | `01-platform-infrastructure.md#T-07.02.01` | done | Earlier deferred | Create versioned configuration store in PostgreSQL |
-| `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |
+| `01-platform-infrastructure.md#T-07.02.02` | partial | Earlier deferred | Create configuration validation framework |
 | `01-platform-infrastructure.md#T-07.02.03` | partial | Earlier deferred | Implement configuration rollback |
 | `01-platform-infrastructure.md#T-07.02.04` | done | Earlier deferred | Create secrets encryption and masking service |
 | `01-platform-infrastructure.md#T-07.02.05` | done | Earlier deferred | Implement provider configuration lifecycle with test-send |

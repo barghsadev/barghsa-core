@@ -115,7 +115,10 @@ uploads older than 24 hours, with a bounded scan and a durable cursor so later
 pages are visited. Storage administrators can change the age from 1 to 168
 hours under Storage settings; changes require step-up and are audited. Outcomes
 are stored in `upload_cleanup_log`, and failed provider aborts are retried on a
-later scan. Reapply `pnpm setup:bucket` to install the seven-day S3 fallback
+later scan. An invalid saved cleanup age stops the worker's cleanup pass before
+provider calls. Storage settings shows the paused state and lets an authorized
+administrator save a valid age against the current policy version.
+Reapply `pnpm setup:bucket` to install the seven-day S3 fallback
 after reviewing deployed custom rules. MinIO uses its separate stale-upload
 server settings; bucket setup cannot install the S3 abort rule there.
 
