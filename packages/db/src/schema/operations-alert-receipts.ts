@@ -12,7 +12,7 @@ export const operationsAlertReceipts = pgTable(
     database: text('database').notNull(),
     status: text('status', { enum: ['firing', 'resolved'] }).notNull(),
     severity: text('severity', { enum: ['warning', 'critical'] }).notNull(),
-    priority: text('priority', { enum: ['P1', 'P2'] }),
+    priority: text('priority', { enum: ['P1', 'P2', 'P3'] }),
     startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
     receivedAt: timestamp('received_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -21,7 +21,7 @@ export const operationsAlertReceipts = pgTable(
     check('operations_alert_severity_check', sql`${t.severity} IN ('warning','critical')`),
     check(
       'operations_alert_priority_check',
-      sql`${t.priority} IS NULL OR ${t.priority} IN ('P1','P2')`
+      sql`${t.priority} IS NULL OR ${t.priority} IN ('P1','P2','P3')`
     ),
   ]
 );

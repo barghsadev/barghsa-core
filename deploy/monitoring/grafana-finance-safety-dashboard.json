@@ -247,7 +247,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "max by (environment, database, alertname) (ALERTS{alertstate=\"firing\",alertname=~\"WalletReconciliationCritical|RefundObligationOverdue|PaymentCallbackAnomaly|PaymentIdempotencyConflict\"})",
+          "expr": "max by (environment, database, alertname) (ALERTS{alertstate=\"firing\",alertname=~\"WalletReconciliationCritical|WalletReconciliationReview|RefundObligationOverdue|PaymentCallbackAnomaly|PaymentIdempotencyConflict\"})",
           "legendFormat": "{{environment}}/{{database}} \u00b7 {{alertname}}"
         }
       ]

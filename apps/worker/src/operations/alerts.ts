@@ -18,6 +18,8 @@ const labels: Record<string, string> = {
     'تأخیر پردازش اعلان‌ها بحرانی است / Notification processing is critically delayed',
   RefundObligationOverdue: 'تعهد بازپرداخت معوق است / Mandatory refund is overdue',
   WalletReconciliationCritical: 'مغایرت بحرانی کیف پول / Critical wallet reconciliation mismatch',
+  WalletReconciliationReview:
+    'مغایرت تطبیق نیازمند بررسی است / Reconciliation mismatch needs review',
   PaymentCallbackAnomaly: 'ناهنجاری در پاسخ درگاه پرداخت / Payment callback anomaly',
   PaymentIdempotencyConflict: 'مغایرت در تلاش دوباره پرداخت / Payment retry data mismatch',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
@@ -84,12 +86,15 @@ const criticalAlerts = new Set([
   'PostgresBackupStale',
   'PostgresBackupMonitoringUnavailable',
 ]);
-const alertPriorities = new Map<string, 'P1' | 'P2'>([
+type AlertPriority = 'P1' | 'P2' | 'P3';
+
+const alertPriorities = new Map<string, AlertPriority>([
   ['SmsProviderLowCredit', 'P2'],
   ['NotificationOutboxBacklog', 'P2'],
   ['NotificationOutboxBacklogCritical', 'P1'],
   ['RefundObligationOverdue', 'P2'],
   ['WalletReconciliationCritical', 'P1'],
+  ['WalletReconciliationReview', 'P3'],
   ['PaymentCallbackAnomaly', 'P1'],
   ['PaymentIdempotencyConflict', 'P1'],
   ['ApplicationDatabasePoolSaturated', 'P2'],
@@ -110,7 +115,7 @@ type Alert = {
   environment: string;
   database: string;
   severity: 'warning' | 'critical';
-  priority: 'P1' | 'P2' | null;
+  priority: AlertPriority | null;
   service?: string;
   syntheticCheck?: string;
   criticalApiRoute?: string;

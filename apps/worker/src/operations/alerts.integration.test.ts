@@ -209,6 +209,61 @@ it('retains the P2 credit priority in the authenticated receipt and private admi
   );
 });
 
+it('delivers a reconciliation review and its resolution once to the private admin inbox', async () => {
+  const input = envelope();
+  const alert = input.alerts[0]!;
+  Object.assign(alert.labels, { alertname: 'WalletReconciliationReview', priority: 'P3' });
+  const wrongPriority = structuredClone(input);
+  Object.assign(wrongPriority.alerts[0]!.labels, { priority: 'P2' });
+  expect((await request(wrongPriority)).status).toBe(400);
+  expect((await request(input, { Authorization: 'Bearer wrong' })).status).toBe(403);
+
+  for (const status of ['firing', 'resolved']) {
+    alert.status = status;
+    const response = await request(input);
+    expect(response.status).toBe(200);
+    const { receipts } = (await response.json()) as {
+      receipts: { id: string; inserted: boolean }[];
+    };
+    expect(receipts).toEqual([{ id: expect.any(String), inserted: true }]);
+    const repeat = await request(input);
+    expect(repeat.status).toBe(200);
+    expect(await repeat.json()).toEqual({ receipts: [{ id: receipts[0]!.id, inserted: false }] });
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT alert_name,priority,severity,status FROM operations_alert_receipts WHERE id=$1',
+          [receipts[0]!.id]
+        )
+      ).rows
+    ).toEqual([
+      { alert_name: 'WalletReconciliationReview', priority: 'P3', severity: 'warning', status },
+    ]);
+  }
+
+  const jobs = await ctx.pool.query('SELECT channel FROM notification_job');
+  expect(jobs.rows).toEqual([{ channel: 'in_app' }, { channel: 'in_app' }]);
+  expect(
+    await runOutboxPoll({
+      pool: ctx.pool,
+      transports: { in_app: new InAppNotificationTransport(ctx.pool) },
+    })
+  ).toMatchObject({ delivered: 2, failed: 0 });
+  const notices = await ctx.pool.query(
+    "SELECT recipient_user_id, profile_id, operating_context, type, params FROM in_app_notifications ORDER BY params->>'alertStatus'"
+  );
+  expect(notices.rows).toMatchObject(
+    ['firing', 'resolved'].map((alertStatus) => ({
+      recipient_user_id: 'ops-admin',
+      profile_id: null,
+      operating_context: 'staff',
+      type: 'admin.operations_alert',
+      params: { operationsAlertName: 'WalletReconciliationReview', priority: 'P3', alertStatus },
+    }))
+  );
+  expect(JSON.stringify(notices.rows)).not.toMatch(/DO_NOT_COPY|unsafe\.example/);
+});
+
 it.each([
   ['ApplicationDatabasePoolSaturated', {}, 'barghsa-postgresql', undefined],
   [

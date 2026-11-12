@@ -1,0 +1,2 @@
+ALTER TABLE "operations_alert_receipts" DROP CONSTRAINT "operations_alert_priority_check";--> statement-breakpoint
+ALTER TABLE "operations_alert_receipts" ADD CONSTRAINT "operations_alert_priority_check" CHECK ("operations_alert_receipts"."priority" IS NULL OR "operations_alert_receipts"."priority" IN ('P1','P2','P3'));

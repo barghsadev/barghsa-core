@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T07:54:34+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T08:03:45+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1238 | Accepted with unchanged source bindings. |
-| verify | 36 | Existing work may be complete; inspect evidence before building. |
-| partial | 86 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 34 | Existing work may be complete; inspect evidence before building. |
+| partial | 88 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1391,8 +1391,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.01.01` | done | Recorded batch work | Define alert severity taxonomy: P1 (user-facing outage, payment/refund risk), P2 (degradation, backlog), P3 (warning, info) |
 | `06-security-testing-observability.md#T-06.15.01.02` | partial | Recorded batch work | Configure P1 alerts: payment/refund duplication risk, ledger mismatch, backup failure, outbox backlog > threshold, elevated auth failures, SLO burn rate |
 | `06-security-testing-observability.md#T-06.15.01.03` | partial | Recorded batch work | Configure P2 alerts: provider circuit-breaker open, queue age > target, database connection pool saturation, elevated error rate on critical routes |
-| `06-security-testing-observability.md#T-06.15.01.04` | verify | Inventory needed | Configure P3 alerts: certificate expiry, storage lifecycle warning, reconciliation mismatch, low SMS credit |
-| `06-security-testing-observability.md#T-06.15.01.05` | verify | Inventory needed | Configure alert routing: P1 → on-call pager/phone, P2 → team channel + task, P3 → review board |
+| `06-security-testing-observability.md#T-06.15.01.04` | partial | Recorded batch work | Configure P3 alerts: certificate expiry, storage lifecycle warning, reconciliation mismatch, low SMS credit |
+| `06-security-testing-observability.md#T-06.15.01.05` | partial | Recorded batch work | Configure alert routing: P1 → on-call pager/phone, P2 → team channel + task, P3 → review board |
 | `06-security-testing-observability.md#T-06.15.01.06` | done | Recorded batch work | Configure deduplication and alert grouping to prevent noise storms |
 | `06-security-testing-observability.md#T-06.15.01.07` | partial | Recorded batch work | Set up dead-man check / watchdog for alert delivery pipeline |
 | `06-security-testing-observability.md#T-06.15.01.08` | partial | Recorded batch work | Every alert links to its dashboard and runbook |

@@ -31,6 +31,21 @@ describe('operations alert budget links', () => {
     expect(links[2]?.label).toBe('notifications.operations.runbook');
   });
 
+  it('links the reconciliation review notice to Finance and its runbook', () => {
+    expect(
+      operationsAlertLinks('admin.operations_alert', {
+        operationsAlertName: 'WalletReconciliationReview',
+        operationsDashboardOrigin: origin,
+      })
+    ).toEqual([
+      { label: 'notifications.operations.dashboard', href: `${origin}/d/barghsa-finance-safety` },
+      {
+        label: 'notifications.operations.runbook',
+        href: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md',
+      },
+    ]);
+  });
+
   it('uses only the trusted origin and the allowed operations event and name', () => {
     const alert = {
       operationsAlertName: 'RefundObligationOverdue',

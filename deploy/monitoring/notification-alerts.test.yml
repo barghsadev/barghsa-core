@@ -158,6 +158,68 @@
           ],
       },
       {
+        'name': 'Reconciliation review fires once per database with known zero critical drift',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'reconciliation_mismatches_unresolved{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '4 4 4 0',
+            },
+            {
+              'series': 'reconciliation_mismatches_unresolved{job="worker",environment="staging",database="core",instance="b",pod="b"}',
+              'values': '4 4 4 0',
+            },
+            {
+              'series': 'reconciliation_wallets_critical_drift{job="worker",environment="staging",database="core",instance="a",pod="a"}',
+              'values': '0 0 0 0',
+            },
+            {
+              'series': 'reconciliation_wallets_critical_drift{job="worker",environment="staging",database="core",instance="b",pod="b"}',
+              'values': '0 1 stale 0',
+            },
+            {
+              'series': 'reconciliation_mismatches_unresolved{job="worker",environment="staging",database="missing",instance="a",pod="a"}',
+              'values': '4 4 4 4',
+            },
+            {
+              'series': 'reconciliation_wallets_critical_drift{job="worker",environment="production",database="missing",instance="a",pod="a"}',
+              'values': '0 0 0 0',
+            },
+          ],
+        'alert_rule_test':
+          [
+            {
+              'eval_time': '0m',
+              'alertname': 'WalletReconciliationReview',
+              'exp_alerts':
+                &wallet_reconciliation_review [
+                  {
+                    'exp_labels':
+                      {
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'warning',
+                        'priority': 'P3',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'Open reconciliation mismatches need Finance review',
+                        'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '1m', 'alertname': 'WalletReconciliationReview', 'exp_alerts': [] },
+            {
+              'eval_time': '2m',
+              'alertname': 'WalletReconciliationReview',
+              'exp_alerts': *wallet_reconciliation_review,
+            },
+            { 'eval_time': '3m', 'alertname': 'WalletReconciliationReview', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Overdue mandatory refunds alert once per database scope and recover',
         'interval': '1m',
         'input_series':

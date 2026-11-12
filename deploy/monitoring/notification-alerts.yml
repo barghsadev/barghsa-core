@@ -99,6 +99,16 @@ groups:
           summary: Current wallet balance differs from its ledger at or above the critical threshold
           slo_dashboard_uid: barghsa-executive-slo
           journey_burn: *journey_burn
+      - alert: WalletReconciliationReview
+        expr: |
+          max by (environment, database) (reconciliation_mismatches_unresolved) > 0
+          and max by (environment, database) (reconciliation_wallets_critical_drift) == 0
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
+          summary: Open reconciliation mismatches need Finance review
       - alert: PaymentCallbackAnomaly
         expr: |
           max without (instance, pod, callback, reason) (

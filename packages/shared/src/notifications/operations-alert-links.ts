@@ -10,6 +10,7 @@ const alertResources = {
   NotificationOutboxBacklogCritical: ['barghsa-notifications', 'notification-outage'],
   RefundObligationOverdue: ['barghsa-finance-safety', 'refund-backlog'],
   WalletReconciliationCritical: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
+  WalletReconciliationReview: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
   PaymentCallbackAnomaly: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
   PaymentIdempotencyConflict: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
   AiModelCircuitOpen: ['barghsa-ai-usage', 'ai-provider-outage'],

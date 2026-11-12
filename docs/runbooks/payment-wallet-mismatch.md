@@ -1,5 +1,11 @@
 # Payment or wallet mismatch
 
+## Working-hours review (P3)
+
+`WalletReconciliationReview` reaches the private operations inbox when a database has open or investigating reconciliation mismatches and its reported critical wallet drift is zero. Finance reviews the affected records in `/admin/reconciliation` during working hours, preserves the supporting evidence, and records the disposition in the existing audited workflow. Check the independent reconciliation panel for current state. If the review finds possible duplicate movement or a payment or balance that cannot be explained, use the incident procedure below immediately.
+
+## Payment or ledger incident
+
 **Incident P0. Finance leads reconciliation and platform operations handles containment.** Suspected duplicate charges, a payment that disagrees with its invoice, or an unexplained wallet-to-ledger discrepancy can affect available balances and the ability to settle an invoice.
 
 1. Open a P0 incident and record the affected profiles, financial references, correlation IDs and first known discrepancy in protected evidence. Suspend the affected payment initiation path under the approved production control. Preserve provider callback and inquiry evidence.
