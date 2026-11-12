@@ -22,7 +22,10 @@ jobs:
           node-version: '24'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
       - name: Exercise proxy privacy and verification correlation
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
         shell: bash
         run: |
           pnpm --filter @barghsa/api exec vitest run src/auth/proxy-rate-http.integration.test.ts src/crm/crm-verification.integration.test.ts \
