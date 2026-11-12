@@ -341,6 +341,7 @@ export class BankReceiptConfirmationController {
     schema: {
       type: 'object',
       required: ['reason'],
+      additionalProperties: false,
       properties: {
         reason: {
           type: 'string',

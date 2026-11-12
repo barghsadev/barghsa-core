@@ -47,7 +47,7 @@ export function parseBankReceiptRejectReason(raw: unknown): ParseRejectReasonRes
   }
   const body = raw as Record<string, unknown>;
   const value = body.reason;
-  if (typeof value !== 'string') {
+  if (typeof value !== 'string' || Object.keys(body).some((key) => key !== 'reason')) {
     return { ok: false, message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON() };
   }
   const trimmed = value.trim();
@@ -74,7 +74,7 @@ export function parseInvoiceBankReceiptRejectReason(raw: unknown): ParseRejectRe
   }
   const body = raw as Record<string, unknown>;
   const value = body.reason;
-  if (typeof value !== 'string') {
+  if (typeof value !== 'string' || Object.keys(body).some((key) => key !== 'reason')) {
     return { ok: false, message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON() };
   }
   const trimmed = value.trim();

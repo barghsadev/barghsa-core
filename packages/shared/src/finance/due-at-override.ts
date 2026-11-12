@@ -113,6 +113,8 @@ export function parseDueAtOverrideBody(
     };
   }
   const body = raw as Record<string, unknown>;
+  if (Object.keys(body).some((key) => key !== 'dueAt' && key !== 'due_at' && key !== 'reason'))
+    return { ok: false, issues: ['Unsupported invoice due date fields'], fields: [] };
   const issues: string[] = [];
 
   const dueAt = parseIsoDate(body.dueAt ?? body.due_at);

@@ -996,6 +996,53 @@ async function confirmInvoice(user: string, id: string, refreshReview = true) {
     body: JSON.stringify({ expectedReviewHash: reviewed.hash }),
   });
 }
+it('rejects extra receipt review and rejection fields without changing financial state', async () => {
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":100000}')
+     ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+  );
+  const invoice = await invoiceReceipt();
+  const wallet = await walletReceipt();
+  const snapshot = async () =>
+    Promise.all(
+      [
+        http.pool.query('SELECT * FROM bank_receipts WHERE id=$1', [invoice.id]),
+        http.pool.query('SELECT * FROM invoices WHERE id=$1', [invoice.invoice]),
+        http.pool.query('SELECT * FROM wallet_transactions WHERE id=$1', [wallet.id]),
+        http.pool.query('SELECT * FROM wallets WHERE profile_id=$1', [wallet.profile]),
+        http.pool.query("SELECT id FROM approval_requests WHERE details->>'receiptId' IN ($1,$2)", [
+          invoice.id,
+          wallet.id,
+        ]),
+        http.pool.query(
+          'SELECT id FROM audit_log WHERE metadata::text LIKE $1 OR metadata::text LIKE $2 ORDER BY id',
+          [`%${invoice.id}%`, `%${wallet.id}%`]
+        ),
+        http.pool.query(
+          'SELECT id FROM in_app_notifications WHERE profile_id IN ($1,$2) ORDER BY id',
+          [invoice.profile, wallet.profile]
+        ),
+      ].map(async (query) => (await query).rows)
+    );
+  const before = await snapshot();
+  const review = await invoiceReviewHash('initiator', invoice.id, { actor: 'private-value' });
+  expect(review.response.status).toBe(400);
+  expect(await review.response.text()).not.toContain('private-value');
+  for (const path of [
+    `invoices/bank-receipts/${invoice.id}/reject`,
+    `wallet/bank-receipt-top-ups/${wallet.id}/reject`,
+  ]) {
+    const response = await fetch(`${http.base}/api/admin/${path}`, {
+      method: 'POST',
+      headers: headers.reviewer!,
+      body: JSON.stringify({ reason: 'Receipt could not be verified', actor: 'private-value' }),
+    });
+    expect(response.status).toBe(400);
+    expect(await response.text()).not.toContain('private-value');
+  }
+  expect(await snapshot()).toEqual(before);
+});
+
 it('requires invoice-owned approval evidence and rejects changed receipt evidence', async () => {
   await http.pool.query(
     `UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`

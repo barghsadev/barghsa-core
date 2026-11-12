@@ -48,6 +48,13 @@ import {
   type InvoiceBankReceiptHistoryPageDto,
 } from '../invoice/invoice-bank-receipt-confirmation.service.js';
 
+const receiptReviewCommand = z.strictObject({
+  emergencyOverrideReason: z.unknown().optional(),
+});
+const receiptConfirmationCommand = receiptReviewCommand.extend({
+  expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+});
+
 const HistoryQuerySchema = z
   .object({
     state: z.enum(['Confirmed', 'Rejected']).optional(),
@@ -313,7 +320,10 @@ export class InvoiceBankReceiptConfirmationController {
   ) {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
-    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
+    const parsed = receiptReviewCommand.safeParse(body === undefined ? {} : body);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt review');
+    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(parsed.data);
     return this.service.review({
       receiptId,
       actorUserId: req.session.userId,
@@ -364,16 +374,10 @@ export class InvoiceBankReceiptConfirmationController {
   ): Promise<InvoiceBankReceiptConfirmDto> {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
-    const parsed = z
-      .object({
-        expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
-        emergencyOverrideReason: z.unknown().optional(),
-      })
-      .strict()
-      .safeParse(body);
+    const parsed = receiptConfirmationCommand.safeParse(body);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid receipt review confirmation');
-    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(body);
+    const emergencyOverrideReason = readReceiptEmergencyOverrideReason(parsed.data);
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       receiptId,
@@ -400,6 +404,7 @@ export class InvoiceBankReceiptConfirmationController {
     schema: {
       type: 'object',
       required: ['reason'],
+      additionalProperties: false,
       properties: {
         reason: {
           type: 'string',

@@ -17590,6 +17590,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "reason": {
                     "description": "Customer-visible rejection reason",
@@ -18348,25 +18349,62 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "dueAt": {
-                    "example": "2026-09-15T08:00:00.000Z",
-                    "format": "date-time",
-                    "type": "string"
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "dueAt": {
+                        "example": "2026-09-15T08:00:00.000Z",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "due_at": {
+                        "description": "Legacy due date alias",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "Customer-visible reason for the override",
+                        "example": "Customer requested an extension after a billing delay",
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "dueAt",
+                      "reason"
+                    ],
+                    "type": "object"
                   },
-                  "reason": {
-                    "description": "Customer-visible reason for the override",
-                    "example": "Customer requested an extension after a billing delay",
-                    "maxLength": 2000,
-                    "minLength": 1,
-                    "type": "string"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "dueAt": {
+                        "example": "2026-09-15T08:00:00.000Z",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "due_at": {
+                        "description": "Legacy due date alias",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "reason": {
+                        "description": "Customer-visible reason for the override",
+                        "example": "Customer requested an extension after a billing delay",
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "due_at",
+                      "reason"
+                    ],
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "dueAt",
-                  "reason"
-                ],
-                "type": "object"
+                ]
               }
             }
           },
@@ -25796,6 +25834,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "reason": {
                     "description": "Customer-visible rejection reason",

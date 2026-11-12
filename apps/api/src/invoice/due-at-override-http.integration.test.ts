@@ -70,6 +70,27 @@ async function stored(invoiceId: string) {
   };
 }
 
+it('rejects undeclared due-date fields and keeps the legacy alias', async () => {
+  const f = await fixture();
+  const before = await stored(f.invoiceId);
+  const rejected = await fetch(f.url, {
+    method: 'POST',
+    headers: f.headers,
+    body: JSON.stringify({ ...body, actor: 'private-value' }),
+  });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.text()).not.toContain('private-value');
+  expect(await stored(f.invoiceId)).toEqual(before);
+  const accepted = await fetch(f.url, {
+    method: 'POST',
+    headers: f.headers,
+    body: JSON.stringify({ due_at: body.dueAt, reason: body.reason }),
+  });
+  expect(accepted.status).toBe(200);
+  expect(await accepted.json()).toMatchObject({ dueAt: body.dueAt });
+  expect(await stored(f.invoiceId)).toMatchObject({ dueAt: body.dueAt, audits: 1 });
+});
+
 it('Finance reads and changes the deadline with an attributed customer-visible reason', async () => {
   const f = await fixture();
   await http.pool.query(

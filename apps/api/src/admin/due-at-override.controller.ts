@@ -115,18 +115,22 @@ export class DueAtOverrideController {
   @ApiParam({ name: 'invoiceId', format: 'uuid' })
   @ApiBody({
     schema: {
-      type: 'object',
-      required: ['dueAt', 'reason'],
-      properties: {
-        dueAt: { type: 'string', format: 'date-time', example: '2026-09-15T08:00:00.000Z' },
-        reason: {
-          type: 'string',
-          minLength: 1,
-          maxLength: DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
-          description: 'Customer-visible reason for the override',
-          example: 'Customer requested an extension after a billing delay',
+      anyOf: ['dueAt', 'due_at'].map((dateField) => ({
+        type: 'object',
+        required: [dateField, 'reason'],
+        additionalProperties: false,
+        properties: {
+          dueAt: { type: 'string', format: 'date-time', example: '2026-09-15T08:00:00.000Z' },
+          due_at: { type: 'string', format: 'date-time', description: 'Legacy due date alias' },
+          reason: {
+            type: 'string',
+            minLength: 1,
+            maxLength: DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
+            description: 'Customer-visible reason for the override',
+            example: 'Customer requested an extension after a billing delay',
+          },
         },
-      },
+      })),
     },
   })
   @ApiResponse({ status: 200, description: 'Due date overridden.' })

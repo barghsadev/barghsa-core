@@ -19039,6 +19039,27 @@ export interface operations {
                      */
                     dueAt: string;
                     /**
+                     * Format: date-time
+                     * @description Legacy due date alias
+                     */
+                    due_at?: string;
+                    /**
+                     * @description Customer-visible reason for the override
+                     * @example Customer requested an extension after a billing delay
+                     */
+                    reason: string;
+                } | {
+                    /**
+                     * Format: date-time
+                     * @example 2026-09-15T08:00:00.000Z
+                     */
+                    dueAt?: string;
+                    /**
+                     * Format: date-time
+                     * @description Legacy due date alias
+                     */
+                    due_at: string;
+                    /**
                      * @description Customer-visible reason for the override
                      * @example Customer requested an extension after a billing delay
                      */

@@ -197,6 +197,14 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
       status: 400,
     });
     expect(service.confirm).not.toHaveBeenCalled();
+    await expect(
+      controller.review(adminReq, RECEIPT_ID, {
+        emergencyOverrideReason: 'Valid reason',
+        actor: 'private-value',
+      })
+    ).rejects.toMatchObject({ status: 400 });
+    expect(service.review).not.toHaveBeenCalled();
+    expect(await controller.review(adminReq, RECEIPT_ID)).toEqual({ hash: REVIEW_HASH });
     expect(await controller.review(adminReq, RECEIPT_ID, {})).toEqual({ hash: REVIEW_HASH });
     expect(service.review).toHaveBeenCalledWith({
       receiptId: RECEIPT_ID,
@@ -206,6 +214,16 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
     });
     await expect(controller.review(nonAdminReq, RECEIPT_ID, {})).rejects.toMatchObject({
       status: 403,
+    });
+    await controller.review(adminReq, RECEIPT_ID, {
+      emergencyOverrideReason: '  Reviewed reason  ',
+    });
+    expect(service.review).toHaveBeenLastCalledWith({
+      receiptId: RECEIPT_ID,
+      actorUserId: 'admin-1',
+      sessionId: 'staff-session',
+      csrfToken: 'staff-csrf',
+      emergencyOverrideReason: 'Reviewed reason',
     });
   });
 
