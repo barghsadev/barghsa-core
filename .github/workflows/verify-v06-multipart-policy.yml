@@ -1,0 +1,42 @@
+name: Verify v0.6 multipart policy fixtures
+on:
+  push:
+    branches: ['codex/verify/v06-multipart-policy-*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter='./packages/*'
+      - name: Exercise versioned storage policy HTTP mutations and reads
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/api exec vitest run src/storage/storage-config-http.integration.test.ts 2>&1 | tee "$RUNNER_TEMP/multipart-api.log"
+      - name: Exercise PostgreSQL and MinIO cleanup and recovery
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/worker exec vitest run src/storage/multipart-cleanup.integration.test.ts 2>&1 | tee "$RUNNER_TEMP/multipart-worker.log"
+      - name: Preserve fixture evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: multipart-policy-native-results
+          path: ${{ runner.temp }}/multipart-*.log
+          if-no-files-found: warn
+          retention-days: 14

@@ -4,6 +4,15 @@ import { createStorageProvider } from './storage-factory.js';
 import type { IFileStorageProvider } from './storage-provider.js';
 
 export const STORAGE_CONFIG_KEY = 'storage.active';
+export const MULTIPART_CLEANUP_POLICY_KEY = 'storage.multipart_orphan_hours';
+export const DEFAULT_MULTIPART_CLEANUP_HOURS = 24;
+export const multipartCleanupPolicy = z.strictObject({
+  hours: z.number().int().min(1).max(168),
+});
+export const multipartCleanupPolicyUpdate = multipartCleanupPolicy.extend({
+  version: z.number().int().min(0),
+});
+
 const endpoint = z
   .string()
   .max(2048)

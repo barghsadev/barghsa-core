@@ -1,9 +1,14 @@
 import type { Pool } from 'pg';
 import { finishMultipartReservation, withMultipartUploadLock } from '@barghsa/db/storage-multipart';
-import type { MultipartUploadSummary, StorageProvider } from '@barghsa/shared/storage';
+import {
+  DEFAULT_MULTIPART_CLEANUP_HOURS,
+  MULTIPART_CLEANUP_POLICY_KEY,
+  multipartCleanupPolicy,
+  type MultipartUploadSummary,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import { recoverMultipartOperations } from './multipart-recovery.js';
 
-const policyKey = 'storage.multipart_orphan_hours';
 const cursorKey = 'storage.multipart_cleanup_cursor';
 const pageSize = 100;
 const scanLimit = 500;
@@ -94,14 +99,15 @@ export async function cleanupMultipartOrphans(
       ).rows[0]?.acquired === true;
     if (!acquired) return { scanned: 0, aborted: 0, failed: 0, busy: true };
     const policy = (
-      await client.query<{ value: { hours?: number } }>(
-        'SELECT value FROM app_config WHERE key=$1',
-        [policyKey]
-      )
-    ).rows[0]?.value;
-    const hours = policy?.hours ?? 24;
-    if (!Number.isInteger(hours) || hours < 1 || hours > 168)
-      throw new Error('Invalid multipart orphan cleanup policy');
+      await client.query<{ value: unknown }>('SELECT value FROM app_config WHERE key=$1', [
+        MULTIPART_CLEANUP_POLICY_KEY,
+      ])
+    ).rows[0];
+    const parsed = multipartCleanupPolicy.safeParse(
+      policy ? policy.value : { hours: DEFAULT_MULTIPART_CLEANUP_HOURS }
+    );
+    if (!parsed.success) throw new Error('Invalid multipart orphan cleanup policy');
+    const { hours } = parsed.data;
     const stored = (
       await client.query<{ value: Cursor }>('SELECT value FROM app_config WHERE key=$1', [
         cursorKey,

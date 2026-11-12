@@ -235,6 +235,27 @@ it('allows only one writer to create the initial cleanup policy version', async 
   expect(await (await request('/multipart-cleanup-policy')).json()).toMatchObject({ version: 1 });
 });
 
+it('reports a paused cleanup policy and lets authorized staff repair its current version', async () => {
+  await http.pool.query(`
+    INSERT INTO app_config(key,value,version)
+    VALUES('storage.multipart_orphan_hours','{}'::jsonb,7)
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=EXCLUDED.version
+  `);
+  const paused = await request('/multipart-cleanup-policy');
+  expect(paused.status).toBe(200);
+  expect(await paused.json()).toEqual({ hours: null, version: 7 });
+  expect(
+    (await request('/multipart-cleanup-policy', 'PUT', { hours: 48, version: 6 })).status
+  ).toBe(409);
+  const repaired = await request('/multipart-cleanup-policy', 'PUT', { hours: 48, version: 7 });
+  expect(repaired.status, http.logs()).toBe(200);
+  expect(await repaired.json()).toEqual({ hours: 48, version: 8 });
+  expect(await (await request('/multipart-cleanup-policy')).json()).toEqual({
+    hours: 48,
+    version: 8,
+  });
+});
+
 it('persists encrypted configuration, activates new signing credentials, and rejects stale saves', async () => {
   const initial = await update('new-secret-never-return');
   const candidate = { ...initial, accessKeyId: 'new-access-key' };

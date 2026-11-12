@@ -161,7 +161,7 @@ export default function AdminStorageConfig() {
     if (uncertain.cleanup && cleanup.loading) recoveryLoading.current.cleanup = true;
     if (!cleanup.data || cleanup.loading || cleanup.error) return;
     const previous = acceptedCleanup.current;
-    if (!previous) resetCleanup({ hours: String(cleanup.data.hours) });
+    if (!previous) resetCleanup({ hours: String(cleanup.data.hours ?? '') });
     else if (basis(previous) !== basis(cleanup.data)) {
       closeAction();
       setChanged((value) => ({ ...value, cleanup: true }));
@@ -191,7 +191,8 @@ export default function AdminStorageConfig() {
       return;
     closeAction();
     if (owner === 'config' && config.data) resetConfig(storageDraft(config.data));
-    if (owner === 'cleanup' && cleanup.data) resetCleanup({ hours: String(cleanup.data.hours) });
+    if (owner === 'cleanup' && cleanup.data)
+      resetCleanup({ hours: String(cleanup.data.hours ?? '') });
     setChanged((value) => ({ ...value, [owner]: false }));
     setUncertain((value) => ({ ...value, [owner]: false }));
     setRecovered((value) => ({ ...value, [owner]: false }));
@@ -493,6 +494,9 @@ export default function AdminStorageConfig() {
         >
           <h2 className="font-semibold">{label('cleanupTitle')}</h2>
           <p className="text-sm text-muted-foreground">{label('cleanupDescription')}</p>
+          {cleanup.data.hours === null && (
+            <Alert variant="destructive">{text('cleanupInvalidPolicy')}</Alert>
+          )}
           {stateFeedback('cleanup')}
           {catalogueRootMessage(cleanupForm.errors) && (
             <Alert variant="destructive">{catalogueRootMessage(cleanupForm.errors)}</Alert>
@@ -578,6 +582,7 @@ export default function AdminStorageConfig() {
               const command = action.body as CleanupPolicyView;
               if (
                 !validCleanupPolicy(result) ||
+                result.hours === null ||
                 result.hours !== command.hours ||
                 result.version !== command.version + 1
               )

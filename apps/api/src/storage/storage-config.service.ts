@@ -9,9 +9,12 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
-import { z } from 'zod';
 import {
   STORAGE_CONFIG_KEY,
+  MULTIPART_CLEANUP_POLICY_KEY,
+  DEFAULT_MULTIPART_CLEANUP_HOURS,
+  multipartCleanupPolicy,
+  multipartCleanupPolicyUpdate,
   storageConfigUpdate,
   storedStorageConfig,
   environmentStorageConfig,
@@ -27,21 +30,19 @@ import { rejectContentFields } from '../admin/content-input-fields.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
-const multipartCleanupPolicyKey = 'storage.multipart_orphan_hours';
-const multipartCleanupPolicyInput = z
-  .object({ hours: z.number().int().min(1).max(168), version: z.number().int().min(0) })
-  .strict();
 
 @Injectable()
 export class StorageConfigService {
   async getMultipartCleanupPolicy() {
     const row = (
-      await getDbPool().query<{ value: { hours: number }; version: number }>(
+      await getDbPool().query<{ value: unknown; version: number }>(
         'SELECT value,version FROM app_config WHERE key=$1',
-        [multipartCleanupPolicyKey]
+        [MULTIPART_CLEANUP_POLICY_KEY]
       )
     ).rows[0];
-    return { hours: row?.value.hours ?? 24, version: row?.version ?? 0 };
+    if (!row) return { hours: DEFAULT_MULTIPART_CLEANUP_HOURS, version: 0 };
+    const parsed = multipartCleanupPolicy.safeParse(row.value);
+    return { hours: parsed.success ? parsed.data.hours : null, version: row.version };
   }
 
   async saveMultipartCleanupPolicy(raw: unknown, session: MutationSession) {
@@ -50,17 +51,17 @@ export class StorageConfigService {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
       await requireSessionStepUp(client, session);
-      const parsed = multipartCleanupPolicyInput.safeParse(raw);
+      const parsed = multipartCleanupPolicyUpdate.safeParse(raw);
       if (!parsed.success) rejectContentFields(parsed.error.issues, ['hours']);
       await client.query(
-        `INSERT INTO app_config(key,value,version) VALUES($1,'{"hours":24}'::jsonb,0)
+        `INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,0)
          ON CONFLICT(key) DO NOTHING`,
-        [multipartCleanupPolicyKey]
+        [MULTIPART_CLEANUP_POLICY_KEY, JSON.stringify({ hours: DEFAULT_MULTIPART_CLEANUP_HOURS })]
       );
       const current = (
         await client.query<{ version: number }>(
           'SELECT version FROM app_config WHERE key=$1 FOR UPDATE',
-          [multipartCleanupPolicyKey]
+          [MULTIPART_CLEANUP_POLICY_KEY]
         )
       ).rows[0];
       if ((current?.version ?? 0) !== parsed.data.version)
@@ -69,7 +70,7 @@ export class StorageConfigService {
         `INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,1)
          ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
            version=app_config.version+1,updated_at=NOW()`,
-        [multipartCleanupPolicyKey, JSON.stringify({ hours: parsed.data.hours })]
+        [MULTIPART_CLEANUP_POLICY_KEY, JSON.stringify({ hours: parsed.data.hours })]
       );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata)

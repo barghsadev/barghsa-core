@@ -12,6 +12,8 @@ const en = {
   hours: 'Enter a whole number of hours from 1 to 168.',
   cleanupLoading: 'Loading the incomplete upload cleanup policy…',
   cleanupLoadError: 'The incomplete upload cleanup policy could not be loaded.',
+  cleanupInvalidPolicy:
+    'Cleanup is paused because the saved age is invalid. Enter and save a valid age to resume cleanup.',
   extensions: 'Select at least one deployment-permitted format.',
   size: 'Enter a size within the deployment limit that equals a whole number of bytes.',
   unavailable: 'Validation could not load. Your entries are preserved; try again.',
@@ -35,6 +37,8 @@ const fa: Record<keyof typeof en, string> = {
   hours: 'تعداد ساعت را به‌صورت عدد صحیح بین ۱ تا ۱۶۸ وارد کنید.',
   cleanupLoading: 'در حال دریافت سیاست پاک‌سازی بارگذاری‌های ناتمام…',
   cleanupLoadError: 'دریافت سیاست پاک‌سازی بارگذاری‌های ناتمام انجام نشد.',
+  cleanupInvalidPolicy:
+    'پاک‌سازی متوقف شده است چون مدت ذخیره‌شده نامعتبر است. برای ادامه، مدت معتبری وارد و ذخیره کنید.',
   extensions: 'حداقل یک قالب مجاز در استقرار را انتخاب کنید.',
   size: 'اندازه‌ای در محدوده استقرار و معادل تعداد صحیح بایت وارد کنید.',
   unavailable: 'اعتبارسنجی بارگذاری نشد. ورودی‌های شما حفظ شده است؛ دوباره تلاش کنید.',
