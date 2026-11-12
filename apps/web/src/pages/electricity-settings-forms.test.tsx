@@ -135,6 +135,7 @@ it('prepares a green recovery draft and requires an exact separate activation re
   try {
     expect(view.fetch.mock.calls.some(([path]) => path.endsWith('rollback-history'))).toBe(false);
     await act(async () => button(view.host, 'Green rules history').click());
+    await act(async () => vi.dynamicImportSettled());
     await flush(() => expect(button(view.host, 'Draft from revision 1')).not.toBeNull());
     await act(async () => button(view.host, 'Draft from revision 1').click());
     await flush(() => expect(dialog?.action.path).toMatch(/\/rollback-draft$/));

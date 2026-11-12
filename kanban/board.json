@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:26:04+00:00",
+  "updated": "2026-11-12T22:36:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -28692,7 +28692,8 @@
           "release-0.6-provider-tests-outside-transactions",
           "release-0.6-maintenance-recovery",
           "release-0.6-green-rule-recovery",
-          "release-0.6-security-rate-limit-recovery"
+          "release-0.6-security-rate-limit-recovery",
+          "release-0.6-green-recovery-test-synchronization"
         ],
         "current_acceptance": {
           "kind": "source-bound-provider-restore-scope",
@@ -147067,7 +147068,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -147811,6 +147812,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Added three scoped green rule recovery routes and a lazy staff history section. Existing OpenAPI paths and components matched exactly. Targeted API, browser, web and build checks covered the changed behavior and callers."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -148215,7 +148224,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -148959,6 +148968,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Added three scoped green rule recovery routes and a lazy staff history section. Existing OpenAPI paths and components matched exactly. Targeted API, browser, web and build checks covered the changed behavior and callers."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -157624,7 +157641,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -158368,6 +158385,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Added three scoped green rule recovery routes and a lazy staff history section. Existing OpenAPI paths and components matched exactly. Targeted API, browser, web and build checks covered the changed behavior and callers."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -361041,7 +361066,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -362053,6 +362078,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -362355,7 +362388,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -363367,6 +363400,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -363669,7 +363710,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -364681,6 +364722,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -364983,7 +365032,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -365995,6 +366044,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -366297,7 +366354,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -367309,6 +367366,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -367611,7 +367676,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -368623,6 +368688,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -368925,7 +368998,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -369937,6 +370010,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -370239,7 +370320,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -371251,6 +371332,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -371553,7 +371642,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -372565,6 +372654,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -372867,7 +372964,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -373879,6 +373976,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -374181,7 +374286,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -375193,6 +375298,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -375495,7 +375608,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -376507,6 +376620,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -376810,7 +376931,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -377822,6 +377943,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -378124,7 +378253,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -379136,6 +379265,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -379438,7 +379575,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -380450,6 +380587,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -380752,7 +380897,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -381764,6 +381909,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -382066,7 +382219,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -383078,6 +383231,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -654977,7 +655138,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
@@ -655094,6 +655255,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -786725,7 +786894,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -787914,6 +788083,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -788862,7 +789039,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -790051,6 +790228,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -791000,7 +791185,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -792189,6 +792374,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -793107,7 +793300,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -794296,6 +794489,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -795240,7 +795441,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -796429,6 +796630,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -797382,7 +797591,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -798571,6 +798780,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -799497,7 +799714,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -800686,6 +800903,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -801576,7 +801801,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -802765,6 +802990,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -803655,7 +803888,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -804844,6 +805077,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -805735,7 +805976,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -806924,6 +807165,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -807814,7 +808063,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -809003,6 +809252,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -809954,7 +810211,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -811352,6 +811609,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -812297,7 +812562,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -813695,6 +813960,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -816321,7 +816594,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -817043,6 +817316,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -818008,7 +818289,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -819399,6 +819680,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -820344,7 +820633,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -821742,6 +822031,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -822687,7 +822984,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -824085,6 +824382,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -825030,7 +825335,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -826428,6 +826733,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -827373,7 +827686,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -828771,6 +829084,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -829716,7 +830037,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -831114,6 +831435,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -832059,7 +832388,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -833457,6 +833786,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -834402,7 +834739,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -835800,6 +836137,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -836745,7 +837090,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -838143,6 +838488,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -839088,7 +839441,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -840486,6 +840839,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -841431,7 +841792,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -842829,6 +843190,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -844663,7 +845032,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -846061,6 +846430,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -847006,7 +847383,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -848404,6 +848781,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         }
@@ -850961,7 +851346,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -852150,6 +852535,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -853036,7 +853429,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -854225,6 +854618,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -855111,7 +855512,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -856300,6 +856701,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -857186,7 +857595,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -858375,6 +858784,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -859261,7 +859678,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -860450,6 +860867,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -861336,7 +861761,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -862525,6 +862950,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -863411,7 +863844,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -864600,6 +865033,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ]
         },
@@ -991348,7 +991789,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
@@ -991487,6 +991928,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -1006020,7 +1006469,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "f3567096f23d803a07b53a708dd4ca1e9967d29f23d0ac74bb22e82377584a08"
+              "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -1010192,6 +1010641,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-green-recovery-test-synchronization",
+              "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
             }
           ],
           "presentation_renewals": [
@@ -1190082,6 +1190539,114 @@
         {
           "file": "typecheck.log",
           "sha256": "daab2a0992b975fc1862c044209fcd85639e544a8bcba22d593fda7b4c1c587a"
+        }
+      ]
+    },
+    "release-0.6-green-recovery-test-synchronization": {
+      "batch": "release-0.6-green-recovery-test-synchronization",
+      "base_commit": "9c8cd85d767a1d3996447eb2d6396ed1aa38ba9e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.02.03",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "06-security-testing-observability.md#T-06.09.03.08",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.30.02.09",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/electricity-settings-forms.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+          "sha256": "e093edc258c4155f90ab3fb6abb32af4a94aa3c3f24382a2810ed8b69f94f0aa"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac3c464c98c92cd7dc977b16f426e22f586e5c3cea4dd33c8d4be9782b5d746e"
+        },
+        {
+          "path": "apps/web/src/components/GreenRulesRecovery.tsx",
+          "sha256": "a46bf5b63e2e620398f813d4ffdbf1b207508670440f97e03051bde785ad0dff"
+        },
+        {
+          "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+          "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+        }
+      ],
+      "checks": [
+        "GitHub run 43315948494 on 137264f7418d2ce504a6a8f3f8904d9b60e4b864 reported one failed web case among 5534. The history button was expanded and the loading status still rendered when the draft button was asserted. The other 420 web test files passed. The fast coverage and aggregate checks inherited the failure.",
+        "The test now waits for Vitest to settle the lazy import inside React act. Its original draft, exact confirmation receipt, activation and published-state assertions are byte-identical.",
+        "All 27 targeted tests in the electricity settings and affected navigation/recovery files passed, and a separate cold run passed all 11 settings tests. Changed-file ESLint, Prettier and whitespace checks passed."
+      ],
+      "limitations": [
+        "Exact successor hosted publication is pending. The failed run is retained and did not verify strict combined source coverage or an accepted release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-green-recovery-test-synchronization",
+      "execution_receipts": [
+        {
+          "file": "web-targeted.log",
+          "sha256": "5c0a31bd8aa9993e66ccd87122ca08d1a5e47c472b0f4e81f2dcd51187265849"
+        },
+        {
+          "file": "web-cold-repeat.log",
+          "sha256": "af0fb0861054be622008676189c76af25784fece828ac038e2bf5390ef6e440b"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-inline-style/hosted-test-43315948494-failed.log",
+          "sha256": "e72a29b19cfce6ed6c4acd36a45582774ce83711fe536e928412260cd501463a"
         }
       ]
     }
