@@ -88,12 +88,15 @@ describe('reconciliation-exceptions permission gates (T-09.09.01)', () => {
   it('passes filters to the service for admin', async () => {
     const { controller, service } = makeController();
     await controller.listReconciliationItems('open', 'high', '10', '0', adminReq);
-    expect(service.listReconciliationExceptions).toHaveBeenCalledWith({
-      status: 'open',
-      severity: 'high',
-      limit: 10,
-      offset: 0,
-    });
+    expect(service.listReconciliationExceptions).toHaveBeenCalledWith(
+      {
+        status: 'open',
+        severity: 'high',
+        limit: 10,
+        offset: 0,
+      },
+      adminReq.session
+    );
   });
 
   it('investigate requires the resolve permission', async () => {
@@ -155,10 +158,13 @@ describe('reconciliation-exceptions body validation', () => {
   it('passes limit/offset to the service when valid', async () => {
     const { controller, service } = makeController();
     await controller.listReconciliationItems(undefined, undefined, '25', '5', adminReq);
-    expect(service.listReconciliationExceptions).toHaveBeenCalledWith({
-      limit: 25,
-      offset: 5,
-    });
+    expect(service.listReconciliationExceptions).toHaveBeenCalledWith(
+      {
+        limit: 25,
+        offset: 5,
+      },
+      adminReq.session
+    );
   });
 
   it('rejects an out-of-range limit with 400', async () => {

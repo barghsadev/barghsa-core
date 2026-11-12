@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T15:31:32+00:00",
+  "updated": "2026-11-12T15:37:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22571,7 +22571,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/tos/tos.controller.ts",
@@ -22680,6 +22680,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -135734,23 +135742,23 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
-              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+              "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
-              "sha256": "17fca8a4d9264915d6ce5618a3c2354f7c82a668c2dbd1c02896670142eca516"
+              "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
-              "sha256": "586c2f3cd6223f6d0f62dcaba6e08591a146d16dd476ab71e5bf9b115946023e"
+              "sha256": "eb57176aa5462ced17df16feaf6ba63e8a5a97dfda94affc874e9385713aec28"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
-              "sha256": "c77e4efaf812cded60a0fe30f305b21a550841a04547c45cbd19280899d9cd3b"
+              "sha256": "ff5d05517a256a29967d342d925a40531dad3492cb34276f326528f46fe8747e"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -136938,6 +136946,18 @@
                 "apps/api/src/wallet/wallet-history.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+                "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.service.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ],
           "presentation_renewals": [
@@ -149652,23 +149672,23 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
-              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+              "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
-              "sha256": "17fca8a4d9264915d6ce5618a3c2354f7c82a668c2dbd1c02896670142eca516"
+              "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
-              "sha256": "586c2f3cd6223f6d0f62dcaba6e08591a146d16dd476ab71e5bf9b115946023e"
+              "sha256": "eb57176aa5462ced17df16feaf6ba63e8a5a97dfda94affc874e9385713aec28"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
-              "sha256": "c77e4efaf812cded60a0fe30f305b21a550841a04547c45cbd19280899d9cd3b"
+              "sha256": "ff5d05517a256a29967d342d925a40531dad3492cb34276f326528f46fe8747e"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -150786,6 +150806,18 @@
                 "apps/api/src/wallet/wallet-history.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+                "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.service.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ],
           "presentation_renewals": [
@@ -538282,7 +538314,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
-              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+              "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle-http.integration.test.ts",
@@ -540210,6 +540242,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ],
           "presentation_renewals": [
@@ -609096,7 +609136,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -609365,6 +609405,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -609547,7 +609595,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
-              "sha256": "17fca8a4d9264915d6ce5618a3c2354f7c82a668c2dbd1c02896670142eca516"
+              "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.controller.test.ts",
@@ -609731,7 +609779,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -609867,6 +609915,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -609941,7 +609998,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -610087,6 +610144,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -610184,7 +610249,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -610352,6 +610417,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -610511,7 +610584,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -610745,6 +610818,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -610795,7 +610876,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -611064,6 +611145,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -611237,7 +611326,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -611515,6 +611604,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -612511,8 +612608,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, and two chargeback and Finance warning route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with reconciliation item access, linked records and decisions, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, and six reconciliation access, read and decision route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with staff manual invoice and due date routes, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -612522,6 +612619,11 @@
           "apps/api/src/admin/chargeback-alert.controller.test.ts",
           "apps/api/src/admin/chargeback-alert.controller.ts",
           "apps/api/src/admin/dual-approval.service.ts",
+          "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+          "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+          "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+          "apps/api/src/admin/reconciliation-exceptions.service.ts",
           "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
           "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
           "apps/api/src/consultation/consultation-payment.integration.test.ts",
@@ -612643,7 +612745,8 @@
           "release-0.6-invoice-correction-scope",
           "release-0.6-refund-provenance",
           "release-0.6-wallet-ledger-scope",
-          "release-0.6-chargeback-evidence"
+          "release-0.6-chargeback-evidence",
+          "release-0.6-reconciliation-authority"
         ],
         "current_acceptance": null
       }
@@ -612719,7 +612822,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -612881,6 +612984,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -612987,7 +613098,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
@@ -613227,7 +613338,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -613523,6 +613634,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -614146,7 +614266,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -614384,6 +614504,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -615565,11 +615693,11 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
-              "sha256": "17fca8a4d9264915d6ce5618a3c2354f7c82a668c2dbd1c02896670142eca516"
+              "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -615708,6 +615836,15 @@
                 "apps/api/src/admin/reconciliation-exceptions.controller.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -615959,11 +616096,11 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
-              "sha256": "17fca8a4d9264915d6ce5618a3c2354f7c82a668c2dbd1c02896670142eca516"
+              "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/tos-http.integration.test.ts",
@@ -616130,6 +616267,15 @@
                 "apps/api/src/electricity/electricity-price-adjustment.service.ts"
               ],
               "scope": "Reviewed changed electricity history, detail, increase and price-adjustment paths. Native cases preserved authorized financial outcomes and rejected mismatched links. Unit and production Chromium checks preserved request-bound signing and staff decisions. Unchanged parts of previously accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -627973,7 +628119,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
             },
             {
               "path": "docs/threat-model.md",
@@ -628145,6 +628291,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -642476,15 +642630,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
-              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+              "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
-              "sha256": "446532a9250c5f5276aa7ca87f9ddbe1d2f8886dc1d438fdb963fa81762ebbff"
+              "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
-              "sha256": "c77e4efaf812cded60a0fe30f305b21a550841a04547c45cbd19280899d9cd3b"
+              "sha256": "ff5d05517a256a29967d342d925a40531dad3492cb34276f326528f46fe8747e"
             },
             {
               "path": "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
@@ -642679,6 +642833,16 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+                "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+                "apps/api/src/admin/reconciliation-exceptions.service.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ]
         }
@@ -970586,7 +970750,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
-              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+              "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle-http.integration.test.ts",
@@ -973184,6 +973348,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-reconciliation-authority",
+              "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+              "paths": [
+                "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts"
+              ],
+              "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
             }
           ],
           "presentation_renewals": [
@@ -1143130,6 +1143302,162 @@
         {
           "file": "chargeback-routes.json",
           "sha256": "0d5dfbfd7c4e7260db676c24378c58ee5dd64854f95f84466157319391f7ec03"
+        }
+      ]
+    },
+    "release-0.6-reconciliation-authority": {
+      "batch": "release-0.6-reconciliation-authority",
+      "base_commit": "d1b96e3fad9b9d6591bff970c82e5e7263505dc7",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-06.01.05",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.12.03",
+        "03-core-business.md#T-03.90.03",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.04.01.03",
+        "06-security-testing-observability.md#T-06.04.01.05",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+        "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+        "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+        "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+        "apps/api/src/admin/reconciliation-exceptions.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
+          "sha256": "f1711c17cd5ef56bff961988834ac3412969ed0be5a312cfdb039e6a8e8168d0"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger.controller.ts",
+          "sha256": "25f316b8f6798f7101688fd9d9fea7bc8a84b613d43d46d61743ce761ff3f65a"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+          "sha256": "24b8d26b65898887cc4ca999e84f1461eab842c22707efe12838799679f8351a"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+          "sha256": "bb02f054d4b1e304db162ceac0bf38e06d66659ae8ea40f6c1d9bd031641fb64"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "sha256": "625687fe77b630e4849b029563b2601969c5b26c6a00019aaf8061fbd5c87ad2"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+          "sha256": "eb57176aa5462ced17df16feaf6ba63e8a5a97dfda94affc874e9385713aec28"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
+          "sha256": "ff5d05517a256a29967d342d925a40531dad3492cb34276f326528f46fe8747e"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/session/authorization.service.ts",
+          "sha256": "d502e02960fdaf15dbc096d0daaed29ecf5066c38bdf198af7718bf8b8f313c2"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
+        },
+        {
+          "path": "apps/web/src/lib/reconciliation-form.test.ts",
+          "sha256": "002b579735c0f94a7e9fbeb871911903e48c9193129f26da334a03a1bebbaf7e"
+        },
+        {
+          "path": "apps/web/src/lib/reconciliation-form.ts",
+          "sha256": "87531468dd966c9022e11b878ece6f793326d102b7c719799d1ead5f5845cfed"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "ff4ca848ce3a77c98521dad36a05f22a8e8919bfa6dec645972044ea6575477b"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed six staff reconciliation access, list, detail and lifecycle method/path pairs. Queue and detail read inside the live Finance grant and session transaction. The access response reads current capability flags from the authenticated session and exposes no records.",
+        "Investigation, resolution and closure lock the selected exception and read the exact response before commit. The resolve permission, audit atomicity, concurrent decision handling and original resolver and note are preserved.",
+        "Verified that scanner details are diagnostic records and linked invoice and wallet endpoints enforce their own authority. Native list and detail checks withhold records when a session expires during a blocked read.",
+        "47 targeted API and four web caller cases passed. API build, typecheck, generated API contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-reconciliation-authority",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "237f64f81ec261028d05621eacb0c33a25e51a33b9c7111c14c5abc09c54dbf4"
+        },
+        {
+          "file": "api-checks.log",
+          "sha256": "5fa4a7a7f6ed9daa9dc3b9c202058db29f434f7ec6b37f16b1900c95b89620b2"
+        },
+        {
+          "file": "completion-authority.log",
+          "sha256": "c961c757c394f9dd422e26e4a8abdb7842700ce457dd67b83eb5cb672decb32c"
+        },
+        {
+          "file": "web-caller.log",
+          "sha256": "81bb90570a444cd8988a6beeca4e7c63ba741226f6cae0f8904756c301e2f612"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "115cdc7a05a791f08edf912ad275f37f74f566eaa2a037b101f083e1513c9110"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "b8b52ce195b7cd92b262a17bd5a7f4b440068be1babc5649b64761cd9fd836a4"
+        },
+        {
+          "file": "reconciliation-routes.json",
+          "sha256": "b53f1083a3aaa0dcdc5ba983420404b436f8487c911c6a66fa356ef8f4daed1f"
         }
       ]
     }

@@ -169,7 +169,7 @@ export class ReconciliationExceptionsController {
     }
     if (createdFrom !== undefined) options.createdFrom = createdFrom;
     if (createdBefore !== undefined) options.createdBefore = createdBefore;
-    return this.reconciliationService.listReconciliationExceptions(options);
+    return this.reconciliationService.listReconciliationExceptions(options, req.session);
   }
 
   @Get(':id')
@@ -180,7 +180,7 @@ export class ReconciliationExceptionsController {
   @ApiResponse({ status: 404, description: 'Exception not found' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.assertViewPermission(req);
-    return this.reconciliationService.getExceptionDto(id);
+    return this.reconciliationService.getExceptionDto(id, req.session);
   }
 
   /**

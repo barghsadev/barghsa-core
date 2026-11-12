@@ -1,10 +1,11 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
-import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, HttpException } from '@nestjs/common';
 import { z } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -46,6 +47,7 @@ export interface ListReconciliationExceptionsOptions {
 const DEFAULT_LIST_LIMIT = 50;
 const MAX_LIST_LIMIT = 200;
 const MAX_RESOLUTION_NOTE_LENGTH = 1000;
+type ReconciliationActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * Reconciliation exception review service (S-09.09, T-09.09.01).
@@ -81,7 +83,8 @@ export class ReconciliationExceptionsService {
    * @throws 400 when an invalid status or severity filter is supplied.
    */
   async listReconciliationExceptions(
-    options: ListReconciliationExceptionsOptions = {}
+    options: ListReconciliationExceptionsOptions,
+    actor: ReconciliationActor
   ): Promise<ReconciliationExceptionDto[]> {
     const limit = sanitizeLimit(options.limit);
     const offset = sanitizeOffset(options.offset);
@@ -126,9 +129,9 @@ export class ReconciliationExceptionsService {
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    const pool = getDbPool();
-    const result = await pool.query(
-      `SELECT rex.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
+    return this.authorizedTransaction(actor, 'admin:reconciliation:view', async (client) => {
+      const result = await client.query(
+        `SELECT rex.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
        FROM reconciliation_exceptions rex
        LEFT JOIN users assignee ON assignee.user_id = rex.assigned_to_id
        LEFT JOIN users resolver ON resolver.user_id = rex.resolved_by_id
@@ -138,17 +141,18 @@ export class ReconciliationExceptionsService {
          AND ($6::timestamptz IS NULL OR rex.created_at < $6)
        ORDER BY rex.created_at DESC, rex.id DESC
        LIMIT $3 OFFSET $4`,
-      [
-        status,
-        severity,
-        limit,
-        offset,
-        dates.data.createdFrom ?? null,
-        dates.data.createdBefore ?? null,
-      ]
-    );
+        [
+          status,
+          severity,
+          limit,
+          offset,
+          dates.data.createdFrom ?? null,
+          dates.data.createdBefore ?? null,
+        ]
+      );
 
-    return result.rows.map(toReconciliationExceptionDto);
+      return result.rows.map(toReconciliationExceptionDto);
+    });
   }
 
   /**
@@ -158,7 +162,7 @@ export class ReconciliationExceptionsService {
    */
   async investigateReconciliationException(
     exceptionId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: ReconciliationActor,
     ip: string
   ): Promise<ReconciliationExceptionDto> {
     return this.transition(exceptionId, actor, ip, 'investigating', {
@@ -176,7 +180,7 @@ export class ReconciliationExceptionsService {
    */
   async resolveReconciliationException(
     exceptionId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: ReconciliationActor,
     ip: string,
     note: unknown
   ): Promise<ReconciliationExceptionDto> {
@@ -206,7 +210,7 @@ export class ReconciliationExceptionsService {
    */
   async closeReconciliationException(
     exceptionId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: ReconciliationActor,
     ip: string,
     note: unknown
   ): Promise<ReconciliationExceptionDto> {
@@ -247,7 +251,7 @@ export class ReconciliationExceptionsService {
    */
   private async transition(
     exceptionId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: ReconciliationActor,
     ip: string,
     toStatus: ReconciliationStatus,
     opts: {
@@ -257,112 +261,104 @@ export class ReconciliationExceptionsService {
     }
   ): Promise<ReconciliationExceptionDto> {
     const actorUserId = actor.userId;
-    const pool = getDbPool();
     const now = new Date();
 
-    const client = await pool.connect();
-    let committed = false;
     try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:reconciliation:resolve');
-      await requireCurrentSession(client, actor);
+      const dto = await this.authorizedTransaction(
+        actor,
+        'admin:reconciliation:resolve',
+        async (client) => {
+          const result = await client.query(
+            `SELECT status, exception_type FROM reconciliation_exceptions WHERE id = $1 FOR UPDATE`,
+            [exceptionId]
+          );
 
-      const result = await client.query(
-        `SELECT exc.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
-         FROM reconciliation_exceptions exc
-         LEFT JOIN users assignee ON assignee.user_id = exc.assigned_to_id
-         LEFT JOIN users resolver ON resolver.user_id = exc.resolved_by_id
-         WHERE exc.id = $1
-         FOR UPDATE OF exc`,
-        [exceptionId]
-      );
+          const row = result.rows[0] as
+            (Record<string, unknown> & { status: string; exception_type: string }) | undefined;
 
-      const row = result.rows[0] as
-        (Record<string, unknown> & { status: string; exception_type: string }) | undefined;
+          if (!row) {
+            throw new HttpException(
+              {
+                statusCode: 404,
+                error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+                message: 'Reconciliation exception not found',
+              },
+              404
+            );
+          }
 
-      if (!row) {
-        throw new HttpException(
-          {
-            statusCode: 404,
-            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-            message: 'Reconciliation exception not found',
-          },
-          404
-        );
-      }
+          if (!opts.allowedFrom.includes(row.status as ReconciliationStatus)) {
+            throw new HttpException(
+              {
+                statusCode: 409,
+                error: ErrorCodes.CONFLICT_STATE.code,
+                message: `Reconciliation exception status '${row.status}' cannot be changed to '${toStatus}'`,
+              },
+              409
+            );
+          }
 
-      if (!opts.allowedFrom.includes(row.status as ReconciliationStatus)) {
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: `Reconciliation exception status '${row.status}' cannot be changed to '${toStatus}'`,
-          },
-          409
-        );
-      }
-
-      if (toStatus === 'investigating') {
-        // Claim action: only the status and assigned staff change.
-        await client.query(
-          `UPDATE reconciliation_exceptions
+          if (toStatus === 'investigating') {
+            // Claim action: only the status and assigned staff change.
+            await client.query(
+              `UPDATE reconciliation_exceptions
            SET status = $1, assigned_to_id = $2, updated_at = $3
            WHERE id = $4`,
-          [toStatus, actorUserId, now, exceptionId]
-        );
-      } else if (toStatus === 'resolved') {
-        // Resolution: record the resolver, note and timestamp.
-        await client.query(
-          `UPDATE reconciliation_exceptions
+              [toStatus, actorUserId, now, exceptionId]
+            );
+          } else if (toStatus === 'resolved') {
+            // Resolution: record the resolver, note and timestamp.
+            await client.query(
+              `UPDATE reconciliation_exceptions
            SET status = $1, resolved_by_id = $2, resolution_note = $3, resolved_at = $4, updated_at = $4
            WHERE id = $5`,
-          [toStatus, actorUserId, opts.note, now, exceptionId]
-        );
-      } else {
-        // Close: never overwrite a pre-existing resolution record; fill in
-        // the closer only when the item was never resolved before.
-        await client.query(
-          `UPDATE reconciliation_exceptions
+              [toStatus, actorUserId, opts.note, now, exceptionId]
+            );
+          } else {
+            // Close: never overwrite a pre-existing resolution record; fill in
+            // the closer only when the item was never resolved before.
+            await client.query(
+              `UPDATE reconciliation_exceptions
            SET status = $1,
                resolved_by_id = COALESCE(resolved_by_id, $2),
                resolution_note = COALESCE(resolution_note, $3),
                resolved_at = COALESCE(resolved_at, $4),
                updated_at = $4
            WHERE id = $5`,
-          [toStatus, actorUserId, opts.note, now, exceptionId]
-        );
-      }
+              [toStatus, actorUserId, opts.note, now, exceptionId]
+            );
+          }
 
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+          await client.query(
+            `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          uuidv7(),
-          actorUserId,
-          opts.event,
-          JSON.stringify({
-            reconciliationExceptionId: exceptionId,
-            exceptionType: row.exception_type,
-            fromStatus: row.status,
-            toStatus,
-            ...(opts.note !== null ? { resolutionNote: opts.note } : {}),
-          }),
-          uuidv7(),
-          ip,
-          now,
-        ]
-      );
+            [
+              uuidv7(),
+              actorUserId,
+              opts.event,
+              JSON.stringify({
+                reconciliationExceptionId: exceptionId,
+                exceptionType: row.exception_type,
+                fromStatus: row.status,
+                toStatus,
+                ...(opts.note !== null ? { resolutionNote: opts.note } : {}),
+              }),
+              uuidv7(),
+              ip,
+              now,
+            ]
+          );
 
-      await requireCurrentSession(client, actor);
-      await client.query('COMMIT');
-      committed = true;
+          // Materialize this command's receipt while the exception row is still locked.
+          return this.readExceptionDto(client, exceptionId);
+        }
+      );
 
       this.logger.log(
         `Reconciliation exception ${exceptionId} ${toStatus} by ${privateLogId('actor', actorUserId)}`
       );
+      return dto;
     } catch (error) {
-      if (committed) throw error;
-      await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
       this.logger.error('Failed to resolve reconciliation exception');
       throw new HttpException(
@@ -373,21 +369,23 @@ export class ReconciliationExceptionsService {
         },
         500
       );
-    } finally {
-      client.release();
     }
-
-    // Post-commit DTO read is deliberately outside the transactional
-    // try/catch: the state change and audit row are already durably
-    // committed, so a failure to re-read must never ROLLBACK (the
-    // transaction is closed) or report the transition as failed.
-    return this.getExceptionDto(exceptionId);
   }
 
-  /** Fetch a single exception by id; callers enforce the view permission. */
-  async getExceptionDto(id: string): Promise<ReconciliationExceptionDto> {
-    const pool = getDbPool();
-    const result = await pool.query(
+  async getExceptionDto(
+    id: string,
+    actor: ReconciliationActor
+  ): Promise<ReconciliationExceptionDto> {
+    return this.authorizedTransaction(actor, 'admin:reconciliation:view', (client) =>
+      this.readExceptionDto(client, id)
+    );
+  }
+
+  private async readExceptionDto(
+    client: PoolClient,
+    id: string
+  ): Promise<ReconciliationExceptionDto> {
+    const result = await client.query(
       `SELECT exc.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
        FROM reconciliation_exceptions exc
        LEFT JOIN users assignee ON assignee.user_id = exc.assigned_to_id
@@ -406,6 +404,32 @@ export class ReconciliationExceptionsService {
       );
     }
     return toReconciliationExceptionDto(result.rows[0]!);
+  }
+
+  private async authorizedTransaction<T>(
+    actor: ReconciliationActor,
+    permission: 'admin:reconciliation:view' | 'admin:reconciliation:resolve',
+    run: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, permission);
+      await requireCurrentSession(client, actor);
+      const session = await client.query(
+        "SELECT current_setting('barghsa.actor_context', true) AS context"
+      );
+      if (session.rows[0]?.context !== 'staff') throw new ForbiddenException();
+      const result = await run(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }
 

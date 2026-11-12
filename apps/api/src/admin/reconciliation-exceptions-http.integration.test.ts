@@ -72,13 +72,29 @@ it('enforces view and mutation permissions and records the full lifecycle withou
   expect((await request('?status=open&severity=high', 'GET', undefined, 'viewer')).status).toBe(
     200
   );
-  expect((await request(`/${id}/investigate`, 'POST', {})).status).toBe(200);
+  const investigation = await request(`/${id}/investigate`, 'POST', {});
+  expect(investigation.status).toBe(200);
+  expect(await investigation.json()).toMatchObject({
+    id,
+    status: 'investigating',
+    assignedToId: 'operator',
+  });
   expect((await row(id)).assigned_to_id).toBe('operator');
   expect((await request(`/${id}/resolve`, 'POST', { note: ' ' })).status).toBe(400);
-  expect((await request(`/${id}/resolve`, 'POST', { note: 'Original resolution' })).status).toBe(
-    200
-  );
-  expect((await request(`/${id}/close`, 'POST', { note: 'Closure checked' })).status).toBe(200);
+  const resolution = await request(`/${id}/resolve`, 'POST', { note: 'Original resolution' });
+  expect(resolution.status).toBe(200);
+  expect(await resolution.json()).toMatchObject({
+    id,
+    status: 'resolved',
+    resolutionNote: 'Original resolution',
+  });
+  const closure = await request(`/${id}/close`, 'POST', { note: 'Closure checked' });
+  expect(closure.status).toBe(200);
+  expect(await closure.json()).toMatchObject({
+    id,
+    status: 'closed',
+    resolutionNote: 'Original resolution',
+  });
   expect(await row(id)).toMatchObject({
     status: 'closed',
     resolution_note: 'Original resolution',
@@ -222,6 +238,54 @@ it('reads a current exception outside its filtered queue with current view autho
     resolutionNote: 'Saved resolution',
   });
 });
+it.each(['queue', 'detail'])(
+  'withholds the reconciliation %s when the session expires during the read',
+  async (surface) => {
+    const id = await seed();
+    const session = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES ($1,'viewer',$2,$3,clock_timestamp()+INTERVAL '3 seconds',NOW()+INTERVAL '30 minutes','staff')`,
+      [session, randomUUID(), randomUUID()]
+    );
+    headers.expiring = { Cookie: `barghsa_session=${session}` };
+    const locker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await locker.query('BEGIN');
+      await locker.query('LOCK TABLE reconciliation_exceptions IN ACCESS EXCLUSIVE MODE');
+      pending = request(surface === 'detail' ? `/${id}` : '', 'GET', undefined, 'expiring');
+      await expect
+        .poll(
+          async () =>
+            Number(
+              (
+                await http.pool.query(
+                  `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock'
+       AND query LIKE '%FROM reconciliation_exceptions%' AND cardinality(pg_blocking_pids(pid))>0`
+                )
+              ).rows[0].count
+            ),
+          { timeout: 2000 }
+        )
+        .toBe(1);
+      await locker.query(
+        `SELECT pg_sleep(GREATEST(0, EXTRACT(EPOCH FROM expires_at-clock_timestamp()))+0.05)
+       FROM sessions WHERE session_id=$1`,
+        [session]
+      );
+      await locker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, http.logs()).toBe(401);
+      expect(await response.text()).not.toContain(id);
+    } finally {
+      await locker.query('ROLLBACK').catch(() => {});
+      locker.release();
+      await pending?.catch(() => {});
+    }
+  },
+  10000
+);
 it.each(['resolve', 'close'])(
   'returns safe explanation fields for %s after permission checks',
   async (action) => {

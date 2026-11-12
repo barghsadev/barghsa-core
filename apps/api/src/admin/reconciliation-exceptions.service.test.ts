@@ -26,7 +26,11 @@ function mockPool() {
 function mockClient() {
   const mockClientQuery = vi.fn().mockResolvedValue({ rows: [] });
   const mockRelease = vi.fn();
-  return { mockClientQuery, mockRelease, client: { query: mockClientQuery, release: mockRelease } };
+  const query = (sql: string, params?: unknown[]) =>
+    sql === "SELECT current_setting('barghsa.actor_context', true) AS context"
+      ? Promise.resolve({ rows: [{ context: 'staff' }] })
+      : mockClientQuery(sql, ...(params ? [params] : []));
+  return { mockClientQuery, mockRelease, client: { query, release: mockRelease } };
 }
 
 function mockDbModule(pool: {
@@ -56,6 +60,8 @@ function httpStatus(error: unknown): number | undefined {
   return undefined;
 }
 
+const actor = { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' };
+
 const OPEN_ROW = {
   id: 'ex-1',
   exception_type: 'wallet_mismatch',
@@ -81,14 +87,16 @@ function returnRow(row: Record<string, unknown>) {
 
 describe('ReconciliationExceptionsService.listReconciliationExceptions (T-09.09.01)', () => {
   it('lists exceptions, maps rows to DTOs, and orders newest first', async () => {
-    const { service, mockQuery } = await loadService();
+    const { service, mockConnect, mockQuery } = await loadService();
+    const { mockClientQuery, client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     const listRow = {
       ...OPEN_ROW,
       status: 'open',
       assigned_to_username: 'staff1',
     };
-    mockQuery.mockResolvedValueOnce({ rows: [listRow] });
-    const result = await service.listReconciliationExceptions();
+    mockClientQuery.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({ rows: [listRow] });
+    const result = await service.listReconciliationExceptions({}, actor);
     expect(result[0]).toMatchObject({
       id: 'ex-1',
       exceptionType: 'wallet_mismatch',
@@ -98,36 +106,39 @@ describe('ReconciliationExceptionsService.listReconciliationExceptions (T-09.09.
       assignedToUsername: 'staff1',
       resolvedById: null,
     });
-    expect(String(mockQuery.mock.calls[0]![0])).toContain(
+    expect(String(mockClientQuery.mock.calls[1]![0])).toContain(
       'ORDER BY rex.created_at DESC, rex.id DESC'
     );
+    expect(mockClientQuery).toHaveBeenLastCalledWith('COMMIT');
+    expect(mockQuery).not.toHaveBeenCalled();
   });
 
   it('passes status/severity filters through to the query', async () => {
-    const { service, mockQuery } = await loadService();
-    mockQuery.mockResolvedValueOnce({ rows: [] });
-    await service.listReconciliationExceptions({ status: 'open', severity: 'high' });
-    const params = mockQuery.mock.calls[0]![1] as unknown[];
+    const { service, mockConnect } = await loadService();
+    const { mockClientQuery, client } = mockClient();
+    mockConnect.mockResolvedValue(client);
+    await service.listReconciliationExceptions({ status: 'open', severity: 'high' }, actor);
+    const params = mockClientQuery.mock.calls[1]![1] as unknown[];
     expect(params[0]).toBe('open');
     expect(params[1]).toBe('high');
   });
 
   it('rejects an invalid status filter with 400 without querying', async () => {
-    const { service, mockQuery } = await loadService();
+    const { service, mockConnect } = await loadService();
     const rejection = await service
-      .listReconciliationExceptions({ status: 'bogus' as never })
+      .listReconciliationExceptions({ status: 'bogus' as never }, actor)
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
-    expect(mockQuery).not.toHaveBeenCalled();
+    expect(mockConnect).not.toHaveBeenCalled();
   });
 
   it('rejects an invalid severity filter with 400 without querying', async () => {
-    const { service, mockQuery } = await loadService();
+    const { service, mockConnect } = await loadService();
     const rejection = await service
-      .listReconciliationExceptions({ severity: 'bogus' as never })
+      .listReconciliationExceptions({ severity: 'bogus' as never }, actor)
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
-    expect(mockQuery).not.toHaveBeenCalled();
+    expect(mockConnect).not.toHaveBeenCalled();
   });
 });
 
@@ -143,10 +154,10 @@ describe('ReconciliationExceptionsService.investigate (T-09.09.01)', () => {
       .mockResolvedValueOnce(returnRow(OPEN_ROW)) // locked SELECT
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // audit INSERT
+      .mockResolvedValueOnce(
+        returnRow({ ...OPEN_ROW, status: 'investigating', assigned_to_id: 'admin-1' })
+      ) // Locked DTO read
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
-    mockQuery.mockResolvedValueOnce(
-      returnRow({ ...OPEN_ROW, status: 'investigating', assigned_to_id: 'admin-1' })
-    ); // DTO read
 
     const dto = await service.investigateReconciliationException(
       'ex-1',
@@ -168,6 +179,14 @@ describe('ReconciliationExceptionsService.investigate (T-09.09.01)', () => {
     const auditCall = mockClientQuery.mock.calls[3]!;
     expect(String(auditCall[0])).toContain('INSERT INTO audit_log');
     expect(auditCall[1]![2]).toBe('reconciliation_status_changed');
+    expect(mockClientQuery.mock.calls[1]![0]).toContain('FOR UPDATE');
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      5,
+      expect.stringContaining('WHERE exc.id = $1'),
+      ['ex-1']
+    );
+    expect(mockClientQuery).toHaveBeenLastCalledWith('COMMIT');
+    expect(mockQuery).not.toHaveBeenCalled();
   });
 
   it('rejects investigate on a non-open state with 409 and never issues an UPDATE or audit', async () => {
@@ -217,16 +236,16 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
       .mockResolvedValueOnce(returnRow(OPEN_ROW)) // locked SELECT
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // audit INSERT
+      .mockResolvedValueOnce(
+        returnRow({
+          ...OPEN_ROW,
+          status: 'resolved',
+          resolved_by_id: 'admin-1',
+          resolution_note: 'balanced',
+          resolved_at: new Date('2026-08-28T01:00:00Z'),
+        })
+      ) // Locked DTO read
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
-    mockQuery.mockResolvedValueOnce(
-      returnRow({
-        ...OPEN_ROW,
-        status: 'resolved',
-        resolved_by_id: 'admin-1',
-        resolution_note: 'balanced',
-        resolved_at: new Date('2026-08-28T01:00:00Z'),
-      })
-    ); // DTO read
 
     const dto = await service.resolveReconciliationException(
       'ex-1',
@@ -248,6 +267,14 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
     expect(updateCall[1]![0]).toBe('resolved');
     expect(updateCall[1]![2]).toBe('balanced');
     expect(mockClientQuery.mock.calls[3]![1]![2]).toBe('resolution_recorded');
+    expect(mockClientQuery.mock.calls[1]![0]).toContain('FOR UPDATE');
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      5,
+      expect.stringContaining('WHERE exc.id = $1'),
+      ['ex-1']
+    );
+    expect(mockClientQuery).toHaveBeenLastCalledWith('COMMIT');
+    expect(mockQuery).not.toHaveBeenCalled();
     expect(mockClientQuery.mock.calls[3]![1]![3]).toContain('reconciliationExceptionId');
   });
 
@@ -310,10 +337,10 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       .mockResolvedValueOnce(returnRow(resolvedRow)) // locked SELECT
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // audit INSERT
+      .mockResolvedValueOnce({
+        rows: [{ ...resolvedRow, status: 'closed' }],
+      }) // Locked DTO read
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
-    mockQuery.mockResolvedValueOnce({
-      rows: [{ ...resolvedRow, status: 'closed' }],
-    }); // DTO read
 
     const dto = await service.closeReconciliationException(
       'ex-1',
@@ -334,6 +361,13 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
     expect(String(updateCall[0])).toContain('COALESCE(resolved_by_id');
     expect(updateCall[1]![0]).toBe('closed');
     expect(mockClientQuery.mock.calls[3]![1]![2]).toBe('resolution_recorded');
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      5,
+      expect.stringContaining('WHERE exc.id = $1'),
+      ['ex-1']
+    );
+    expect(mockClientQuery).toHaveBeenLastCalledWith('COMMIT');
+    expect(mockQuery).not.toHaveBeenCalled();
   });
 
   it('fills in the closer as the resolution owner when closing an unresolved item', async () => {
@@ -345,18 +379,18 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       .mockResolvedValueOnce(returnRow(OPEN_ROW)) // locked SELECT (open)
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // audit INSERT
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            ...OPEN_ROW,
+            status: 'closed',
+            resolved_by_id: 'admin',
+            resolution_note: 'dismissed',
+            resolved_at: new Date('2026-08-28T01:00:00Z'),
+          },
+        ],
+      }) // Locked DTO read
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
-    mockQuery.mockResolvedValueOnce({
-      rows: [
-        {
-          ...OPEN_ROW,
-          status: 'closed',
-          resolved_by_id: 'admin',
-          resolution_note: 'dismissed',
-          resolved_at: new Date('2026-08-28T01:00:00Z'),
-        },
-      ],
-    }); // DTO read
 
     const dto = await service.closeReconciliationException(
       'ex-1',
@@ -371,6 +405,13 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       resolvedById: 'admin',
       resolutionNote: 'dismissed',
     });
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      5,
+      expect.stringContaining('WHERE exc.id = $1'),
+      ['ex-1']
+    );
+    expect(mockClientQuery).toHaveBeenLastCalledWith('COMMIT');
+    expect(mockQuery).not.toHaveBeenCalled();
   });
 
   it('rejects close when already closed', async () => {
