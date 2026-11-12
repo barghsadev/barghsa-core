@@ -1,0 +1,112 @@
+name: Verify development database entry points
+on:
+  push:
+    branches: ['codex/verify/v06-dev-database-*']
+
+permissions:
+  contents: read
+
+jobs:
+  development:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - name: Run the root setup on a fresh checkout
+        shell: bash
+        run: |
+          test ! -e .env
+          pnpm setup:dev 2>&1 | tee "$RUNNER_TEMP/fresh-setup.log"
+          cmp .env .env.example
+          test "$(stat -c %a .env)" = 600
+          psql() { docker compose exec -T postgres psql -U barghsa -d barghsa -v ON_ERROR_STOP=1 -Atqc "$1"; }
+          test "$(psql "SELECT count(*) FROM pg_trigger WHERE tgname = 'zzz_audit_log_immutable_row'")" = 1
+          test "$(psql 'SELECT count(*) > 0 FROM products')" = t
+          test "$(psql 'SELECT count(*) > 0 FROM drizzle.__drizzle_migrations')" = t
+      - name: Repeat bootstrap without replacing local configuration
+        shell: bash
+        run: |
+          printf '\n# Preserved by repeated setup\n' >> .env
+          sha256sum .env > "$RUNNER_TEMP/env.sha256"
+          pnpm setup:dev 2>&1 | tee "$RUNNER_TEMP/repeated-setup.log"
+          sha256sum -c "$RUNNER_TEMP/env.sha256"
+      - name: Apply Drizzle changes only to a disposable database
+        shell: bash
+        env:
+          BARGHSA_DEV_PUSH_DATABASE_URL: postgresql://barghsa:barghsa-dev-password@localhost:5432/barghsa_schema_scratch
+        run: |
+          python3 - <<'PY' > "$RUNNER_TEMP/prepare-scratch.sh"
+          from pathlib import Path
+          readme = Path('README.md').read_text()
+          section = readme.split('### Disposable schema experiments', 1)[1]
+          commands = section.split('```bash' + chr(10), 1)[1].split('NODE_ENV=development pnpm db:push', 1)[0]
+          assert 'CREATE DATABASE barghsa_schema_scratch' in commands
+          print(commands, end='')
+          PY
+          bash -e -o pipefail "$RUNNER_TEMP/prepare-scratch.sh"
+          docker compose exec -T postgres psql -U barghsa -d barghsa_schema_scratch -v ON_ERROR_STOP=1 \
+            -c 'ALTER TABLE public.users ADD COLUMN dev_schema_probe text'
+          python3 - <<'PY' 2>&1 | tee "$RUNNER_TEMP/scratch-push.log"
+          import errno
+          import os
+          import pty
+          import select
+          import sys
+          import time
+
+          child, terminal = pty.fork()
+          if child == 0:
+              os.execlp('pnpm', 'pnpm', 'db:push')
+          deadline = time.monotonic() + 75
+          transcript = bytearray()
+          selected = False
+          while time.monotonic() < deadline:
+              if not select.select([terminal], [], [], 1)[0]:
+                  continue
+              try:
+                  block = os.read(terminal, 4096)
+              except OSError as error:
+                  if error.errno != errno.EIO:
+                      raise
+                  break
+              transcript.extend(block)
+              sys.stdout.buffer.write(block)
+              sys.stdout.buffer.flush()
+              if not selected and (b'Yes, I want to execute all statements' in transcript or
+                                   b'Do you still want to push changes?' in transcript):
+                  time.sleep(0.2)
+                  os.write(terminal, bytes([27, 91, 66, 13]))
+                  selected = True
+          else:
+              os.kill(child, 15)
+              raise RuntimeError('Scratch push did not finish before its deadline')
+          _, status = os.waitpid(child, 0)
+          assert os.waitstatus_to_exitcode(status) == 0 and selected and b'Changes applied' in transcript
+          PY
+          psql() { docker compose exec -T postgres psql -U barghsa -d barghsa_schema_scratch -v ON_ERROR_STOP=1 -Atqc "$1"; }
+          test "$(psql "SELECT to_regclass('public.users') IS NOT NULL")" = t
+          test "$(psql 'SELECT count(*) > 0 FROM drizzle.__drizzle_migrations')" = t
+          test "$(psql "SELECT count(*) FROM information_schema.columns WHERE table_schema='public' AND table_name='users' AND column_name='dev_schema_probe'")" = 0
+          git diff --exit-code -- packages/db/drizzle/production
+      - name: Preserve command results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: development-database-entrypoints
+          path: |
+            ${{ runner.temp }}/fresh-setup.log
+            ${{ runner.temp }}/repeated-setup.log
+            ${{ runner.temp }}/scratch-push.log
+          retention-days: 14
+      - name: Remove disposable services
+        if: always()
+        run: docker compose down -v
