@@ -13,6 +13,7 @@ import { Reflector } from '@nestjs/core';
 import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
 import { browserCorsOptions } from './common/browser-origin.js';
 import { observeHttpRequest } from './metrics/http-request-metrics.js';
+import { ApiRequestTracing } from './metrics/api-request-tracing.js';
 import type { Server, ServerResponse } from 'node:http';
 
 export async function createApplication() {
@@ -42,6 +43,7 @@ export async function createApplication() {
   });
   const correlation = new CorrelationIdMiddleware();
   app.use(correlation.use.bind(correlation));
+  app.use(app.get(ApiRequestTracing).observe);
   app.use(observeHttpRequest);
   app.enableCors(browserCorsOptions());
 

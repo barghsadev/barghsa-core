@@ -14,7 +14,12 @@ export async function startHttpFixture(
   poolMax = 10,
   aiModelAllowedHosts = '',
   startAiModelWorker = false,
-  telemetry?: { endpoint: string; intervalMs: number; timeoutMs: number }
+  telemetry?: {
+    endpoint: string;
+    intervalMs: number;
+    timeoutMs: number;
+    traces?: { endpoint: string; sampleRate: number };
+  }
 ) {
   const localStorageEndpoint = typeof localService === 'string' ? localService : undefined;
   const publicOrigin =
@@ -132,6 +137,10 @@ export async function startHttpFixture(
         AI_MODEL_TEST_WAIT_MS: startAiModelWorker ? '10000' : '1000',
         OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: telemetry?.endpoint ?? '',
         OTEL_EXPORTER_OTLP_METRICS_HEADERS: '',
+        OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: telemetry?.traces?.endpoint ?? '',
+        OTEL_EXPORTER_OTLP_TRACES_HEADERS: '',
+        OTEL_EXPORTER_OTLP_TRACES_TIMEOUT: '2000',
+        OTEL_TRACE_SUCCESS_SAMPLE_RATE: String(telemetry?.traces?.sampleRate ?? 0),
         OTEL_EXPORTER_OTLP_HEADERS: '',
         ...(telemetry
           ? {

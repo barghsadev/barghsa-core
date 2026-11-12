@@ -3,6 +3,7 @@ import promClient from 'prom-client';
 import { createOperatorLogger, operatorLogCorrelation } from '@barghsa/shared/operator-logging';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { apiRequestTrace } from './api-request-tracing.js';
 
 const apiPath = /^\/api(?:\/|$)/i;
 const logRequest = createOperatorLogger('api');
@@ -88,6 +89,7 @@ export const observeHttpRequest: RequestHandler = (request, response, next) => {
   if (apiPath.test(request.path)) {
     const started = performance.now();
     const correlationId = operatorLogCorrelation.getStore();
+    const trace = apiRequestTrace.getStore();
     function recordJourney(route: string, outcome: 'success' | 'failure') {
       if (
         !journeyAttempts ||
@@ -112,6 +114,7 @@ export const observeHttpRequest: RequestHandler = (request, response, next) => {
       logRequest(status >= 500 ? 'error' : 'info', 'HTTP request completed', {
         event: 'http.request',
         correlationId,
+        ...trace,
         route,
         method: request.method,
         status,

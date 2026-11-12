@@ -6,6 +6,7 @@ import { AppController } from './app.controller.js';
 import { CorrelationIdProvider, ShutdownService } from './common/index.js';
 import { HealthModule } from './health/health.module.js';
 import { MetricsModule } from './metrics/metrics.module.js';
+import { ApiRequestTracing } from './metrics/api-request-tracing.js';
 import { ConfigCacheModule } from './config-cache/index.js';
 import { RedisModule } from './redis/index.js';
 import { RateLimitModule } from './rate-limit/index.js';
@@ -82,6 +83,6 @@ import { TelegramModule } from './telegram/telegram.module.js';
     TelegramModule,
   ],
   controllers: [AppController, RouteErrorsController],
-  providers: [CorrelationIdProvider, ShutdownService],
+  providers: [CorrelationIdProvider, ShutdownService, ApiRequestTracing],
 })
 export class AppModule {}

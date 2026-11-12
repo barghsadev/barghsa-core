@@ -7,6 +7,7 @@ import {
 } from '@opentelemetry/sdk-metrics';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
 import { resourceFromAttributes } from '@opentelemetry/resources';
+import { collectorAgent } from './otlp-http-agent.js';
 
 export interface DatabaseTelemetrySnapshot {
   metrics: DatabaseMetrics | null;
@@ -112,24 +113,6 @@ const descriptors: Descriptor[] = [
     value: (s) => s.metrics?.tableScans?.index ?? null,
   },
 ];
-
-async function collectorAgent(protocol: string, timeoutMs: number) {
-  const { Agent } = protocol === 'https:' ? await import('node:https') : await import('node:http');
-  const agent = new Agent({ keepAlive: false });
-  const connect = agent.createConnection.bind(agent);
-  agent.createConnection = (options, callback) => {
-    const socket = connect(options, callback);
-    if (socket) {
-      // The SDK's request timeout measures inactivity. Bound the socket's
-      // lifetime too, including DNS, TLS and a continuously streamed reply.
-      const deadline = setTimeout(() => socket.destroy(), timeoutMs);
-      deadline.unref();
-      socket.once('close', () => clearTimeout(deadline));
-    }
-    return socket;
-  };
-  return agent;
-}
 
 /** A private provider avoids replacing any application-wide OpenTelemetry SDK. */
 export function createDatabaseTelemetry(

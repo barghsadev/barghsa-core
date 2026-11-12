@@ -30,3 +30,30 @@ Verify the final staging candidate by matching one request's response ID to
 its API and edge records and a queued delivery to its worker record. Confirm
 the configured external log sink receives those same structured records and
 apply the approved retention policy there.
+
+## API request traces
+
+Set `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` to the protected OTLP HTTP traces
+endpoint. Use HTTPS for a collector outside the private network and supply
+its authentication through `OTEL_EXPORTER_OTLP_TRACES_HEADERS`. The exporter
+is off until the endpoint is set. `OTEL_EXPORTER_OTLP_TRACES_TIMEOUT` defaults
+to 2,000 milliseconds and applies to the collector connection as well as the
+export attempt.
+
+The API accepts one valid W3C `traceparent` and starts a new context for
+missing, malformed or repeated values. It records the registered route
+template, HTTP method and status. URLs, query values, headers, bodies,
+exception text, baggage and `tracestate` are excluded. Request completion logs
+add `traceId` and `spanId` when tracing is enabled and retain `correlationId`.
+
+Completed API spans with HTTP 5xx, timeout or an interrupted response are
+selected for export, as are requests that run for more than 500 milliseconds.
+`OTEL_TRACE_SUCCESS_SAMPLE_RATE` controls routine spans and defaults to 0.1.
+The API chooses locally without using the caller's sampled flag. Export uses
+a bounded queue and a failed collector can lose spans. This policy applies to
+the API server span. The web server, outbox and worker require their own
+instrumentation and cross-process verification.
+
+On the configured collector, verify a request span and its corresponding
+API log by trace ID and check that the route is the registered template.
+[W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)
