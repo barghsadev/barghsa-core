@@ -272,11 +272,13 @@ docker compose --env-file /etc/barghsa/staging/runtime.env \
   -f /opt/barghsa/staging/compose.yml logs --tail=100 api worker
 ```
 
-The API/worker app image is shared; the worker uses its own command and health
-check. Database migrations run once per release before the API and worker are
-replaced. After a failure, the previous app image checks the current database
-schema before the release restores the previous API, worker, AI inference and
-web images. The release stops those services if the schema check fails. Recover
+The API and worker share an image. The worker uses its own command and health
+check. The release stops the API, worker and AI inference before applying
+migrations. A failed stop cancels the migration and enters rollback. The release
+starts the candidate API after migrations finish and waits for its health check.
+After a failure, the previous app image checks the current database schema
+before the release restores the previous API, worker, AI inference and web
+images. The release stops those services if the schema check fails. Recover
 the matching app and database pair before accepting writes, or roll forward.
 Check Compose status and the active manifest before retrying. Use the
 [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)

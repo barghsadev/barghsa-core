@@ -144,7 +144,8 @@ BARGHSA_PROXY_IPS=$(docker network inspect barghsa-staging-private --format '{{(
 }
 echo 'Disposable staging: no offsite backup is configured' >&2
 
-"${dc[@]}" stop worker ai-inference || true
+# Quiesce the previous API and worker before changing their database schema.
+"${dc[@]}" stop worker api ai-inference
 "${dc[@]}" run --rm --no-deps api node run-packaged-migrations.cjs
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 api

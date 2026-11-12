@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:53:01+00:00",
+  "updated": "2026-11-12T22:57:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11289,7 +11289,8 @@
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-schema-aware-staging-rollback"
+          "release-0.6-schema-aware-staging-rollback",
+          "release-0.6-staging-migration-writer-stop"
         ],
         "current_acceptance": null
       }
@@ -18412,7 +18413,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -18536,6 +18537,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ]
         }
@@ -28495,7 +28504,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -28693,6 +28702,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ]
         }
@@ -31128,7 +31145,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31492,6 +31509,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ]
         }
@@ -92594,7 +92619,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -93922,6 +93947,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -153078,7 +153111,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -153090,7 +153123,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -154046,6 +154079,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -587121,7 +587163,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -587653,6 +587695,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -606904,7 +606954,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -607313,6 +607363,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -607675,7 +607733,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -608084,6 +608142,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -608444,7 +608510,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -608853,6 +608919,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -609213,7 +609287,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -609646,6 +609720,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -610500,7 +610582,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -610909,6 +610991,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -611453,7 +611543,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -611465,7 +611555,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -612445,6 +612535,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -612960,7 +613059,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -613369,6 +613468,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -613728,7 +613835,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -614137,6 +614244,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -614497,7 +614612,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -614906,6 +615021,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -615267,7 +615390,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -615700,6 +615823,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -616059,7 +616190,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -616468,6 +616599,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -616827,7 +616966,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -617236,6 +617375,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -640790,7 +640937,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -640923,6 +641070,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ]
         }
@@ -1013618,7 +1013773,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1013642,7 +1013797,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1016432,6 +1016587,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "presentation_renewals": [
@@ -1018993,7 +1019157,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1019017,7 +1019181,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1021709,6 +1021873,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-migration-writer-stop",
+              "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1191384,6 +1191557,92 @@
         {
           "file": "postgres-control.log",
           "sha256": "dd98fbcbd3cff2facf7741b2da19242c8399ecc6a98ac465fd36fdb569310225"
+        }
+      ]
+    },
+    "release-0.6-staging-migration-writer-stop": {
+      "batch": "release-0.6-staging-migration-writer-stop",
+      "base_commit": "9ba75415c50778192b223ca58c1f4a2166d0c773",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "d2d1dacc0b05678fea55937794226568a36c4a5853f312ce794d32ce5f79c2b1"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "b781e9c3bc637c6e03d47bcfc424854a68802a93f45ee797ac22b61ff679894c"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "6c3c94fb91bbe20da1a98e2756f1187497e767c500db78dcb9c8cb923407b685"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
+        }
+      ],
+      "checks": [
+        "The shell regression reproduced both baseline failures. The API was omitted from the stop command and a failed stop still allowed the migration command to execute.",
+        "The release now waits for a successful Compose stop of API, worker and inference. A stop error triggers rollback with its original exit status before any migration command. Tests verify the exact order on success and that the migration is absent on failure.",
+        "All 24 staging release queue and rollback tests passed. The existing rollback fixture retains the previous app image and rejects an incompatible database schema. Bash syntax, ShellCheck, Markdown formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The rollout and failure order was verified in local shell and Compose fixtures. A live v0.6.0 rollout and the separately documented PostgreSQL image cutover and recovery rehearsal remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-migration-writer-stop",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "09673d7190f49e9991fc0ab9306d8b2acbb59bb1347d55b9fc0bceb2b060f1ae"
+        },
+        {
+          "file": "staging-release-tests.log",
+          "sha256": "9f9dd7f05b43e5faa700d660a86064a1fdc258ac05d9777aaa2f7a279561ecab"
         }
       ]
     }

@@ -90,6 +90,30 @@ fi
         self.assertIn("Previous app could not verify the current database schema", result.stderr)
         self.assertIn("Recover the matching app and database pair, or roll forward", result.stderr)
 
+    def test_migrations_wait_for_a_successful_writer_stop(self):
+        text = RELEASE.read_text()
+        start = text.index('\n', text.index("echo 'Disposable staging: no offsite backup is configured'"))
+        end = text.index('\n"${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference', start)
+        script = f'''set -euo pipefail
+mode=$1
+dc=(compose)
+compose() {{
+  printf '%s\\n' "$*"
+  if [[ $1 == stop && "$mode" == stop-failed ]]; then return 19; fi
+}}
+trap 'status=$?; echo rollback; exit "$status"' ERR
+{text[start:end]}
+'''
+        for mode, expected, code in (
+            ('stopped', ['stop worker api ai-inference', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
+            ('stop-failed', ['stop worker api ai-inference', 'rollback'], 19),
+        ):
+            with self.subTest(mode=mode):
+                result = subprocess.run(['bash', '-c', script, 'migration-fixture', mode],
+                                        capture_output=True, text=True, check=False)
+                self.assertEqual(result.returncode, code, result.stderr)
+                self.assertEqual(result.stdout.splitlines(), expected)
+
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()
         loaded = text[text.index('commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}'):
