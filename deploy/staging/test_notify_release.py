@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import io
 import json
 import os
@@ -220,18 +221,41 @@ class ReleaseNotificationTests(unittest.TestCase):
         bins = self.root / "bin"
         bins.mkdir()
         log = self.root / "calls.log"
+        scripts = self.root / "scripts"
+        scripts.mkdir()
+        (scripts / "check-runtime-images.sh").write_text('exec scan-runtime "$@"\n')
         stub = """#!/usr/bin/env python3
-import os,pathlib,sys
+import hashlib,json,os,pathlib,subprocess,sys
 name=pathlib.Path(sys.argv[0]).name
 args=sys.argv[1:]
 with pathlib.Path(os.environ['CALL_LOG']).open('a') as log: log.write(name+' '+ ' '.join(args)+'\\n')
+prefixes={'barghsa-app:':'b','barghsa-web:':'c','barghsa-postgres:':'d','barghsa-clamav:':'e'}
+def identity(tag):
+    return 'sha256:'+next(letter for prefix,letter in prefixes.items() if tag.startswith(prefix))*64
 if name=='git' and args==['rev-parse','HEAD']: print('a'*40)
 elif name=='git' and args==['rev-parse','--short=12','HEAD']: print('a'*12)
 elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']: sys.exit(int(os.environ.get('FAIL_ACCEPTANCE','0')))
-elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','verify-images']: os.execv(sys.executable,[sys.executable,*args])
+elif name=='python3' and args[1] in ('verify-images','verify-image-bundle'): os.execv(sys.executable,[sys.executable,*args])
 elif name=='python3' and '--check' in args: sys.exit(int(os.environ.get('FAIL_PREFLIGHT','0')))
-elif name=='docker' and args[:2]==['image','inspect']: print('sha256:'+('b'*64 if args[-1].startswith('barghsa-app:') else 'c'*64))
+elif name=='docker' and args[:2]==['image','inspect']: print(identity(args[-1]))
+elif name=='sha256sum':
+    assert args==['--check','--status']
+    expected,path=sys.stdin.read().rstrip('\\n').split('  ',1)
+    sys.exit(int(hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()!=expected))
+elif name=='scan-runtime':
+    if os.environ.get('FAIL_SCAN'): sys.exit(1)
+    root=pathlib.Path(args[0])
+    for index,tag in enumerate(args[1:],1):
+        payload=json.dumps({'fixture':tag}).encode()
+        sha=hashlib.sha256(payload).hexdigest()
+        (root/f'{index}-vulnerabilities.json').write_bytes(payload)
+        (root/f'{index}-sbom.cdx.json').write_bytes(payload)
+        (root/f'{index}-image.json').write_text(json.dumps({'image_id':identity(tag),'blocked':False,'report_sha256':sha,'sbom_sha256':sha}))
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
+elif name=='ssh' and args[-1].startswith('bash -c '):
+    archive=sys.stdin.buffer.read()
+    if os.environ.get('CORRUPT_TRANSFER'): archive+=b'tampered'
+    sys.exit(subprocess.run(['bash','-c',args[-1]],input=archive).returncode)
 elif name=='ssh' and args[-1]=='test -r /etc/barghsa/staging/active-images.env': sys.exit(int(os.environ['FRESH_STAGING']))
 elif name=='ssh' and 'grep -E' in args[-1]: print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
@@ -240,20 +264,38 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         print('BARGHSA_STAGING_RUNTIME_IMAGES_V1','a'*40,*('sha256:'+c*64 for c in (app,'c','d','e')))
     sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
 """
-        for name in ["git", "python3", "ssh", "scp", "docker"]:
+        for name in ["git", "python3", "ssh", "scp", "docker", "scan-runtime", "sha256sum"]:
             file = bins / name
             file.write_text(stub.replace("#!/usr/bin/env python3", f"#!{sys.executable}"))
             file.chmod(0o700)
-        scenarios = [(failure, False) for failure in (
-            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
+        bundle = self.root / "bundle"
+        bundle.mkdir()
+        subprocess.run(
+            [str(bins / "scan-runtime"), str(bundle), "barghsa-app:fixture", "barghsa-web:fixture"],
+            env={**os.environ, "CALL_LOG": str(log)}, check=True,
+        )
+        (bundle / "images.tar.gz").write_bytes(b"image archive fixture")
+        (bundle / "release-licenses.json").write_text(json.dumps({
+            "commit": "a" * 40, "images": {"app": "sha256:" + "b" * 64, "web": "sha256:" + "c" * 64},
+            "packages": [{"scope": scope, "status": "allowed"} for scope in ("app", "web", "browser")],
+        }))
+        subprocess.run([
+            sys.executable, str(staging / "release-queue.py"), "prepare-image-bundle", str(bundle), "a" * 40,
+            "sha256:" + "b" * 64, "sha256:" + "c" * 64,
+        ], check=True)
+        bundle_sha = hashlib.sha256((bundle / "bundle.json").read_bytes()).hexdigest()
+        scenarios = [(failure, False, False) for failure in (
+            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
         )]
-        for failure, fresh in [*scenarios, (None, True)]:
-            with self.subTest(failure=failure, fresh=fresh):
+        for failure, fresh, prebuilt in [*scenarios, (None, True, False), (None, False, True),
+                                        ("CORRUPT_TRANSFER", False, True)]:
+            with self.subTest(failure=failure, fresh=fresh, prebuilt=prebuilt):
                 log.unlink(missing_ok=True)
                 receipt = self.root / "runtime-images.json"
                 receipt.unlink(missing_ok=True)
                 env = {
                     **os.environ,
+                    "HOME": str(self.root),
                     "PATH": str(bins) + os.pathsep + os.environ["PATH"],
                     "CALL_LOG": str(log),
                     "FRESH_STAGING": str(int(fresh)),
@@ -263,24 +305,28 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 command = ["bash", str(staging / "deploy.sh")]
                 if not fresh:
                     command.append(str(receipt))
+                if prebuilt:
+                    command.extend([str(bundle), bundle_sha])
                 result = subprocess.run(command, env=env, capture_output=True, text=True)
                 calls = log.read_text().splitlines()
                 sends = [line for line in calls if line.startswith('python3 deploy/staging/notify-release.py') and '--check' not in line]
                 acceptance = 'python3 deploy/staging/release-queue.py check-release --commit ' + 'a'*40
                 preflight = 'python3 deploy/staging/notify-release.py --check --commit ' + 'a'*40
                 self.assertIn(acceptance, calls)
-                self.assertEqual(len(sends), 0 if failure else 1)
+                self.assertEqual(len(sends), 0 if failure else 1, result.stderr)
                 self.assertEqual(result.returncode, 1 if failure else 0, result.stderr)
                 self.assertEqual(receipt.exists(), not failure and not fresh)
                 if not failure:
                     verification = next(line for line in calls if 'release-queue.py verify-images' in line)
                     self.assertLess(calls.index(verification), calls.index(sends[0]))
                     if not fresh:
-                        self.assertEqual(json.loads(receipt.read_text()), {
-                            "schema_version": 1, "commit": "a" * 40,
-                            "image_ids": dict(zip(("app", "web", "postgres", "clamav"),
-                                                  ("sha256:" + c * 64 for c in "bcde"))),
-                        })
+                        evidence = json.loads(receipt.read_text())
+                        self.assertEqual(evidence["schema_version"], 1)
+                        self.assertEqual(evidence["commit"], "a" * 40)
+                        self.assertEqual(evidence["image_ids"], dict(zip(
+                            ("app", "web", "postgres", "clamav"), ("sha256:" + c * 64 for c in "bcde"),
+                        )))
+                        self.assertEqual(set(evidence["image_scans"]["images"]), {"app", "web"})
                         self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
                 if failure == "FAIL_ACCEPTANCE":
                     self.assertNotIn(preflight, calls)
@@ -288,6 +334,11 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     self.assertLess(calls.index(acceptance), calls.index(preflight))
                 if failure in {"FAIL_ACCEPTANCE", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
+                elif prebuilt:
+                    self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ")) for line in calls))
+                    self.assertEqual(sum(line.startswith("docker load ") for line in calls), 0 if failure else 1)
+                    if failure:
+                        self.assertFalse(any(line.startswith("scp ") for line in calls))
                 else:
                     for dockerfile in ('Dockerfile.base', 'Dockerfile.web'):
                         builds = [line for line in calls if line.startswith('docker build ') and f'-f {dockerfile} ' in line]
@@ -302,7 +353,12 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         f'docker build --platform linux/amd64 --build-arg BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:{tag} '
                         f'-f deploy/staging/Dockerfile.postgres -t barghsa-postgres:{tag} .'
                     )
+                    scan = next(line for line in calls if line.startswith('scan-runtime '))
+                    if failure == "FAIL_SCAN":
+                        self.assertFalse(any(line.startswith(('docker save ', 'scp ')) for line in calls))
+                        continue
                     transfer = next(line for line in calls if line.startswith('docker save '))
+                    self.assertLess(calls.index(scan), calls.index(transfer))
                     if fresh:
                         self.assertLess(calls.index(helper), calls.index(postgres))
                         self.assertLess(calls.index(postgres), calls.index(transfer))

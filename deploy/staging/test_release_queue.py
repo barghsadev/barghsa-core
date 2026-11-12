@@ -89,6 +89,9 @@ class ReleaseQueueTests(unittest.TestCase):
 set -eu
 git rev-parse HEAD > "$QUEUE_CAPTURE/deployed-head"
 test -z "$(git status --porcelain)"
+if [ "$#" -gt 1 ]; then
+    printf '%s\\n' "$2" "$3" > "$QUEUE_CAPTURE/image-bundle"
+fi
 if [ "${QUEUE_TEST_WRITE_IMAGES:-}" = 1 ]; then
     printf '%s\\n' "$QUEUE_TEST_IMAGES" > "$1"
 fi
@@ -143,6 +146,53 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertEqual(stored.read_bytes(), before)
         with self.assertRaisesRegex(ValueError, "immutable"):
             queue.enqueue(self.repo, self.state, self.commit, [self.image])
+
+    def test_queued_image_bundle_requires_passing_evidence_and_retains_its_identity(self):
+        directory = self.root / "bundle"
+        directory.mkdir()
+        ids = {"app": "sha256:" + "b" * 64, "web": "sha256:" + "c" * 64}
+        for index, image_id in enumerate(ids.values(), 1):
+            artifact = b"fixture"
+            sha = hashlib.sha256(artifact).hexdigest()
+            (directory / f"{index}-vulnerabilities.json").write_bytes(artifact)
+            (directory / f"{index}-sbom.cdx.json").write_bytes(artifact)
+            (directory / f"{index}-image.json").write_text(json.dumps({
+                "image_id": image_id, "blocked": False, "report_sha256": sha, "sbom_sha256": sha,
+            }))
+        license_path = directory / "release-licenses.json"
+        licenses = {"commit": self.commit, "images": ids, "packages": [
+            {"scope": scope, "status": "allowed"} for scope in ("app", "web", "browser")
+        ]}
+        license_path.write_text(json.dumps(licenses))
+        archive = directory / "images.tar.gz"
+        archive.write_bytes(b"fixture archive")
+        prepare = [sys.executable, queue.__file__, "prepare-image-bundle", str(directory), self.commit, *ids.values()]
+        subprocess.run(prepare, check=True)
+        manifest = directory / "bundle.json"
+        original = manifest.read_bytes()
+        sha = hashlib.sha256(original).hexdigest()
+        with self.assertRaisesRegex(ValueError, "queued commit"):
+            queue.verify_image_bundle(directory, "0" * 40, sha)
+        licenses["packages"][0]["status"] = "review-required"
+        license_path.write_text(json.dumps(licenses))
+        with self.assertRaisesRegex(ValueError, "passing license"):
+            queue.enqueue(self.repo, self.state, self.commit, [], directory)
+        self.assertEqual(queue.jobs(self.state), [])
+        licenses["packages"][0]["status"] = "allowed"
+        license_path.write_text(json.dumps(licenses))
+        job = queue.enqueue(self.repo, self.state, self.commit, [], directory)
+        self.assertEqual(job["image_bundle"], {"directory": str(directory.resolve()), "manifest_sha256": sha})
+        archive.write_bytes(b"tampered archive")
+        with self.assertRaisesRegex(ValueError, "archive checksum"):
+            queue.verify_image_bundle(directory, self.commit, sha)
+        subprocess.run(prepare, check=True)
+        with self.assertRaisesRegex(ValueError, "immutable image bundle"):
+            queue.enqueue(self.repo, self.state, self.commit, [], directory)
+        archive.write_bytes(b"fixture archive")
+        manifest.write_bytes(original)
+        with self.live():
+            self.assertEqual(queue.work(self.state), 0)
+        self.assertEqual((self.capture / "image-bundle").read_text().splitlines(), [str(directory.resolve()), sha])
 
     def test_pushed_unaccepted_release_cannot_use_working_tree_acceptance(self):
         commit = self.publish("0.1.4", "in_progress")

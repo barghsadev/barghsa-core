@@ -3,6 +3,8 @@ set -euo pipefail
 umask 077
 
 receipt=${1:-}
+bundle_dir=${2:-}
+bundle_manifest_sha=${3:-}
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$root"
 if [[ -n $(git status --porcelain) ]]; then
@@ -13,6 +15,10 @@ commit="$(git rev-parse HEAD)"
 python3 deploy/staging/release-queue.py check-release --commit "$commit"
 # Validate notes and Telegram channel before spending time building images.
 python3 deploy/staging/notify-release.py --check --commit "$commit"
+if [[ -n "$bundle_dir" ]]; then
+  bundle=$(python3 deploy/staging/release-queue.py verify-image-bundle "$bundle_dir" "$commit" "$bundle_manifest_sha")
+  read -r app_id web_id archive_sha <<< "$bundle"
+fi
 
 host="${BARGHSA_VPS_HOST:-89.42.199.13}"
 port="${BARGHSA_VPS_SSH_PORT:-30222}"
@@ -36,6 +42,10 @@ if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.en
   }
   echo 'Keeping the existing PostgreSQL and ClamAV images and volumes' >&2
 else
+  if [[ -n "$bundle_dir" ]]; then
+    echo 'The application image bundle needs an initialized staging database and scanner' >&2
+    exit 1
+  fi
   postgres_image="barghsa-postgres:$tag"
   clamav_image="barghsa-clamav:$tag"
   bash deploy/staging/build-postgres-image.sh "$postgres_image"
@@ -49,10 +59,12 @@ else
   }
 fi
 
-docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
-docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.web --target production -t "barghsa-web:$tag" .
-app_id=$(docker image inspect --format '{{.Id}}' "barghsa-app:$tag")
-web_id=$(docker image inspect --format '{{.Id}}' "barghsa-web:$tag")
+if [[ -z "$bundle_dir" ]]; then
+  docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
+  docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.web --target production -t "barghsa-web:$tag" .
+  app_id=$(docker image inspect --format '{{.Id}}' "barghsa-app:$tag")
+  web_id=$(docker image inspect --format '{{.Id}}' "barghsa-web:$tag")
+fi
 [[ "$app_id" =~ ^sha256:[0-9a-f]{64}$ && "$web_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
   echo 'Invalid release image IDs' >&2
   exit 1
@@ -60,24 +72,43 @@ web_id=$(docker image inspect --format '{{.Id}}' "barghsa-web:$tag")
 # A rebuild of the same source must never replace a tag used for rollback.
 app_image="barghsa-app:$tag-${app_id#sha256:}"
 web_image="barghsa-web:$tag-${web_id#sha256:}"
-docker image tag "$app_id" "$app_image"
-docker image tag "$web_id" "$web_image"
-images+=("$app_image" "$web_image")
 
-# Hosted checks build their own images. Scan the exact images this worker will
-# transfer, and keep each attempt's evidence even when the scan fails.
-scan_root="${HOME}/.local/state/barghsa-staging-queue/image-scans"
-if [[ -n "$receipt" ]]; then
-  scan_root=$(dirname -- "$receipt")
+if [[ -n "$bundle_dir" ]]; then
+  scan_dir=$bundle_dir
+  # The destination checks the complete archive before Docker reads any tag.
+  load_archive=$(cat <<'BASH'
+set -euo pipefail
+umask 077
+archive=$(mktemp)
+trap 'rm -f -- "$archive"' EXIT
+cat > "$archive"
+printf '%s  %s\n' "$1" "$archive" | sha256sum --check --status
+docker load --input "$archive"
+BASH
+)
+  printf -v load_command 'bash -c %q -- %q' "$load_archive" "$archive_sha"
+  echo 'Transferring verified staging image bundle over SSH' >&2
+  # shellcheck disable=SC2029 # The fixed script and checked hash are quoted for the remote shell.
+  ssh "${ssh_args[@]}" "$remote" "$load_command" < "$bundle_dir/images.tar.gz"
+else
+  docker image tag "$app_id" "$app_image"
+  docker image tag "$web_id" "$web_image"
+  images+=("$app_image" "$web_image")
+
+  # Scan the exact new images and retain each attempt, including failures.
+  scan_root="${HOME}/.local/state/barghsa-staging-queue/image-scans"
+  if [[ -n "$receipt" ]]; then
+    scan_root=$(dirname -- "$receipt")
+  fi
+  mkdir -p -- "$scan_root"
+  scan_dir=$(mktemp -d "$scan_root/image-scan.XXXXXXXX")
+  echo "Scanning release images; evidence: $scan_dir" >&2
+  bash scripts/check-runtime-images.sh "$scan_dir" "${images[@]}"
+
+  echo 'Transferring release images over SSH' >&2
+  docker save "${images[@]}" \
+    | gzip -1 | ssh "${ssh_args[@]}" "$remote" 'gzip -d | docker load'
 fi
-mkdir -p -- "$scan_root"
-scan_dir=$(mktemp -d "$scan_root/image-scan.XXXXXXXX")
-echo "Scanning release images; evidence: $scan_dir" >&2
-bash scripts/check-runtime-images.sh "$scan_dir" "${images[@]}"
-
-echo 'Transferring release images over SSH' >&2
-docker save "${images[@]}" \
-  | gzip -1 | ssh "${ssh_args[@]}" "$remote" 'gzip -d | docker load'
 
 ssh "${ssh_args[@]}" "$remote" 'mkdir -p /opt/barghsa/staging /etc/barghsa/staging /etc/nginx/snippets /etc/letsencrypt/renewal-hooks/deploy'
 scp "${scp_args[@]}" deploy/staging/compose.yml deploy/staging/postgres.conf deploy/staging/freshclam.conf deploy/staging/check-s3.py "$remote:/opt/barghsa/staging/"

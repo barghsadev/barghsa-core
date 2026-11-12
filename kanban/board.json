@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T07:32:25+00:00",
+  "updated": "2026-11-12T07:45:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4209,7 +4209,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             }
           ],
           "checks": [
@@ -4372,6 +4372,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -4757,7 +4765,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4921,6 +4929,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -5148,7 +5164,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             }
           ],
           "checks": [
@@ -5349,6 +5365,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -5645,7 +5669,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -5825,6 +5849,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -6086,7 +6118,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6249,6 +6281,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -6360,7 +6400,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6523,6 +6563,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -6876,7 +6924,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -7130,6 +7178,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -7291,7 +7347,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7454,6 +7510,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -7582,7 +7646,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -7768,6 +7832,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -10858,7 +10930,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             }
           ],
           "checks": [
@@ -10993,6 +11065,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -16469,7 +16549,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -16569,6 +16649,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -17855,7 +17943,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/development/ci.md",
@@ -18044,6 +18132,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -18117,7 +18213,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -18294,6 +18390,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -18373,7 +18477,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "package.json",
@@ -18618,6 +18722,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -18859,7 +18971,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -19005,6 +19117,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -19060,13 +19180,15 @@
           "deploy/staging/release.sh",
           "deploy/staging/test_notify_release.py",
           "deploy/staging/test_release_queue.py",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          ".github/workflows/ci.yml"
         ],
         "batches": [
           "release-0.6-production-quarantine-guard",
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-runtime-image-binding",
-          "release-0.6-staging-image-scans"
+          "release-0.6-staging-image-scans",
+          "release-0.6-portable-staging-images"
         ],
         "current_acceptance": null
       }
@@ -23370,7 +23492,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -23971,6 +24093,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -25260,7 +25390,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -25409,6 +25539,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -26307,7 +26445,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/development/ci.md",
@@ -26506,6 +26644,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -26584,7 +26730,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".prettierignore",
@@ -26759,6 +26905,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -26843,7 +26997,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".husky/commit-msg",
@@ -27070,6 +27224,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -27511,7 +27673,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -27793,6 +27955,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -28260,7 +28430,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -28969,6 +29139,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -29052,7 +29230,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".prettierignore",
@@ -29357,6 +29535,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -136469,7 +136655,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -137237,6 +137423,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -514641,7 +514835,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -515168,6 +515362,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -515325,7 +515527,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -516121,6 +516323,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -516274,7 +516484,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -516786,6 +516996,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -516905,7 +517123,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -517417,6 +517635,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -517536,7 +517762,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -518048,6 +518274,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -546807,7 +547041,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -547599,6 +547833,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -560232,7 +560474,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "Dockerfile.web",
@@ -560441,6 +560683,14 @@
                 "apps/web/server.js"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -560734,7 +560984,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -560917,6 +561167,14 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -560977,7 +561235,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "Dockerfile.web",
@@ -561186,6 +561444,14 @@
                 "apps/web/server.js"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -561617,7 +561883,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             }
           ],
           "checks": [
@@ -561781,6 +562047,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -567003,7 +567277,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -567148,6 +567422,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -569150,7 +569432,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -569259,6 +569541,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -572496,7 +572786,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -572859,6 +573149,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -574033,7 +574331,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".gitignore",
@@ -574270,6 +574568,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -574333,7 +574639,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".gitignore",
@@ -574529,6 +574835,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         },
@@ -574651,7 +574965,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -574814,6 +575128,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         },
@@ -574920,7 +575242,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -575065,6 +575387,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -575123,7 +575453,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "Dockerfile.base",
@@ -575310,6 +575640,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -575373,7 +575711,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".gitignore",
@@ -575569,6 +575907,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         },
@@ -575677,7 +576023,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -575812,6 +576158,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -576061,7 +576415,8 @@
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-runtime-image-binding",
           "release-0.6-runtime-log-channel-and-image",
-          "release-0.6-staging-image-scans"
+          "release-0.6-staging-image-scans",
+          "release-0.6-portable-staging-images"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -576694,7 +577049,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -576856,6 +577211,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -578612,7 +578975,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -578781,6 +579144,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -578829,7 +579200,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -578996,6 +579367,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -579043,7 +579422,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -579198,6 +579577,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -581672,7 +582059,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/development/ci.md",
@@ -581764,6 +582151,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -585407,7 +585802,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -585591,6 +585986,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -586099,7 +586502,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -586340,6 +586743,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -586399,7 +586810,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -586627,6 +587038,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -587148,7 +587567,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -587293,6 +587712,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -587345,7 +587772,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -587498,6 +587925,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -588440,7 +588875,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -588690,6 +589125,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -589716,7 +590159,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -589895,6 +590338,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -589943,7 +590394,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -590122,6 +590573,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -590172,7 +590631,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -590351,6 +590810,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -590398,7 +590865,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -590577,6 +591044,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -590643,7 +591118,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "docs/development/ci.md",
@@ -590709,6 +591184,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -590755,7 +591238,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -590926,6 +591409,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -590975,7 +591466,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/openapi.json",
@@ -591230,6 +591721,14 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -591375,7 +591874,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Run the release worker for an accepted v0.6.0 candidate. Verify the running image IDs against the worker's exact pre-transfer scan and SBOM receipts plus the retained stateful image receipts. Verify the migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
+        "Run the release worker for the accepted v0.6.0 candidate. Use exact prepared CI images if the local builder remains unavailable. Verify the running image IDs and scan/SBOM evidence for both application images and the retained stateful images, then verify migration, live readiness/liveness, private S3 and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -591410,7 +591909,8 @@
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-runtime-image-binding",
-          "release-0.6-staging-image-scans"
+          "release-0.6-staging-image-scans",
+          "release-0.6-portable-staging-images"
         ],
         "current_acceptance": null
       }
@@ -591461,7 +591961,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -591658,6 +592158,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -591705,7 +592213,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -591995,6 +592503,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -592058,7 +592574,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/README.md",
@@ -592329,6 +592845,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -593037,7 +593561,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -593226,6 +593750,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -593284,7 +593816,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -593473,6 +594005,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -598307,7 +598847,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -598540,6 +599080,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -604090,7 +604638,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "Dockerfile.base",
@@ -604098,11 +604646,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "c455b6f4d4bf7baf45894766b6cfe64041280e6d850b4d34b80ad20232e0ed01"
+              "sha256": "d838d4d7740f876034f2aaa9d09f5f58803106be772193e0b75353f9e2a81974"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -604418,6 +604966,16 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -606754,7 +607312,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "Dockerfile.base",
@@ -606778,7 +607336,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -606956,6 +607514,15 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -607156,7 +607723,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -607258,6 +607825,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -607374,7 +607949,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -607476,6 +608051,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -607530,7 +608113,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -607632,6 +608215,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -661500,7 +662091,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -662509,6 +663100,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -662653,7 +663252,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -663662,6 +664261,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -664492,7 +665099,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -665501,6 +666108,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -665584,7 +666199,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -665755,6 +666370,14 @@
                 "apps/web/e2e/critical-accessibility.ts"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         }
@@ -894297,15 +894920,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
+              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "c455b6f4d4bf7baf45894766b6cfe64041280e6d850b4d34b80ad20232e0ed01"
+              "sha256": "d838d4d7740f876034f2aaa9d09f5f58803106be772193e0b75353f9e2a81974"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "d9ab577257a606750515b8b5ee417136a2b6a5971edde8e68fcb26cd1c2d9f45"
+              "sha256": "61b46486819d65b096b8f01acd3c5bd707462d41b93369a406052da0d5ee4b60"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -894344,6 +894967,16 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         },
@@ -904139,7 +904772,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/openapi.json",
@@ -906295,7 +906928,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -906303,7 +906936,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -906315,7 +906948,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
+              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -908600,6 +909233,17 @@
                 "apps/api/src/crm/crm-verification.integration.test.ts"
               ],
               "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "presentation_renewals": [
@@ -909045,7 +909689,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": "apps/api/openapi.json",
@@ -911161,7 +911805,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+              "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -911169,7 +911813,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -911181,7 +911825,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
+              "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -913366,6 +914010,17 @@
                 "apps/api/src/crm/crm-verification.integration.test.ts"
               ],
               "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -915672,7 +916327,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "439a9cd8bfed0074364b23361f15096b0a61b6675b34df92ad186f95cb31addb"
+              "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
             },
             {
               "path": ".size-limit.json",
@@ -918044,6 +918699,14 @@
                 "apps/web/src/pages/AdminStorageConfig.tsx"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-portable-staging-images",
+              "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
             }
           ]
         },
@@ -918630,7 +919293,8 @@
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-staging-image-scans",
           "release-0.6-multipart-policy-validation",
-          "release-0.6-structured-log-fixtures"
+          "release-0.6-structured-log-fixtures",
+          "release-0.6-portable-staging-images"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1058423,6 +1059087,178 @@
         {
           "file": "native/structured-log-fixtures.log",
           "sha256": "97aa36ab0ef6468b30825a79d8989204735972433f1532791ed44b896e12222f"
+        }
+      ]
+    },
+    "release-0.6-portable-staging-images": {
+      "batch": "release-0.6-portable-staging-images",
+      "base_commit": "f8d9747957a3015836788330c9dbd2307d09c22c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "22ed50769b169eeb26eee5aa3303781ea1cecd326ea23abb1e37a792c9d5c300"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "19b3a311235abb72c347b9f099d26b096403b16f9b0c442d95efcb5be62f6517"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "f83d46a16bea24fb277da37b36c26fe56c49d3286274321a154cb6f1f8d95628"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "d838d4d7740f876034f2aaa9d09f5f58803106be772193e0b75353f9e2a81974"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "61b46486819d65b096b8f01acd3c5bd707462d41b93369a406052da0d5ee4b60"
+        }
+      ],
+      "checks": [
+        "The existing manual CI workflow can retain the exact scanned Linux AMD64 app and web images as an opt-in artifact after its strict image and license checks. The archive includes exact checksummed vulnerability and SBOM receipts and the source-matched license report.",
+        "Enqueue pins the prepared bundle manifest. The detached worker uses the local archive without Docker or CI access, verifies source, archive and report hashes, then the destination rechecks archive bytes before loading. Existing migration, running-image, health and Telegram receipt checks apply.",
+        "The earlier notifier fixture lacked the scanner introduced by the staging-image scan batch. The repaired fixture supplies checksummed scan evidence and preserves all acceptance, first-start, transfer, runtime receipt and announcement assertions. It also checks scanner rejection and archive mutation after local verification.",
+        "All 19 release queue and 15 notifier tests passed. The queue tests reject unresolved license evidence, source mismatch, archive tampering and replacing an already queued bundle. The notifier fixtures verify no send after rejected scans or corrupted transfers.",
+        "Hosted run 43177364594 used the exact packaging and server load commands with two disposable Docker images. It rejected a corrupted archive before any image appeared, restored both Linux AMD64 tags and matching image IDs from the original archive, and read back the exact source revision. The downloaded fixture manifest, archive and both report hashes were verified again.",
+        "Actionlint, ShellCheck, Bash syntax, changed-file Prettier and whitespace checks passed."
+      ],
+      "limitations": [
+        "The isolated Docker run used fixture images and deliberately synthetic scan and license reports. It proves byte verification and Docker loading only. The actual application bundle requires exact successful strict CI and package dispositions.",
+        "v0.6.0 staging remains pending. The compatible staging PostgreSQL replacement, retained scanner evidence and actual Telegram receipts remain separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-portable-staging-images",
+      "execution_receipts": [
+        {
+          "file": "diagnostic-snapshot.json",
+          "sha256": "db411933f82639b02245afecaa4fb9c3ce7d32df2a18ee17ba3821b385c4a49d"
+        },
+        {
+          "file": "verify-v06-portable-staging-images.yml",
+          "sha256": "42d2ab37e244a502936633e876d97a3d02bed05d4e2fa4cfdb7be79d55d68bd7"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "c89a43d4362a27331f4a5707fbeba0bb3da9e8b9a046afa5b19d3bd6e4619bea"
+        },
+        {
+          "file": "native/native-bundle-check.json",
+          "sha256": "19251d6904fa2472f939364091c6c1be42f6be8f720e8f7c054a185a7ef5c670"
+        },
+        {
+          "file": "native/staging-image-bundle/bundle.json",
+          "sha256": "fa4b4ff38b8f643b85947f54a98d35a7ca4121cb8d4ce44a2d49c436aedb49e8"
+        },
+        {
+          "file": "native/staging-image-bundle/images.tar.gz",
+          "sha256": "ac4fd932e6da0c1f085b1a83a50faaa526f5211bdd655f54adf9114048016ce3"
+        },
+        {
+          "file": "queue-tests.log",
+          "sha256": "ba27c0190a2111d456ecb1d2ca673646a006f55177dc1f785c97eb1fa7d3ff28"
+        },
+        {
+          "file": "notifier-tests.log",
+          "sha256": "eecae0594911ef0190cc912005dc745030e5948d182b3b270cb4471335198e28"
         }
       ]
     }

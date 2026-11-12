@@ -7,6 +7,11 @@ on:
     # Create a preflight branch directly at the immutable candidate SHA.
     branches: [main, 'codex/preflight/**']
   workflow_dispatch:
+    inputs:
+      package_staging_images:
+        description: Retain the exact scanned staging app and web images for deployment
+        type: boolean
+        default: false
 
 env:
   NODE_VERSION: '24'
@@ -106,6 +111,39 @@ jobs:
           path: ${{ runner.temp }}/runtime-image-scan
           if-no-files-found: warn
           retention-days: 14
+      - name: Package verified staging application images
+        if: github.event_name == 'workflow_dispatch' && inputs.package_staging_images
+        shell: bash
+        run: |
+          umask 077
+          bundle="$RUNNER_TEMP/staging-image-bundle"
+          scans="$RUNNER_TEMP/runtime-image-scan"
+          mkdir -- "$bundle"
+          cp "$scans"/{1,2}-{image.json,sbom.cdx.json,vulnerabilities.json} \
+            "$scans/release-licenses.json" "$bundle/"
+          ids=()
+          tags=()
+          for scope in app web; do
+            source="barghsa-ci-$scope:$GITHUB_SHA"
+            id=$(docker image inspect --format '{{if and (eq .Os "linux") (eq .Architecture "amd64")}}{{.Id}}{{end}}' "$source")
+            [[ "$id" =~ ^sha256:[a-f0-9]{64}$ ]]
+            tag="barghsa-$scope:vps-$GITHUB_SHA-${id#sha256:}"
+            docker image tag "$id" "$tag"
+            ids+=("$id")
+            tags+=("$tag")
+          done
+          docker save "${tags[@]}" | gzip -1 > "$bundle/images.tar.gz"
+          python3 deploy/staging/release-queue.py prepare-image-bundle \
+            "$bundle" "$GITHUB_SHA" "${ids[@]}"
+      - name: Upload verified staging application images
+        if: github.event_name == 'workflow_dispatch' && inputs.package_staging_images
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-image-bundle
+          path: ${{ runner.temp }}/staging-image-bundle
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 3
 
   quality:
     name: Check build and application integrity

@@ -214,6 +214,36 @@ Docker image ID is the manifest or index digest. Keep the verified chain with
 the scan receipt. Upgrade a retained stateful image through its backup and
 restore procedure before release when its exact scan fails the gate.
 
+### Reuse an accepted candidate's scanned images
+
+For an initialized staging installation, retain the exact app and web images
+when running the candidate's manual CI gates. This path uses the existing
+database and scanner images. The opt-in artifact is built only after the
+strict image and license checks pass.
+
+```sh
+gh workflow run ci.yml --ref "$CANDIDATE_REF" -f package_staging_images=true
+gh run view "$CI_RUN" --json headSha,event,status,conclusion,jobs
+gh run download "$CI_RUN" -n staging-image-bundle --dir "$PROTECTED_BUNDLE_DIR"
+```
+
+Before publishing, confirm the run is the successful manual CI run for the
+exact candidate SHA. Download into a new private directory outside the
+checkout and retain it until the deployment and its receipts are verified.
+After the accepted commit is pushed and read back, include the directory in
+the usual queue command.
+
+```sh
+python3 deploy/staging/release-queue.py enqueue --commit "$CANDIDATE_SHA" \
+  --image-bundle "$PROTECTED_BUNDLE_DIR"
+```
+
+The worker verifies the selected manifest, archive and image evidence without
+using local Docker or contacting CI. The server verifies the transferred
+archive before loading it. The existing health, migration, image readback and
+Telegram checks apply. Keep the retained database and scanner scan receipts
+with the same release evidence.
+
 Redis and object-store images are pinned by digest. Already installed exact
 images are reused with Compose's `--policy missing`; missing images are still
 pulled and a failed pull blocks the release.
