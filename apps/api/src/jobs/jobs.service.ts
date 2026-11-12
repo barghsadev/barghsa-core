@@ -5,6 +5,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import type { PoolClient } from 'pg';
 
 export interface JobStatus {
   id: string;
@@ -20,7 +21,11 @@ export interface JobStatus {
 
 const publicFields = `id,type,status,progress_pct,result_url,error_message,
   created_at,started_at,completed_at`;
+const ownerScope = `created_by=$2 AND operating_context=$3
+  AND ($3<>'staff' OR EXISTS (SELECT 1 FROM users u WHERE u.user_id=$2
+    AND (u.is_staff OR u.is_admin OR EXISTS (SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id))))`;
 const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+type JobActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken' | 'operatingContext'>;
 
 /** Submit work from an authorized product service; payload is never returned to the browser. */
 @Injectable()
@@ -44,37 +49,24 @@ export class JobService {
     return id;
   }
 
-  async get(id: string, userId: string, operatingContext: OperatingContext): Promise<JobStatus> {
-    if (!validId.test(id)) throw new NotFoundException();
-    const result = await getDbPool().query<JobStatus>(
-      `SELECT ${publicFields} FROM async_jobs
-       WHERE id=$1 AND created_by=$2 AND operating_context=$3`,
-      [id, userId, operatingContext]
-    );
-    if (!result.rows[0]) throw new NotFoundException();
-    return result.rows[0];
+  async get(id: string, actor: JobActor): Promise<JobStatus> {
+    return this.withJobSession(id, actor, async (client) => {
+      const result = await client.query<JobStatus>(
+        `SELECT ${publicFields} FROM async_jobs
+         WHERE id=$1 AND ${ownerScope}`,
+        [id, actor.userId, actor.operatingContext]
+      );
+      if (!result.rows[0]) throw new NotFoundException();
+      return result.rows[0];
+    });
   }
 
-  async retry(
-    id: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken' | 'operatingContext'>
-  ): Promise<JobStatus> {
-    if (!validId.test(id)) throw new NotFoundException();
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      const users = await client.query(
-        'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR UPDATE',
-        [actor.userId]
-      );
-      const user = users.rows[0];
-      if (!user || user.disabled_at || user.activation_token)
-        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-      await requireCurrentSession(client, actor);
+  async retry(id: string, actor: JobActor): Promise<JobStatus> {
+    return this.withJobSession(id, actor, async (client) => {
       const result = await client.query<JobStatus>(
         `UPDATE async_jobs SET status='queued',progress_pct=0,result_url=NULL,
             error_message=NULL,attempts=0,started_at=NULL,completed_at=NULL
-         WHERE id=$1 AND created_by=$2 AND operating_context=$3 AND status='failed'
+           WHERE id=$1 AND ${ownerScope} AND status='failed'
          RETURNING ${publicFields}`,
         [id, actor.userId, actor.operatingContext]
       );
@@ -91,8 +83,31 @@ export class JobService {
           correlationIdStorage.getStore() ?? null,
         ]
       );
-      await client.query('COMMIT');
       return result.rows[0];
+    });
+  }
+
+  private async withJobSession<T>(
+    id: string,
+    actor: JobActor,
+    operation: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    if (!validId.test(id)) throw new NotFoundException();
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const users = await client.query(
+        'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR NO KEY UPDATE',
+        [actor.userId]
+      );
+      const user = users.rows[0];
+      if (!user || user.disabled_at || user.activation_token)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, actor);
+      const result = await operation(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => undefined);
       throw error;

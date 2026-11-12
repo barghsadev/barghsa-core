@@ -15,13 +15,13 @@ export class JobsController {
   @Get(':id')
   @ApiOperation({ summary: 'Read your async job status' })
   get(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    return this.jobs.get(id, req.session.userId, req.session.operatingContext);
+    return this.jobs.get(id, req.session);
   }
 
   @Get(':id/status')
   @ApiOperation({ summary: 'Read your async job status' })
   status(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    return this.jobs.get(id, req.session.userId, req.session.operatingContext);
+    return this.jobs.get(id, req.session);
   }
 
   @Get(':id/result')
@@ -35,7 +35,7 @@ export class JobsController {
     @Req() req: AuthenticatedRequest,
     @Res() res: Response
   ): Promise<void> {
-    const job = await this.jobs.get(id, req.session.userId, req.session.operatingContext);
+    const job = await this.jobs.get(id, req.session);
     const resultUrl = relativeLinkRoute({ link_route: job.result_url });
     if (job.status === 'completed' && resultUrl) {
       res.redirect(302, resultUrl);

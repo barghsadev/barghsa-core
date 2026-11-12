@@ -10,6 +10,11 @@ Unknown types stay queued until their handler is deployed. Interrupted leases ca
 
 `GET /api/jobs/:id` and its `/status` alias return owner- and operating-context-scoped status, progress and timestamps. `GET /api/jobs/:id/result` returns 202 while active, 409 after failure, 302 for a completed safe result path, or 204 when no safe result exists. `POST /api/jobs/:id/retry` requires session and CSRF proof. Result paths use the existing same-origin path validator in the worker, API redirect and browser parser; encoded host escapes are refused.
 
+Job reads and retries hold current account and session authority until the
+response or commit. Staff jobs also require current staff access. If a session
+expires while a request waits, the API withholds status and result locations,
+and a retry rolls back with its audit record.
+
 Mount `JobProgress` with the returned ID. It polls every two seconds while queued or processing, stops on terminal state, cancels stale reads when the ID changes, and offers loading recovery, failed-job retry and the completed result link. Supply an estimated duration only when the operation can provide one; otherwise the component states that an estimate is unavailable. Persian and English labels and accessible progress/status announcements are shared with the UI package.
 
 The current worker registers the profile-export handler, and the profile lifecycle screen uses this component. Document scanning, knowledge processing and model tests have their own durable queues and status flows. Document generation and media-processing integrations must use their approved workflow when those product operations are added; their presence is not inferred from the generic framework.

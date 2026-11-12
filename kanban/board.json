@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T16:30:37+00:00",
+  "updated": "2026-11-12T16:35:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -258350,7 +258350,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -259240,6 +259240,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -259524,7 +259532,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -260414,6 +260422,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -260588,7 +260604,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -261724,6 +261740,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -261943,7 +261967,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -264039,6 +264063,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -264303,7 +264335,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -266399,6 +266431,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -266727,7 +266767,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -267617,6 +267657,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -603987,11 +604035,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -604003,7 +604051,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -604091,7 +604139,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -604405,6 +604453,17 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -604519,11 +604578,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -604535,7 +604594,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -604623,7 +604682,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -604961,6 +605020,17 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -605075,11 +605145,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -605091,7 +605161,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -605179,7 +605249,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -605493,6 +605563,17 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -605608,11 +605689,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -605624,7 +605705,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -605712,7 +605793,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -606050,6 +606131,17 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -618935,8 +619027,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, and six profile privacy request, export and closure method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with account-owned job reads, result redirects and retry, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, and four account-owned background-job method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with authenticated account preferences and identity resource loaders, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -619009,6 +619101,9 @@
           "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
           "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
           "apps/api/src/invoice/manual-invoice.service.ts",
+          "apps/api/src/jobs/jobs-http.integration.test.ts",
+          "apps/api/src/jobs/jobs.controller.ts",
+          "apps/api/src/jobs/jobs.service.ts",
           "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
           "apps/api/src/notifications/notification-center.controller.ts",
           "apps/api/src/notifications/notification-center.service.ts",
@@ -619115,7 +619210,8 @@
           "release-0.6-notification-history-corrections",
           "release-0.6-inbox-session-authority",
           "release-0.6-ticket-attachment-authority",
-          "release-0.6-profile-export-authority"
+          "release-0.6-profile-export-authority",
+          "release-0.6-account-job-authority"
         ],
         "current_acceptance": null
       }
@@ -981927,11 +982023,11 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -981943,7 +982039,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/knowledge-bases/index.ts",
@@ -983575,7 +983671,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -986222,6 +986318,17 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "presentation_renewals": [
@@ -987199,11 +987306,11 @@
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
-              "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+              "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
             },
             {
               "path": "apps/api/src/jobs/jobs.controller.ts",
-              "sha256": "2bd20c7e460552a752e25915a20823b6649e22aa2302c96ea12e1660c4a97b6e"
+              "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
             },
             {
               "path": "apps/api/src/jobs/jobs.module.ts",
@@ -987215,7 +987322,7 @@
             },
             {
               "path": "apps/api/src/jobs/jobs.service.ts",
-              "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+              "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
             },
             {
               "path": "apps/api/src/knowledge-bases/index.ts",
@@ -988823,7 +988930,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+              "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -991370,6 +991477,17 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-job-authority",
+              "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+              "paths": [
+                "apps/api/src/jobs/jobs-http.integration.test.ts",
+                "apps/api/src/jobs/jobs.controller.ts",
+                "apps/api/src/jobs/jobs.service.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1153257,6 +1153375,145 @@
         {
           "file": "profile-privacy-routes.json",
           "sha256": "6ab1d9895c8e19d1433562f588be370e472491c0eee29e175256539848b798c3"
+        }
+      ]
+    },
+    "release-0.6-account-job-authority": {
+      "batch": "release-0.6-account-job-authority",
+      "base_commit": "0420e815614baae5c263486640d3c692caedce2d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/jobs/jobs-http.integration.test.ts",
+        "apps/api/src/jobs/jobs.controller.ts",
+        "apps/api/src/jobs/jobs.service.ts",
+        "docs/operations/async-jobs.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
+          "sha256": "83e0b75eea675cec5a8924f799a3605083f0ea2c99e2e8cdb9d946572a7b7d9e"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs.controller.ts",
+          "sha256": "20567ddabc4612f558a79dd21e624645a008cd5a9a646cce43a993fd120523fd"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs.service.test.ts",
+          "sha256": "c58bed1223475376b3f1a72c213e3386233ec8ed6699a002f3e4ab4cf0d59e45"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs.service.ts",
+          "sha256": "7b02f00dd749d6b8e8b15ba034251ab968e8d3531b45257d3a8e79715d0fd646"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "c312bd43444195a65c9da9384ad7825ac040fe2395006d51322ffd8bb1786d36"
+        },
+        {
+          "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
+          "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
+        },
+        {
+          "path": "apps/web/src/components/jobs/JobProgress.tsx",
+          "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
+        },
+        {
+          "path": "apps/web/src/lib/jobs.test.ts",
+          "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
+        },
+        {
+          "path": "apps/web/src/lib/jobs.ts",
+          "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
+        },
+        {
+          "path": "apps/worker/src/jobs/async-runner.ts",
+          "sha256": "d4e647598a777f06de85aa513aacc755b0000966a944ad705a6cdbec3aa662b7"
+        },
+        {
+          "path": "docs/operations/async-jobs.md",
+          "sha256": "8c3c3609bbf7916d610c1ebf671d2a7fa56e5f49fc7ff4c00e239fdc43207980"
+        },
+        {
+          "path": "packages/shared/src/notifications/navigation.ts",
+          "sha256": "9c9421c69f56be8a7de6d88427c600d3c4cf3f4cb7d113346b3df7977b4b6eed"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed four account-owned background-job method/path pairs for status, status alias, result and retry. The API exposes no job payload. Result redirects retain the same-origin validator and private no-store response.",
+        "All reads and decisions lock the account then revalidate the session. Current staff eligibility is required to load or retry a staff-owned job. Native blocked reads withhold private job information and redirect locations after expiry.",
+        "Retry remains scoped to the owner, current context and failed status. CSRF, locked expiry and audit-failure checks passed. An additional native case expires the session during the audit and verifies both the retry and audit roll back.",
+        "16 targeted API and 12 web caller tests passed. API build, typecheck, generated contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-account-job-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "3918db24704e3213c7ecbfbc38cf30f7b3aa8a3b953f7bc36b5651c8cea50cad"
+        },
+        {
+          "file": "web.log",
+          "sha256": "3fbec3e04496cc555188bfe5da9fbfc534ccc7d215de463493b9f786408cf371"
+        },
+        {
+          "file": "types.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "1e998e15a9967d06348a966c34662ba1ac02293ffa13d587d4b21ecbbcf389fd"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "75651b22f7e7d3b194ac3a2f63bf81cadf3438041559e4474aaa2a12bac673cc"
+        },
+        {
+          "file": "account-job-routes.json",
+          "sha256": "1fc97d756f64e61eaab66b7f1aedcc273eaada53d11620a7aad2972dff55ba0a"
         }
       ]
     }
