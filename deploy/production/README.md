@@ -231,6 +231,26 @@ the ingress and reconcile the receipt before attempting another ramp. Use
 current production topology and telemetry in the launch rehearsal. The
 isolated tests use synthetic traffic and metrics.
 
+### Rehearse browser sign-in
+
+Run the native browser smoke with the candidate's compiled web and API.
+It creates a disposable PostgreSQL database and reads the one-time code
+from that database's encrypted delivery outbox. The browser submits the
+normal login and verification forms, reads the owned dashboard and wallet,
+and signs out. The fixture checks that the API revoked the session.
+
+```sh
+pnpm exec turbo run build --filter=@barghsa/web --filter=@barghsa/api --filter=@barghsa/worker
+BARGHSA_TEST_PREBUILT=1 BARGHSA_TEST_POSTGRES_COMPOSE=1 \
+  BARGHSA_BROWSER_FIXTURE_LOOPBACK=1 BARGHSA_NATIVE_ROLLOUT_SMOKE=1 \
+  node scripts/run-production-browser.mjs e2e/rollout-smoke.spec.ts --project=chromium
+```
+
+Retain the passing case and its synthetic Persian dashboard capture. Repeat
+the customer sign-in on the exact staged candidate with the authorized
+synthetic account and its verified contact. Record the staged release SHA,
+rendered dashboard, wallet scope and logout result with the rollout receipt.
+
 ## Grafana deployment markers
 
 Run the Grafana annotation step after the guarded rollout completes. Check out
