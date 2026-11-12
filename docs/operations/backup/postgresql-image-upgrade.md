@@ -29,6 +29,16 @@ Run the packaged backup tools as `postgres` during image verification. The
 first trial build inherited owner-only file modes from its private archive,
 which prevented that user from loading the backup modules.
 
+From the reviewed checkout, build a new staging tag and scan the resulting
+image. The build uses the existing backup image for the privilege-drop binary,
+its notices and the PostGIS initialization scripts. CI builds and inventories
+both database images under separate scopes.
+
+```bash
+bash deploy/staging/build-postgres-image.sh barghsa-postgres:vps-ubuntu-rehearsal
+bash scripts/check-runtime-images.sh /secure/pg-image-scan barghsa-postgres:vps-ubuntu-rehearsal
+```
+
 Keep the original cluster stopped and protected until the recovery window closes. The previous volume can serve as a rollback while no new writes have been accepted. After new writes, switching back could lose data; stop traffic and use the approved recovery or roll-forward procedure. Rehearse backup and WAL recovery independently on the new operating system. See the [PostgreSQL restore runbook](postgresql-restore-runbook.md) and [PostgreSQL collation guidance](https://www.postgresql.org/docs/16/sql-altercollation.html).
 
 The normal application release retains the active database image. The production application uses a separate PostgreSQL service; this staging image rehearsal does not authorize a production database change.

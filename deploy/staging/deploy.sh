@@ -35,7 +35,7 @@ if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.en
 else
   postgres_image="barghsa-postgres:$tag"
   clamav_image="barghsa-clamav:$tag"
-  docker build --platform linux/amd64 -f packages/db/scripts/backup/Dockerfile -t "$postgres_image" .
+  bash deploy/staging/build-postgres-image.sh "$postgres_image"
   docker build --platform linux/amd64 -f deploy/clamav/Dockerfile -t "$clamav_image" .
   images+=("$postgres_image" "$clamav_image")
 fi

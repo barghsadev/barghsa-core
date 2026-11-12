@@ -1,0 +1,76 @@
+ARG BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:local
+FROM ${BACKUP_HELPERS_IMAGE} AS helpers
+
+# Retain the glibc collation used by the staging databases.
+FROM ubuntu:24.04@sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5 AS runtime
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends postgresql-common \
+    && mkdir -p /etc/postgresql-common/createcluster.d \
+    && printf 'create_main_cluster = false\n' > /etc/postgresql-common/createcluster.d/00-barghsa.conf \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       ca-certificates gnupg locales postgresql-16 postgresql-client-16 python3 \
+    && localedef -i en_US -f UTF-8 en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+ENV PATH="/opt/backup-venv/bin:/usr/lib/postgresql/16/bin:${PATH}" \
+    PGDATA=/var/lib/postgresql/data LANG=en_US.utf8
+
+FROM runtime AS build
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       curl gcc libc6-dev make postgresql-server-dev-16 python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+RUN curl --fail --silent --show-error --location --retry 2 --max-time 90 \
+      https://codeload.github.com/pgvector/pgvector/tar.gz/8ee86c96f0fd72390f890aa8a336fda6d3ab4c6c \
+      --output /tmp/pgvector.tar.gz \
+    && echo 'd076a3098010905fd60256649327809651f6288327db6413f0938305f62ea299  /tmp/pgvector.tar.gz' | sha256sum -c - \
+    && mkdir /tmp/pgvector && tar -xzf /tmp/pgvector.tar.gz -C /tmp/pgvector --strip-components=1 \
+    && cd /tmp/pgvector && make -j2 OPTFLAGS= with_llvm=no \
+    && make install DESTDIR=/out with_llvm=no \
+    && install -D -m 0644 LICENSE /out/usr/local/share/licenses/pgvector/LICENSE
+COPY packages/db/scripts/backup/requirements.txt /tmp/requirements.txt
+RUN python3 -m venv /tmp/pip-venv && python3 -m venv --without-pip /opt/backup-venv \
+    && /tmp/pip-venv/bin/pip --python /opt/backup-venv install --disable-pip-version-check \
+       --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/requirements.txt
+
+# Hashes for the PostGIS packages come from the signed PGDG Noble archive index.
+WORKDIR /tmp/postgres-assets
+RUN postgres_source=https://raw.githubusercontent.com/docker-library/postgres/9d15534160ade17f2b6c455a39ee967c49b1937d \
+    && postgis_source=https://apt-archive.postgresql.org/pub/repos/apt/pool/main/p/postgis \
+    && curl --fail --silent --show-error --location --retry 2 --max-time 90 \
+       "$postgres_source/16/bookworm/docker-entrypoint.sh" -o docker-entrypoint.sh \
+    && curl --fail --silent --show-error --location --retry 2 --max-time 90 \
+       "$postgres_source/LICENSE" -o LICENSE \
+    && curl --fail --silent --show-error --location --retry 2 --max-time 90 \
+       "$postgis_source/postgresql-16-postgis-3_3.6.4+dfsg-2.pgdg24.04+1_amd64.deb" -o postgis.deb \
+    && curl --fail --silent --show-error --location --retry 2 --max-time 90 \
+       "$postgis_source/postgresql-16-postgis-3-scripts_3.6.4+dfsg-2.pgdg24.04+1_all.deb" -o postgis-scripts.deb \
+    && printf '%s\n' \
+       '9c440299ae04a0a79d55b8bf03307036d890a40979d2fb698073c9050d4b20a5  docker-entrypoint.sh' \
+       '87ffd2c45e3f90cfa3407b5c40ef8333e87c3e875e4895f8b64df758198deafc  LICENSE' \
+       'e2c4cc4b6756c3de39ef74c7740becde529a4c73c82c34189e4606b5cedd12dc  postgis.deb' \
+       '6ddea23b1acad8d43edf57ed9dcadb3b0ef0daa5cf9c54b8ea6f5805f0b5cf5f  postgis-scripts.deb' \
+       | sha256sum -c - \
+    && chmod 0755 docker-entrypoint.sh
+
+FROM runtime
+COPY --from=build /out/ /
+COPY --from=build /opt/backup-venv /opt/backup-venv
+COPY --from=build /tmp/postgres-assets/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --from=build /tmp/postgres-assets/LICENSE /usr/local/share/licenses/postgres-entrypoint/LICENSE
+COPY --from=build /tmp/postgres-assets/*.deb /tmp/postgis/
+COPY --from=helpers /usr/local/bin/gosu /usr/local/bin/gosu
+COPY --from=helpers /usr/local/share/licenses/gosu/ /usr/local/share/licenses/gosu/
+COPY --from=helpers /docker-entrypoint-initdb.d/10_postgis.sh /docker-entrypoint-initdb.d/
+COPY --from=helpers /usr/local/bin/update-postgis.sh /usr/local/bin/
+COPY packages/db/scripts/backup/ /opt/backup/
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends /tmp/postgis/*.deb \
+    && rm -rf /tmp/postgis /var/lib/apt/lists/* \
+    && test "$(dpkg-query -W -f='${Version}' postgresql-16-postgis-3)" = '3.6.4+dfsg-2.pgdg24.04+1' \
+    && test -r "$(pg_config --sharedir)/extension/postgis.control" \
+    && mkdir -p /var/run/postgresql && chown postgres:postgres /var/run/postgresql \
+    && chmod -R a+rX /opt/backup \
+    && cd /opt/backup \
+    && gosu postgres test -x ./backup-pg.sh \
+    && gosu postgres python3 -B -c 'import boto3, physical_backup; assert boto3.__version__ == "1.43.93"'
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["postgres"]

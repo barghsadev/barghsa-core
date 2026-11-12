@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T02:33:51+00:00",
+  "updated": "2026-11-12T02:44:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4153,7 +4153,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             }
           ],
           "checks": [
@@ -4258,6 +4258,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -4643,7 +4651,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4759,6 +4767,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -4978,7 +4994,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             }
           ],
           "checks": [
@@ -5107,6 +5123,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -5403,7 +5427,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -5535,6 +5559,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -5787,7 +5819,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5902,6 +5934,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -6013,7 +6053,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6128,6 +6168,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -6473,7 +6521,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6662,6 +6710,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -6823,7 +6879,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6938,6 +6994,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -7066,7 +7130,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -7210,6 +7274,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -9682,7 +9754,13 @@
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md"
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
@@ -9690,7 +9768,8 @@
           "release-0.6-multipart-upgrade-preflight-fix",
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
-          "release-0.6-postgres-compatible-runtime"
+          "release-0.6-postgres-compatible-runtime",
+          "release-0.6-postgres-staging-recipe"
         ],
         "current_acceptance": null
       }
@@ -10147,7 +10226,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             }
           ],
           "checks": [
@@ -10250,6 +10329,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -16612,7 +16699,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/development/ci.md",
@@ -16744,6 +16831,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -16817,7 +16912,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -16962,6 +17057,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -17041,7 +17144,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "package.json",
@@ -17198,6 +17301,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -17438,7 +17549,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -17552,6 +17663,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -21471,7 +21590,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -22013,6 +22132,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -24006,7 +24133,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/development/ci.md",
@@ -24138,6 +24265,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -24216,7 +24351,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".prettierignore",
@@ -24333,6 +24468,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -24417,7 +24560,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".husky/commit-msg",
@@ -24577,6 +24720,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -25687,7 +25838,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -26313,6 +26464,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -26396,7 +26555,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".prettierignore",
@@ -26591,6 +26750,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -493744,7 +493911,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -494212,6 +494379,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -494369,7 +494544,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -495099,6 +495274,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -495252,7 +495435,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -495706,6 +495889,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -495825,7 +496016,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -496279,6 +496470,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -496398,7 +496597,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -496852,6 +497051,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -536122,7 +536329,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "Dockerfile.web",
@@ -536291,6 +536498,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -536566,7 +536781,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -536708,6 +536923,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -536768,7 +536991,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "Dockerfile.web",
@@ -536937,6 +537160,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -537324,7 +537555,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             }
           ],
           "checks": [
@@ -537447,6 +537678,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -541989,7 +542228,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -542102,6 +542341,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -546898,7 +547145,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -547189,6 +547436,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -548270,7 +548525,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".gitignore",
@@ -548451,6 +548706,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -548514,7 +548777,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".gitignore",
@@ -548678,6 +548941,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         },
@@ -548800,7 +549071,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -548907,6 +549178,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         },
@@ -549013,7 +549292,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -549126,6 +549405,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -549184,7 +549471,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "Dockerfile.base",
@@ -549331,6 +549618,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -549394,7 +549689,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".gitignore",
@@ -549558,6 +549853,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         },
@@ -549666,7 +549969,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -549769,6 +550072,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -549790,6 +550101,7 @@
       "launch_required": true,
       "remaining": [
         "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
+        "Review the separate postgres-staging scope from the exact five-image protected preflight. Retain the existing unsigned review packet for its matching four scopes and browser evidence. The new scope requires separate exact package dispositions.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -549797,7 +550109,15 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          ".github/workflows/ci.yml",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-font-source-provenance",
@@ -549813,7 +550133,8 @@
           "release-0.6-license-review-roles",
           "release-0.6-integrity-requires-tests",
           "release-0.6-pdf-preflight-and-license-readback",
-          "release-0.6-license-handoff-current"
+          "release-0.6-license-handoff-current",
+          "release-0.6-postgres-staging-recipe"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -549935,7 +550256,8 @@
         "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests.",
         "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
         "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
-        "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions."
+        "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
+        "Verify the new fifth scan receipt for the repository Ubuntu image. Match the exact candidate Docker ID and production registry artifacts before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -549945,7 +550267,14 @@
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md"
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          ".github/workflows/ci.yml",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
@@ -549953,7 +550282,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
-          "release-0.6-postgres-compatible-runtime"
+          "release-0.6-postgres-compatible-runtime",
+          "release-0.6-postgres-staging-recipe"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -550537,7 +550867,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -550659,6 +550989,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -552248,7 +552586,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -552352,6 +552690,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -552400,7 +552746,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -552535,6 +552881,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -552582,7 +552936,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -552705,6 +553059,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -554816,7 +555178,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/development/ci.md",
@@ -554833,6 +555195,16 @@
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
               "sha256": "b35609327e50a2318eb7e72af2db0c12e19f07b51740303383463159dd219d2c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -557976,7 +558348,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -558118,6 +558490,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -558559,7 +558939,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -558741,6 +559121,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -558800,7 +559188,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -558969,6 +559357,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -559450,7 +559846,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -559563,6 +559959,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -559615,7 +560019,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -559736,6 +560140,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -560608,7 +561020,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -560801,6 +561213,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -561737,7 +562157,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -561884,6 +562304,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -561932,7 +562360,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -562079,6 +562507,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -562129,7 +562565,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -562276,6 +562712,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -562323,7 +562767,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -562470,6 +562914,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -562536,7 +562988,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "docs/development/ci.md",
@@ -562561,6 +563013,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -562607,7 +563067,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -562746,6 +563206,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -562795,7 +563263,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/openapi.json",
@@ -562959,6 +563427,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -563037,13 +563513,23 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks."
+        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks.",
+        "Verify the exact source run of the additional Ubuntu staging image build, scan and license inventory with the existing four image gates."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
+        ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-private-api-monitoring",
@@ -563052,7 +563538,8 @@
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
           "release-0.6-durable-multipart-operations",
-          "release-0.6-exact-storage-receipt-locator"
+          "release-0.6-exact-storage-receipt-locator",
+          "release-0.6-postgres-staging-recipe"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -563090,7 +563577,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reproduce the scanned Ubuntu 24.04 PostgreSQL 16.15/PostGIS 3.6.4 staging candidate from the repository. The exact trial passed the security scan and matched the application and retained QA databases, including 1,312 text columns and the Unicode fixture. Complete the backup and PITR checks, review its distribution inventory, verify the packaged migrator and readiness against a restored candidate, then retain an independently verified cutover backup and rollback proof.",
+        "Verify the protected CI receipt for the repository Ubuntu staging image and refresh the exact package review. The Ubuntu trial matched both staging databases and passed 32 isolated physical backup, WAL and PITR tests as postgres after correcting file modes. Verify the packaged migrator and readiness against the restored candidate, then retain an independently verified cutover backup and rollback proof.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
@@ -563101,7 +563588,14 @@
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md"
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          ".github/workflows/ci.yml",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
@@ -563111,7 +563605,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
-          "release-0.6-postgres-compatible-runtime"
+          "release-0.6-postgres-compatible-runtime",
+          "release-0.6-postgres-staging-recipe"
         ],
         "current_acceptance": null
       }
@@ -563162,7 +563657,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -563317,6 +563812,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -563364,7 +563867,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -563581,6 +564084,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -563644,7 +564155,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/README.md",
@@ -563866,6 +564377,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -564410,7 +564929,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -564557,6 +565076,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -564615,7 +565142,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -564762,6 +565289,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -568594,7 +569129,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -568762,6 +569297,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -573877,7 +574420,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "Dockerfile.base",
@@ -573885,11 +574428,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e9597fab16cc85f6ce0876576fd77f2362d03343489a2000292340c5d0d23780"
+              "sha256": "8dd863acc32842722027dfdb79896f4ec9672521d416b32626b641d4d9aef6f4"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -574092,6 +574635,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -576272,7 +576825,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "Dockerfile.base",
@@ -576296,7 +576849,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -576417,6 +576970,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -576609,7 +577171,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -576671,6 +577233,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -576779,7 +577349,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -576841,6 +577411,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -576895,7 +577473,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -576957,6 +577535,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -627561,7 +628147,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -628505,6 +629091,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -628649,7 +629243,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -629593,6 +630187,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -630371,7 +630973,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -631315,6 +631917,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -631398,7 +632008,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -631536,6 +632146,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         }
@@ -847761,7 +848379,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e9597fab16cc85f6ce0876576fd77f2362d03343489a2000292340c5d0d23780"
+              "sha256": "8dd863acc32842722027dfdb79896f4ec9672521d416b32626b641d4d9aef6f4"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -847777,6 +848395,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         },
@@ -857371,7 +857997,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/openapi.json",
@@ -859535,7 +860161,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -861632,6 +862258,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "presentation_renewals": [
@@ -862077,7 +862712,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": "apps/api/openapi.json",
@@ -864201,7 +864836,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -866196,6 +866831,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -868453,7 +869097,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+              "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
             },
             {
               "path": ".size-limit.json",
@@ -870716,6 +871360,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-postgres-staging-recipe",
+              "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
             }
           ]
         },
@@ -871015,7 +871667,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Reproduce the scanned Ubuntu 24.04 PostgreSQL 16.15/PostGIS 3.6.4 staging candidate from the repository. The exact trial passed the security scan and matched the application and retained QA databases, including 1,312 text columns and the Unicode fixture. Complete the backup and PITR checks, review its distribution inventory, verify the packaged migrator and readiness against a restored candidate, then retain an independently verified cutover backup and rollback proof."
+        "Verify the protected CI receipt for the repository Ubuntu staging image and refresh the exact package review. The Ubuntu trial matched both staging databases and passed 32 isolated physical backup, WAL and PITR tests as postgres after correcting file modes. Verify the packaged migrator and readiness against the restored candidate, then retain an independently verified cutover backup and rollback proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -871257,7 +871909,8 @@
           "release-0.6-single-edge-security-headers",
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
-          "release-0.6-postgres-compatible-runtime"
+          "release-0.6-postgres-compatible-runtime",
+          "release-0.6-postgres-staging-recipe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -871326,7 +871979,13 @@
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
           "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md"
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/test_notify_release.py",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ]
       }
     },
@@ -1002238,6 +1002897,169 @@
         {
           "file": "backup-permission.Dockerfile",
           "sha256": "c8a00e310c05129a899a5bd91ad02ed7acbc00d3bdc5a861838a40fc58390777"
+        }
+      ]
+    },
+    "release-0.6-postgres-staging-recipe": {
+      "batch": "release-0.6-postgres-staging-recipe",
+      "base_commit": "671e8a2df2709e7bb7d853dc06d732f6c16c9691",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "deploy/staging/Dockerfile.postgres",
+        "deploy/staging/build-postgres-image.sh",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/test_notify_release.py",
+        "docs/operations/backup/postgresql-image-upgrade.md",
+        "scripts/check-release-licenses.py",
+        "scripts/test_check_release_licenses.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b21a27d8dc632a799198cb949107c1a45b7066c268879acdcfc833d07daf7e60"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "87f1d1d3838741c51d0290919761396cecf9dda2cf0e7a31c6ff3c673b30b15f"
+        },
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "17d6addcf376bf61b4cabcf82755e3cd2b2b872d948cb50acc7571861b30ef92"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "8dd863acc32842722027dfdb79896f4ec9672521d416b32626b641d4d9aef6f4"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "a36a90c7235dc0b26aee6e49e735baae013a4049686227c60ef8c3e84abfbdd4"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "b31323da6b9f014e1e66d348d5492cab19ee95d556de44268efd0efba8c305dc"
+        },
+        {
+          "path": "scripts/test_check_release_licenses.py",
+          "sha256": "14bb94574b0d78575ca75be7e1d4ed119582606944543cdfcf89683878334e00"
+        }
+      ],
+      "checks": [
+        "The repository staging recipe builds Ubuntu 24.04 with PostgreSQL 16, the existing pinned pgvector 0.8.6 source and signed-index PostGIS 3.6.4 packages verified by exact SHA-256. It reuses the existing helper image for the privilege-drop binary, notices and PostGIS initialization. Runtime installation verifies packaged tools as postgres.",
+        "The existing staged image is retained on an ordinary release. The actual first-install script builds the Ubuntu image and transfers it as the PostgreSQL image. The canonical Alpine backup image keeps its previous source and CI slot. The fifth CI image has its own exact scan, Go notices, source notices and license review scope.",
+        "All 15 targeted staging deployment and notification tests and all eight license-policy tests passed. The first-install case checks helper and image build ordering, separate transfer and unchanged gates. Source comparison verifies the unchanged sections of the deployment, CI and license scripts. ShellCheck, Bash syntax, actionlint, formatting and whitespace checks passed.",
+        "The mode-corrected Ubuntu trial image preserved every backup script byte and passed all 32 existing tests as postgres against an isolated S3 service. Checks included latest restore with WAL and tablespaces, PITR excluding a later commit, corruption, authentication failures, immutable labels and exact data fingerprints."
+      ],
+      "limitations": [
+        "The backup suite used the permission-corrected Ubuntu trial image. The repository-built image, protected five-image scan and final package review remain separate exact checks. No live staging database switch or release activation occurred."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-staging-recipe",
+      "execution_receipts": [
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "9a0f5ff55a005c103e733e3c8aef2a304fee8494f6201580d49bb5e5c3af9eef"
+        },
+        {
+          "file": "targeted-checks.log",
+          "sha256": "6735f976a9f72ed19ef7c24ae1fc9e84e8b1a63a1fc2f31ebfe46afc65210221"
+        },
+        {
+          "file": "trial-backup-tests.log",
+          "sha256": "a916e13cba00977df1b2da952fbd880348b7918e02a1e3c4343b15abb4bbc387"
+        },
+        {
+          "file": "trial-backup-permissions.log",
+          "sha256": "6429d21e18594a103d8b793cf1bfd6ad4fec551b7a90f91064198d89ce368214"
+        },
+        {
+          "file": "pgvector.LICENSE",
+          "sha256": "6bba9ebeb73e27477463b05e5ef1bf303bccbddb3db9bbc95905d351604d6a87"
         }
       ]
     }

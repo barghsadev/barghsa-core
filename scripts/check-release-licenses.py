@@ -15,7 +15,7 @@ from urllib.parse import quote
 
 
 ALLOWED = frozenset({'MIT', 'Apache-2.0', 'ISC', 'BSD-2-Clause', 'BSD-3-Clause'})
-IMAGE_SCOPES = ('app', 'web', 'clamav', 'postgres')
+IMAGE_SCOPES = ('app', 'web', 'clamav', 'postgres', 'postgres-staging')
 FIRST_PARTY = {
     'pkg:npm/%40barghsa/' + package + '@0.0.0'
     for package in ('api', 'db', 'i18n', 'shared', 'ui', 'web', 'worker')
@@ -49,6 +49,14 @@ POSTGRES_GO_NOTICES = {
     'x-sys.PATENTS': '96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc',
     'go-stdlib.LICENSE': '911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad',
     'go-stdlib.PATENTS': '96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc',
+}
+STAGING_POSTGRES_COMPONENTS = {
+    'pkg:github/docker-library/postgres@9d15534160ade17f2b6c455a39ee967c49b1937d': (
+        'MIT', 'postgres-entrypoint', '87ffd2c45e3f90cfa3407b5c40ef8333e87c3e875e4895f8b64df758198deafc',
+    ),
+    'pkg:github/pgvector/pgvector@v0.8.6': (
+        'PostgreSQL', 'pgvector', '6bba9ebeb73e27477463b05e5ef1bf303bccbddb3db9bbc95905d351604d6a87',
+    ),
 }
 
 
@@ -155,12 +163,16 @@ def verify_app_notices(image_id, components):
         docker('rm', '-v', container)
 
 
-def verify_postgres_notices(image_id):
+def verify_postgres_notices(image_id, *, staging=False):
     container = docker('create', image_id).decode().strip()
     try:
         notices = archive_files(container, '/usr/local/share/licenses/gosu')
         require({name: digest(data) for name, data in notices.items()} == POSTGRES_GO_NOTICES,
                 'Missing or incorrect PostgreSQL Go notices')
+        if staging:
+            for identity, (_, directory, expected) in STAGING_POSTGRES_COMPONENTS.items():
+                component = archive_files(container, f'/usr/local/share/licenses/{directory}')
+                require(digest(component['LICENSE']) == expected, f'Incorrect staging PostgreSQL license for {identity}')
         return POSTGRES_GO_LICENSES
     finally:
         docker('rm', '-v', container)
@@ -233,10 +245,13 @@ def audit(directory, commit, approvals):
         verified_licenses = None
         if scope == 'app':
             verified_licenses = verify_app_notices(image_id, bom['components'])
-        elif scope == 'postgres':
-            verified_licenses = verify_postgres_notices(image_id)
+        elif scope in ('postgres', 'postgres-staging'):
+            verified_licenses = verify_postgres_notices(image_id, staging=scope == 'postgres-staging')
         for identity, licenses in image_components(bom, verified_licenses):
             items.setdefault((scope, identity, licenses), set()).add(scope)
+        if scope == 'postgres-staging':
+            for identity, (license_name, _, _) in STAGING_POSTGRES_COMPONENTS.items():
+                items.setdefault((scope, identity, (license_name,)), set()).add(scope)
     container = docker('create', scopes['web']).decode().strip()
     try:
         manifests = archive_files(container, '/app/browser-license-inventory')

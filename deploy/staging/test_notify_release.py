@@ -215,7 +215,8 @@ class ReleaseNotificationTests(unittest.TestCase):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.
         staging = self.root / "deploy/staging"
         staging.mkdir(parents=True)
-        shutil.copy(Path(__file__).with_name("deploy.sh"), staging / "deploy.sh")
+        for script in ("deploy.sh", "build-postgres-image.sh"):
+            shutil.copy(Path(__file__).with_name(script), staging / script)
         bins = self.root / "bin"
         bins.mkdir()
         log = self.root / "calls.log"
@@ -230,6 +231,7 @@ elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-rel
 elif name=='python3' and '--check' in args: sys.exit(int(os.environ.get('FAIL_PREFLIGHT','0')))
 elif name=='docker' and args[:2]==['image','inspect']: print('sha256:'+('b'*64 if args[-1].startswith('barghsa-app:') else 'c'*64))
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
+elif name=='ssh' and args[-1]=='test -r /etc/barghsa/staging/active-images.env': sys.exit(int(os.environ['FRESH_STAGING']))
 elif name=='ssh' and 'grep -E' in args[-1]: print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '): sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
 """
@@ -237,10 +239,16 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             file = bins / name
             file.write_text(stub.replace("#!/usr/bin/env python3", f"#!{sys.executable}"))
             file.chmod(0o700)
-        for failure in ["FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", None]:
-            with self.subTest(failure=failure):
+        scenarios = [(failure, False) for failure in ("FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", None)]
+        for failure, fresh in [*scenarios, (None, True)]:
+            with self.subTest(failure=failure, fresh=fresh):
                 log.unlink(missing_ok=True)
-                env = {**os.environ, "PATH": str(bins) + os.pathsep + os.environ["PATH"], "CALL_LOG": str(log)}
+                env = {
+                    **os.environ,
+                    "PATH": str(bins) + os.pathsep + os.environ["PATH"],
+                    "CALL_LOG": str(log),
+                    "FRESH_STAGING": str(int(fresh)),
+                }
                 if failure:
                     env[failure] = "1"
                 result = subprocess.run(["bash", str(staging / "deploy.sh")], env=env, capture_output=True, text=True)
@@ -262,6 +270,25 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         builds = [line for line in calls if line.startswith('docker build ') and f'-f {dockerfile} ' in line]
                         self.assertEqual(len(builds), 1)
                         self.assertIn('--build-arg BARGHSA_RELEASE_SHA=' + 'a'*40, builds[0])
+                    tag = 'vps-' + 'a'*40
+                    helper = (
+                        'docker build --platform linux/amd64 -f packages/db/scripts/backup/Dockerfile '
+                        f'-t barghsa-postgres-helpers:{tag} .'
+                    )
+                    postgres = (
+                        f'docker build --platform linux/amd64 --build-arg BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:{tag} '
+                        f'-f deploy/staging/Dockerfile.postgres -t barghsa-postgres:{tag} .'
+                    )
+                    transfer = next(line for line in calls if line.startswith('docker save '))
+                    if fresh:
+                        self.assertLess(calls.index(helper), calls.index(postgres))
+                        self.assertLess(calls.index(postgres), calls.index(transfer))
+                        self.assertIn(f'barghsa-postgres:{tag}', transfer.split())
+                        self.assertNotIn(f'barghsa-postgres-helpers:{tag}', transfer.split())
+                    else:
+                        self.assertNotIn(helper, calls)
+                        self.assertNotIn(postgres, calls)
+                        self.assertFalse(any(image.startswith('barghsa-postgres:') for image in transfer.split()))
 
 
 if __name__ == "__main__":

@@ -129,5 +129,22 @@ class LicenseCheckTests(unittest.TestCase):
                 self.assertEqual(json.loads(report.read_text()), result)
 
 
+    def test_staging_postgres_requires_its_source_component_notices(self):
+        self.assertIn('postgres-staging', licenses.IMAGE_SCOPES)
+        components = {identity: (name, directory, licenses.digest(directory.encode()))
+                      for identity, (name, directory, _) in licenses.STAGING_POSTGRES_COMPONENTS.items()}
+        notices = [{}, *({'LICENSE': directory.encode()} for _, directory, _ in components.values())]
+        with patch.object(licenses, 'POSTGRES_GO_NOTICES', {}), \
+             patch.object(licenses, 'STAGING_POSTGRES_COMPONENTS', components), \
+             patch.object(licenses, 'docker', return_value=b'container') as docker, \
+             patch.object(licenses, 'archive_files', side_effect=notices) as archive:
+            self.assertEqual(licenses.verify_postgres_notices('image', staging=True), licenses.POSTGRES_GO_LICENSES)
+            for index in range(1, len(notices)):
+                archive.side_effect = [*notices[:index], {'LICENSE': b'wrong license'}]
+                with self.assertRaisesRegex(ValueError, 'Incorrect staging PostgreSQL license'):
+                    licenses.verify_postgres_notices('image', staging=True)
+                docker.assert_called_with('rm', '-v', 'container')
+
+
 if __name__ == '__main__':
     unittest.main()

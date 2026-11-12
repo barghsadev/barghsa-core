@@ -76,17 +76,20 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - name: Build the four staging runtime images
+      - name: Build the application and database runtime images
         run: |
           docker build -f Dockerfile.base --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-app:$GITHUB_SHA" .
           docker build -f Dockerfile.web --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-web:$GITHUB_SHA" .
           docker build -f deploy/clamav/Dockerfile -t "barghsa-ci-clamav:$GITHUB_SHA" .
           docker build -f packages/db/scripts/backup/Dockerfile -t "barghsa-ci-postgres:$GITHUB_SHA" .
+          docker build --platform linux/amd64 --build-arg "BACKUP_HELPERS_IMAGE=barghsa-ci-postgres:$GITHUB_SHA" \
+            -f deploy/staging/Dockerfile.postgres -t "barghsa-ci-postgres-staging:$GITHUB_SHA" .
       - name: Scan exact built image IDs
         run: |
           bash scripts/check-runtime-images.sh "$RUNNER_TEMP/runtime-image-scan" \
             "barghsa-ci-app:$GITHUB_SHA" "barghsa-ci-web:$GITHUB_SHA" \
-            "barghsa-ci-clamav:$GITHUB_SHA" "barghsa-ci-postgres:$GITHUB_SHA"
+            "barghsa-ci-clamav:$GITHUB_SHA" "barghsa-ci-postgres:$GITHUB_SHA" \
+            "barghsa-ci-postgres-staging:$GITHUB_SHA"
       - name: Verify release license policy handling
         run: python3 -m unittest discover -s scripts -p 'test_check_release_licenses.py'
       - name: Check shipped component licenses
