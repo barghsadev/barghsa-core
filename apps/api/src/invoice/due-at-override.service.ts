@@ -90,6 +90,7 @@ function asMetadataObject(value: unknown): Record<string, unknown> {
 
 function toDto(row: InvoiceDueAtRow, extra: { auditId?: string } = {}): InvoiceDueAtDto {
   const metadata = asMetadataObject(row.metadata);
+  const override = readDueAtOverrideSnapshot(metadata);
   return {
     invoiceId: row.id,
     state: row.state,
@@ -97,7 +98,10 @@ function toDto(row: InvoiceDueAtRow, extra: { auditId?: string } = {}): InvoiceD
     payableFrom: iso(row.payable_from),
     dueAt: iso(row.due_at),
     canOverride: isDueAtOverrideableState(row.state),
-    dueAtOverride: readDueAtOverrideSnapshot(metadata),
+    dueAtOverride:
+      override && row.due_at && Date.parse(override.dueAt) === row.due_at.getTime()
+        ? override
+        : null,
     ...(extra.auditId ? { auditId: extra.auditId } : {}),
   };
 }
@@ -196,12 +200,16 @@ export class DueAtOverrideService {
         );
       }
 
-      if (row.issued_at && parsed.value.dueAt.getTime() < row.issued_at.getTime()) {
+      const dueAtTime = parsed.value.dueAt.getTime();
+      if (
+        (row.issued_at && dueAtTime < row.issued_at.getTime()) ||
+        (row.payable_from && dueAtTime < row.payable_from.getTime())
+      ) {
         await client.query('ROLLBACK');
         throw new InputFieldException(['dueAt']);
       }
 
-      if (row.due_at && parsed.value.dueAt.getTime() === row.due_at.getTime()) {
+      if (row.due_at && dueAtTime === row.due_at.getTime()) {
         await client.query('ROLLBACK');
         throw new InputFieldException(['dueAt']);
       }

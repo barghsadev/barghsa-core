@@ -198,6 +198,46 @@ it('Finance issues exact amounts and one audit; concurrent identical retries ret
   expect(await invoiceCount(body.idempotencyKey)).toBe(1);
 });
 
+it('requires the selected profile to own the contract throughout review, issue and replay', async () => {
+  const contractId = randomUUID();
+  const versionId = randomUUID();
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'solar',$3)",
+      [contractId, legalId, versionId]
+    );
+    await client.query(
+      `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+       VALUES($1,$2,1,$3,'Initial version','manual-finance')`,
+      [versionId, contractId, { price: '1' }]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const matching = { ...payload(), contractId, profileId: legalId };
+  const { snapshot, ...confirmed } = await reviewedBody(matching);
+  expect(snapshot.data).toMatchObject({ contractId, profile: { id: legalId } });
+  const wrongProfile = { ...matching, profileId };
+  expect((await review(wrongProfile)).status).toBe(404);
+  expect((await create({ ...wrongProfile, expectedReviewHash: snapshot.hash })).status).toBe(404);
+  expect(await invoiceCount(matching.idempotencyKey)).toBe(0);
+  const response = await create(confirmed);
+  expect(response.status, http.logs()).toBe(201);
+  const invoice = (await response.json()) as IssuedInvoice;
+  expect(invoice).toMatchObject({ contractId, profileId: legalId, state: 'Unpaid' });
+  await http.pool.query('UPDATE invoices SET contract_id=NULL WHERE id=$1', [invoice.invoiceId]);
+  const replay = await create(confirmed);
+  expect(replay.status, http.logs()).toBe(409);
+  expect(await replay.json()).not.toHaveProperty('lines');
+  expect(await invoiceCount(matching.idempotencyKey)).toBe(1);
+});
+
 it('rejects a stale preview when the customer identity changes before issue', async () => {
   const body = payload();
   const { snapshot, ...confirmed } = await reviewedBody(body);

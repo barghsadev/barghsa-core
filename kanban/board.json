@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T15:37:28+00:00",
+  "updated": "2026-11-12T15:44:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -159018,7 +159018,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -159042,7 +159042,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -160157,6 +160157,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -160501,7 +160510,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -160525,7 +160534,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -161641,6 +161650,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -161946,7 +161964,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -161970,7 +161988,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -162135,6 +162153,15 @@
                 "apps/api/src/invoice/vat-calculation.repository.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         },
@@ -162583,7 +162610,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -162607,7 +162634,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -163722,6 +163749,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -164065,7 +164101,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -164089,7 +164125,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -165205,6 +165241,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -165548,7 +165593,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -165572,7 +165617,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -166687,6 +166732,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -167030,7 +167084,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -167054,7 +167108,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -168169,6 +168223,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -168530,7 +168593,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -168554,7 +168617,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -169678,6 +169741,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -170021,7 +170093,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -170045,7 +170117,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -171160,6 +171232,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -171541,7 +171622,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -171553,7 +171634,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -172504,6 +172585,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -172899,7 +172989,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -172911,7 +173001,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -173862,6 +173952,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -174257,7 +174356,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -174269,7 +174368,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -175220,6 +175319,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -175615,7 +175723,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -175627,7 +175735,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -176578,6 +176686,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -176973,7 +177090,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -176985,7 +177102,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -177936,6 +178053,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -178331,7 +178457,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -178343,7 +178469,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -179294,6 +179420,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -179776,7 +179911,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -179788,7 +179923,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -180888,6 +181023,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -181293,7 +181437,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -181305,7 +181449,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -182256,6 +182400,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -182738,7 +182891,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -182750,7 +182903,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -183850,6 +184003,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -184255,7 +184417,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -184267,7 +184429,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -185218,6 +185380,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -185578,7 +185749,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -186306,6 +186477,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -186579,7 +186758,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -187355,6 +187534,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -187611,7 +187798,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -188337,6 +188524,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -513725,7 +513920,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -513749,7 +513944,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -515036,6 +515231,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -515411,7 +515615,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -515435,7 +515639,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -516722,6 +516926,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -517098,7 +517311,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -517122,7 +517335,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -518409,6 +518622,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -518784,7 +519006,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -518808,7 +519030,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -520095,6 +520317,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -520470,7 +520701,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -520494,7 +520725,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -521781,6 +522012,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -522157,7 +522397,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -522181,7 +522421,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -523468,6 +523708,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -523845,7 +524094,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -523869,7 +524118,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -525156,6 +525405,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -525542,7 +525800,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -526885,6 +527143,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -527229,7 +527495,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -527253,7 +527519,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -528540,6 +528806,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -528914,7 +529189,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -528938,7 +529213,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -530225,6 +530500,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -530608,7 +530892,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -531951,6 +532235,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -532301,7 +532593,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -533644,6 +533936,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -533994,7 +534294,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -535337,6 +535637,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -609136,7 +609444,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -609413,6 +609721,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -609779,7 +610095,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -609924,6 +610240,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -609998,7 +610322,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -610152,6 +610476,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -610249,7 +610581,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -610425,6 +610757,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -610584,7 +610924,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -610826,6 +611166,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -610876,7 +611224,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -611153,6 +611501,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -611326,7 +611682,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -611612,6 +611968,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -612608,8 +612972,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, and six reconciliation access, read and decision route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with staff manual invoice and due date routes, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, and five manual invoice and due date route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with the failed-jobs access, read and decision routes, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -612658,6 +613022,8 @@
           "apps/api/src/invoice/customer-invoice-activity.ts",
           "apps/api/src/invoice/customer-invoice-details.service.ts",
           "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+          "apps/api/src/invoice/due-at-override.service.ts",
           "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
@@ -612666,6 +613032,8 @@
           "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
           "apps/api/src/invoice/invoice-correction-request.ts",
           "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "apps/api/src/invoice/manual-invoice.service.ts",
           "apps/api/src/refund/refund.service.ts",
           "apps/api/src/refund/wallet-refund.controller.ts",
           "apps/api/src/saving/saving-address-amendments.ts",
@@ -612746,7 +613114,8 @@
           "release-0.6-refund-provenance",
           "release-0.6-wallet-ledger-scope",
           "release-0.6-chargeback-evidence",
-          "release-0.6-reconciliation-authority"
+          "release-0.6-reconciliation-authority",
+          "release-0.6-manual-invoice-authority"
         ],
         "current_acceptance": null
       }
@@ -612822,7 +613191,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -612992,6 +613361,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -613338,7 +613715,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -613643,6 +614020,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -614266,7 +614651,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -614512,6 +614897,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -628119,7 +628512,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "0d1317f2f4973de2667d9db2ba0abdaa0d31edd2dfa2d15924d952bf2cd27b74"
+              "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
             },
             {
               "path": "docs/threat-model.md",
@@ -628299,6 +628692,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ]
         }
@@ -963550,7 +963951,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -963574,7 +963975,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -963754,7 +964155,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
-              "sha256": "53966a30de2d4f1b6a321497ab99153501955d71366399b8e896eb19cf8e1f85"
+              "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
             },
             {
               "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
@@ -963766,7 +964167,7 @@
             },
             {
               "path": "apps/api/src/invoice/due-at-override.service.ts",
-              "sha256": "cfd5df5473a219cf1580a51d73cb05885a3fa1b0aad31ef3148f7e77dafb95f2"
+              "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
             },
             {
               "path": "apps/api/src/invoice/due-at.integration.test.ts",
@@ -967953,6 +968354,17 @@
                 "apps/api/src/wallet/chargeback-alert.service.ts"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+                "apps/api/src/invoice/due-at-override.service.ts",
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -970318,7 +970730,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
-              "sha256": "9a93c8284024a0ddf5e3e557931005e10fb23dbd7e1644bad35a6ebc7aacdda7"
+              "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
@@ -970342,7 +970754,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+              "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -973356,6 +973768,15 @@
                 "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts"
               ],
               "scope": "Reconciliation reads hold current staff and view authority. Decision receipts are read on the locked row before commit and preserve the recorded resolution."
+            },
+            {
+              "batch": "release-0.6-manual-invoice-authority",
+              "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+              "paths": [
+                "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+                "apps/api/src/invoice/manual-invoice.service.ts"
+              ],
+              "scope": "Manual invoice contract and retry readback bind the selected profile and issue evidence. Due date readback verifies the recorded deadline and changes respect the payment opening. Affected consultation and solar callers passed."
             }
           ],
           "presentation_renewals": [
@@ -1143458,6 +1143879,231 @@
         {
           "file": "reconciliation-routes.json",
           "sha256": "b53f1083a3aaa0dcdc5ba983420404b436f8487c911c6a66fa356ef8f4daed1f"
+        }
+      ]
+    },
+    "release-0.6-manual-invoice-authority": {
+      "batch": "release-0.6-manual-invoice-authority",
+      "base_commit": "bb8c87ee022f154ed81f0d1f7a8c0c25132300a5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+        "apps/api/src/invoice/due-at-override.service.ts",
+        "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+        "apps/api/src/invoice/manual-invoice.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.test.ts",
+          "sha256": "f4b0eea50e278db8a10966621c352ed972a9a5a5ccfb376364653dc803483f67"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "52e4ec804867d7240017678833b8ff44d6f3172e4e91e7ebf18f03b139253054"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
+          "sha256": "ca4a99a78d0a8a57dd435e21f42b06cff8eb81080ba06952aa4dcf5a21314929"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+          "sha256": "8479b4de9b65f1fa378c938cf12190a41638680d1aaf816cdc856399b281c1f0"
+        },
+        {
+          "path": "apps/api/src/contract/contract.service.ts",
+          "sha256": "989e16314de5d768c0aefdc71860b7516a6ffd029d0cffaf7270b86b71fe8d42"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "f317f8f15757f46d38790c3739e5e044c678e8bdc7b89e2a53dd090e202a7f93"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
+          "sha256": "6f412334ed083d80b5228e0d46158ebb5f814103bc0f3de2a649c33e8f14f5c5"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.integration.test.ts",
+          "sha256": "01f6d5e2c2b56e6cff39e4aefbbed4a8853fa51698471fcef53e85c6427ffec8"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.test.ts",
+          "sha256": "a08cabc6b1813210eb82264a32fa5754025b5446276d11ae9f17472b0720817f"
+        },
+        {
+          "path": "apps/api/src/invoice/due-at-override.service.ts",
+          "sha256": "6e9171120e5144af3100dd10bfe6afba35c77210a1f2dd951db12857c129719f"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-audit.repository.ts",
+          "sha256": "f64eb1d764b70593fed77aed5cb91a2f3bf22cbf92b03cfcb4d56dd270c84cc0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-profile-lock.ts",
+          "sha256": "663e71f7595cf8d9ae8428e89c36d3e2299a872a5e34f0b2127bdea561dd8615"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "e0bde460603a6c701b3dca7a68d0d307480d56f2d4083e1ab6df20af74b035a6"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
+          "sha256": "ed5c2f00698740076f049ef310079da35d7d759d37ff33203f673a4944c347ee"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "a54d1e9e4177c8f247ce13fd9e0d3e25591b143a2a802ad28d0656b12b569557"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.integration.test.ts",
+          "sha256": "7a2f7abf746209fa5ab2d674c4a0e4a2ff4d63fd71a8091bf8c1008168592580"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "4df5792995db7317d892eadc39f5c197fb84a1983ef2044cf45e3803ef4f3fc4"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "bc79120c623d41a4219df91506a30cd1cef3e3e13677bcb6a9f343e5362096d9"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+          "sha256": "2a22af3bfcb79e4840c05a38280355abcac152011888de331323d1aee6279f66"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
+          "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
+          "sha256": "ff907bfe4cf3289ce6967477745d4eb6758cd5e8c3dc1c59e8f0eaf1236abc88"
+        },
+        {
+          "path": "apps/web/src/lib/due-at-override.test.ts",
+          "sha256": "fb1dcf6190cf70f5bc89e0c50e209a05c652e8ee80b77bb75b994c35664c2851"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "8d403a922e0ef46ff6cb27a91db42d73e56f2b34d06b131a32658eb698a46a77"
+        },
+        {
+          "path": "packages/db/drizzle/production/0259_invoice_origin_foreign_keys.sql",
+          "sha256": "7da9064616117595d2f418dd0ed725da20f12a7e8968101c4a44dbf72fceac87"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed five staff manual invoice and deadline method/path pairs. Manual review and issuance require the selected profile and any linked contract to match under locks.",
+        "Retry holds the original invoice, validates its profile, type and contract, and requires one canonical issue audit. A native fixture verifies that historical linkage drift withholds invoice lines and creates no second invoice.",
+        "Due-date changes cannot precede the payment opening. Staff readback matches the persisted deadline and retains prior override history. Native cases preserve current Finance authority, step-up, audit, reminders and customer-visible reasons.",
+        "67 targeted manual invoice and due date cases, three native consultation and solar caller cases and 31 web caller cases passed across targeted runs. Corrected the local draft fixture to satisfy existing version description and content constraints and reran its case.",
+        "API build, typecheck, generated API contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-manual-invoice-authority",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "bbb38503589c085e5e09bce6a2955e6e7fdd1c8d3b16da8500890afa5d7eceec"
+        },
+        {
+          "file": "invoice-checks.log",
+          "sha256": "f107707c77e2a41719ab360b51fad96d7e74f45054d87e02da533cb1daa86f93"
+        },
+        {
+          "file": "contract-scope-final.log",
+          "sha256": "e77e1b838be6b05f8d6b4bc61feaa33de9e70912f97bcc36126a8f3176265cd1"
+        },
+        {
+          "file": "service-callers.log",
+          "sha256": "4564a115f5eaf648542edf269deb61aa05ae3f5849feaa6addbf51a133eeec24"
+        },
+        {
+          "file": "web-callers.log",
+          "sha256": "d1a0f96f264e84a8dc421a14b6586a5d8a9f10eacedd2df56b23512d9f74c187"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "82a15749d88c62f396f7c7d5517da650d41b8baef13687ddf7f21acd84ba5d07"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "b8b52ce195b7cd92b262a17bd5a7f4b440068be1babc5649b64761cd9fd836a4"
+        },
+        {
+          "file": "manual-invoice-routes.json",
+          "sha256": "5d64363f7935a9345ed0b2f5670eb755845227b38d3fe0bca2da059ba7cb09e6"
         }
       ]
     }

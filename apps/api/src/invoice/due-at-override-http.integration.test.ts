@@ -167,6 +167,30 @@ it('requires session, CSRF, current permission and step-up', async () => {
   expect(await stored(f.invoiceId)).toMatchObject({ dueAt: oldDue, audits: 0 });
 });
 
+it('keeps the deadline at or after payment opens and omits a stale override snapshot', async () => {
+  const f = await fixture();
+  await http.pool.query("UPDATE invoices SET payable_from='2026-09-08T10:00:00Z' WHERE id=$1", [
+    f.invoiceId,
+  ]);
+  const rejected = await fetch(f.url, {
+    method: 'POST',
+    headers: f.headers,
+    body: JSON.stringify({ ...body, dueAt: '2026-09-05T10:00:00Z' }),
+  });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).toMatchObject({ error: { fields: ['dueAt'] } });
+  expect(await stored(f.invoiceId)).toMatchObject({ dueAt: oldDue, audits: 0 });
+  expect((await f.submit()).status).toBe(200);
+  await http.pool.query('UPDATE invoices SET due_at=$2 WHERE id=$1', [f.invoiceId, oldDue]);
+  const response = await fetch(f.url, { headers: f.headers });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({ dueAt: oldDue, dueAtOverride: null });
+  expect(await stored(f.invoiceId)).toMatchObject({
+    audits: 1,
+    metadata: { dueAtOverride: { dueAt: body.dueAt } },
+  });
+});
+
 it.each(['invoice', 'audit', 'read'] as const)(
   'rolls back when session expires while waiting for %s lock',
   async (target) => {

@@ -172,6 +172,15 @@ export class ManualInvoiceService {
     private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
+  private async requireContractScope(client: PoolClient, profileId: string, contractId?: string) {
+    if (contractId === undefined) return;
+    const result = await client.query(
+      'SELECT id FROM contracts WHERE invoice_reference=$1 AND profile_id=$2 FOR SHARE',
+      [contractId, profileId]
+    );
+    if (!result.rows.length) throw new NotFoundException('Invoice contract not found for profile');
+  }
+
   private async financialReview(
     client: PoolClient,
     input: {
@@ -253,6 +262,7 @@ export class ManualInvoiceService {
       await lockInvoiceProfile(client, 'profile', input.profileId);
       await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       await requireCurrentSession(client, actor);
+      await this.requireContractScope(client, input.profileId, input.contractId);
       const due = await this.dueAtCalculation.resolve(client, {
         serviceType: duePeriodTypeForManual(),
         issuedAt: new Date(),
@@ -350,6 +360,7 @@ export class ManualInvoiceService {
           throw new BadRequestException('Invoice actor does not match the session');
         await requireSessionStepUp(client, cmd.actorSession);
       }
+      await this.requireContractScope(client, cmd.profileId, cmd.contractId);
 
       // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {
@@ -362,7 +373,7 @@ export class ManualInvoiceService {
            WHERE profile_id = $1
              AND metadata->>'source' = 'manual'
              AND metadata->>'idempotencyKey' = $2
-           LIMIT 2`,
+           LIMIT 2 FOR SHARE`,
           [cmd.profileId, cmd.idempotencyKey]
         )) as { rows: Array<{ id: string; metadata: Record<string, unknown> | null }> };
 
@@ -396,7 +407,7 @@ export class ManualInvoiceService {
               }
             );
 
-          const replayed = await this.loadInvoiceExcerpt(client, existingId);
+          const replayed = await this.loadInvoiceExcerpt(client, existingId, cmd);
           const auditId = await this.findIssueAuditId(client, existingId);
 
           if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
@@ -524,7 +535,7 @@ export class ManualInvoiceService {
       // --- 7. Read back INSIDE the transaction (read-your-own-writes):
       //      a read failure here rolls back everything and cannot be
       //      reported as a create failure for a committed invoice. ---
-      const excerpt = await this.loadInvoiceExcerpt(client, invoiceId);
+      const excerpt = await this.loadInvoiceExcerpt(client, invoiceId, cmd);
 
       if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
       if (ownedTransaction) await client.query('COMMIT');
@@ -558,15 +569,17 @@ export class ManualInvoiceService {
       `SELECT id FROM audit_log
        WHERE event = 'invoice.issue'
          AND metadata::jsonb->>'invoiceId' = $1
-       ORDER BY created_at ASC, id ASC LIMIT 1`,
+         AND metadata::jsonb->>'fromState' = 'Draft'
+         AND metadata::jsonb->>'toState' = 'Unpaid'
+         AND metadata::jsonb->>'transition' = 'issue'
+       LIMIT 2`,
       [invoiceId]
     )) as { rows: Array<{ id: string }> };
-    const auditId = auditResult.rows[0]?.id;
-    if (!auditId)
+    if (auditResult.rows.length !== 1)
       throw new ConflictException(
-        'The invoice issue audit is missing; reconcile the existing invoice before retrying'
+        'The invoice issue audit cannot be verified; reconcile the existing invoice before retrying'
       );
-    return auditId;
+    return auditResult.rows[0]!.id;
   }
 
   /**
@@ -575,13 +588,15 @@ export class ManualInvoiceService {
    */
   private async loadInvoiceExcerpt(
     client: TransactionClient,
-    invoiceId: string
+    invoiceId: string,
+    scope: Pick<CreateManualInvoiceCommand, 'profileId' | 'contractId'>
   ): Promise<Omit<ManualInvoiceResult, 'auditId' | 'transition'>> {
     const invoiceResult = (await client.query(
       `SELECT id, profile_id, contract_id, state, total_amount,
               issued_at, payable_from, due_at
-       FROM invoices WHERE id = $1`,
-      [invoiceId]
+       FROM invoices WHERE id = $1 AND profile_id = $2 AND type = 'manual'
+         AND contract_id IS NOT DISTINCT FROM $3::text`,
+      [invoiceId, scope.profileId, scope.contractId ?? null]
     )) as {
       rows: Array<{
         id: string;
@@ -595,7 +610,7 @@ export class ManualInvoiceService {
       }>;
     };
     const row = invoiceResult.rows[0];
-    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`);
+    if (!row) throw new ConflictException('Manual invoice linkage requires reconciliation');
     if (!row.issued_at || !row.payable_from) {
       throw new ConflictException(
         'The invoice issue timestamps are missing; reconcile the existing invoice before retrying'
