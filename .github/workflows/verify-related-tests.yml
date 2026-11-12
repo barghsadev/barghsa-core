@@ -1,0 +1,42 @@
+name: Verify related test selection with a native HTTP case
+on:
+  push:
+    branches: ['codex/verify/v06-related-tests-*']
+permissions:
+  contents: read
+jobs:
+  related:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact native and web test dependencies
+        run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker --filter=@barghsa/web
+      - name: Verify selector decision cases
+        run: node --test scripts/run-fast-tests.test.mjs
+      - name: Run the production fast test command against a test-only diff
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          base=$(git rev-parse HEAD^)
+          git diff --name-status "$base" HEAD
+          node scripts/run-fast-tests.mjs "$base" 2>&1 | tee "$RUNNER_TEMP/related-tests.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: related-tests
+          path: ${{ runner.temp }}/related-tests.log
+          retention-days: 14

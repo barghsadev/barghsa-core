@@ -8,7 +8,14 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 The test and application-quality jobs build the workspace before using compiled API and browser fixtures. They run alongside the static, secret and runtime image scans. Combined coverage waits for the two jobs that produce its artifacts. The required check waits for all six results, including the full coverage enforcement result when full CI is selected.
 
-The fast test step uses the successful workspace build from the same job. Turbo selects affected workspaces and their dependents, then executes their test tasks with `--only --force`. This reruns the selected tests while omitting build tasks whose outputs are already present.
+The fast test step uses the successful workspace build from the same job.
+For a diff limited to Vitest files under the API, web, or worker source trees,
+ordinary documentation, and board updates, it runs `vitest related --run`
+in each affected application. The report must include a passing case from
+every changed test file. Runtime, shared code, migrations, fixtures, and
+configuration changes use Turbo's affected workspace graph and its
+`--only --force` test tasks. An unavailable comparison base runs the full
+workspace test set. Manual release coverage keeps its separate full scope.
 
 The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 

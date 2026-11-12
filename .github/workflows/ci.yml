@@ -347,6 +347,8 @@ jobs:
         timeout-minutes: 6
         run: bash scripts/install-ci-pdf-renderer.sh
       - run: pnpm build
+      - name: Verify affected test selection
+        run: node --test scripts/run-fast-tests.test.mjs
       # Every workspace coverage script runs the same test suite with coverage enabled.
       # Run it once, with at most two packages starting database/server fixtures together.
       - name: Run affected tests or full coverage
@@ -357,18 +359,11 @@ jobs:
           PUSH_TEST_BASE: ${{ github.event.before }}
         run: |
           if [ "$FULL_CI" != "true" ]; then
-            if [ "${{ github.event_name }}" = "push" ]; then
-              filters=()
-              if [ "${{ github.event.created }}" = "true" ] && [[ "$GITHUB_REF" == refs/heads/codex/preflight/* ]]; then
-                PUSH_TEST_BASE=$(git merge-base HEAD origin/main 2>/dev/null) || PUSH_TEST_BASE=''
-              fi
-              if git cat-file -e "$PUSH_TEST_BASE^{commit}" 2>/dev/null; then
-                filters+=(--filter="...[$PUSH_TEST_BASE]")
-              fi
-              pnpm turbo run test --only --force --concurrency=2 "${filters[@]}"
-            else
-              pnpm turbo run test --only --force --concurrency=2 --filter="...[origin/main]"
+            if [ "${{ github.event_name }}" != "push" ] ||
+              { [ "${{ github.event.created }}" = "true" ] && [[ "$GITHUB_REF" == refs/heads/codex/preflight/* ]]; }; then
+              PUSH_TEST_BASE=$(git merge-base HEAD origin/main 2>/dev/null) || PUSH_TEST_BASE=''
             fi
+            node scripts/run-fast-tests.mjs "$PUSH_TEST_BASE"
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
