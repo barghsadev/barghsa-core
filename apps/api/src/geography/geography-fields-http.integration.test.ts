@@ -109,6 +109,58 @@ it('keeps authorization ahead of field feedback', async () => {
   expect(((await response.json()) as ErrorResponse).error.fields).toBeUndefined();
   expect(await counts(current.userId)).toEqual(before);
 });
+it('rejects extra geography fields before creating, editing or importing rows', async () => {
+  const current = await actor();
+  const target = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES ('استان بررسی','Validation Province') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const cities = `/${target}/cities`;
+  const city = (
+    await http.pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر بررسی','Validation City') RETURNING id",
+      [target]
+    )
+  ).rows[0].id as string;
+  const before = await counts(current.userId);
+  const config = (await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows;
+  const names = { nameFa: 'نام تازه', nameEn: 'New Name' };
+  const extra = { privateField: 'private-value' };
+  for (const [path, method, input, fields] of [
+    ['', 'POST', { ...names, ...extra }, undefined],
+    [`/${target}`, 'PATCH', { ...names, ...extra }, undefined],
+    [cities, 'POST', { ...names, ...extra }, undefined],
+    [`${cities}/${city}`, 'PATCH', { ...names, ...extra }, undefined],
+    [
+      `${cities}/import`,
+      'POST',
+      { cities: [names, { nameFa: 'نام دوم', nameEn: 'Second Name', ...extra }] },
+      ['cities'],
+    ],
+  ] as const) {
+    const response = await fetch(`${http.base}/api/admin/geography/provinces${path}`, {
+      method,
+      headers: current.headers,
+      body: JSON.stringify(input),
+    });
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as ErrorResponse;
+    expect(body.error.code).toBe(ErrorCodes.VALIDATION_INPUT_INVALID.code);
+    expect(body.error.fields).toEqual(fields);
+    expect(JSON.stringify(body)).not.toContain('privateField');
+    expect(JSON.stringify(body)).not.toContain('private-value');
+  }
+  expect(await counts(current.userId)).toEqual(before);
+  expect((await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows).toEqual(config);
+  expect(
+    (await http.pool.query('SELECT name_en FROM provinces WHERE id=$1', [target])).rows
+  ).toEqual([{ name_en: 'Validation Province' }]);
+  expect((await http.pool.query('SELECT name_en FROM cities WHERE id=$1', [city])).rows).toEqual([
+    { name_en: 'Validation City' },
+  ]);
+});
+
 it('acknowledges the complete successful import in the selected province', async () => {
   const current = await actor();
   const cities = [

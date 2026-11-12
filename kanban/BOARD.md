@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T11:40:36+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T11:49:22+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1248 | Accepted with unchanged source bindings. |
-| verify | 10 | Existing work may be complete; inspect evidence before building. |
-| partial | 102 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 9 | Existing work may be complete; inspect evidence before building. |
+| partial | 103 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1163,7 +1163,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.03.02` | done | Recorded batch work | Implement dual-approval engine: configurable IRR threshold, second authorized user approval needed |
 | `06-security-testing-observability.md#T-06.03.03.03` | done | Recorded batch work | Implement emergency override: reason, elevated permission, immediate alert, audit review |
 | `06-security-testing-observability.md#T-06.03.03.04` | done | Recorded batch work | Write integration tests: dual-approval flow, override flow, denial flow, alert triggers |
-| `06-security-testing-observability.md#T-06.04.01.01` | verify | Inventory needed | Audit existing Zod schemas for completeness: types, lengths, ranges, enums, pagination caps |
+| `06-security-testing-observability.md#T-06.04.01.01` | partial | Recorded batch work | Audit existing Zod schemas for completeness: types, lengths, ranges, enums, pagination caps |
 | `06-security-testing-observability.md#T-06.04.01.02` | partial | Recorded batch work | Add `z.strictObject()` or `stripUnknown: false` to all command DTOs to reject unknown fields |
 | `06-security-testing-observability.md#T-06.04.01.03` | done | Recorded batch work | Implement reusable pagination validation: max limit, cursor/offset constraints |
 | `06-security-testing-observability.md#T-06.04.01.04` | done | Recorded batch work | Add Zod refinement for business-rule validation (e.g. date ranges, amount limits) |

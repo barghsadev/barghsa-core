@@ -24186,6 +24186,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "contentEn": {
                     "description": "English TOS content (Markdown)",
@@ -24315,6 +24316,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "contentEn": {
                     "description": "English TOS content (Markdown)",
@@ -24380,6 +24382,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "changeType": {
                     "description": "Material change (major) → triggers re-acceptance",

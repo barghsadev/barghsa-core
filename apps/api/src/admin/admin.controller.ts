@@ -1247,6 +1247,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['versionId', 'contentFa', 'contentEn'],
+      additionalProperties: false,
       properties: {
         versionId: { type: 'string', description: 'Human-readable version ID, e.g. "v2"' },
         contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
@@ -1268,7 +1269,7 @@ export class AdminController {
       );
     }
 
-    const schema = z.object({
+    const schema = z.strictObject({
       versionId: z
         .string()
         .min(1)
@@ -1308,6 +1309,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['expectedRevision'],
+      additionalProperties: false,
       properties: {
         expectedRevision: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         versionId: { type: 'string', description: 'Human-readable version ID' },
@@ -1332,7 +1334,7 @@ export class AdminController {
       );
     }
 
-    const schema = z.object({
+    const schema = z.strictObject({
       expectedRevision: z.string().regex(/^[a-f0-9]{64}$/),
       versionId: z
         .string()
@@ -1399,6 +1401,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['changeType', 'expectedRevision'],
+      additionalProperties: false,
       properties: {
         expectedRevision: {
           type: 'string',
@@ -1429,7 +1432,7 @@ export class AdminController {
       );
     }
 
-    const schema = z.object({
+    const schema = z.strictObject({
       changeType: z.enum(['major', 'minor']),
       expectedRevision: z.string().regex(/^[a-f0-9]{64}$/),
     });

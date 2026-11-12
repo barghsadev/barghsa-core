@@ -76,6 +76,38 @@ async function create() {
   return (await response.json()) as { id: string };
 }
 
+it('rejects unknown fields before creating, editing or publishing terms', async () => {
+  const extra = { privateField: 'private-value' };
+  const rejected = await request('', 'POST', { ...draft, ...extra });
+  expect(rejected.status).toBe(400);
+  expect((await http.pool.query('SELECT id FROM tos_versions')).rows).toHaveLength(0);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='tos_updated'")).rows
+  ).toHaveLength(0);
+
+  const { id } = await create();
+  const before = (await http.pool.query('SELECT * FROM tos_versions WHERE id=$1', [id])).rows;
+  const edited = await request(`/${id}`, 'PUT', { contentEn: 'New terms', ...extra });
+  const published = await request(`/${id}/publish`, 'POST', { changeType: 'major', ...extra });
+  for (const response of [rejected, edited, published]) {
+    expect(response.status).toBe(400);
+    const body = await response.text();
+    expect(body).toContain('VALIDATION:INPUT:INVALID');
+    expect(body).not.toContain('privateField');
+    expect(body).not.toContain('private-value');
+  }
+  expect((await http.pool.query('SELECT * FROM tos_versions WHERE id=$1', [id])).rows).toEqual(
+    before
+  );
+  expect(
+    (
+      await auditWindow.query(
+        "SELECT metadata::jsonb->>'action' AS action FROM audit_log WHERE event='tos_updated'"
+      )
+    ).rows
+  ).toEqual([{ action: 'create' }]);
+});
+
 it('paginates only published terms metadata anonymously without recording acceptance', async () => {
   const published: string[] = [];
   for (let index = 0; index < 22; index++) {

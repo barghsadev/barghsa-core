@@ -37,7 +37,7 @@ function rejectInvalidGeography(issues: readonly { path: PropertyKey[] }[]): nev
   );
 }
 
-export const CreateProvinceSchema = z.object({
+export const CreateProvinceSchema = z.strictObject({
   nameFa: z
     .string()
     .trim()
@@ -52,7 +52,7 @@ export const CreateProvinceSchema = z.object({
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
 });
 
-export const UpdateProvinceSchema = z.object({
+export const UpdateProvinceSchema = z.strictObject({
   nameFa: z
     .string()
     .trim()
@@ -77,7 +77,7 @@ export type UpdateProvinceDto = z.infer<typeof UpdateProvinceSchema>;
 // City Zod validation schemas
 // ---------------------------------------------------------------------------
 
-export const CreateCitySchema = z.object({
+export const CreateCitySchema = z.strictObject({
   nameFa: z
     .string()
     .trim()
@@ -92,7 +92,7 @@ export const CreateCitySchema = z.object({
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
 });
 
-export const UpdateCitySchema = z.object({
+export const UpdateCitySchema = z.strictObject({
   nameFa: z
     .string()
     .trim()
