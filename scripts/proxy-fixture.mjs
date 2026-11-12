@@ -7,7 +7,13 @@ for (const [port, service] of [
 ]) {
   const server = createServer((req, res) => {
     if (service === 'api' && req.url === '/api/upstream-hsts') {
-      res.writeHead(200, { 'Strict-Transport-Security': 'max-age=1; preload' });
+      res.writeHead(200, {
+        'Strict-Transport-Security': 'max-age=1; preload',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'origin',
+        'Permissions-Policy': 'camera=*',
+        'X-Frame-Options': 'SAMEORIGIN',
+      });
       res.end('fixture');
       return;
     }

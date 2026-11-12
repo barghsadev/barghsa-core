@@ -1,0 +1,44 @@
+name: Verify single edge security headers
+on:
+  push:
+    branches: ['codex/verify/v06-edge-headers-*']
+
+permissions:
+  contents: read
+
+jobs:
+  proxy:
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [pilot, staging]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      PROFILE: ${{ matrix.profile }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Exercise the exact proxy profile and all TLS checks
+        shell: bash
+        run: python3 scripts/test-pilot-proxy.py --profile "$PROFILE" 2>&1 | tee "$RUNNER_TEMP/proxy-positive.log"
+      - name: Confirm the same CI assertions fail for the original duplicate headers
+        shell: bash
+        run: |
+          git show "HEAD^:deploy/$PROFILE/nginx.conf" > "deploy/$PROFILE/nginx.conf"
+          if python3 scripts/test-pilot-proxy.py --profile "$PROFILE" > "$RUNNER_TEMP/proxy-negative.log" 2>&1; then
+            echo "The gate passed despite duplicate upstream headers."
+            exit 1
+          fi
+          grep -F 'upstream response: x-content-type-options' "$RUNNER_TEMP/proxy-negative.log"
+      - name: Retain both exact probe outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-headers-${{ matrix.profile }}
+          path: |
+            ${{ runner.temp }}/proxy-positive.log
+            ${{ runner.temp }}/proxy-negative.log
+          retention-days: 14
