@@ -19,6 +19,14 @@ available notices. Where the scanner found no license, the package stays in
 the review list and the underlying inventory retains the empty license set.
 [Matching preflight inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43157243591)
 
+The `40ac6449` preflight added twelve permitted runtime entries and identified
+`transport@0.0.1` in Pino's published test fixture in both application package
+trees. The fixture has no license metadata. The production build now removes
+that directory from both trees before copying the runtime layers. The rebuilt
+application SBOM retains Pino and omits the fixture. The existing 387 review
+entries still require their named dispositions and final candidate checks.
+[Application image verification](https://github.com/barghsadev/barghsa-core/actions/runs/43170460090)
+
 ## Reviewer and approval
 
 The release gate accepts named owner or legal-reviewer sign-off on exact package exceptions. The owner can provide the policy approval once the stated obligations have been verified. For GPL/LGPL source and replacement questions, the recommended reviewer is a lawyer experienced in open-source software licensing. An internal compliance lead with access to that expertise can coordinate the review. OpenChain's guidance describes access to internal or external legal expertise and assignment of review and approval responsibilities. [OpenChain resource guidance](https://openchain-project.github.io/OpenChain-KWG/en/guide/iso5230_guide/2-relevant-tasks/2-resourced/).

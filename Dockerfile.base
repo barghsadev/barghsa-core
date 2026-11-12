@@ -9,6 +9,9 @@ FROM deps AS build
 RUN pnpm -r --filter @barghsa/api... --filter @barghsa/worker... build
 RUN pnpm --filter @barghsa/api deploy --prod /out/api
 RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
+# Exclude the upstream transport test fixture from both production bundles.
+RUN find /out/api/node_modules /out/worker/node_modules -type d \
+  -path '*/node_modules/pino/test/fixtures/transport' -prune -exec rm -r {} +
 
 FROM node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 AS runtime
 WORKDIR /app

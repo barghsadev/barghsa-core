@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T06:41:26+00:00",
+  "updated": "2026-11-12T06:48:37+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8185,7 +8185,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -8229,6 +8229,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -8310,7 +8318,7 @@
           "source_evidence": [
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -8342,6 +8350,14 @@
                 "packages/db/src/index.test.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -8409,7 +8425,7 @@
           "source_evidence": [
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -8441,6 +8457,14 @@
                 "packages/db/src/query-cancellation.integration.test.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -8538,7 +8562,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -8583,6 +8607,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -11208,7 +11240,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "deploy/production/README.md",
@@ -11389,6 +11421,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -11938,7 +11978,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -12005,6 +12045,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -12092,7 +12140,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -12160,6 +12208,14 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -12988,7 +13044,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -13033,6 +13089,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -13183,7 +13247,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.ts",
@@ -13329,6 +13393,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -13554,7 +13626,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             }
           ],
           "checks": [
@@ -13597,6 +13669,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -39632,7 +39712,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "d8b0ed56b36423fd3a153cf8a09ce7de5f6d1917830d1595382eaff264dd1d87"
+              "sha256": "b0e8ceb914d572236eb0a8190080c77b0bd1608dcea0b2f32a9093142a314990"
             }
           ],
           "checks": [
@@ -40043,6 +40123,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -40479,7 +40567,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -40855,6 +40943,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -45542,7 +45638,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -45918,6 +46014,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -92810,7 +92914,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -94702,6 +94806,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -108180,7 +108292,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -108714,6 +108826,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -109364,7 +109484,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -109898,6 +110018,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -110548,7 +110676,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -111082,6 +111210,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -111733,7 +111869,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -112267,6 +112403,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -112917,7 +113061,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -113451,6 +113595,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -114051,7 +114203,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -114501,6 +114653,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -115113,7 +115273,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -115474,6 +115634,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -115992,7 +116160,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -116526,6 +116694,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -127173,7 +127349,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "565c8f9941aeac2932beab6c936fa2e7d76b71d2703f280938429118508d20dd"
+              "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -127418,6 +127594,14 @@
                 "apps/worker/src/jobs/poller-group.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "apps/worker/src/jobs/job-recorder.test.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -127623,7 +127807,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "565c8f9941aeac2932beab6c936fa2e7d76b71d2703f280938429118508d20dd"
+              "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -127868,6 +128052,14 @@
                 "apps/worker/src/jobs/poller-group.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "apps/worker/src/jobs/job-recorder.test.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -134545,7 +134737,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -134945,7 +135137,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -135650,6 +135842,15 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -342552,7 +342753,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -342928,6 +343129,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -351402,7 +351611,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -351778,6 +351987,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -375208,7 +375425,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -375584,6 +375801,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -408972,7 +409197,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -409348,6 +409573,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -517815,7 +518048,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -518267,6 +518500,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -518437,7 +518678,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -518884,6 +519125,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -519425,7 +519674,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -519872,6 +520121,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -520211,7 +520468,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/migrate.snapshot.test.ts",
@@ -520569,6 +520826,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -521108,7 +521373,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -521555,6 +521820,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -521724,7 +521997,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -522195,6 +522468,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -522364,7 +522645,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -522835,6 +523116,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -523004,7 +523293,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -523475,6 +523764,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -523644,7 +523941,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -524115,6 +524412,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -524283,7 +524588,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -524730,6 +525035,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -537499,7 +537812,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -537821,6 +538134,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -538195,7 +538516,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -538517,6 +538838,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -538889,7 +539218,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -539211,6 +539540,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -539583,7 +539920,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -539929,6 +540266,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -540795,7 +541140,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -541117,6 +541462,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -541297,7 +541650,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -541701,7 +542054,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -542426,6 +542779,15 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -542953,7 +543315,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -543275,6 +543637,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -543646,7 +544016,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -543968,6 +544338,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -544340,7 +544718,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -544662,6 +545040,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -545035,7 +545421,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -545381,6 +545767,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -545752,7 +546146,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -546074,6 +546468,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -546445,7 +546847,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -546767,6 +547169,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -548960,7 +549370,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -549048,6 +549458,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -549096,7 +549514,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -549227,6 +549645,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -569408,7 +569834,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -569583,6 +570009,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -570106,7 +570540,8 @@
       "launch_required": true,
       "remaining": [
         "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated e6da94c9 review packet. The 170 original entries and 217 staging PostgreSQL entries match hosted run 43157243591. Verify applicable notices, corresponding source and replacement conditions before recording exceptions.",
-        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
+        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
+        "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -570121,7 +570556,13 @@
           "deploy/staging/test_notify_release.py",
           "docs/operations/backup/postgresql-image-upgrade.md",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "Dockerfile.base",
+          "apps/worker/src/jobs/job-recorder.test.ts",
+          "apps/worker/src/runtime-log-safety.test.ts",
+          "docs/operations/structured-logging.md",
+          "packages/db/src/index.ts",
+          "packages/shared/src/operator-logging.ts"
         ],
         "batches": [
           "release-0.6-font-source-provenance",
@@ -570140,7 +570581,8 @@
           "release-0.6-license-handoff-current",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-unified-license-review"
+          "release-0.6-unified-license-review",
+          "release-0.6-runtime-log-channel-and-image"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -570303,7 +570745,13 @@
           "scripts/test_check_release_licenses.py",
           "docs/security/release-license-review.md",
           "deploy/staging/release-queue.py",
-          "deploy/staging/test_release_queue.py"
+          "deploy/staging/test_release_queue.py",
+          "Dockerfile.base",
+          "apps/worker/src/jobs/job-recorder.test.ts",
+          "apps/worker/src/runtime-log-safety.test.ts",
+          "docs/operations/structured-logging.md",
+          "packages/db/src/index.ts",
+          "packages/shared/src/operator-logging.ts"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
@@ -570314,7 +570762,8 @@
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-runtime-image-binding"
+          "release-0.6-runtime-image-binding",
+          "release-0.6-runtime-log-channel-and-image"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -570493,7 +570942,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -570587,6 +571036,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -570912,7 +571369,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -571082,6 +571539,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -571127,7 +571592,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -571188,6 +571653,14 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -581534,7 +582007,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             }
           ],
           "source_renewals": [
@@ -581641,6 +582114,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -582197,7 +582678,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -582342,6 +582823,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -583259,7 +583748,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             }
           ],
           "source_renewals": [
@@ -583270,6 +583759,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -587686,7 +588183,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "565c8f9941aeac2932beab6c936fa2e7d76b71d2703f280938429118508d20dd"
+              "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -587742,7 +588239,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "68422f5b2949fb8e1da664cb9b9dd0ffc1f331168774a62883b2e21315276bdd"
+              "sha256": "2c30187492512f84c86402cf1c22dccf290f5d2f697ae79a95913d3e587e6aa5"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -587750,7 +588247,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -587766,7 +588263,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
-              "sha256": "4ef0576ab615ad2e71f90a056626c308622d22682cbe9517a5f6fed55c6563be"
+              "sha256": "85c1ce043714731ddeea048c1877c6e6eb240b12155287caa86f4ebd0d0018c3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -587793,6 +588290,17 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "apps/worker/src/jobs/job-recorder.test.ts",
+                "docs/operations/structured-logging.md",
+                "packages/db/src/index.ts",
+                "packages/shared/src/operator-logging.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -587942,7 +588450,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "565c8f9941aeac2932beab6c936fa2e7d76b71d2703f280938429118508d20dd"
+              "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -587998,7 +588506,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "68422f5b2949fb8e1da664cb9b9dd0ffc1f331168774a62883b2e21315276bdd"
+              "sha256": "2c30187492512f84c86402cf1c22dccf290f5d2f697ae79a95913d3e587e6aa5"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -588006,7 +588514,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -588022,7 +588530,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
-              "sha256": "4ef0576ab615ad2e71f90a056626c308622d22682cbe9517a5f6fed55c6563be"
+              "sha256": "85c1ce043714731ddeea048c1877c6e6eb240b12155287caa86f4ebd0d0018c3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -588049,6 +588557,17 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "apps/worker/src/jobs/job-recorder.test.ts",
+                "docs/operations/structured-logging.md",
+                "packages/db/src/index.ts",
+                "packages/shared/src/operator-logging.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -588673,7 +589192,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "565c8f9941aeac2932beab6c936fa2e7d76b71d2703f280938429118508d20dd"
+              "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -588729,7 +589248,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "68422f5b2949fb8e1da664cb9b9dd0ffc1f331168774a62883b2e21315276bdd"
+              "sha256": "2c30187492512f84c86402cf1c22dccf290f5d2f697ae79a95913d3e587e6aa5"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -588737,7 +589256,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -588753,7 +589272,7 @@
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
-              "sha256": "4ef0576ab615ad2e71f90a056626c308622d22682cbe9517a5f6fed55c6563be"
+              "sha256": "85c1ce043714731ddeea048c1877c6e6eb240b12155287caa86f4ebd0d0018c3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -588780,6 +589299,17 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "apps/worker/src/jobs/job-recorder.test.ts",
+                "docs/operations/structured-logging.md",
+                "packages/db/src/index.ts",
+                "packages/shared/src/operator-logging.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -589561,13 +590091,17 @@
           "packages/shared/src/operator-logging.ts",
           "pnpm-lock.yaml",
           "scripts/proxy-fixture.mjs",
-          "scripts/test-pilot-proxy.py"
+          "scripts/test-pilot-proxy.py",
+          "Dockerfile.base",
+          "apps/worker/src/runtime-log-safety.test.ts",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-operator-log-pseudonyms",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
-          "release-0.6-structured-operator-logs"
+          "release-0.6-structured-operator-logs",
+          "release-0.6-runtime-log-channel-and-image"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -592019,7 +592553,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -592272,6 +592806,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -597300,7 +597842,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -597456,6 +597998,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -597512,7 +598062,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -597668,6 +598218,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -597778,7 +598336,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -598086,6 +598644,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -600402,7 +600968,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -600584,6 +601150,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         }
@@ -879794,7 +880368,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -880334,6 +880908,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -880780,7 +881362,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -881320,6 +881902,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -897297,7 +897887,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -899272,6 +899862,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "presentation_renewals": [
@@ -902113,7 +902711,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "6aad572b85fc2d0bbecb75efe9af0df3cd2ba53f97ec8d737bf3021c33c02acf"
+              "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -903987,6 +904585,14 @@
                 "package.json"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -908831,7 +909437,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+              "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
             },
             {
               "path": "Dockerfile.web",
@@ -908903,6 +909509,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Branding adds a fallback appearance field to the existing versioned config and both browser shells. The OpenAPI delta is limited to the two branding operations. Existing forced policies, visual overrides, authorization, activation, recovery and assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-runtime-log-channel-and-image",
+              "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
             }
           ]
         },
@@ -908940,7 +909554,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Verify the corrected cumulative tip in the exact protected integrity check. Run 43163146083 passed the earlier profile and address cases and failed one stale dual-approval unit assertion that expected acceptance of an unknown field. The corrected focused controller suite passed all 24 cases."
+        "Verify the corrected cumulative tip in the exact protected integrity check. Run 43168708755 stopped at the five worker and inference stderr assertions. The related local runtime and packaged image channel checks now pass."
       ],
       "owner": null,
       "depends_on": [],
@@ -909204,7 +909818,8 @@
           "release-0.6-critical-review-accessibility",
           "release-0.6-structured-operator-logs",
           "release-0.6-dual-approval-strict-fixture",
-          "release-0.6-weekly-mutation-and-dependencies"
+          "release-0.6-weekly-mutation-and-dependencies",
+          "release-0.6-runtime-log-channel-and-image"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -909402,7 +910017,9 @@
           ".github/workflows/load-weekly.yml",
           "packages/shared/src/finance/wallet-reconciliation.test.ts",
           "packages/shared/stryker.config.mjs",
-          "packages/shared/vitest.mutation.config.ts"
+          "packages/shared/vitest.mutation.config.ts",
+          "Dockerfile.base",
+          "apps/worker/src/runtime-log-safety.test.ts"
         ]
       }
     },
@@ -1047334,6 +1047951,185 @@
         {
           "file": "wallet-mutation.log",
           "sha256": "3f6925d11bcf44a1a6938ead4a1f3c626d0ecde69b8e672448e6dbc0acdfb985"
+        }
+      ]
+    },
+    "release-0.6-runtime-log-channel-and-image": {
+      "batch": "release-0.6-runtime-log-channel-and-image",
+      "base_commit": "4f107ed8514674dd7c3cb148490fcc23aaee0325",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.13.02.07",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-02.01.01",
+        "01-platform-infrastructure.md#T-02.01.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "01-platform-infrastructure.md#T-02.01.04",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "01-platform-infrastructure.md#T-03.03.01",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-03.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.05.01.04",
+        "03-core-business.md#T-03.05.03.02",
+        "03-core-business.md#T-03.07.01.01",
+        "03-core-business.md#T-03.09.01.01",
+        "05-notifications-documents-ai.md#T-05.11.02",
+        "05-notifications-documents-ai.md#T-05.11.03",
+        "05-notifications-documents-ai.md#T-05.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.12.01",
+        "05-notifications-documents-ai.md#T-05.12.02",
+        "05-notifications-documents-ai.md#T-05.12.03",
+        "05-notifications-documents-ai.md#T-05.13.01",
+        "05-notifications-documents-ai.md#T-05.13.02",
+        "05-notifications-documents-ai.md#T-05.13.03",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.07.03.06",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.11.04.03",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.01"
+      ],
+      "changed_paths": [
+        "Dockerfile.base",
+        "apps/worker/src/jobs/job-recorder.test.ts",
+        "apps/worker/src/runtime-log-safety.test.ts",
+        "docs/operations/structured-logging.md",
+        "packages/db/src/index.ts",
+        "packages/shared/src/operator-logging.ts",
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.test.ts",
+          "sha256": "aec7a5d0694aa4d7195e3d437c81f8ce2109951994b883b7c45faec09792bc56"
+        },
+        {
+          "path": "apps/worker/src/runtime-log-safety.test.ts",
+          "sha256": "32fe30f1f8d05c30d8e79f57eec4544861f760e02fdf00938154337c50e59b23"
+        },
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "2c30187492512f84c86402cf1c22dccf290f5d2f697ae79a95913d3e587e6aa5"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "771fffc8c0ff16f0b2c56b99f44ae1675e3c09cb2dc934044ee46da1033870af"
+        },
+        {
+          "path": "packages/shared/src/operator-logging.ts",
+          "sha256": "85c1ce043714731ddeea048c1877c6e6eb240b12155287caa86f4ebd0d0018c3"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "b0e8ceb914d572236eb0a8190080c77b0bd1608dcea0b2f32a9093142a314990"
+        }
+      ],
+      "checks": [
+        "Protected run 43168708755 found five runtime logging failures because API and worker errors moved from stderr. The shared logger now routes error and fatal records to stderr. The database pool keeps its established stdout channel. The existing failure scenarios retain their exit, log privacy and correlation assertions.",
+        "All 48 focused caller tests passed, including the five worker and inference process failure cases. API and worker builds, affected package typechecks, changed-file lint, formatting and whitespace checks passed.",
+        "The earlier 40ac6449 application SBOM located the extra transport@0.0.1 entry in Pino's test fixture in both packaged API and worker trees. Dockerfile.base removes that exact directory from both production bundles before their runtime layers are copied. No change was made to the license policy.",
+        "Hosted run 43170460090 built the exact production application image, exercised both package trees and verified separate JSON warning and error output, runtime Pino resolution and absence of the fixture and development mutation tool. The image-ID-bound Trivy SBOM includes Pino and omits transport@0.0.1."
+      ],
+      "limitations": [
+        "The targeted image diagnostic covers the production application image. The strict five-image and browser license gate still requires the existing named approvals and final source-bound receipts.",
+        "Exact protected publication and v0.6.0 staging and Telegram confirmation remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-runtime-log-channel-and-image",
+      "execution_receipts": [
+        {
+          "file": "snapshot.json",
+          "sha256": "489e7df7c071cf6aed58704dcbe306b065e19944529305ffa983fa323f674607"
+        },
+        {
+          "file": "failed-run.json",
+          "sha256": "5987474a61501b92c83a241b5bae5c1833548561b4a0433a5ecd46452653d2dc"
+        },
+        {
+          "file": "image-run.json",
+          "sha256": "2f52ff8b566637cfe561d3b0197cbb8990fcc078e97611a184738b57f8014374"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "8522ef802b72b425fa3bf5960f260fb8fd96ff24e9d88cabfca651b176feea44"
+        },
+        {
+          "file": "build.log",
+          "sha256": "485847c0ae4d00948ca7ccf2483ae06065604d6c2671df5633cb39f7c364862f"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "998faa5cbe028c4bf8eb60ee85bc0405d017e869ec9e2e2dbfc54ab9df65d5f4"
+        },
+        {
+          "file": "image/stdout.jsonl",
+          "sha256": "526752299f9cd87b2ec6ffb8281ab43ba8cd5c4b252d3afc9a08abbe4b69a511"
+        },
+        {
+          "file": "image/stderr.jsonl",
+          "sha256": "151274a33537b899f32e0ffb27831df0bb804ef2a08685b02d58a2256a3ee9b4"
+        },
+        {
+          "file": "image/1-image.json",
+          "sha256": "c6e6dc801541e20d62bfe904a72c178b41ba030a3ef1cb69d8cc1db0fe6fe4fa"
+        },
+        {
+          "file": "image/1-sbom.cdx.json",
+          "sha256": "70d4f20a9a77a1c8538ea69d95d88899cbb8b4a417f28f8a363274a56a08a31f"
+        },
+        {
+          "file": "image/1-vulnerabilities.json",
+          "sha256": "9b8e1dac0fa291116aa8a21c7e8b3367bcebf4773c9b90565aa8eed4aff48a9a"
         }
       ]
     }

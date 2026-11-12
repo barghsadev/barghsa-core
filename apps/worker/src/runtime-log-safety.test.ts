@@ -75,6 +75,17 @@ it.each([
   );
   expect(child.error).toBeUndefined();
   expect(child.stderr).toContain(scenario.diagnostic);
+  const record = child.stderr
+    .split('\n')
+    .filter((line) => line.startsWith('{'))
+    .map((line) => JSON.parse(line))
+    .find((entry) => entry.message === scenario.diagnostic);
+  expect(record).toMatchObject({
+    level: 'error',
+    service: scenario.entry === 'main' ? 'worker' : 'ai-inference',
+    correlationId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/),
+  });
+  expect(child.stdout).not.toContain(scenario.diagnostic);
   expect(child.status).toBe(scenario.exitCode);
   expect(child.stdout + child.stderr).not.toContain(privateError);
 });

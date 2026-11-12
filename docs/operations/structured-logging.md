@@ -3,6 +3,8 @@
 The API, background worker, inference process and database pool use Pino to
 write one JSON record per line. The static web server and edge proxy use the
 same core fields with their existing runtime log destinations.
+API and worker error and fatal records use stderr. Database pool diagnostics
+retain their existing stdout destination.
 
 Every record carries `timestamp`, `level`, `service`, `environment` and
 `correlationId`. API request outcomes include the registered route template,
