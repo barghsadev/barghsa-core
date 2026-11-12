@@ -27,6 +27,15 @@ application SBOM retains Pino and omits the fixture. The existing 387 review
 entries still require their named dispositions and final candidate checks.
 [Application image verification](https://github.com/barghsadev/barghsa-core/actions/runs/43170460090)
 
+The image job at `736bcb0c` reported 848 package and scope entries. The 387
+pending entries match the reviewer workbook by scope, exact package URL,
+observed licenses and installation location. The other 461 entries pass the
+current allowlist. The report SHA-256 is
+`20cff858e60c357c84d1dacb1139b4916b83c6d51284240d1a9c909ec572376d`.
+Use the existing workbook for the pending dispositions. The final release
+requires the strict check on its own immutable images.
+[Current image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43286083146)
+
 ## Reviewer and approval
 
 The release gate accepts named owner or legal-reviewer sign-off on exact package exceptions. The owner can provide the policy approval once the stated obligations have been verified. For GPL/LGPL source and replacement questions, the recommended reviewer is a lawyer experienced in open-source software licensing. An internal compliance lead with access to that expertise can coordinate the review. OpenChain's guidance describes access to internal or external legal expertise and assignment of review and approval responsibilities. [OpenChain resource guidance](https://openchain-project.github.io/OpenChain-KWG/en/guide/iso5230_guide/2-relevant-tasks/2-resourced/).

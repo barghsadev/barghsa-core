@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T19:13:34+00:00",
+  "updated": "2026-11-12T19:22:19+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20410,7 +20410,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated e6da94c9 review packet. The 170 original entries and 217 staging PostgreSQL entries match hosted run 43157243591. Verify applicable notices, corresponding source and replacement conditions before recording exceptions.",
+        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated review packet. Report-only image run 43286083146 at 736bcb0c matches all 387 by scope, exact package URL, observed licenses and location. Verify applicable notices, corresponding source and replacement conditions before approving exceptions.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -20462,7 +20462,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-hosted-signed-ubuntu-archive-fallback",
           "release-0.6-license-handoff-current",
-          "release-0.6-unified-license-review"
+          "release-0.6-unified-license-review",
+          "release-0.6-gate-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -21061,7 +21062,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify a successful scheduled 40-shard run on current release source and its seven-day history. Run 43190340052 reported all 40 shards, with one failure and one flake. Preserve earlier failed and unavailable detailed receipts in the history.",
+        "Verify a successful scheduled 40-shard run on current release source and its seven-day history. Run 43190340052 reported all 40 shards, with one failure and one flake. Preserve earlier failed and unavailable detailed receipts in the history. The two affected Persian mobile Safari cases each passed twice on the current production web build. An actual clean scheduled rollup is still required.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21147,7 +21148,8 @@
           "release-0.6-webkit-fixture-idle-connection",
           "release-0.6-webkit-contrast-readback",
           "release-0.6-nightly-email-receipts",
-          "release-0.6-price-dialog-opening"
+          "release-0.6-price-dialog-opening",
+          "release-0.6-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -43934,7 +43936,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "b0e8ceb914d572236eb0a8190080c77b0bd1608dcea0b2f32a9093142a314990"
+              "sha256": "01ab92b2a35300200663abab003ae6ed57acbaf4cacbb38bf12b15dea3c3cc7f"
             }
           ],
           "checks": [
@@ -44402,6 +44404,14 @@
                 "apps/web/e2e/form-accessibility.spec.ts"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-gate-readback",
+              "base_commit": "c8d378cd4a2d71965832e5690e8a7a50e32801da",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "The updated license review packet records an exact inventory comparison. The license policy and approval requirements remain in force."
             }
           ],
           "presentation_renewals": [
@@ -638704,7 +638714,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated e6da94c9 review packet. The 170 original entries and 217 staging PostgreSQL entries match hosted run 43157243591. Verify applicable notices, corresponding source and replacement conditions before recording exceptions.",
+        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated review packet. Report-only image run 43286083146 at 736bcb0c matches all 387 by scope, exact package URL, observed licenses and location. Verify applicable notices, corresponding source and replacement conditions before approving exceptions.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts."
       ],
@@ -638751,7 +638761,8 @@
           "release-0.6-unified-license-review",
           "release-0.6-runtime-log-channel-and-image",
           "release-0.6-weekly-dependency-advisory",
-          "release-0.6-reuse-affected-preflight"
+          "release-0.6-reuse-affected-preflight",
+          "release-0.6-gate-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -642471,7 +642482,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the updated selector in an exact protected push. The installed CLI uses vitest related --run for test-only diffs. The isolated Linux run executed the changed PostgreSQL HTTP and web tests and confirmed a passing case per file. Runtime, shared, migration, fixture and configuration changes retain the package-graph scope. The full release coverage gate remains separate."
+        "Verify the updated selector in an exact protected push. The installed CLI uses vitest related --run for test-only diffs. The isolated Linux run executed the changed PostgreSQL HTTP and web tests and confirmed a passing case per file. Runtime, shared, migration, fixture and configuration changes retain the package-graph scope. The full release coverage gate remains separate. The successful f8d97479 protected preflight and main runs used the package graph for their cumulative diffs, so neither proves the test-only branch."
       ],
       "owner": null,
       "depends_on": [],
@@ -642486,7 +642497,8 @@
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-prebuilt-ci-test-selection",
-          "release-0.6-related-test-selection"
+          "release-0.6-related-test-selection",
+          "release-0.6-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -675284,7 +675296,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry.",
+        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
       ],
       "owner": null,
@@ -675313,7 +675325,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-synthetic-staging-scrape",
-          "release-0.6-tls-expiry-warning"
+          "release-0.6-tls-expiry-warning",
+          "release-0.6-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -1009194,7 +1009207,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-alert-delivery-watchdog",
           "release-0.6-sealed-clamav-lifecycle",
-          "release-0.6-private-jaeger-readback-rehearsal"
+          "release-0.6-private-jaeger-readback-rehearsal",
+          "release-0.6-gate-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1009229,7 +1009243,13 @@
         "changed_paths": [
           "apps/api/src/documents/document-http.integration.test.ts",
           "docs/operations/clamav-signatures.md"
-        ]
+        ],
+        "latest_staging_scanner_readback": {
+          "release": "0.5.1",
+          "commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+          "database": 28181,
+          "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-gate-readback/staging-scanner-version.txt"
+        }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
     },
@@ -1168650,6 +1168670,98 @@
           "sha256": "ad5ef4493141b59c3b440cd7af65abfd32d7cb6a4b2b64468d33bb73cb7d9e90"
         }
       ]
+    },
+    "release-0.6-gate-readback": {
+      "batch": "release-0.6-gate-readback",
+      "base_commit": "c8d378cd4a2d71965832e5690e8a7a50e32801da",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "release-readiness#R-05.03",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "01ab92b2a35300200663abab003ae6ed57acbaf4cacbb38bf12b15dea3c3cc7f"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "sha256": "e282b6b87f04929cd19819ffe9d0ec400788550754c5d589af1121a4984e665d"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "a576dadcb0d8500877b591b7610a81c5ae8732b925289ff8cb7daedcdc47414a"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic.yml",
+          "sha256": "e3d106c7d834038f2564ff84ec4d3a291f53b0c7d982e643939ff2ff5dfa8a0b"
+        }
+      ],
+      "checks": [
+        "Hosted image inventory 43286083146 at 736bcb0c returned 848 entries. Its 387 pending rows match the reviewer workbook exactly by scope, package URL, license set and location. Its 461 other entries pass the allowlist.",
+        "The two Persian mobile Safari regressions from nightly 43190340052 each passed twice on the current production web build. The scheduled receipt still needs a clean 40-shard run and the configured delivery receipt.",
+        "Live v0.5.1 staging has healthy API and worker scrape targets. The independent synthetic target was absent. ClamAV reports daily signature database 28181 dated 12 November.",
+        "Both successful f8d97479 GitHub runs used the affected package graph for cumulative changes. Their results do not fulfill the exact test-only selector check."
+      ],
+      "limitations": [
+        "The current license inventory is report-only. It does not authorize package exceptions or promotion.",
+        "The browser regression run is targeted local evidence. It cannot certify the scheduled browser matrix or nightly email.",
+        "The staging readback does not exercise the exact v0.6.0 candidate or prove authenticated synthetic monitoring and on-call delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-gate-readback",
+      "execution_receipts": [
+        {
+          "file": "license-review-match.json",
+          "sha256": "ac9c4f410a0c3a174a4bdd3872f5d8a0979a8b948ce34104e27bb30f49f9d44e"
+        },
+        {
+          "file": "nightly-regression.log",
+          "sha256": "dee0a788ecfef77d9cb23ef46e76aa181817abce079825f9da956e13a8c6dcba"
+        },
+        {
+          "file": "staging-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-scrapes.json",
+          "sha256": "fc3b0ad6b2e87e5ea6ceb8c49f8509eb004e0c791d59ddaaa35b1b2a946767d8"
+        },
+        {
+          "file": "staging-scanner-version.txt",
+          "sha256": "478400570412aaf8a14a5d9eaa4778b4ae37b0e3ce092088a57a951c36e69d5b"
+        },
+        {
+          "file": "related-selection-readback.json",
+          "sha256": "e8ddc461540dcdcd968aaac9d697966efd9742770b781c83c19a71ab589acaba"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -1168704,7 +1168816,7 @@
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open. GitHub verified main at de6e5374 after a successful exact preflight. The targeted WebKit branding and team journeys passed with the repaired test fixture. The final scheduled rollup and legal dispositions remain open. The next exact protected preflight 43099755916 passed on 256a0d1c, and GitHub confirmed that SHA on main. The Drizzle and node-postgres SQL lint criteria now have source-bound passing checks."
+    "method": "v0.5.1 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open. GitHub verified main at de6e5374 after a successful exact preflight. The targeted WebKit branding and team journeys passed with the repaired test fixture. The final scheduled rollup and legal dispositions remain open. The next exact protected preflight 43099755916 passed on 256a0d1c, and GitHub confirmed that SHA on main. The Drizzle and node-postgres SQL lint criteria now have source-bound passing checks."
   },
   "capabilities": [
     {
