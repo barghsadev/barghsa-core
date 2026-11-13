@@ -137,6 +137,10 @@ for (const locale of ['en', 'fa'] as const)
       await expect(modelRow).toContainText(dollars.format(2.5));
       await expect(modelRow).toContainText(modelText('lastTest'));
       await expect(modelRow).toContainText(modelText('circuitOpen'));
+      await inspect('model-table-desktop.png');
+      // Exercise keyboard scrolling where the desktop table actually overflows.
+      await page.setViewportSize({ width: 1024, height: 900 });
+      await expect(modelTable).toBeVisible();
       const viewport = page.getByRole('region', { name: modelCaption, exact: true });
       const before = await viewport.evaluate((node) => ({
         left: node.scrollLeft,
@@ -146,7 +150,7 @@ for (const locale of ['en', 'fa'] as const)
       await viewport.focus();
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(before.left);
-      await inspect('model-table-desktop.png');
+      await page.setViewportSize({ width: 1280, height: 900 });
       await modelRow.getByRole('button', { name: modelText('edit'), exact: true }).press('Enter');
       const modelDraft = page.locator('#ai-model-title');
       await expect(modelDraft).toHaveValue(model.title);

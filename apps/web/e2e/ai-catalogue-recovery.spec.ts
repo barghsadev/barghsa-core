@@ -43,13 +43,16 @@ for (const locale of ['en', 'fa'] as const) {
               }
       )
     );
-    await page.setViewportSize({ width: 1280, height: 900 });
+    // Keep the desktop table visible with a pane narrow enough to require scrolling.
+    await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto('/admin/ai-models');
     await expect(page.locator('tbody tr')).toHaveCount(1);
     const viewport = page.getByRole('region', {
       name: aiModelFormText('list', locale),
       exact: true,
     });
+    await expect(viewport).toBeVisible();
+    expect(await viewport.evaluate((node) => node.scrollWidth > node.clientWidth)).toBe(true);
     await viewport.focus();
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect

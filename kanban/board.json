@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:24:50+00:00",
+  "updated": "2026-11-13T10:30:44+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Its email job was skipped. The 44-pixel workspace header regression was reproduced and fixed locally. Triage remaining AI catalogue, knowledge and registration outcomes and obtain a clean scheduled rollup on the final candidate.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Its email job was skipped. The 44-pixel workspace header and six AI catalogue scrolling failures were reproduced and corrected with targeted browser proof. Triage the remaining knowledge, registration and shard outcomes and obtain a clean scheduled rollup on the final candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21792,7 +21792,8 @@
           "release-0.6-nightly-email-receipts",
           "release-0.6-price-dialog-opening",
           "release-0.6-gate-readback",
-          "release-0.6-nightly-header-target"
+          "release-0.6-nightly-header-target",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": null
       }
@@ -628514,7 +628515,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The live v0.5.1 report-only logs contain three same-origin inline style reports at the exact Sonner empty-style insertion instruction. The pinned patch resolves the native report on the local candidate with CSP enforcement and preserves the approved CSS hash. The favicon remains verified. Verify the patch on the exact staged candidate, complete the representative full-week report-only review and exercise the customer and staff journeys before enforcement."
+        "The live v0.5.1 report-only logs contain three same-origin inline style reports at the exact Sonner empty-style insertion instruction. The pinned patch resolves the native report on the local candidate with CSP enforcement and preserves the approved CSS hash. The favicon remains verified. Verify the patch on the exact staged candidate, complete the representative full-week report-only review and exercise the customer and staff journeys before enforcement. The owner-activated favicon matched in Chromium and WebKit on November 13, and the staging API recorded zero violations from November 12 21:35 UTC to November 13 10:28 UTC."
       ],
       "owner": null,
       "depends_on": [],
@@ -628528,7 +628529,8 @@
           "release-0.6-staging-favicon-publication-prep",
           "release-0.6-published-staging-favicon",
           "release-0.6-staging-favicon-csp-followup",
-          "release-0.6-sonner-csp-style-insertion"
+          "release-0.6-sonner-csp-style-insertion",
+          "release-0.6-staging-favicon-live-recheck"
         ],
         "current_acceptance": null
       }
@@ -705793,7 +705795,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -705809,7 +705812,7 @@
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
-              "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+              "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -706210,6 +706213,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-nightly-ai-catalogue-scroll",
+              "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+              "paths": [
+                "apps/web/e2e/ai-catalogue-tables.spec.ts"
+              ],
+              "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
             }
           ]
         },
@@ -748550,7 +748561,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -748586,7 +748598,7 @@
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
-              "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+              "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -749656,6 +749668,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-nightly-ai-catalogue-scroll",
+              "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+              "paths": [
+                "apps/web/e2e/ai-catalogue-tables.spec.ts"
+              ],
+              "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
             }
           ]
         }
@@ -749792,7 +749812,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -749828,7 +749849,7 @@
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
-              "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+              "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -750898,6 +750919,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-nightly-ai-catalogue-scroll",
+              "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+              "paths": [
+                "apps/web/e2e/ai-catalogue-tables.spec.ts"
+              ],
+              "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
             }
           ]
         }
@@ -751790,7 +751819,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -751826,7 +751856,7 @@
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
-              "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+              "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -752896,6 +752926,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-nightly-ai-catalogue-scroll",
+              "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+              "paths": [
+                "apps/web/e2e/ai-catalogue-tables.spec.ts"
+              ],
+              "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
             }
           ]
         }
@@ -816021,7 +816059,8 @@
           "integrated-qa-preview-journeys",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-nightly-ai-catalogue-scroll"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -816065,7 +816104,7 @@
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
-              "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+              "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
@@ -819203,6 +819242,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
+            },
+            {
+              "batch": "release-0.6-nightly-ai-catalogue-scroll",
+              "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+              "paths": [
+                "apps/web/e2e/ai-catalogue-tables.spec.ts"
+              ],
+              "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
             }
           ]
         }
@@ -1029606,7 +1029653,8 @@
           "release-0.6-postgres-restore-readback",
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-favicon-csp-followup",
-          "release-0.6-sonner-csp-style-insertion"
+          "release-0.6-sonner-csp-style-insertion",
+          "release-0.6-staging-favicon-live-recheck"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1193936,6 +1193984,104 @@
         {
           "file": "nightly-summary/nightly-browser-summary.json",
           "sha256": "2bfb298c2514450654996cad16c0f2a4e29e26c47f170b04ddcea0d7b30b8612"
+        }
+      ]
+    },
+    "release-0.6-nightly-ai-catalogue-scroll": {
+      "batch": "release-0.6-nightly-ai-catalogue-scroll",
+      "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "07-ui-ux-design.md#T-07.01.03.18",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/ai-catalogue-recovery.spec.ts",
+        "apps/web/e2e/ai-catalogue-tables.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-catalogue-recovery.spec.ts",
+          "sha256": "bb9f48575be75bc0d6b72498d55d183ec341f761f3ab5de29e7f0b2476f15228"
+        },
+        {
+          "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
+          "sha256": "4807f6aea36f87d8180a406097b143503118896b4d8e16f51c6cd3984403c48c"
+        },
+        {
+          "path": "apps/web/src/components/AiModelRecordTable.tsx",
+          "sha256": "4df0a93086d12c7f76cb5f62c60f153562ffc53cc2d646c29d02d4e60fee311a"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.tsx",
+          "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+        },
+        {
+          "path": "packages/ui/src/lib/scroll-keyboard.ts",
+          "sha256": "4369a7e8103d8b5c88c5f572b3157633873aa7fb4077556ce495e5b9f6aa744d"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "8c8827557cb184d1dfdd3b81a00fe157cc12e56a262802cdba85fc98b8fd9022"
+        }
+      ],
+      "checks": [
+        "All six affected English and Persian WebKit failures from run 43398455059 reproduced against the built workspace. At 1280px the model table fits and cannot scroll.",
+        "Tests exercise true desktop overflow at 1024px. They preserve keyboard scroll assertions, 1280px desktop presentation, 390px cards, axe checks, and action/draft safeguards. No product code changed.",
+        "Both affected specs passed all 30 cases across Chromium, WebKit and mobile Safari without retries. Prettier and diff validation passed."
+      ],
+      "limitations": [
+        "The two specs establish the targeted correction. Knowledge, registration and other outcomes still need triage and a clean scheduled rollup with delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-ai-catalogue-scroll",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "1b4db2e30bff1b92245293c3c6a11c1c214ba3ed75c6ffa67eb554680849b181"
+        },
+        {
+          "file": "final.log",
+          "sha256": "66c01208819004624d19b545359f6f6ad1aa0ee0c42e0edb0b6cae6722e27811"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-live-recheck": {
+      "batch": "release-0.6-staging-favicon-live-recheck",
+      "base_commit": "08f9d7d436c5346711fa1e8b85b0b6707f99836b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "b5fb754d77b44e0d7b893d3c5ed68042ff26d682fd3e1af107331082a5defef5"
+        }
+      ],
+      "checks": [
+        "At 10:28 UTC on November 13, Chromium and WebKit each fetched the published same-origin PNG on the live v0.5.1 login page. Both response bodies matched the owner-activated file, with PNG content type, no-store, and no browser CSP events during the probe.",
+        "The live staging API retained zero CSP violation reports from November 12 21:35 UTC through November 13 10:28 UTC. The API container started at November 12 18:45 UTC with zero restarts."
+      ],
+      "limitations": [
+        "The live policy remains report-only. This bounded readback does not substitute for a full representative observation week, the exact staged Sonner candidate, or customer/staff enforcement proof."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
+      "execution_receipts": [
+        {
+          "file": "staging-favicon-live-20261113.json",
+          "sha256": "5a84af185bcb5d50412b3fc60d190235c1af401d0e9955c7bb2cc83825551d6c"
+        },
+        {
+          "file": "staging-favicon-csp-20261113.txt",
+          "sha256": "dcbb5d72b722bfbbd68b376381d6d4232afdf97b37be781c772648d6b18f3fca"
         }
       ]
     }
