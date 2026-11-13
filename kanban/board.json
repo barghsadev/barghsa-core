@@ -16671,7 +16671,8 @@
         "Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy.",
         "Story-level disk alerts, protected backup monitoring host and exporter, real backup failure and stale detection, and verified P1 delivery remain operational prerequisites. The local backup status and alert rules passed focused checks.",
         "Live staging verified archive_mode=off, no matching host backup units, no protected host backup env and no backup keys in its runtime env. The approved separate backup host and protected storage destination remain required.",
-        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
+        "Protected staging migrations can now create a verified encrypted checkpoint after quiescing writers. The native PostgreSQL image passed backup upload and isolated recovery over HTTPS. Configure a dedicated replication role and the approved protected destination and key. The live scheduled backup, WAL/PITR and pager evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -16752,7 +16753,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-postgres-restore-readback",
           "release-0.6-postgres-cutover-preflight",
-          "release-0.6-postgres-disk-capacity"
+          "release-0.6-postgres-disk-capacity",
+          "release-0.6-protected-stage-migration-backup"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -19950,7 +19952,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20115,6 +20117,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ]
         }
@@ -23395,7 +23405,8 @@
         "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt.",
-        "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job."
+        "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job.",
+        "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23448,7 +23459,8 @@
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-retained-scan-binding"
+          "release-0.6-retained-scan-binding",
+          "release-0.6-protected-stage-migration-backup"
         ],
         "current_acceptance": null
       }
@@ -23666,15 +23678,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "4342521f5fae9d26b126328ee1a422c9f49d83ad8dc8e613a043201e953cfe79"
+              "sha256": "c72906b224b5b1792aa5b3e04c25724d90bbb7ee8e0b23562e806255b49e0a7d"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23740,6 +23752,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ]
         }
@@ -23767,7 +23789,8 @@
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
         "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending.",
         "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required.",
-        "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open."
+        "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open.",
+        "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -31382,7 +31405,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31663,6 +31686,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ]
         }
@@ -34447,7 +34478,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34932,6 +34963,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ]
         }
@@ -98701,7 +98740,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -100118,6 +100157,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -162400,7 +162447,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -162412,7 +162459,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -163526,6 +163573,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -612687,7 +612743,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -613287,6 +613343,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -633490,7 +633554,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -633961,6 +634025,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -634327,7 +634399,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634798,6 +634870,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -635162,7 +635242,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635633,6 +635713,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -635997,7 +636085,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636492,6 +636580,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -637350,7 +637446,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637821,6 +637917,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -638379,7 +638483,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -638391,7 +638495,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -639529,6 +639633,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -640048,7 +640161,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640519,6 +640632,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -640882,7 +641003,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641353,6 +641474,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -641717,7 +641846,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642188,6 +642317,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -642553,7 +642690,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643048,6 +643185,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -643411,7 +643556,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643882,6 +644027,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -644245,7 +644398,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644716,6 +644869,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -669937,7 +670098,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -670111,6 +670272,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ]
         }
@@ -699499,7 +699668,8 @@
         "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence.",
-        "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open."
+        "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open.",
+        "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -699547,7 +699717,8 @@
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-retained-scan-binding"
+          "release-0.6-retained-scan-binding",
+          "release-0.6-protected-stage-migration-backup"
         ],
         "current_acceptance": null
       }
@@ -1064623,7 +1064794,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1064647,7 +1064818,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1067746,6 +1067917,15 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "presentation_renewals": [
@@ -1070333,7 +1070513,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+              "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1070357,7 +1070537,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+              "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1073358,6 +1073538,15 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-stage-migration-backup",
+              "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The pre-migration path now takes a verified encrypted checkpoint for non-disposable staging. Retained image, migrations, ingress, provider, application and rollback behaviors outside the checkpoint retain their sources. The rollback suite passed and the native fixture verified upload and restore."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1079442,7 +1079631,8 @@
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts.",
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
         "The protected HTTP payment sandbox is configured and the compiled v0.6.0 adapter verified an existing settled synthetic fixture against it. A production merchant remains required. Staging cache maintenance preserved all tagged images, volumes, containers and the active manifest. The latest data filesystem readback is 93% used with 6,253,801,472 free bytes. Verify approved off-server backup, recovery and cutover capacity before any database image change.",
-        "The replacement PostgreSQL image 7dee39bc is loaded on staging and has matching isolated restore, scan and package evidence. Staging is still on the original database. At readback it had 6,259,064,832 free bytes, or 93% use, and archive_mode still off. The approved off-server backup, recovery and live cutover remain open."
+        "The replacement PostgreSQL image 7dee39bc is loaded on staging and has matching isolated restore, scan and package evidence. Staging is still on the original database. At readback it had 6,259,064,832 free bytes, or 93% use, and archive_mode still off. The approved off-server backup, recovery and live cutover remain open.",
+        "The non-disposable release path now uses the verified encrypted backup helper and dedicated replication configuration. A native TLS backup/restore fixture passed. Live readback still shows no protected staging backup env or key and 6,257,975,296 free bytes (93% usage). Retain the approved off-server backup and measured restore before cutting over."
       ],
       "owner": null,
       "depends_on": [],
@@ -1079495,7 +1079685,8 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-staging-preflight-readback",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-protected-stage-migration-backup"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1254795,7 +1254986,8 @@
         "Operational Retention is the one new registered and permission-filtered route. The existing test now requires all 26 options and that route once. Existing settings navigation, confirmations, Axe and overflow assertions passed across all 16 production-browser cases in Chromium and mobile Safari, with no retries.",
         "The verified prebuilt UI has matching application, design system and localization sources. Web typecheck, scoped lint, format and diff checks passed.",
         "The completed pinned Firefox, WebKit and Mobile Chrome replay passed all 24 remaining settings cases with zero unexpected, flaky or skipped outcomes. This brings the product-source-bound focused set to 40 successful cases across all five projects. The hosted Firefox and WebKit shard logs identify the same earlier 25-option assertion.",
-        "Hosted Mobile Chrome shard 1 also failed only the four 390 px settings cases on the earlier 25-option assertion. The corrected Mobile Chrome cases are included in the passing 24-case replay."
+        "Hosted Mobile Chrome shard 1 also failed only the four 390 px settings cases on the earlier 25-option assertion. The corrected Mobile Chrome cases are included in the passing 24-case replay.",
+        "The full exact hosted diagnostic preserved all 40 shard outcomes. The Mobile Safari shard 1 log confirmed the same four earlier 25-option failures. The full rollup is failed with 20 unexpected and one separate WebKit solar flake."
       ],
       "limitations": [
         "The first local invocation put the file after the variadic project selector. It executed no tests and is retained separately. The corrected invocation passed all 16 selected cases. The old hosted result remains failed and final scheduled acceptance is pending."
@@ -1254837,6 +1255029,14 @@
         {
           "file": "hosted-mobile-chrome-1.log",
           "sha256": "a885d287d222cb2c650f7866fb808a92ff7ea27aa662a8d6642802b27cac9ea7"
+        },
+        {
+          "file": "hosted-mobile-safari-1.log",
+          "sha256": "20eab18b0ce710b3e4ab009d9ca369c234d953cee494ba0baec01104aaf32bd5"
+        },
+        {
+          "file": "hosted-rollup/nightly-browser-summary.json",
+          "sha256": "ce327c028b7c35900baad183093d79b1229bdd70804819622f88c9e40b199592"
         }
       ]
     },
@@ -1255228,6 +1255428,93 @@
         {
           "file": "static-checks.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-protected-stage-migration-backup": {
+      "batch": "release-0.6-protected-stage-migration-backup",
+      "base_commit": "76b98ed1fb478f4b16056302766994ef8273ba6a",
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "a4b2e2e92a8d354af5bc18b84dddf7bffcdf0dad7720dd9b00312023ffce8689"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "5426d5a562ac7132cea55c91ca25911ec68e185f334c54896c8da0d3214b4b36"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "c72906b224b5b1792aa5b3e04c25724d90bbb7ee8e0b23562e806255b49e0a7d"
+        }
+      ],
+      "checks": [
+        "Twelve staging rollback tests passed, including failed writer stop, failed backup, wrong backup database and successful checkpoint before migrations. Shell syntax, ShellCheck, formatting and whitespace passed.",
+        "An isolated instance of the exact staging PostgreSQL replacement used the existing backup tool, approved role shape and certificate-validated fixture storage. It wrote an encrypted full backup, read a matching cluster and label, and reached the simulated migration marker only after backup succeeded. The isolated restore decrypted and replayed the stored bytes before verifying the exact fixture row.",
+        "Live readback found no nonempty protected backup environment or key at the runbook locations. Active staging still serves v0.5.1."
+      ],
+      "limitations": [
+        "The first isolated database startup lacked network listening, then rejected the missing replication HBA rule. Fixture fixes used the staging database config and a scoped fixture replication rule. Restore verified completed replay before querying.",
+        "Fixture storage and artificial rows establish the release path. Live off-server storage, an approved replication account, migration rehearsal, cutover and measured live WAL/PITR remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-protected-stage-migration-backup",
+      "execution_receipts": [
+        {
+          "file": "native-fixture.sh",
+          "sha256": "405a01244eb0a4a0ee90c8b2d18484985996f4968e5bdfb5a9bac270b618af1c"
+        },
+        {
+          "file": "native-migration.log",
+          "sha256": "a7275b14eb16aab0a97d00899696c5930585bb96893c78a9727f9c5693254a01"
+        },
+        {
+          "file": "native-restore.log",
+          "sha256": "643ddb02e9e92a2a70550b865c259e11886bece538181ea3af20d63408f33b6c"
+        },
+        {
+          "file": "related-checks.log",
+          "sha256": "a57290c663fbbee5d7414d76b8c740295ae8d4c7af218c86140b4a08ed518cc3"
+        },
+        {
+          "file": "first-basebackup-diagnostic.log",
+          "sha256": "6e1aa448628165a2aa8889ca056a4592d92eae864708a965bcb103644dc6b255"
+        },
+        {
+          "file": "no-replication-entry.log",
+          "sha256": "7feff61177774cbf962c2aca363fff6d1c24628e0f80cd80518c62b2e9bd76a1"
         }
       ]
     }

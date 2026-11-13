@@ -309,11 +309,25 @@ providers also require their own settings in the app's admin UI.
 
 ## Data and backups
 
-The initial runtime sets `BARGHSA_DISPOSABLE=true`: this staging server has
-no offsite backup destination. Docker volumes survive container and image
-releases, but losing this VPS loses PostgreSQL and uploaded objects. Do not
-put irreplaceable data here. Add an offsite encrypted backup workflow and test
-a restore before changing the release guard for non-disposable staging.
+The initial runtime sets `BARGHSA_DISPOSABLE=true`. Docker volumes survive
+container and image releases. An installation with data to retain needs an
+approved off-server backup destination and tested recovery before changing
+that flag. Place the backup tool's `BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and
+replication-authorized direct `PGDIRECT_URL` in root-owned
+`/etc/barghsa/staging/backup.env`. Allow the dedicated backup role's
+replication connection from the staging Docker network. Mount the recoverable,
+single-line backup key from `/etc/barghsa/staging/backup-key` with read access
+for the `postgres` user inside the exact image. Keep both settings and key
+outside the checkout.
+
+For non-disposable installations, the worker stops the preceding writers and
+uses the retained PostgreSQL image's encrypted backup tool against the direct
+database URL. It requires HTTPS, verifies the backup using PostgreSQL's native
+manifest, and records `BARGHSA_STAGING_MIGRATION_BACKUP_V1` for the running
+database system before invoking migrations. A failed upload or mismatched
+receipt enters rollback. Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
+to test recovery and provision scheduled backups and WAL/PITR. Configuration
+and uploaded objects require their own backup and restore receipts.
 
 Check resource use with `docker stats`, `df -h`, and `docker system df`.
 ClamAV may take several minutes to download signatures on first boot. Keep

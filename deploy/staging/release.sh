@@ -20,6 +20,15 @@ BARGHSA_POSTGRES_VOLUME=barghsa-staging_pgdata
 source "$candidate"
 set +a
 
+backup_env=/etc/barghsa/staging/backup.env
+backup_key=/etc/barghsa/staging/backup-key
+if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
+  [[ -s "$backup_env" && -r "$backup_env" && -s "$backup_key" && -r "$backup_key" ]] || {
+    echo 'Non-disposable staging requires protected off-server backup configuration and key' >&2
+    exit 1
+  }
+fi
+
 for key in POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD DATABASE_URL PGDIRECT_URL REDIS_URL S3_ENDPOINT S3_PRIVATE_ENDPOINT S3_PUBLIC_ENDPOINT S3_REGION S3_BUCKET S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY APP_PUBLIC_URL API_PUBLIC_URL SESSION_SECRET CSRF_SECRET PROVIDER_CONFIG_ENCRYPTION_KEY AUTH_DELIVERY_ENCRYPTION_KEY AI_MODEL_ENCRYPTION_KEY AI_INFERENCE_SHARED_SECRET STORAGE_CONFIG_ENCRYPTION_KEY PAYMENT_GATEWAY_MERCHANT_ID PAYMENT_GATEWAY_WEBHOOK_SECRET; do
   [[ -n "${!key:-}" ]] || { printf 'Missing runtime value: %s\n' "$key" >&2; exit 1; }
 done
@@ -215,14 +224,31 @@ export BARGHSA_PROXY_IPS
 BARGHSA_PROXY_IPS=$(docker network inspect barghsa-staging-private --format '{{(index .IPAM.Config 0).Gateway}}')
 [[ -n "$BARGHSA_PROXY_IPS" ]] || { echo 'Docker bridge gateway missing' >&2; false; }
 
-[[ "${BARGHSA_DISPOSABLE:-false}" == true ]] || {
-  echo 'Offsite backup is not configured; refusing a non-disposable release' >&2
-  false
-}
-echo 'Disposable staging: no offsite backup is configured' >&2
-
-# Quiesce the previous API and worker before changing their database schema.
+# Quiesce the previous API and worker before taking the migration checkpoint.
 "${dc[@]}" stop worker api ai-inference
+if [[ "${BARGHSA_DISPOSABLE:-false}" == true ]]; then
+  echo 'Disposable staging: no offsite backup is configured' >&2
+else
+  backup_label="release-${commit:0:12}-$(date -u +%Y%m%dT%H%M%SZ)-$$"
+  database_system_id=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
+    -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c 'SELECT system_identifier FROM pg_control_system()')
+  backup_manifest=$(docker run --rm --user postgres --network barghsa-staging-private \
+    --env-file "$backup_env" --env BACKUP_ALLOW_HTTP=false \
+    --env BACKUP_GPG_PASSPHRASE_FILE=/run/secrets/backup-key \
+    --mount "type=bind,src=$backup_key,dst=/run/secrets/backup-key,readonly" \
+    --entrypoint /opt/backup/backup-pg.sh "$postgres_id" --label "$backup_label")
+  printf '%s\n' "$backup_manifest" | python3 -c '
+import json, re, sys
+
+label, system_id = sys.argv[1:]
+manifest = json.load(sys.stdin)
+if (not re.fullmatch(r"[0-9]+", system_id) or manifest["version"] != 1
+        or manifest["label"] != label or manifest["system_id"] != system_id
+        or not re.fullmatch(r"[a-f0-9]{64}", manifest["sha256"])):
+    sys.exit("Encrypted backup receipt does not match the running staging database")
+print("BARGHSA_STAGING_MIGRATION_BACKUP_V1", json.dumps(manifest, separators=(",", ":")))
+' "$backup_label" "$database_system_id"
+fi
 "${dc[@]}" run --rm --no-deps api node run-packaged-migrations.cjs
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 api

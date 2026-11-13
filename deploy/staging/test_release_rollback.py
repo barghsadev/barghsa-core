@@ -268,27 +268,54 @@ echo compose-admitted
 
     def test_migrations_wait_for_a_successful_writer_stop(self):
         text = RELEASE.read_text()
-        start = text.index('\n', text.index("echo 'Disposable staging: no offsite backup is configured'"))
+        start = text.index('# Quiesce the previous API and worker')
         end = text.index('\n"${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference', start)
         script = f'''set -euo pipefail
 mode=$1
 dc=(compose)
+commit={'a' * 40}
+POSTGRES_USER=fixture
+POSTGRES_DB=fixture
+backup_env=/fixture/secrets/backup.env
+backup_key=/fixture/secrets/backup-key
+postgres_id=sha256:{'b' * 64}
+BARGHSA_DISPOSABLE=false
+if [[ "$mode" == disposable || "$mode" == stop-failed ]]; then BARGHSA_DISPOSABLE=true; fi
 compose() {{
+  if [[ $1 == exec ]]; then printf '%s\\n' '123456'; return; fi
   printf '%s\\n' "$*"
   if [[ $1 == stop && "$mode" == stop-failed ]]; then return 19; fi
+}}
+docker() {{
+  [[ "$*" == *'--env-file /fixture/secrets/backup.env --env BACKUP_ALLOW_HTTP=false'* &&
+     "$*" == *'dst=/run/secrets/backup-key,readonly'* &&
+     "$*" == *'--entrypoint /opt/backup/backup-pg.sh sha256:{'b' * 64} --label release-'* ]] || return 21
+  if [[ "$mode" == backup-failed ]]; then return 23; fi
+  local system=123456
+  if [[ "$mode" == wrong-database ]]; then system=456789; fi
+  printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}"}}\\n' "${{@: -1}}" "$system"
 }}
 trap 'status=$?; echo rollback; exit "$status"' ERR
 {text[start:end]}
 '''
         for mode, expected, code in (
-            ('stopped', ['stop worker api ai-inference', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
+            ('disposable', ['stop worker api ai-inference', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
             ('stop-failed', ['stop worker api ai-inference', 'rollback'], 19),
+            ('backup-failed', ['stop worker api ai-inference', 'rollback'], 23),
+            ('wrong-database', ['stop worker api ai-inference', 'rollback'], 1),
+            ('protected', ['stop worker api ai-inference', 'verified backup', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
         ):
             with self.subTest(mode=mode):
                 result = subprocess.run(['bash', '-c', script, 'migration-fixture', mode],
                                         capture_output=True, text=True, check=False)
                 self.assertEqual(result.returncode, code, result.stderr)
-                self.assertEqual(result.stdout.splitlines(), expected)
+                observed = result.stdout.splitlines()
+                if mode == 'protected':
+                    marker, receipt = observed[1].split(' ', 1)
+                    self.assertEqual(marker, 'BARGHSA_STAGING_MIGRATION_BACKUP_V1')
+                    self.assertEqual(json.loads(receipt)['system_id'], '123456')
+                    observed[1] = 'verified backup'
+                self.assertEqual(observed, expected)
 
     def test_public_smoke_checks_candidate_revision_before_promotion(self):
         text = RELEASE.read_text()
