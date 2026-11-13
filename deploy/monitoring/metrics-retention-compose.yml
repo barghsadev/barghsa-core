@@ -6,7 +6,7 @@ services:
     image: ${BARGHSA_PROMETHEUS_IMAGE:?Set a verified immutable Prometheus image}
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-      - --storage.tsdb.retention.time=400d
+      - --storage.tsdb.retention.time=${BARGHSA_METRICS_ARCHIVE_RETENTION:-400d}
       - --storage.tsdb.retention.size=${BARGHSA_PROMETHEUS_ARCHIVE_SIZE:?Set the verified archive size limit}
     volumes:
       - ./prometheus-archive.yml:/etc/prometheus/prometheus.yml:ro

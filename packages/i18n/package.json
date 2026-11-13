@@ -47,6 +47,11 @@
       "import": "./dist/saving-staff-review.js",
       "default": "./dist/saving-staff-review.js"
     },
+    "./operational-retention": {
+      "types": "./dist/operational-retention.d.ts",
+      "import": "./dist/operational-retention.js",
+      "default": "./dist/operational-retention.js"
+    },
     "./maintenance": {
       "types": "./dist/maintenance.d.ts",
       "import": "./dist/maintenance.js",

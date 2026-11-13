@@ -923,6 +923,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/operational-retention": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the saved operational retention policy */
+        get: operations["OperationalRetentionController_get"];
+        /** Save an audited, versioned operational retention policy */
+        put: operations["OperationalRetentionController_save"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/operational-retention/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download the saved monitoring policy for infrastructure application */
+        get: operations["OperationalRetentionController_export"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/otp": {
         parameters: {
             query?: never;
@@ -13486,6 +13521,102 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    OperationalRetentionController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        canEdit: boolean;
+                        policy: {
+                            metricsArchiveDays: number;
+                            ordinaryTracesDays: number;
+                            priorityTracesDays: number;
+                            searchableLogsDays: number;
+                        };
+                        version: number;
+                    };
+                };
+            };
+        };
+    };
+    OperationalRetentionController_save: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    policy: {
+                        metricsArchiveDays: number;
+                        ordinaryTracesDays: number;
+                        priorityTracesDays: number;
+                        searchableLogsDays: number;
+                    };
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        canEdit: boolean;
+                        policy: {
+                            metricsArchiveDays: number;
+                            ordinaryTracesDays: number;
+                            priorityTracesDays: number;
+                            searchableLogsDays: number;
+                        };
+                        version: number;
+                    };
+                };
+            };
+        };
+    };
+    OperationalRetentionController_export: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        canEdit: boolean;
+                        policy: {
+                            metricsArchiveDays: number;
+                            ordinaryTracesDays: number;
+                            priorityTracesDays: number;
+                            searchableLogsDays: number;
+                        };
+                        version: number;
+                    };
+                };
             };
         };
     };

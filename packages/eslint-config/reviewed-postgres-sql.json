@@ -8,7 +8,7 @@
   "apps/api/src/ai-agents/ai-test-chat.service.ts": "baafaaf883af723c8b5bccb12298cda8d8d711724fb4b8ec3fa5659ff96bdaf1",
   "apps/api/src/ai-models/ai-models.service.ts": "aaf9b511a1b2b2677cbe9d603eea3c8b6629145b5b8c44ba86eec4023c3c18ad",
   "apps/api/src/ai-policies/ai-policies.service.ts": "9338b1d16898702cc1f15e3eba536f61985a1009fb74173b05b7235904ce1e5d",
-  "apps/api/src/auth/navigation.ts": "47921d1d1a4e80d7fefba23f5d678105c39636b520bd10e666c8921bc5a8cdb7",
+  "apps/api/src/auth/navigation.ts": "7101c2eca83b8c3221c107e882ce024579bcb919a16f54b2aa77f8b160ac74f0",
   "apps/api/src/auth/otp.service.ts": "1209131040f80775e663d54a1a7a45316fb95204e4a2e741a1b52ba0838428aa",
   "apps/api/src/catalogue/catalogue-products.service.ts": "eb7f8fc2df7eedda52f44c8ff8cffb926b3ce7ea71da5ad9af77fe7304b95a99",
   "apps/api/src/consultation/consultation-request.service.ts": "201a3f9ab8a8e470961e911c946c8fbf83b13ac5c45211da51e7c291a5877511",

@@ -56,6 +56,37 @@ one worker delivery in Loki and check `loki_write_sent_entries_total` and
 
 ### Search and archive retention
 
+Staff with configuration access can review **Monitoring retention** in the
+admin settings. Configuration editors save a new revision after staff
+verification. The audit entry records the actor and both policies. The form
+controls searchable operational logs, the downsampled metrics archive, and
+the two operational trace tiers. The legal retention policy for audit,
+security and financial records is separate.
+
+To apply a revision, download the latest saved policy from the admin page.
+On the monitoring host, render it from the same reviewed checkout that
+supplies the Compose files. The output directory must be new.
+
+```sh
+umask 077
+python3 deploy/monitoring/render-operational-retention.py \
+  /protected/operational-retention.json /protected/retention-42
+```
+
+Verify available storage and archive health, then set
+`BARGHSA_LOKI_RETENTION_CONFIG`, `BARGHSA_TEMPO_RETENTION_CONFIG` and
+`BARGHSA_TEMPO_RETENTION_OVERRIDES` to the generated absolute YAML paths in
+the protected Compose environments for their respective services. Load
+`metrics-retention.env` as the final environment file for the metrics
+archive Compose command. Keep the existing environments, image digests,
+volumes, and backup settings. Review the resulting Compose plans with
+`config --quiet` before recreating only Loki, Tempo, and the metrics archive
+in their own projects. Recheck their readiness, effective retention, and
+query and archive behavior. Record the saved version, rendered file digests
+and deployed readings in the operational evidence. Keep the prior files and
+settings until verification finishes. Restoring the prior settings does not
+recover data already expired by a monitoring service.
+
 Use `deploy/monitoring/operator-log-retention.yml` for a new dedicated Loki
 instance with an approved immutable `BARGHSA_LOKI_IMAGE`. Its private data
 volume holds the TSDB index, chunks and compactor state. The singleton

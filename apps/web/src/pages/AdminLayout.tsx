@@ -134,6 +134,11 @@ export default function AdminLayout() {
           label: t('admin.nav.maintenance', locale),
           icon: SlidersHorizontal,
         },
+        {
+          to: '/admin/operational-retention',
+          label: t('admin.retention.title', locale),
+          icon: HardDrive,
+        },
       ],
     },
     {

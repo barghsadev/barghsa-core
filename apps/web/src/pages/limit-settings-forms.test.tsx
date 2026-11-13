@@ -3,9 +3,11 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Limits from './AdminContractLimitsPage.js';
+import Retention from './AdminOperationalRetentionPage.js';
 import Wallet from '../components/WalletTopUpLimitConfigPanel.js';
 import Threshold from '../components/DualApprovalThresholdPanel.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
+import { defaultOperationalRetention } from '@barghsa/shared/admin';
 
 interface Confirmation {
   action: TeamAction;
@@ -65,6 +67,25 @@ const cases = [
     invalid: '9007199254740992',
     normalized: '250000',
     body: { threshold_irr: 250000 },
+  },
+  {
+    name: 'retention',
+    Page: Retention,
+    field: 'searchableLogsDays',
+    selector: '#retention-searchableLogsDays',
+    initial: { version: 0, policy: defaultOperationalRetention, canEdit: true },
+    saved: {
+      version: 1,
+      policy: { ...defaultOperationalRetention, searchableLogsDays: 45 },
+      canEdit: true,
+    },
+    raw: ' ۴۵ ',
+    invalid: '29',
+    normalized: '45',
+    body: {
+      expectedVersion: 0,
+      policy: { ...defaultOperationalRetention, searchableLogsDays: 45 },
+    },
   },
 ] as const;
 let host: HTMLDivElement, root: Root, readValue: unknown, failed: boolean;

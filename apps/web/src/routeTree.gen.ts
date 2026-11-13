@@ -59,6 +59,7 @@ import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminMaintenanceRouteImport } from './routes/admin/maintenance'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminOperationalRetentionRouteImport } from './routes/admin/operational-retention'
 import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
@@ -371,6 +372,12 @@ const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminOperationalRetentionRoute =
+  AdminOperationalRetentionRouteImport.update({
+    id: '/operational-retention',
+    path: '/operational-retention',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminPoliciesRoute = AdminPoliciesRouteImport.update({
   id: '/policies',
   path: '/policies',
@@ -724,6 +731,7 @@ export interface FileRoutesByFullPath {
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
@@ -828,6 +836,7 @@ export interface FileRoutesByTo {
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
@@ -937,6 +946,7 @@ export interface FileRoutesById {
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/operational-retention': typeof AdminOperationalRetentionRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
@@ -1049,6 +1059,7 @@ export interface FileRouteTypes {
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
     | '/admin/notifications'
+    | '/admin/operational-retention'
     | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
@@ -1153,6 +1164,7 @@ export interface FileRouteTypes {
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
     | '/admin/notifications'
+    | '/admin/operational-retention'
     | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
@@ -1261,6 +1273,7 @@ export interface FileRouteTypes {
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
     | '/admin/notifications'
+    | '/admin/operational-retention'
     | '/admin/policies'
     | '/admin/providers'
     | '/admin/reconciliation'
@@ -1688,6 +1701,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/admin/notifications'
       preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/operational-retention': {
+      id: '/admin/operational-retention'
+      path: '/operational-retention'
+      fullPath: '/admin/operational-retention'
+      preLoaderRoute: typeof AdminOperationalRetentionRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/policies': {
@@ -2286,6 +2306,7 @@ interface AdminRouteChildren {
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminMaintenanceRoute: typeof AdminMaintenanceRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminOperationalRetentionRoute: typeof AdminOperationalRetentionRoute
   AdminPoliciesRoute: typeof AdminPoliciesRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminReconciliationRoute: typeof AdminReconciliationRoute
@@ -2336,6 +2357,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminMaintenanceRoute: AdminMaintenanceRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminOperationalRetentionRoute: AdminOperationalRetentionRoute,
   AdminPoliciesRoute: AdminPoliciesRoute,
   AdminProvidersRoute: AdminProvidersRoute,
   AdminReconciliationRoute: AdminReconciliationRoute,

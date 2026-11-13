@@ -35,6 +35,7 @@ export const STAFF_NAVIGATION: ReadonlyArray<readonly [string, ...string[]]> = [
   ['/admin/failed-notifications', 'admin:jobs:view'],
   ['/admin/failed-jobs', 'admin:jobs:view'],
   ['/admin/maintenance', 'admin:config:read', 'admin:config:write'],
+  ['/admin/operational-retention', 'admin:config:read', 'admin:config:write'],
   ['/admin/catalogue', 'admin:catalogue:edit'],
   ['/admin/invoices', 'invoices:read'],
   ['/admin/wallet-receipts', 'admin:finance:wallet:bank-receipt-confirm'],

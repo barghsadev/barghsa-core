@@ -47,6 +47,7 @@ import { BusinessWorkCountsController } from './business-work-counts.controller.
 import { InvoiceLedgerController } from './invoice-ledger.controller.js';
 import { InvoiceLedgerService } from './invoice-ledger.service.js';
 import { ConfigAuditController } from './config-audit.controller.js';
+import { OperationalRetentionController } from './operational-retention.controller.js';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { ConfigAuditController } from './config-audit.controller.js';
     ServiceWorkflowController,
     VerificationPolicyController,
     ConfigAuditController,
+    OperationalRetentionController,
     AdminBrandAssetController,
     AdminController,
     DualApprovalController,

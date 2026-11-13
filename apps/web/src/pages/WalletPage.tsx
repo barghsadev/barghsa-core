@@ -87,10 +87,6 @@ type PageError =
 
 type ReceiptError = 'upload' | 'conflict' | 'maintenance' | 'generic' | 'unconfirmed';
 
-function newIdempotencyKey(): string {
-  return crypto.randomUUID();
-}
-
 function mapReceiptSubmitError(status: number): ReceiptError {
   if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
@@ -177,7 +173,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   }, []);
   const [submitting, setSubmitting] = useState(false);
   const [onlineReview, setOnlineReview] = useState<OnlineTopUpReview | null>(null);
-  const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey);
+  const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
 
   const receipt = useReceiptForm('wallet', parseBankReceiptTopUpAmountIrR);
   const [receiptAmountInput, setReceiptAmountInput] = receipt.field('amount');
@@ -195,7 +191,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const [receiptSubmitting, setReceiptSubmitting] = useState(false);
   const [receiptError, setReceiptError] = useState<ReceiptError | null>(null);
   const [receiptSuccess, setReceiptSuccess] = useState(false);
-  const [receiptIdempotencyKey, setReceiptIdempotencyKey] = useState(newIdempotencyKey);
+  const [receiptIdempotencyKey, setReceiptIdempotencyKey] = useState(() => crypto.randomUUID());
 
   const amountDigits = normalizeIrrAmountDigits(amountInput);
   const amountValue = amountDigits === '' ? null : Number(amountDigits);
@@ -336,7 +332,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     enforcedLimit: { onlineTopUpLimit: number; configVersion: number } | null;
   }) {
     if (['limit-exceeded', 'invalid-amount', 'conflict'].includes(result.error)) {
-      setIdempotencyKey(newIdempotencyKey());
+      setIdempotencyKey(crypto.randomUUID());
     }
     if (result.enforcedLimit) {
       setWallet((prev) =>
@@ -441,7 +437,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       if (!current()) return;
       if (result.kind === 'error') {
         const next = mapReceiptSubmitError(result.status);
-        if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
+        if (next === 'conflict') setReceiptIdempotencyKey(crypto.randomUUID());
         const fields = result.fields ?? [];
         if (receipt.applyServerErrors(fields)) {
           if (fields.includes('attachmentKey')) setReceiptUploaded(null);
@@ -485,7 +481,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           result.status >= 500 || (result.status >= 200 && result.status < 300)
             ? 'unconfirmed'
             : mapReceiptSubmitError(result.status);
-        if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
+        if (next === 'conflict') setReceiptIdempotencyKey(crypto.randomUUID());
         const fields = result.fields ?? [];
         if (receipt.applyServerErrors(fields)) {
           if (fields.includes('attachmentKey')) setReceiptUploaded(null);
@@ -495,7 +491,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       setReceiptReview(null);
       setReceiptSuccess(true);
       toast.success(t('wallet.page.receiptSuccess', locale));
-      setReceiptIdempotencyKey(newIdempotencyKey());
+      setReceiptIdempotencyKey(crypto.randomUUID());
       receipt.form.reset({ ...receipt.form.getValues(), file: null });
       setReceiptUploaded(null);
       if (receiptFileInput.current) receiptFileInput.current.value = '';
@@ -566,19 +562,19 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const validationError = online.errors.root?.validation?.message;
   const receiptValidationError = receipt.errors.root?.validation?.message;
   const errorMessage =
-    error === null
-      ? null
-      : error === 'no-profile'
-        ? t('wallet.page.noProfile', locale)
-        : error === 'load'
-          ? t('wallet.page.loadError', locale)
-          : error === 'gateway'
-            ? t('wallet.page.gatewayError', locale)
-            : error === 'conflict'
-              ? t('wallet.page.conflict', locale)
-              : error === 'maintenance'
-                ? tMaintenance('title', locale)
-                : t('wallet.page.loadError', locale);
+    error &&
+    (error === 'maintenance'
+      ? tMaintenance('title', locale)
+      : t(
+          error === 'no-profile'
+            ? 'wallet.page.noProfile'
+            : error === 'gateway'
+              ? 'wallet.page.gatewayError'
+              : error === 'conflict'
+                ? 'wallet.page.conflict'
+                : 'wallet.page.loadError',
+          locale
+        ));
 
   const receiptErrorMessage = receiptError && receiptErrorText(receiptError, locale);
   const reviewLoading = <p role="status">{t('wallet.page.reviewLoading', locale)}</p>;

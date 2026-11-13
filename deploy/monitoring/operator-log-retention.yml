@@ -11,7 +11,7 @@ services:
     networks: [logs]
     volumes:
       - lokidata:/loki
-      - ./operator-loki.yml:/etc/loki/operator-loki.yml:ro
+      - ${BARGHSA_LOKI_RETENTION_CONFIG:-./operator-loki.yml}:/etc/loki/operator-loki.yml:ro
 
 networks:
   logs:

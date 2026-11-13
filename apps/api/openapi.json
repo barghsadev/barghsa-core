@@ -3926,6 +3926,277 @@
         ]
       }
     },
+    "/api/admin/config/operational-retention": {
+      "get": {
+        "operationId": "OperationalRetentionController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "canEdit": {
+                      "type": "boolean"
+                    },
+                    "policy": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "metricsArchiveDays": {
+                          "maximum": 730,
+                          "minimum": 400,
+                          "type": "integer"
+                        },
+                        "ordinaryTracesDays": {
+                          "maximum": 90,
+                          "minimum": 7,
+                          "type": "integer"
+                        },
+                        "priorityTracesDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        },
+                        "searchableLogsDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "searchableLogsDays",
+                        "metricsArchiveDays",
+                        "ordinaryTracesDays",
+                        "priorityTracesDays"
+                      ],
+                      "type": "object"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "policy",
+                    "canEdit"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get the saved operational retention policy",
+        "tags": [
+          "Admin operational retention"
+        ]
+      },
+      "put": {
+        "operationId": "OperationalRetentionController_save",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "policy": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "metricsArchiveDays": {
+                        "maximum": 730,
+                        "minimum": 400,
+                        "type": "integer"
+                      },
+                      "ordinaryTracesDays": {
+                        "maximum": 90,
+                        "minimum": 7,
+                        "type": "integer"
+                      },
+                      "priorityTracesDays": {
+                        "maximum": 365,
+                        "minimum": 30,
+                        "type": "integer"
+                      },
+                      "searchableLogsDays": {
+                        "maximum": 365,
+                        "minimum": 30,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "searchableLogsDays",
+                      "metricsArchiveDays",
+                      "ordinaryTracesDays",
+                      "priorityTracesDays"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "expectedVersion",
+                  "policy"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "canEdit": {
+                      "type": "boolean"
+                    },
+                    "policy": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "metricsArchiveDays": {
+                          "maximum": 730,
+                          "minimum": 400,
+                          "type": "integer"
+                        },
+                        "ordinaryTracesDays": {
+                          "maximum": 90,
+                          "minimum": 7,
+                          "type": "integer"
+                        },
+                        "priorityTracesDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        },
+                        "searchableLogsDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "searchableLogsDays",
+                        "metricsArchiveDays",
+                        "ordinaryTracesDays",
+                        "priorityTracesDays"
+                      ],
+                      "type": "object"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "policy",
+                    "canEdit"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Save an audited, versioned operational retention policy",
+        "tags": [
+          "Admin operational retention"
+        ]
+      }
+    },
+    "/api/admin/config/operational-retention/export": {
+      "get": {
+        "operationId": "OperationalRetentionController_export",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "canEdit": {
+                      "type": "boolean"
+                    },
+                    "policy": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "metricsArchiveDays": {
+                          "maximum": 730,
+                          "minimum": 400,
+                          "type": "integer"
+                        },
+                        "ordinaryTracesDays": {
+                          "maximum": 90,
+                          "minimum": 7,
+                          "type": "integer"
+                        },
+                        "priorityTracesDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        },
+                        "searchableLogsDays": {
+                          "maximum": 365,
+                          "minimum": 30,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "searchableLogsDays",
+                        "metricsArchiveDays",
+                        "ordinaryTracesDays",
+                        "priorityTracesDays"
+                      ],
+                      "type": "object"
+                    },
+                    "version": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "policy",
+                    "canEdit"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Download the saved monitoring policy for infrastructure application",
+        "tags": [
+          "Admin operational retention"
+        ]
+      }
+    },
     "/api/admin/config/otp": {
       "get": {
         "operationId": "OtpConfigController_get",

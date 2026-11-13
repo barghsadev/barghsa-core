@@ -6,6 +6,51 @@ import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { tWalletLimit } from '@barghsa/i18n/wallet-limit';
 import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
+import { retentionText } from '@barghsa/i18n/operational-retention';
+import { defaultOperationalRetention } from '@barghsa/shared/admin';
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`reviews a monitoring retention change in ${locale}`, async ({ page }) => {
+    await setupCatalogueForms(page, locale, false);
+    const label = (key: string) => retentionText(key, locale);
+    let saved = { version: 0, policy: defaultOperationalRetention, canEdit: true };
+    const path = '**/api/admin/config/operational-retention';
+    await page.route(path, (route) => {
+      if (route.request().method() === 'PUT') {
+        const policy = { ...defaultOperationalRetention, searchableLogsDays: 45 };
+        expect(route.request().postDataJSON()).toEqual({ expectedVersion: 0, policy });
+        saved = { version: 1, policy, canEdit: true };
+      }
+      return route.fulfill({ json: saved });
+    });
+    await page.goto('/admin/operational-retention');
+    const section = page.getByRole('form', { name: label('savedPolicy') });
+    const input = section.getByLabel(label('searchableLogsDays'));
+    const save = section.getByRole('button', { name: label('save') });
+    await expect(section).toContainText(label('legal'));
+    await expect(section.getByRole('link', { name: label('export') })).toBeVisible();
+    await expect(input).toHaveValue('30');
+    await input.fill(locale === 'fa' ? '۲۹' : '29');
+    await save.click();
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+    await input.fill(locale === 'fa' ? '۴۵' : '45');
+    await save.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(label('confirm'));
+    await dialog
+      .getByRole('button', { name: appText('team.confirm', locale), exact: true })
+      .click();
+    await expect(input).toHaveValue('45');
+    await expect(page.getByText(label('saved'), { exact: true }).first()).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page }).include('form[aria-labelledby]').analyze()).violations
+    ).toEqual([]);
+    saved = { ...saved, canEdit: false };
+    await page.getByRole('button', { name: label('refresh'), exact: true }).click();
+    await expect(input).toBeDisabled();
+    await expect(save).toHaveCount(0);
+  });
+}
 
 for (const locale of ['en', 'fa'] as const) {
   test(`contract limit recovery activates a reviewed draft separately (${locale})`, async ({

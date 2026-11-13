@@ -31,7 +31,15 @@ export const ADMIN_SETTINGS_SECTIONS = [
     ],
   },
   { key: 'security', paths: ['/admin/verification', '/admin/authorization-audit'] },
-  { key: 'system', paths: ['/admin/storage', '/admin/service-targets', '/admin/maintenance'] },
+  {
+    key: 'system',
+    paths: [
+      '/admin/storage',
+      '/admin/service-targets',
+      '/admin/maintenance',
+      '/admin/operational-retention',
+    ],
+  },
 ] as const;
 
 export function activeAdminSettingsPath(pathname: string): string | null {

@@ -35,8 +35,8 @@ services:
     networks: [tempo-ingest, trace-query, tempo-egress]
     volumes:
       - tempo-data:/var/tempo
-      - ./operator-tempo.yml:/etc/tempo/operator-tempo.yml:ro
-      - ./operator-tempo-overrides.yml:/etc/tempo/operator-tempo-overrides.yml:ro
+      - ${BARGHSA_TEMPO_RETENTION_CONFIG:-./operator-tempo.yml}:/etc/tempo/operator-tempo.yml:ro
+      - ${BARGHSA_TEMPO_RETENTION_OVERRIDES:-./operator-tempo-overrides.yml}:/etc/tempo/operator-tempo-overrides.yml:ro
 
 networks:
   trace-ingest:

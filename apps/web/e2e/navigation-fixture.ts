@@ -27,6 +27,7 @@ export function fullNavigation(
           '/admin/failed-notifications',
           '/admin/failed-jobs',
           '/admin/maintenance',
+          '/admin/operational-retention',
           '/admin/catalogue',
           '/admin/invoices',
           '/admin/wallet-receipts',
