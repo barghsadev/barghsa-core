@@ -154,6 +154,12 @@ client span with the database system, operation and table name. It omits SQL,
 parameters, database addresses and errors. A failed operation records the
 span status and preserves the existing transaction rollback.
 
+Redis commands issued through the API's shared client appear under the active
+request or domain span, including commands sent in a pipeline. Spans carry a
+fixed Redis command name or `_OTHER` and mark failed commands as errors. Keys,
+values, scripts, replies, connection details and error text stay private.
+Calls without an active request trace use the same Redis client behavior.
+
 Completed API spans with HTTP 5xx, timeout or an interrupted response are
 selected for export, as are requests that run for more than 500 milliseconds.
 `OTEL_TRACE_SUCCESS_SAMPLE_RATE` controls routine spans and defaults to 0.1.

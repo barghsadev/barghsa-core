@@ -2,8 +2,13 @@ import 'reflect-metadata';
 import { createServer, type Socket } from 'node:net';
 import { once } from 'node:events';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { createServer as createCollector } from 'node:http';
+import { SpanKind } from '@opentelemetry/api';
+import { operatorLogTrace } from '@barghsa/shared/operator-logging';
+import { createTraceProvider, extractTraceparent } from '@barghsa/shared/telemetry';
 import type { Redis } from 'ioredis';
 import { afterEach, expect, it, vi } from 'vitest';
+import { apiOperationTracer } from '../metrics/domain-tracing.js';
 import { RedisModule, REDIS_CLIENT } from './redis.module.js';
 
 afterEach(() => vi.unstubAllEnvs());
@@ -88,3 +93,116 @@ it.each(['redis-url', 'rediss-url', 'production-host', 'development-host'] as co
   },
   10_000
 );
+
+it('exports bounded Redis spans under the request parent without command data', async () => {
+  const exports: string[] = [];
+  const collector = createCollector(async (request, response) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(Buffer.from(chunk));
+    exports.push(Buffer.concat(chunks).toString('utf8'));
+    response.writeHead(200, { 'content-type': 'application/json' }).end('{}');
+  });
+  const sockets = new Set<Socket>();
+  const secret = 'private-redis-fixture-marker';
+  const redisServer = createServer((socket) => {
+    sockets.add(socket);
+    socket.once('close', () => sockets.delete(socket));
+    socket.on('data', (bytes) => {
+      for (const [, command] of bytes.toString().matchAll(/\*\d+\r\n\$\d+\r\n([a-z]+)\r\n/g)) {
+        if (command === 'get') socket.write(`$${secret.length}\r\n${secret}\r\n`);
+        else if (command === 'eval') socket.write(`-ERR ${secret}\r\n`);
+        else if (command === 'incr') socket.write(':1\r\n');
+        else socket.write('+OK\r\n');
+      }
+    });
+  });
+  const listen = async (server: typeof collector | typeof redisServer) => {
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing fixture address');
+    return address.port;
+  };
+  const [collectorPort, redisPort] = await Promise.all([listen(collector), listen(redisServer)]);
+  vi.stubEnv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT', `http://127.0.0.1:${collectorPort}/v1/traces`);
+  vi.stubEnv('OTEL_TRACE_SUCCESS_SAMPLE_RATE', '1');
+  vi.stubEnv('REDIS_URL', `redis://127.0.0.1:${redisPort}`);
+  vi.stubEnv('REDIS_HOST', '');
+  vi.stubEnv('REDIS_PASSWORD', '');
+  const provider = createTraceProvider('barghsa-api')!;
+  let module: TestingModule | undefined;
+  let client: Redis | undefined;
+  try {
+    module = await Test.createTestingModule({ imports: [RedisModule] }).compile();
+    const redis = module.get<Redis>(REDIS_CLIENT);
+    client = redis;
+    expect(await redis.get(secret)).toBe(secret);
+    const tracer = provider.getTracer('redis-fixture');
+    const traceId = 'f8181818181818181818181818181818';
+    const parent = tracer.startSpan(
+      'request-fixture',
+      { kind: SpanKind.SERVER },
+      extractTraceparent(`00-${traceId}-f929292929292929-00`)
+    );
+    try {
+      await apiOperationTracer.run(tracer, () =>
+        operatorLogTrace.run(parent.spanContext(), async () => {
+          expect(await redis.get(secret)).toBe(secret);
+          await expect(redis.eval(secret, 0)).rejects.toThrow(secret);
+          expect(await redis.pipeline().get(secret).incr(secret).exec()).toEqual([
+            [null, secret],
+            [null, 1],
+          ]);
+          expect(await redis.call('echo', secret)).toBe('OK');
+        })
+      );
+    } finally {
+      parent.end();
+    }
+    await provider.forceFlush();
+
+    const raw = exports.join('\n');
+    expect(raw).not.toContain(secret);
+    expect(raw).not.toContain('127.0.0.1');
+    const spans = exports.flatMap((payload) => {
+      const data = JSON.parse(payload) as {
+        resourceSpans: { scopeSpans: { spans: { name: string }[] }[] }[];
+      };
+      return data.resourceSpans.flatMap((resource) =>
+        resource.scopeSpans.flatMap((scope) => scope.spans)
+      );
+    });
+    const commands = spans.filter(({ name }) => name.startsWith('redis '));
+    expect(commands.map(({ name }) => name).sort()).toEqual([
+      'redis EVAL',
+      'redis GET',
+      'redis GET',
+      'redis INCR',
+      'redis _OTHER',
+    ]);
+    for (const span of commands) {
+      expect(span).toMatchObject({
+        traceId,
+        parentSpanId: parent.spanContext().spanId,
+        kind: 3,
+        attributes: [
+          { key: 'db.system.name', value: { stringValue: 'redis' } },
+          { key: 'db.operation.name', value: { stringValue: span.name.slice(6) } },
+        ],
+      });
+    }
+    expect(commands.find(({ name }) => name === 'redis EVAL')).toMatchObject({
+      status: { code: 2 },
+    });
+  } finally {
+    client?.disconnect();
+    await module?.close();
+    await provider.shutdown();
+    for (const socket of sockets) socket.destroy();
+    await Promise.all(
+      [collector, redisServer].map(
+        (server) => new Promise<void>((resolve) => server.close(() => resolve()))
+      )
+    );
+  }
+});

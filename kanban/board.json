@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T17:38:59+00:00",
+  "updated": "2026-11-13T17:45:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16888,7 +16888,9 @@
           "historically_skipped": false
         },
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-redis-command-tracing"
+        ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
           "reviewed_sha": "9e8e0ff61372df735a9c54c1863abf1ef6769e38",
@@ -16903,7 +16905,7 @@
             },
             {
               "path": "apps/api/src/redis/redis.module.ts",
-              "sha256": "01da3da42122e4c1713c2cb6680622bc0f84173c85afeb5960df057b621d84c2"
+              "sha256": "0d23853bb52a7c70cffd9afbf6e5a99d3bdab51ac64d95c9ac96db01da8dcbf4"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -16931,7 +16933,17 @@
               "apps/api/src/redis/redis.module.ts"
             ],
             "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-readiness-evidence"
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "apps/api/src/redis/redis.module.ts"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
+            }
+          ]
         }
       }
     },
@@ -693890,7 +693902,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Complete the applicable shared process instrumentation for web, worker, NestJS, Express, PostgreSQL and Redis. The API now uses the OpenTelemetry trace SDK for HTTP request spans. Reconcile gRPC instrumentation with actual process transports."
+        "Complete the applicable shared process instrumentation for web, worker, NestJS, Express, PostgreSQL and Redis. The API now uses the OpenTelemetry trace SDK for HTTP request spans. Reconcile gRPC instrumentation with actual process transports.",
+        "The shared API Redis client now exports client spans under the active request, including pipeline commands. Native fixtures verified normal, failed and unrecognized command paths without exporting command data. Verify this instrumentation on the exact staged candidate. General PostgreSQL operation tracing remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -693910,7 +693923,8 @@
           "pnpm-lock.yaml"
         ],
         "batches": [
-          "release-0.6-api-request-tracing"
+          "release-0.6-api-request-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": null
       }
@@ -693930,7 +693944,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the configured API, worker, web and dedicated inference instrumentation on staging. The production web runtime now exports fixed HTTP spans using the existing SDK and its exact runtime package was verified locally. Remaining applicable auto-instrumentation and protected collector readback are open."
+        "Verify the configured API, worker, web and dedicated inference instrumentation on staging. The production web runtime now exports fixed HTTP spans using the existing SDK and its exact runtime package was verified locally. Remaining applicable auto-instrumentation and protected collector readback are open.",
+        "Local native checks verify the API Redis client uses the existing request tracer and preserves cache fallback, atomic quotas, TLS selection and pipeline results. Repeat through the final staged collector."
       ],
       "owner": null,
       "depends_on": [],
@@ -693990,7 +694005,8 @@
           "release-0.6-api-request-tracing",
           "release-0.6-notification-outbox-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": null
       }
@@ -694027,7 +694043,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-domain-postgresql-tracing",
@@ -694058,7 +694075,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             }
           ],
           "source_renewals": [
@@ -694150,6 +694167,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -694270,7 +694295,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -694317,7 +694343,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -694523,6 +694549,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -694797,7 +694831,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -694844,7 +694879,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -695050,6 +695085,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -695123,7 +695166,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -695259,7 +695303,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -695486,6 +695530,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -695559,7 +695611,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -695695,7 +695748,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -695922,6 +695975,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -696470,7 +696531,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -696606,7 +696668,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -696833,6 +696895,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -696867,7 +696937,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-loki-shipping",
@@ -696879,7 +696950,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "deploy/monitoring/operator-logs.alloy",
@@ -696975,6 +697046,14 @@
                 "packages/shared/src/operator-logging.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -696995,7 +697074,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify current provider, worker and infrastructure sink behavior on the exact accepted source. Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including isolated proxy failures, and retain the redacted receipts."
+        "Verify current provider, worker and infrastructure sink behavior on the exact accepted source. Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including isolated proxy failures, and retain the redacted receipts.",
+        "The Redis tracing fixture verified exact bounded command metadata and rejected a key, value, script and error marker in the raw OTLP export. Verify the same boundary in the protected deployed sink."
       ],
       "owner": null,
       "depends_on": [],
@@ -697161,7 +697241,8 @@
           "release-0.6-operator-log-pseudonyms",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-structured-operator-logs",
-          "release-0.6-structured-log-fixtures"
+          "release-0.6-structured-log-fixtures",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -707813,7 +707894,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-redis-command-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-grafana-trace-search",
@@ -707825,7 +707907,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "5956ebb741d1ac9aba1eadfb97e7c7cdd0eb0e51fcbc672b885c61239d4c3a39"
+              "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -707912,6 +707994,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ]
         }
@@ -1049170,11 +1049260,11 @@
             },
             {
               "path": "apps/api/src/redis/redis.module.integration.test.ts",
-              "sha256": "959a68cdb9ac269d622a8f68065506d11add489d1dec0517624f5833dce3138b"
+              "sha256": "f5978b0214e0ce4db4e199e825a8347bfedb0b56c65e84a120266f4d43bccdd5"
             },
             {
               "path": "apps/api/src/redis/redis.module.ts",
-              "sha256": "01da3da42122e4c1713c2cb6680622bc0f84173c85afeb5960df057b621d84c2"
+              "sha256": "0d23853bb52a7c70cffd9afbf6e5a99d3bdab51ac64d95c9ac96db01da8dcbf4"
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
@@ -1053506,6 +1053596,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "apps/api/src/redis/redis.module.integration.test.ts",
+                "apps/api/src/redis/redis.module.ts"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ],
           "presentation_renewals": [
@@ -1053913,7 +1054012,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-redis-command-tracing"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1054762,11 +1054862,11 @@
             },
             {
               "path": "apps/api/src/redis/redis.module.integration.test.ts",
-              "sha256": "959a68cdb9ac269d622a8f68065506d11add489d1dec0517624f5833dce3138b"
+              "sha256": "f5978b0214e0ce4db4e199e825a8347bfedb0b56c65e84a120266f4d43bccdd5"
             },
             {
               "path": "apps/api/src/redis/redis.module.ts",
-              "sha256": "01da3da42122e4c1713c2cb6680622bc0f84173c85afeb5960df057b621d84c2"
+              "sha256": "0d23853bb52a7c70cffd9afbf6e5a99d3bdab51ac64d95c9ac96db01da8dcbf4"
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
@@ -1058976,6 +1059076,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-redis-command-tracing",
+              "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+              "paths": [
+                "apps/api/src/redis/redis.module.integration.test.ts",
+                "apps/api/src/redis/redis.module.ts"
+              ],
+              "scope": "Extends the existing API tracer with bounded Redis command spans. The Redis factory, TLS configuration, health checks, cache fallback and durable quota decisions retain their existing behavior and assertions. The logging runbook adds only the new span fields and privacy behavior."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1059400,7 +1059509,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-redis-command-tracing"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1236815,6 +1236925,100 @@
         {
           "file": "staging-rehearsal-postcheck.txt",
           "sha256": "84cf115ae3580848953e8c4b97a439da0b61550ee77b4536da3c4a557cea4816"
+        }
+      ]
+    },
+    "release-0.6-redis-command-tracing": {
+      "batch": "release-0.6-redis-command-tracing",
+      "base_commit": "61cf7bda437525f6907ba312ee685f319083dac5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.01",
+        "06-security-testing-observability.md#T-06.13.01.01",
+        "06-security-testing-observability.md#T-06.13.01.02",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.16.01.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/redis/redis.module.ts",
+        "apps/api/src/redis/redis.module.integration.test.ts",
+        "docs/operations/structured-logging.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/redis/redis.module.ts",
+          "sha256": "0d23853bb52a7c70cffd9afbf6e5a99d3bdab51ac64d95c9ac96db01da8dcbf4"
+        },
+        {
+          "path": "apps/api/src/redis/redis.module.integration.test.ts",
+          "sha256": "f5978b0214e0ce4db4e199e825a8347bfedb0b56c65e84a120266f4d43bccdd5"
+        },
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "199ecc994751f059a4a4036ecdee8fa5132122d8827de8c82ed0fc442cac8e83"
+        },
+        {
+          "path": "apps/api/src/metrics/api-request-tracing.ts",
+          "sha256": "5bd74d1440f31604a188be2e5e60a96eacb130790bd36b56898af2c003f7a545"
+        },
+        {
+          "path": "apps/api/src/metrics/domain-tracing.ts",
+          "sha256": "6a877cfde9d6d3db0f7837bcdac877bc3ec30fc6dabfeab750e74c240577940a"
+        },
+        {
+          "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+          "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-factory.ts",
+          "sha256": "5322964b576a930e9cf7b4283a7f7ffc7a253aa71b27b261e9b0b55eefeec86a"
+        },
+        {
+          "path": "packages/telemetry/src/index.ts",
+          "sha256": "e392b88f59abc1669126945976e4a25e94019b068c03ffe5042452e751263341"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Nineteen selected tests passed across three suites, with native Redis and production-migrated PostgreSQL coverage for quotas and configuration cache.",
+        "The Nest module fixture exported real OTLP bytes to a loopback HTTP collector. It verified five Redis client spans, exact trace and parent identity, direct and pipelined commands, error status, bounded unknown command name and absence of private inputs and endpoint data.",
+        "API typecheck, changed-file ESLint, Prettier and git diff --check passed."
+      ],
+      "limitations": [
+        "The deployed protected collector, broader process instrumentation and final staged release evidence remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-redis-command-tracing",
+      "execution_receipts": [
+        {
+          "file": "integration.log",
+          "sha256": "f9a6cafc8a18c4bc85247cb8126b139c3a87082197b10c3d6d3d5c03549ec5f0"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "validation.log",
+          "sha256": "f4d2a81dacccbd7ebe8d82cff2190c6451263e3e205ece3fde0795c63554ed77"
         }
       ]
     }
