@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T20:31:19+00:00",
+  "updated": "2026-11-13T20:41:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21346,7 +21346,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal."
+        "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal.",
+        "The compiled f571986ee HTTP adapter recovered and verified an existing settled fixture through live staging HTTPS with its current adapter source. Verify the exact deployed application, circuit signals and controlled recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -21396,7 +21397,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-bill-electricity-caller"
+          "release-0.6-bill-electricity-caller",
+          "release-0.6-staging-preflight-readback"
         ],
         "current_acceptance": null
       }
@@ -22860,7 +22862,8 @@
       "remaining": [
         "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
-        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending."
+        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
+        "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images."
       ],
       "owner": null,
       "depends_on": [],
@@ -22919,7 +22922,8 @@
           "release-0.6-license-inventory-reuse",
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
-          "release-0.6-license-candidate-39619e439"
+          "release-0.6-license-candidate-39619e439",
+          "release-0.6-staging-preflight-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -678377,7 +678381,8 @@
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
         "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt.",
-        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending."
+        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
+        "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -678432,7 +678437,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
-          "release-0.6-license-candidate-39619e439"
+          "release-0.6-license-candidate-39619e439",
+          "release-0.6-staging-preflight-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1077981,7 +1077987,8 @@
         "A stale BuildKit archive stage could rebuild the older glibc packages. The refreshed build matches all 241 hosted PostgreSQL package rows and the strict package gate remains open. The isolated native restore of both databases passed, with matching data and collation and the current service preserved. Staging WAL archiving is off, the checked host has no backup job, and its Docker filesystem was 93% full. Obtain the approved backup destination, verify recoverable backups and capacity, and preserve the old image and volume before any live cutover.",
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
         "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports.",
-        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
+        "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -1078277,7 +1078284,8 @@
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-license-candidate-39619e439",
-          "release-0.6-local-staging-runner-rehearsal"
+          "release-0.6-local-staging-runner-rehearsal",
+          "release-0.6-staging-preflight-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1078530,7 +1078538,8 @@
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "On live v0.5.1, ClamD loaded daily 28182. The current vendor versions matched all three signed EU mirror archives. The local compiled candidate verified clean and quarantined documents and retry against the live scanner with disposable state. Deploy the approved application and monitoring configuration together and verify the deployed signature metric, scanner recovery and external alert delivery.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts.",
-        "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover."
+        "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
+        "The protected HTTP payment sandbox is configured and the compiled v0.6.0 adapter verified an existing settled synthetic fixture against it. A production merchant remains required. Staging cache maintenance preserved all tagged images, volumes, containers and the active manifest. The latest data filesystem readback is 93% used with 6,253,801,472 free bytes. Verify approved off-server backup, recovery and cutover capacity before any database image change."
       ],
       "owner": null,
       "depends_on": [],
@@ -1078580,7 +1078589,8 @@
           "release-0.6-staging-favicon-final-readback",
           "release-0.6-protected-main-and-staging-capacity-readback",
           "release-0.6-staging-scanner-current-signatures",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-staging-preflight-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1078627,7 +1078637,7 @@
           "receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-gate-readback/staging-scanner-version.txt"
         }
       },
-      "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
+      "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and production merchant configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
     },
     {
       "key": "release-readiness#R-06.01",
@@ -1253412,6 +1253422,90 @@
         {
           "file": "checks.json",
           "sha256": "4045544b72698cdedd9c32f7599e748de2a9dbb076190d8dd4522381c856fa2b"
+        }
+      ]
+    },
+    "release-0.6-staging-preflight-readback": {
+      "batch": "release-0.6-staging-preflight-readback",
+      "base_commit": "dfe73b34a98ddf8d3326c11392c75797ec89aea3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "c0677e822b870e53e247d022e78ecce643f2ea720c4f87674c439b0c6f66aa8a"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.ts",
+          "sha256": "233a5c78e091c41296009fc7e02136b23669f2381771ad6d69de085bcb3dd39e"
+        },
+        {
+          "path": "deploy/staging/payment-sandbox.mjs",
+          "sha256": "b55344675618600622283bf8f547e61a55a596d6df3771a6ff790b0d7625eba6"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "The amd64 application compiled at f571986ee used its native HTTP payment adapter with protected staging configuration. Live HTTPS inquiry recovered the previously accepted synthetic fixture and its exact provider authority. Verification read back its prior settlement. Source and lockfile digests match the current checkout.",
+        "Staging sandbox reported realFunds false. The readback created no payment, sent no callback and performed no application ledger write.",
+        "Hosted preflight 43497840080 for 840325e7d passed Verify monorepo integrity and reached main. The five runtime image scans and SBOM digests match their receipts. The report-only inventory contains the same 859 exact package and scope rows as 39619e439, including 387 review-required and 472 permitted rows.",
+        "Staging reclaimed only 37 reviewed unused, unshared BuildKit records older than 48 hours. The staging release lock held throughout. Tagged image, all container and volume identities and the active manifest were preserved. Public v0.5.1 health returned healthy PostgreSQL, Redis and object storage.",
+        "The PostgreSQL volume uses the same filesystem as Docker. The latest readback after cache cleanup reports 6,253,801,472 free bytes and 93% use. This is a capacity improvement and is not a database backup or cutover receipt."
+      ],
+      "limitations": [
+        "The payment readback exercised inquiry and verification on an existing provider fixture. The final deployed application, live callback and provider failure and recovery gates still require exact release evidence. Production merchant configuration remains external.",
+        "The license check was report-only and the 387 exact dispositions remain pending. The final image license gate remains strict.",
+        "No staging release was deployed. No database volume, rollback image, retained snapshot or service configuration was changed. The approved off-server backup, restore and measured cutover capacity remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-existing-payment-sandbox-readback",
+      "execution_receipts": [
+        {
+          "file": "provider-readback.json",
+          "sha256": "06fc7b2fea9069d31dbcdac865e57313f33db370f64ab98385ddcbb2ce27a5d3"
+        },
+        {
+          "file": "source-binding.json",
+          "sha256": "fecfd8fd9e4dba540d944859cfb3f377d286313ced459f492d6c66fbe41dc393"
+        },
+        {
+          "file": "hosted-image-readback.json",
+          "sha256": "a8675fcde7746581f72996ca348c552f351d9efe29dce4ba3d3a26a91af78e23"
+        },
+        {
+          "file": "staging-cache-maintenance-final.log",
+          "sha256": "f6d9a9ca986fc614fbeedb8743deb4dcd736fe2f56ca47f529b40edd6ec9f31c"
+        },
+        {
+          "file": "staging-cache-reclaim.log",
+          "sha256": "6bb87cbbc1cf100d082e43fabe55d5709218870d9d973214cebb67f39edc440c"
+        },
+        {
+          "file": "staging-disk-after.txt",
+          "sha256": "7f6252875a88692a72bc43c36dc84ec609af718df33c2d57df974cc6805716f1"
+        },
+        {
+          "file": "staging-release-after.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-health-after.json",
+          "sha256": "6ce0cf76fa2d9438e5cc8a2f3fedc33b9e3d14f3c8fef186dfe5d05177228b66"
         }
       ]
     }
