@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T17:07:24+00:00",
+  "updated": "2026-11-13T17:12:21+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -668342,7 +668342,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify exact hosted native Resend, signed top-up and chargeback callback suites against migration 0285.",
         "Complete the approved SMS and storage receipt contracts with source digest, current authority and replay-safe outcome evidence."
       ],
       "owner": null,
@@ -668354,7 +668353,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-hosted-callback-receipts"
         ],
         "current_acceptance": null
       }
@@ -668646,7 +668646,7 @@
       "launch_required": true,
       "remaining": [
         "Complete valid, expiry, wrong/missing proof, replay and duplicate tests for the approved SMS and storage contracts.",
-        "The payment and Resend cases already have verifier and durable native evidence. Obtain actual staging provider receipts separately."
+        "Hosted run 43456360315 verified the migrated Resend, signed top-up, chargeback and alert suites. The same 72 native cases passed on the current 0296 schema. Obtain actual staging provider receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -668655,7 +668655,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-provider-webhook-storage-and-replay-evidence",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-hosted-callback-receipts"
         ],
         "current_acceptance": null
       }
@@ -1236030,6 +1236031,140 @@
         {
           "file": "current/5-image.json",
           "sha256": "67cb1616ffed89f9bcc6d9a2e516698a2cc4bb43696076fd4bab1f3afaecfabf"
+        }
+      ]
+    },
+    "release-0.6-hosted-callback-receipts": {
+      "batch": "release-0.6-hosted-callback-receipts",
+      "base_commit": "c7b748d9afcee26a389d1c6f6aa52ecd0e482531",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.02.05",
+        "06-security-testing-observability.md#T-06.06.02.07"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
+          "sha256": "d97555cae5c693914bc382926ebb1d71aa998347238c995c1e00c5c582bdfb48"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "b7e6a28547f7e60453cede2ddfc9c562df86be190502487d559e93d7b16ffc23"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "556935dfc2874ffb36685bd789c23a2f0a49865c39db68a9a6a79ef1d2ce3383"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
+        },
+        {
+          "path": "apps/api/src/common/webhook-signature.ts",
+          "sha256": "f43879da2b0812b203aef3da87a55f9351caa7fa90034d4cf959dfc331eb0369"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+          "sha256": "81d3e759634e3563749a5c96667bbcf40e0ed494f774a33a94560b41c2282e75"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.ts",
+          "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "e7b56cb128ac14eab60b65f8772d5828bb3761873eea9f6a87823476b726339e"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0285_webhook_payload_digests.sql",
+          "sha256": "64d9eea162da96bab39a986982b7623387a1ebf50b52a5dafbe3e0e27c1f2e3b"
+        },
+        {
+          "path": "packages/db/src/schema/email-webhook-events.ts",
+          "sha256": "ad41cdd85f932c32ee78b4d7fca3645dd7f19b5f48dc7be6a3e13ae7df69ca04"
+        },
+        {
+          "path": "packages/db/src/schema/wallet-chargeback-events.ts",
+          "sha256": "7afe7d132faaf67cdaf05ea536ee19c374e25f256401e7a616f42960d52b2aaf"
+        },
+        {
+          "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
+          "sha256": "bfbbe945edfe2e9063fcd6082bce9998ef182395c4720afa3f29e05a35f0ecea"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "d756ebc6b42173eca69eb69bf27803b953a8d4635e09acef75311456c35527b7"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "docker-compose.test.yml",
+          "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "91f433e18f68256c55739e14282ae258a5d35da8f8bc1d2bc56444ed7fc2d4b5"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Verified exact hosted push 43456360315 at b11f41263 and successful test job 131991435402. The log contains 28 Resend, 17 signed top-up, 19 chargeback detection and 8 chargeback alert cases.",
+        "The hosted tests applied the production journal. The 0285 SQL and journal entry, callback code, tests and HTTP template setup match current source.",
+        "Built the current local test outputs and passed all 72 cases against disposable PostgreSQL with the current production journal, including the subsequent 0296 migration. Preserved the original financial and replay assertions."
+      ],
+      "limitations": [
+        "Hosted and local fixtures establish signed receipt, idempotency and financial behavior in their tested scopes. Actual provider deliveries and the approved SMS and storage feedback contracts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-hosted-callback-receipts",
+      "execution_receipts": [
+        {
+          "file": "hosted-run.json",
+          "sha256": "dc0cebbdcc2443bec77097e9ba838c52f775d76c7fdf6fcffd74e521869fc725"
+        },
+        {
+          "file": "hosted-131991435402.log",
+          "sha256": "c13ccc8ab6d053bd1de2c51a88df85fdfc0a2d3d95e71b23e902d58d1b61c623"
+        },
+        {
+          "file": "local-sha.txt",
+          "sha256": "47daf3c92326be51528c3dbfc42ff1fd1d887836ea80ba43cff168428f007b13"
+        },
+        {
+          "file": "current-native.log",
+          "sha256": "b7329724cc4d21fae008b55e3bd24b738215c9cbf462851fff6208d29fbd2569"
+        },
+        {
+          "file": "verified.json",
+          "sha256": "2980a062b545ae11a4a72a5b29f6a1d9cf5e4514ce15798dbfbbcf9f8161b751"
         }
       ]
     }
