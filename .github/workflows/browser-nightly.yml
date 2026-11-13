@@ -125,15 +125,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-outcome-${{ matrix.project }}-${{ matrix.shard }}
+          name: browser-outcome-${{ matrix.project }}-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/browser-outcomes.json
-          overwrite: true
           retention-days: 14
       - name: Upload Playwright results and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-${{ matrix.project }}-${{ matrix.shard }}
+          name: browser-${{ matrix.project }}-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: apps/web/test-results/
           retention-days: 14
 
@@ -150,7 +149,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          pattern: browser-outcome-*
+          pattern: browser-outcome-*-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/browser-outcomes
       - name: Read recent scheduled outcomes
         env:
@@ -161,15 +160,17 @@ jobs:
           history="$RUNNER_TEMP/nightly-history"
           mkdir -p "$history"
           since=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
-          gh run list --repo "$GITHUB_REPOSITORY" --workflow browser-nightly.yml \
-            --branch "$DEFAULT_BRANCH" --event schedule --status completed --created ">=$since" \
-            --limit 30 --json databaseId,conclusion > "$history/runs.json"
-          while IFS= read -r run; do
+          gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/browser-nightly.yml/runs" \
+            -f branch="$DEFAULT_BRANCH" -f event=schedule -f status=completed \
+            -f created=">=$since" -F per_page=30 \
+            --jq '[.workflow_runs[] | {databaseId: .id, conclusion, attempt: .run_attempt, sha: .head_sha}]' \
+            > "$history/runs.json"
+          while IFS=$'\t' read -r run attempt; do
             if ! gh run download "$run" --repo "$GITHUB_REPOSITORY" \
-              --name nightly-browser-summary --dir "$history/$run"; then
-              echo "No outcome receipt available for scheduled run $run."
+              --name "nightly-browser-summary-attempt-$attempt" --dir "$history/$run"; then
+              echo "No attempt-specific outcome receipt available for scheduled run $run."
             fi
-          done < <(jq -r '.[].databaseId' "$history/runs.json")
+          done < <(jq -r '.[] | [.databaseId, .attempt] | @tsv' "$history/runs.json")
       - name: Summarize current and historical outcomes
         if: ${{ always() && !cancelled() }}
         run: |
@@ -185,12 +186,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nightly-browser-summary
+          name: nightly-browser-summary-attempt-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/nightly-browser-summary.json
             ${{ runner.temp }}/nightly-browser-summary.md
             ${{ runner.temp }}/nightly-quarantine.json
-          overwrite: true
           retention-days: 14
 
   deliver:
@@ -210,7 +210,7 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
-          name: nightly-browser-summary
+          name: nightly-browser-summary-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/nightly-email-report
       - name: Send the dedicated nightly email
         if: ${{ always() && !cancelled() && steps.checkout.outcome == 'success' }}

@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 
 
@@ -24,14 +25,26 @@ def valid_counts(value):
     )
 
 
-def summarize_shards(directory):
+def run_identity(env):
+    sha = env.get("GITHUB_SHA", "")
+    run_id = env.get("GITHUB_RUN_ID", "")
+    attempt = env.get("GITHUB_RUN_ATTEMPT", "")
+    if not re.fullmatch(r"[0-9a-f]{40}", sha) or not all(
+        re.fullmatch(r"[1-9][0-9]{0,19}", value) for value in (run_id, attempt)
+    ):
+        raise ValueError("Expected a GitHub commit, run ID and attempt")
+    return {"commit": sha, "run_id": int(run_id), "run_attempt": int(attempt)}
+
+
+def summarize_shards(directory, identity):
     totals = dict.fromkeys(COUNTS, 0)
     missing, failed = [], []
     expected = len(PROJECTS) * len(SHARDS)
+    attempt = identity["run_attempt"]
     for project in PROJECTS:
         for shard in SHARDS:
             name = f"browser-outcome-{project}-{shard}"
-            result = read_json(directory / name / "browser-outcomes.json")
+            result = read_json(directory / f"{name}-attempt-{attempt}" / "browser-outcomes.json")
             if (
                 not valid_counts(result)
                 or result.get("schema_version") != 1
@@ -49,6 +62,7 @@ def summarize_shards(directory):
                 failed.append(name)
     return {
         "schema_version": 1,
+        **identity,
         "status": "incomplete" if missing else "failed" if failed else "passed",
         "expected_shards": expected,
         "reported_shards": expected - len(missing),
@@ -75,6 +89,13 @@ def history_lines(runs, directory):
         if (
             isinstance(receipt, dict)
             and receipt.get("schema_version") == 1
+            and type(run.get("attempt")) is int and run["attempt"] > 0
+            and isinstance(run.get("sha"), str) and re.fullmatch(r"[0-9a-f]{40}", run["sha"])
+            and type(receipt.get("run_id")) is int
+            and receipt.get("run_id") == run_id
+            and type(receipt.get("run_attempt")) is int
+            and receipt.get("run_attempt") == run.get("attempt")
+            and receipt.get("commit") == run.get("sha")
             and valid_counts(receipt.get("counts"))
             and type(receipt.get("reported_shards")) is int
             and type(receipt.get("expected_shards")) is int
@@ -88,7 +109,7 @@ def history_lines(runs, directory):
             shards, flakes = "Unavailable", "Unknown"
         quarantine = read_json(directory / str(run_id) / 'nightly-quarantine.json')
         active = 'Unknown'
-        if (isinstance(quarantine, dict) and quarantine.get('schema_version') == 1
+        if (shards != "Unavailable" and isinstance(quarantine, dict) and quarantine.get('schema_version') == 1
                 and quarantine.get('status') in ('passed', 'blocked')
                 and type(quarantine.get('active_quarantine_count')) is int
                 and quarantine['active_quarantine_count'] >= 0):
@@ -104,7 +125,11 @@ def main():
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--message", type=Path)
     args = parser.parse_args()
-    current = summarize_shards(args.outcomes)
+    try:
+        identity = run_identity(os.environ)
+    except ValueError as error:
+        parser.error(str(error))
+    current = summarize_shards(args.outcomes, identity)
     args.report.write_text(json.dumps(current, indent=2) + "\n")
     coverage = f"{current['reported_shards']} of {current['expected_shards']} shards reported."
     observed = (

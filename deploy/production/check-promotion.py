@@ -52,7 +52,7 @@ def verify_workflow(run_id, path, sha):
             or run['event'] != 'workflow_dispatch' or run['status'] != 'completed'
             or run['conclusion'] != 'success'):
         raise ValueError(f'Run {run_id} must be a successful manual {path} run for the candidate')
-    return run['html_url']
+    return run
 
 
 def verify_ci_checks(run_id):
@@ -73,14 +73,24 @@ def verify_ci_checks(run_id):
         raise ValueError('Full tests, enforced licenses and combined coverage must each pass')
 
 
-def verify_browser_rollup(run_id, directory):
+def verify_browser_rollup(run_id, directory, sha, attempt):
+    if type(attempt) is not int or attempt < 1:
+        raise ValueError('The browser workflow attempt is missing or invalid')
     command('Hosted browser outcome download', 'gh', 'run', 'download', str(run_id),
-            '--repo', REPO, '--name', 'nightly-browser-summary', '--dir', str(directory))
+            '--repo', REPO, '--name', f'nightly-browser-summary-attempt-{attempt}', '--dir', str(directory))
     rollup = json.loads((directory / 'nightly-browser-summary.json').read_text())
-    counts = rollup['counts']
-    if (rollup['schema_version'] != 1 or rollup['status'] != 'passed' or rollup['reported_shards'] != 40
-            or rollup['expected_shards'] != 40 or counts['expected'] <= 0
-            or rollup['missing_or_invalid_shards'] or rollup['failed_shards']
+    if (not isinstance(rollup, dict) or rollup.get('commit') != sha or type(rollup.get('run_id')) is not int
+            or rollup['run_id'] != run_id or type(rollup.get('run_attempt')) is not int
+            or rollup['run_attempt'] != attempt):
+        raise ValueError('The browser rollup must match the candidate, run and attempt')
+    counts = rollup.get('counts')
+    count_keys = ('expected', 'unexpected', 'flaky', 'skipped', 'runner_errors')
+    if (not isinstance(counts, dict) or any(type(counts.get(key)) is not int or counts[key] < 0
+                                            for key in count_keys)
+            or rollup.get('schema_version') != 1 or rollup.get('status') != 'passed'
+            or rollup.get('reported_shards') != 40 or rollup.get('expected_shards') != 40
+            or counts['expected'] <= 0 or rollup.get('missing_or_invalid_shards') != []
+            or rollup.get('failed_shards') != []
             or any(counts[key] != 0 for key in ('unexpected', 'flaky', 'runner_errors'))):
         raise ValueError('The browser rollup must pass for all 40 shards')
     return counts
@@ -362,14 +372,14 @@ def main():
             raise ValueError('Use the immutable v0.9.0 first-launch candidate')
         command('Launch board', sys.executable, 'kanban/scripts/board.py', 'ready', '--release', version)
         paths, hashes = index_receipts(args.receipt_index, sha)
-        ci_url = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
+        ci_run = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
         verify_ci_checks(args.ci_run)
-        browser_url = verify_workflow(args.browser_run, '.github/workflows/browser-nightly.yml', sha)
+        browser_run = verify_workflow(args.browser_run, '.github/workflows/browser-nightly.yml', sha)
         with tempfile.TemporaryDirectory(prefix='barghsa-promotion-') as temporary:
             directory = Path(temporary)
             command('Strict quarantine', sys.executable, 'scripts/check-flaky-tests.py',
                     '--promotion', '--report', str(directory / 'quarantine.json'))
-            counts = verify_browser_rollup(args.browser_run, directory)
+            counts = verify_browser_rollup(args.browser_run, directory, sha, browser_run.get('run_attempt'))
         verify_staging(version, sha)
         checked_at = time.time()
         backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
@@ -390,7 +400,7 @@ def main():
         return 1
     print(json.dumps({'status': 'ready_for_owner_review', 'version': version, 'candidate_sha': sha,
                       'checked_at': checked_at,
-                      'ci': ci_url, 'browser': browser_url, 'browser_counts': counts,
+                      'ci': ci_run['html_url'], 'browser': browser_run['html_url'], 'browser_counts': counts,
                       'operational_receipt_sha256': hashes, 'verified_backup': backup,
                       'verified_staging_images': images,
                       'verified_staging_and_telegram': release}, indent=2))

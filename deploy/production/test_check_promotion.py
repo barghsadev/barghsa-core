@@ -47,7 +47,7 @@ class PromotionEvidenceTest(unittest.TestCase):
             'html_url': 'https://github.com/barghsadev/barghsa-core/actions/runs/1',
         }
         with patch.object(promotion, 'command', return_value=json.dumps(expected)):
-            self.assertEqual(promotion.verify_workflow(1, expected['path'], SHA), expected['html_url'])
+            self.assertEqual(promotion.verify_workflow(1, expected['path'], SHA), expected)
         for key, value in [
             ('path', '.github/workflows/browser-nightly.yml'),
             ('head_repository', {'full_name': 'another/repository'}),
@@ -79,24 +79,34 @@ class PromotionEvidenceTest(unittest.TestCase):
                 promotion.verify_ci_checks(1)
 
     def test_requires_every_browser_shard_without_unexplained_flakes(self):
-        with tempfile.TemporaryDirectory() as temporary, patch.object(promotion, 'command'):
+        with tempfile.TemporaryDirectory() as temporary, patch.object(promotion, 'command') as command:
             directory = Path(temporary)
             report = directory / 'nightly-browser-summary.json'
             valid = {
                 'schema_version': 1, 'status': 'passed', 'expected_shards': 40,
+                'commit': SHA, 'run_id': 1, 'run_attempt': 2,
                 'reported_shards': 40, 'missing_or_invalid_shards': [], 'failed_shards': [],
-                'counts': {'expected': 100, 'unexpected': 0, 'flaky': 0, 'runner_errors': 0},
+                'counts': {'expected': 100, 'unexpected': 0, 'flaky': 0, 'skipped': 0, 'runner_errors': 0},
             }
             report.write_text(json.dumps(valid))
-            self.assertEqual(promotion.verify_browser_rollup(1, directory), valid['counts'])
+            self.assertEqual(promotion.verify_browser_rollup(1, directory, SHA, 2), valid['counts'])
+            self.assertIn('nightly-browser-summary-attempt-2', command.call_args.args)
             for changed in [
                 {'reported_shards': 39},
                 {'missing_or_invalid_shards': ['one-shard']},
                 {'counts': {**valid['counts'], 'flaky': 1}},
+                {'counts': {**valid['counts'], 'expected': True}},
+                {'counts': {**valid['counts'], 'skipped': -1}},
             ]:
                 report.write_text(json.dumps({**valid, **changed}))
                 with self.assertRaisesRegex(ValueError, 'all 40 shards'):
-                    promotion.verify_browser_rollup(1, directory)
+                    promotion.verify_browser_rollup(1, directory, SHA, 2)
+            for changed in [{'commit': 'b' * 40}, {'run_id': 2}, {'run_attempt': 1}, {'run_id': True}]:
+                report.write_text(json.dumps({**valid, **changed}))
+                with self.assertRaisesRegex(ValueError, 'candidate, run and attempt'):
+                    promotion.verify_browser_rollup(1, directory, SHA, 2)
+            with self.assertRaisesRegex(ValueError, 'attempt is missing or invalid'):
+                promotion.verify_browser_rollup(1, directory, SHA, None)
 
     def test_requires_exact_healthy_staging_readback(self):
         live = {'version': '0.9.0', 'commit': SHA}

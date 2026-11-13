@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T17:12:21+00:00",
+  "updated": "2026-11-13T17:20:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7663,7 +7663,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -7671,7 +7672,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -7986,6 +7987,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -8470,7 +8479,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8478,7 +8488,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -8490,7 +8500,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8514,7 +8524,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/test-browser-flake-gate.mjs",
@@ -8530,7 +8540,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
+              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
             }
           ],
           "checks": [
@@ -8708,6 +8718,17 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "deploy/production/check-promotion.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -21219,7 +21240,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21231,7 +21253,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "AGENTS.md",
@@ -21457,6 +21479,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -23019,7 +23049,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup. Firefox shard 5 reported one provider-boundary fixture flake after a rejected HTTPS navigation. The explicit fixture now uses a fresh page within the same proxied context. All 36 repeated cases passed without retries across Chromium, WebKit and pinned Firefox 1575.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup. Firefox shard 5 reported one provider-boundary fixture flake after a rejected HTTPS navigation. The explicit fixture now uses a fresh page within the same proxied context. All 36 repeated cases passed without retries across Chromium, WebKit and pinned Firefox 1575. Browser artifacts and the strict rollup now bind the candidate commit, run and attempt. A partial rerun stays incomplete when earlier shards are absent. Verify all 40 shards on one hosted attempt of the final immutable candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -23120,7 +23150,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-solar-back-touch-target",
           "release-0.6-firefox-provider-fixture",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": null
       }
@@ -31897,7 +31928,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -31914,7 +31946,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "eslint.config.mjs",
@@ -32176,6 +32208,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -32555,7 +32595,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -32597,7 +32638,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "eslint.config.mjs",
@@ -32867,6 +32908,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -35464,7 +35513,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-service-workflow-recovery",
           "release-0.6-web-server-tracing",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35495,7 +35545,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "package.json",
@@ -35977,6 +36027,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -36316,7 +36374,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36341,7 +36400,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -36412,6 +36471,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -674489,7 +674556,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -674497,7 +674565,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "vitest.config.ts",
@@ -674767,6 +674835,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -675252,7 +675328,8 @@
           "release-0.6-related-test-selection",
           "release-0.6-gate-readback",
           "release-0.6-postgres-package-alignment",
-          "release-0.6-related-test-selector-acceptance"
+          "release-0.6-related-test-selector-acceptance",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -675272,7 +675349,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -675295,6 +675372,16 @@
             "Test-only hosted preflight 43293337565 selected only the changed web Vitest file and passed four cases. The affected-test receipt bound the candidate and exact base. The separate runtime image job failed on that run.",
             "Protected main run 43310340984 passed the required aggregate and reused exact affected-test evidence. The selector, workflow and receipt handling match their hosted sources. Four selector and seven receipt checks passed locally.",
             "Runtime, fixture and configuration changes retain affected-workspace execution. Full release coverage remains a separate gate."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            }
           ]
         }
       }
@@ -678210,7 +678297,8 @@
           "release-0.6-nightly-limit-settings-isolation",
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "batch": "release-0.6-critical-form-recovery",
@@ -678278,7 +678366,7 @@
             },
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
@@ -678584,6 +678672,14 @@
                 "apps/web/e2e/limit-settings-forms.spec.ts"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -678746,7 +678842,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-compose-postgres17-acceptance",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -678820,7 +678917,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -679008,6 +679105,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -679047,7 +679152,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -679055,7 +679161,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -679164,6 +679270,14 @@
                 "apps/api/src/test/build-http-app.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -679203,7 +679317,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -679211,7 +679326,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -679320,6 +679435,14 @@
                 "apps/api/src/test/build-http-app.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -679370,7 +679493,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -679402,7 +679526,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -679616,6 +679740,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -681980,7 +682112,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -682012,7 +682145,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -682227,6 +682360,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -682260,7 +682401,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -682308,7 +682450,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -682389,6 +682531,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -683315,7 +683465,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-solar-back-touch-target"
+          "release-0.6-solar-back-touch-target",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
@@ -683323,7 +683474,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -683359,7 +683510,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -683405,6 +683556,15 @@
                 "apps/web/src/pages/SolarRequestDetailPage.tsx"
               ],
               "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -683704,7 +683864,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -683712,7 +683873,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -683724,7 +683885,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -683917,6 +684078,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -683964,7 +684134,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-firefox-provider-fixture"
+          "release-0.6-firefox-provider-fixture",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -684044,7 +684215,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -684148,6 +684319,14 @@
                 "apps/web/e2e/local-network.spec.ts"
               ],
               "scope": "Isolates the explicitly fulfilled HTTPS navigation on a new page in the same browser context. The external HTTP, redirect and CONNECT denials and successful local fixture assertions passed across the three browser engines. Shared fixture, proxy and application sources retain their bytes."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -689926,7 +690105,8 @@
           "docs/security/supply-chain.md"
         ],
         "batches": [
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -689938,7 +690118,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -690033,6 +690213,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -691037,7 +691225,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -691051,7 +691240,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -691059,11 +691248,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "9b88dbff3db8e51e65d765094c9c38c7387d97551900899c2a54a636be93d87c"
+              "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -691087,7 +691276,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/test_check_browser_results.py",
@@ -691099,7 +691288,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
+              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
             }
           ],
           "source_renewals": [
@@ -691303,6 +691492,18 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -691753,7 +691954,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -691767,7 +691969,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -691779,11 +691981,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "9b88dbff3db8e51e65d765094c9c38c7387d97551900899c2a54a636be93d87c"
+              "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -691795,7 +691997,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             }
           ],
           "source_renewals": [
@@ -692135,6 +692337,17 @@
                 "kanban/scripts/board.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -692652,7 +692865,8 @@
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -692660,7 +692874,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -692692,7 +692906,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/web-navigation-paths.mjs",
@@ -692781,6 +692995,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -693083,7 +693306,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -693096,7 +693320,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -693104,7 +693328,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -693124,7 +693348,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -693132,7 +693356,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
+              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
             }
           ],
           "source_renewals": [
@@ -693329,6 +693553,17 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "deploy/production/check-promotion.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -693373,7 +693608,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -693386,7 +693622,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -693394,7 +693630,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -693414,7 +693650,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -693422,7 +693658,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
+              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
             }
           ],
           "source_renewals": [
@@ -693619,6 +693855,17 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "deploy/production/check-promotion.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -712807,7 +713054,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -712827,7 +713075,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -712974,6 +713222,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -713078,7 +713334,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -713098,7 +713355,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -713245,6 +713502,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -713287,7 +713552,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -713307,7 +713573,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "446ca268752bbfc339793d3c29d445e0be13149197cfff3dc1110b7d0f2f35b7"
+              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -713454,6 +713720,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ]
         }
@@ -1015878,7 +1016152,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1016242,7 +1016517,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1016630,6 +1016905,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1016826,7 +1017109,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1017190,7 +1017474,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1017578,6 +1017862,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1017774,7 +1018066,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1018138,7 +1018431,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1018526,6 +1018819,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1018723,7 +1019024,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1019087,7 +1019389,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1019475,6 +1019777,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1019671,7 +1019981,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1020035,7 +1020346,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1020423,6 +1020734,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1020619,7 +1020938,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1020983,7 +1021303,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1021371,6 +1021691,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1021567,7 +1021895,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1021931,7 +1022260,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1022319,6 +1022648,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1022516,7 +1022853,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1022880,7 +1023218,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1023268,6 +1023606,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1023464,7 +1023810,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1023828,7 +1024175,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1024216,6 +1024563,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1024412,7 +1024767,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-browser-attempt-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1024776,7 +1025132,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1025164,6 +1025520,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-browser-attempt-receipts",
+              "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1064025,7 +1064389,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open.",
+        "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Browser artifacts and the strict rollup now bind the candidate commit, run and attempt. A partial rerun stays incomplete when earlier shards are absent. Verify all 40 shards on one hosted attempt of the final immutable candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures. Preflight 43465392373 failed on the legacy invoice reminder fixture. The fixture now applies canonical migration 0291, and its focused PostgreSQL and unit suites pass. Verify the successor exact hosted run. The license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
@@ -1064319,7 +1064683,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-queue-schema-rehearsal",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-browser-attempt-receipts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1236165,6 +1236530,125 @@
         {
           "file": "verified.json",
           "sha256": "2980a062b545ae11a4a72a5b29f6a1d9cf5e4514ce15798dbfbbcf9f8161b751"
+        }
+      ]
+    },
+    "release-0.6-browser-attempt-receipts": {
+      "batch": "release-0.6-browser-attempt-receipts",
+      "base_commit": "27614ec9d815220111c0c166ddd00e1e1a29b1f2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.09.03.09",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/browser-nightly.yml",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "docs/development/ci.md",
+        "scripts/report-nightly-browser.py",
+        "scripts/test_report_nightly_browser.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "scripts/email-nightly-browser-report.py",
+          "sha256": "4634fa5c457414008c9634e5c489f20f4e0f641436ab161dfa3eaa17b503649f"
+        }
+      ],
+      "checks": [
+        "All 25 focused tests passed: 12 nightly browser and email, 2 shard-result validation, and 11 production promotion.",
+        "One shard on attempt two cannot consume the other 39 from attempt one. A full later attempt passes with all 40. Promotion rejects mismatched commit, run and attempt, malformed counts and any unexplained flake.",
+        "actionlint, Prettier and git diff --check passed. GitHub API readback confirmed full commit and attempt are returned for completed scheduled runs."
+      ],
+      "limitations": [
+        "These fixtures do not certify the revised hosted workflow, the final candidate browser matrix, scheduled report delivery or a release. Historical runs without attempt-specific artifacts report unavailable counts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-attempt-receipts",
+      "execution_receipts": [
+        {
+          "file": "nightly-tests.log",
+          "sha256": "597215d577d9bc67943b933b43e6f9bd501be5cb9ed022ae5fdbbf9b732090a4"
+        },
+        {
+          "file": "browser-results-tests.log",
+          "sha256": "43d5272f5c5bda1e180fbc70784dae3be69e1f1cf8aa4cdd351fcf5f5a3bed65"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "e3fd20089fe8041f8a1047cbd8784b17f6ef1d099bb8354be9509b166696810d"
+        },
+        {
+          "file": "validation.log",
+          "sha256": "cb916a5626a87e904e9b168d62aa3e1f44e55b7d7e7b57a7a0ed953204665029"
+        },
+        {
+          "file": "historical-runs.json",
+          "sha256": "6d4f6880de4396d8c4b706c944c92bf1dc931a297b4600a25775c8163598b7a4"
         }
       ]
     }
