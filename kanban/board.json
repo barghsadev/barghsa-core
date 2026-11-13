@@ -22928,7 +22928,8 @@
         "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
-        "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images."
+        "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images.",
+        "The protected dfe73b34a preflight and main readback verified all five image scans. Its exact report reproduces the same 387 pending package exceptions. The strict candidate check remains blocked on the original signed dispositions."
       ],
       "owner": null,
       "depends_on": [],
@@ -22988,7 +22989,8 @@
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
           "release-0.6-license-candidate-39619e439",
-          "release-0.6-staging-preflight-readback"
+          "release-0.6-staging-preflight-readback",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -23721,7 +23723,7 @@
         "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required.",
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
         "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending.",
-        "Manual diagnostic 43504566627 reported four mobile settings count failures after the Operational Retention entry was added. The 26-option assertion now checks that route explicitly. All 16 Chromium and mobile Safari cases passed. The complete hosted attempt and scheduled report delivery remain required."
+        "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -656861,7 +656863,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the integrated security-header checks on the final immutable candidate and complete the selected production-equivalent ingress TLS/HSTS gate. The exact isolated pilot and staging runs passed both positive checks and rejection of the original duplicate headers."
+        "Verify the integrated security-header checks on the final immutable candidate and complete the selected production-equivalent ingress TLS/HSTS gate. The exact isolated pilot and staging runs passed both positive checks and rejection of the original duplicate headers.",
+        "The protected dfe73b34a check passed the built web security headers, pilot TLS proxy, and staging proxy headers. Their workflow, ingress and test inputs match the current checkout. Repeat only invalidated checks and retain the final candidate and production-equivalent TLS/HSTS evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -656880,7 +656883,8 @@
           "release-0.6-proxy-security-headers",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-single-edge-security-headers"
+          "release-0.6-single-edge-security-headers",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "current_acceptance": null
       }
@@ -678692,7 +678696,8 @@
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
         "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt.",
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
-        "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending."
+        "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending.",
+        "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet."
       ],
       "owner": null,
       "depends_on": [],
@@ -678748,7 +678753,8 @@
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
           "release-0.6-license-candidate-39619e439",
-          "release-0.6-staging-preflight-readback"
+          "release-0.6-staging-preflight-readback",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -678897,7 +678903,8 @@
         "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required.",
         "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts.",
         "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
-        "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence."
+        "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence.",
+        "Protected preflight 43503647318 verified all five scan and SBOM receipts. The staged ClamAV archive and loaded PostgreSQL replacement have their own exact evidence. The old running PostgreSQL image still fails the gate. Verify the final cutover and deployment plus registry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -678949,7 +678956,8 @@
           "release-0.6-amd64-license-readback",
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-license-candidate-39619e439",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -713793,7 +713801,8 @@
       "remaining": [
         "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
         "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts.",
-        "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open."
+        "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open.",
+        "Protected preflight 43503647318 passed the monitoring rule checks with matching inputs. Native deployed counters, rule delivery and authorized external pager readbacks remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -713821,7 +713830,8 @@
         "batches": [
           "release-0.6-journey-slo-burn",
           "release-0.6-native-journey-availability",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "current_acceptance": null
       }
@@ -1078523,7 +1078533,8 @@
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
         "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
-        "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending."
+        "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending.",
+        "dfe73b34a reached protected main after all seven preflight jobs passed. Verified the five image reports and unchanged license review scope. The loaded PostgreSQL replacement and retained scanner each match their hosted package and license scope. Final strict tests, exact staging acceptance and actual live receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1078820,7 +1078831,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-license-candidate-39619e439",
           "release-0.6-local-staging-runner-rehearsal",
-          "release-0.6-staging-preflight-readback"
+          "release-0.6-staging-preflight-readback",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1079074,7 +1079086,8 @@
         "On live v0.5.1, ClamD loaded daily 28182. The current vendor versions matched all three signed EU mirror archives. The local compiled candidate verified clean and quarantined documents and retry against the live scanner with disposable state. Deploy the approved application and monitoring configuration together and verify the deployed signature metric, scanner recovery and external alert delivery.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts.",
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
-        "The protected HTTP payment sandbox is configured and the compiled v0.6.0 adapter verified an existing settled synthetic fixture against it. A production merchant remains required. Staging cache maintenance preserved all tagged images, volumes, containers and the active manifest. The latest data filesystem readback is 93% used with 6,253,801,472 free bytes. Verify approved off-server backup, recovery and cutover capacity before any database image change."
+        "The protected HTTP payment sandbox is configured and the compiled v0.6.0 adapter verified an existing settled synthetic fixture against it. A production merchant remains required. Staging cache maintenance preserved all tagged images, volumes, containers and the active manifest. The latest data filesystem readback is 93% used with 6,253,801,472 free bytes. Verify approved off-server backup, recovery and cutover capacity before any database image change.",
+        "The replacement PostgreSQL image 7dee39bc is loaded on staging and has matching isolated restore, scan and package evidence. Staging is still on the original database. At readback it had 6,259,064,832 free bytes, or 93% use, and archive_mode still off. The approved off-server backup, recovery and live cutover remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1079126,7 +1079139,8 @@
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-clamav-missing-metric",
           "release-0.6-staging-preflight-readback",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-protected-preflight-and-stateful-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1254424,7 +1254438,8 @@
       "checks": [
         "Hosted Chromium shard 1 in run 43504566627 recorded four failures across both languages and themes at 390 px. It observed 26 options against the former 25-option assertion. The desktop variants passed.",
         "Operational Retention is the one new registered and permission-filtered route. The existing test now requires all 26 options and that route once. Existing settings navigation, confirmations, Axe and overflow assertions passed across all 16 production-browser cases in Chromium and mobile Safari, with no retries.",
-        "The verified prebuilt UI has matching application, design system and localization sources. Web typecheck, scoped lint, format and diff checks passed."
+        "The verified prebuilt UI has matching application, design system and localization sources. Web typecheck, scoped lint, format and diff checks passed.",
+        "The completed pinned Firefox, WebKit and Mobile Chrome replay passed all 24 remaining settings cases with zero unexpected, flaky or skipped outcomes. This brings the product-source-bound focused set to 40 successful cases across all five projects. The hosted Firefox and WebKit shard logs identify the same earlier 25-option assertion."
       ],
       "limitations": [
         "The first local invocation put the file after the variadic project selector. It executed no tests and is retained separately. The corrected invocation passed all 16 selected cases. The old hosted result remains failed and final scheduled acceptance is pending."
@@ -1254446,6 +1254461,127 @@
         {
           "file": "selection-error.log",
           "sha256": "3e918e3d8f651c99711c0fdd79317dace4276fe49809dd2da7192f27dc732a6e"
+        },
+        {
+          "file": "browser-remaining-engines.log",
+          "sha256": "f5f34d24002ef35dbcf11a09fa8aea6043628420b5c66eb03e06ec3c004374e9"
+        },
+        {
+          "file": "remaining-engine-results.json",
+          "sha256": "b0196bce2b6cb9ddf06bce04addd5bbc113adefb027add6f438dc76406983d8b"
+        },
+        {
+          "file": "hosted-firefox-1.log",
+          "sha256": "9a915be97e8d32c34857cd9ed83fa4a36943c98bce9a456a0bbe8cf8728e7ae5"
+        },
+        {
+          "file": "hosted-webkit-1.log",
+          "sha256": "9413b0865a9dc357f451444bca8a7427efe51b6122d74b1bfe62e89f6d9f30ce"
+        }
+      ]
+    },
+    "release-0.6-protected-preflight-and-stateful-readback": {
+      "batch": "release-0.6-protected-preflight-and-stateful-readback",
+      "base_commit": "d19812d0ad5a3dee003290a99a73f2233ff39607",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "4059d8c4520ad2fbf498ca8d17b0d902cc2378ce701e62ab46d7ecf51b6bd9a4"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "9289579d0f066af97bc4f4f1cb539f1c14019e088ab58a1dbd4f4b5c5c52f40e"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "5c40106ee5dbe1a7a8ea401e8858632c59c40aee0af9c4a10a081f8364efd8c2"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "6d14b56375508043a600fce3873473007da7721658d79f64f8c3e0aedb9e0199"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "56c7bf85b713bc58246c5ebfac52840ce76f03f57bab4fb268023433f150f604"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx-s3-proxy.conf",
+          "sha256": "9f1cd69e8b73bdafbf88dfec384820b7e158e3061a21d2bfab9f3fb05c7414ca"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "7e200bcd67036b403abbab1dee49d931955ffac8ded77041bade143a069c0ed6"
+        },
+        {
+          "path": "scripts/check-production-security-headers.mjs",
+          "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
+        },
+        {
+          "path": "scripts/check-proxy-tls.mjs",
+          "sha256": "166c569cfe4e3400e118388483a35b7505bd4a896e5c70d71db8f53258c9681c"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "8403f43c0a4c78b10871fc6e3805fe623a87573b7f8cbca777cb14e272924b56"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "44d7617e6eb391201ed0897231437035cdc8f3bd22d4585ce07a2f70e1e21000"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "f6581d10d30ed8c66a2afdd96f5b03e9a70554bbed762a5b942c9e6778191c92"
+        }
+      ],
+      "checks": [
+        "GitHub returned dfe73b34a as the protected main head after exact required check 132177571405 passed from App 15368 on preflight 43503647318. The six contributing jobs passed, including combined source coverage and the selected security-header and monitoring steps.",
+        "All five archived scan subjects match the runtime IDs in the report, and vulnerability and CycloneDX artifact hashes match their image receipts. The report-only 859-row license inventory exactly matches 840325e7d, with 387 awaiting named approval and 472 allowed.",
+        "Read-only staging checks matched the retained scanner Docker digest to the verified archive manifest and the staged PostgreSQL replacement to the existing passed scan. The scanner and replacement match all 41 and 241 exact package URLs and detected license sets from the corresponding hosted scopes. The active legacy database is a separate image with a failing recorded scan.",
+        "The data filesystem reported 6,259,064,832 free bytes and 93% utilization, above the prior isolated rehearsal floor of 2 GiB. WAL archiving is off. The measured capacity and old isolated restore do not certify the live cutover."
+      ],
+      "limitations": [
+        "This protected push is an implementation checkpoint. The image scan is separate from the report-only license inventory. No release was accepted or deployed and no Telegram publication was triggered.",
+        "The retained and loaded images have different IDs from the hosted build. Each uses its own scan and image evidence. The named package decisions, approved off-server backup and restore, and final image/registry receipt remain outstanding."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-preflight-dfe73b34a",
+      "execution_receipts": [
+        {
+          "file": "verified-image-license-readback.json",
+          "sha256": "7f52b883292cd2abe52b5fa79a874d38cc3b0a0be31a98e1d29f4ece5426cecb"
+        },
+        {
+          "file": "protected-and-quality-readback.json",
+          "sha256": "66eaa9eee1fb920ac1d3dd48db29d423db76f002cb897426c1efc60b7851cb6e"
+        },
+        {
+          "file": "stateful-cutover-readback.json",
+          "sha256": "096c980c555c4908704cb0709dc4f1ca908993a5a4126116864f371fa5bdd953"
+        },
+        {
+          "file": "release-licenses.json",
+          "sha256": "d4987ccd9460b823d60b7be976a588946f776930af45a9d1680aa996bbfbf7f7"
         }
       ]
     }
