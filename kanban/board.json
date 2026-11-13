@@ -22564,7 +22564,8 @@
       "launch_required": true,
       "remaining": [
         "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
-        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
+        "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
+        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -22622,7 +22623,8 @@
           "release-0.6-refreshed-license-review",
           "release-0.6-license-inventory-reuse",
           "release-0.6-web-license-delta",
-          "release-0.6-amd64-license-readback"
+          "release-0.6-amd64-license-readback",
+          "release-0.6-license-candidate-39619e439"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -677117,7 +677119,8 @@
         "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
-        "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt."
+        "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt.",
+        "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -677171,7 +677174,8 @@
           "release-0.6-refreshed-license-review",
           "release-0.6-local-staging-license-gate",
           "release-0.6-web-license-delta",
-          "release-0.6-amd64-license-readback"
+          "release-0.6-amd64-license-readback",
+          "release-0.6-license-candidate-39619e439"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -677318,7 +677322,8 @@
         "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence.",
         "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts.",
         "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required.",
-        "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts."
+        "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts.",
+        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -677368,7 +677373,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
-          "release-0.6-postgres-cutover-preflight"
+          "release-0.6-postgres-cutover-preflight",
+          "release-0.6-license-candidate-39619e439"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -677409,7 +677415,8 @@
       "launch_required": true,
       "remaining": [
         "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed.",
-        "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed."
+        "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed.",
+        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -677440,7 +677447,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-runtime-image-binding",
           "release-0.6-weekly-dependency-advisory",
-          "release-0.6-postgres-restore-readback"
+          "release-0.6-postgres-restore-readback",
+          "release-0.6-license-candidate-39619e439"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -1075411,7 +1075419,7 @@
       "remaining": [
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Browser artifacts and the strict rollup now bind the candidate commit, run and attempt. A partial rerun stays incomplete when earlier shards are absent. Verify all 40 shards on one hosted attempt of the final immutable candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
-        "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures. Preflight 43465392373 failed on the legacy invoice reminder fixture. The fixture now applies canonical migration 0291, and its focused PostgreSQL and unit suites pass. Verify the successor exact hosted run. The license gate still requires exact dispositions.",
+        "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures. Preflight 43465392373 failed on the legacy invoice reminder fixture. The fixture now applies canonical migration 0291, and its focused PostgreSQL and unit suites pass. Successor affected preflight 43484917342 passed Verify monorepo integrity and 39619e439 reached protected main. Run full native and combined coverage on the final immutable release. The license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
         "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open.",
@@ -1075711,7 +1075719,8 @@
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-protected-main-and-staging-capacity-readback",
           "release-0.6-independent-critical-defect-fixture",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-license-candidate-39619e439"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1249997,6 +1250006,55 @@
         {
           "file": "local-checks.json",
           "sha256": "e210166d2e75046c9e4c3a770c6846bef5ba801c356df5cb72ce78dc87821430"
+        }
+      ]
+    },
+    "release-0.6-license-candidate-39619e439": {
+      "batch": "release-0.6-license-candidate-39619e439",
+      "base_commit": "39619e43990b47ba5cd36d26293eda73042fbfb0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "8403f43c0a4c78b10871fc6e3805fe623a87573b7f8cbca777cb14e272924b56"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "7118aa8b6c46175a9f5a6478238a26d81aee5fd75bf801d4c529e77da7a018a7"
+        }
+      ],
+      "checks": [
+        "GitHub Actions run 43484917342 completed successfully. The required Verify monorepo integrity check from app 15368 matched 39619e439 exactly and the SHA was read back from protected main after its fast-forward push.",
+        "The exact runtime image artifact 14066778919 matched its GitHub digest. All five Linux amd64 CycloneDX and vulnerability reports matched their image IDs and recorded hashes. Each vulnerability scan had zero high and critical findings.",
+        "Report-only license inventory reproduced all 859 package and scope rows with the same exact package URLs, licenses, locations and dispositions. The 387 pending rows matched the refreshed reviewer packet, with no scope changes."
+      ],
+      "limitations": [
+        "This was an affected preflight and report-only image inventory. The final strict license, full candidate coverage, live deployment and production registry checks remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-candidate-39619e439",
+      "execution_receipts": [
+        {
+          "file": "metadata.json",
+          "sha256": "7f1c5f4ef0a3aebeb2fcaf2dcb362bf2bb247afdb258f8e2597c204070af3ff1"
+        },
+        {
+          "file": "verified.json",
+          "sha256": "d35d550a39e7328871d6f394506aa9f48e5e714f8db3c7ff31188b4ca21fafc7"
         }
       ]
     }
