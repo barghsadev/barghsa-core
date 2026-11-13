@@ -213,20 +213,35 @@ for health in live ready; do
     python3 -c '
 import json, sys
 
-kind = sys.argv[1]
+kind, commit = sys.argv[1:]
 try:
     body = json.load(sys.stdin)
     status = body.get("status")
     valid = status == "ok" if kind == "live" else (
         status in ("ok", "degraded") and body["checks"]["postgresql"]["status"] == "ok"
+        and (not commit or body.get("commit") == commit)
     )
 except (ValueError, AttributeError, KeyError, TypeError):
     valid = False
 if not valid:
     sys.exit(f"Invalid staging {kind} health response")
-' "$health"
+' "$health" "$commit"
 done
 curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/" >/dev/null
+if [[ -n "$commit" ]]; then
+  curl --fail --silent --show-error --max-time 20 -H 'Cache-Control: no-cache' \
+    "$APP_PUBLIC_URL/release.json?commit=$commit" |
+    python3 -c '
+import json, sys
+
+try:
+    valid = json.load(sys.stdin).get("commit") == sys.argv[1]
+except (ValueError, AttributeError):
+    valid = False
+if not valid:
+    sys.exit("Staging web release does not match the candidate commit")
+' "$commit"
+fi
 [[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
   echo 'Public S3 gateway did not return AccessDenied' >&2; false;
 }

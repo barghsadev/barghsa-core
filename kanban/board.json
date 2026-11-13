@@ -23131,7 +23131,8 @@
       "launch_required": true,
       "remaining": [
         "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
-        "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released."
+        "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released.",
+        "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -23179,7 +23180,8 @@
           "release-0.6-staging-image-scans",
           "release-0.6-portable-staging-images",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": null
       }
@@ -23372,7 +23374,8 @@
           "release-0.6-incident-runbook-criteria",
           "release-0.6-maintenance-recovery",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23392,7 +23395,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/README.md",
@@ -23400,7 +23403,7 @@
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "837dcd9960f7fe11cfb227a485920b7c6ef78011a8d26fa96d40c850806dcf3f"
+              "sha256": "d637a7c36572605f58d7913c9f7a2d4480de829ccae70001e310074670c9ecaa"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23428,6 +23431,15 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ]
         }
@@ -98103,7 +98115,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -98251,7 +98264,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -99652,6 +99665,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -161506,7 +161527,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -161890,7 +161912,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -162971,6 +162993,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -611832,7 +611862,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -612004,7 +612035,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -612588,6 +612619,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -632500,7 +632539,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -632740,7 +632780,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -633195,6 +633235,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -633320,7 +633368,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -633560,7 +633609,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634015,6 +634064,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -634138,7 +634195,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634378,7 +634436,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634833,6 +634891,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -634956,7 +635022,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -635196,7 +635263,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635675,6 +635742,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -636292,7 +636367,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -636532,7 +636608,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636987,6 +637063,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -637171,7 +637255,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -637555,7 +637640,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638660,6 +638745,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -638938,7 +639031,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -639178,7 +639272,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -639633,6 +639727,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -639755,7 +639857,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -639995,7 +640098,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640450,6 +640553,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -640573,7 +640684,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -640813,7 +640925,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641268,6 +641380,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -641392,7 +641512,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -641632,7 +641753,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642111,6 +642232,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -642233,7 +642362,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642473,7 +642603,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642928,6 +643058,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -643050,7 +643188,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -643290,7 +643429,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643745,6 +643884,14 @@
                 "packages/db/src/pgbouncer.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -697984,7 +698131,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
-        "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released."
+        "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
+        "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -698027,7 +698175,8 @@
           "release-0.6-staging-paired-restore-rehearsal",
           "release-0.6-immutable-board-readiness",
           "release-0.6-queue-schema-rehearsal",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_acceptance": null
       }
@@ -1062328,7 +1062477,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1065371,6 +1065520,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "presentation_renewals": [
@@ -1065786,7 +1065943,8 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1067979,7 +1068137,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1070924,6 +1071082,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-public-staging-revision-smoke",
+              "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1071356,7 +1071522,8 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-public-staging-revision-smoke"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1251419,6 +1251586,93 @@
         {
           "file": "local-checks.json",
           "sha256": "762ef4328e72ad667025d3e03142b6728e1f437db814a99574fecd1bd6f9e69f"
+        }
+      ]
+    },
+    "release-0.6-public-staging-revision-smoke": {
+      "batch": "release-0.6-public-staging-revision-smoke",
+      "base_commit": "9b88942b6fabb5e8efc8fdd74257933fabb1ff11",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "d637a7c36572605f58d7913c9f7a2d4480de829ccae70001e310074670c9ecaa"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
+        },
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1234d2cb59978e5f79dfcd4ad7222202174d08bf677d00c8c082de2d8ad3bc5b"
+        }
+      ],
+      "checks": [
+        "The same regression failed against the previous script on stale and missing public API revision and stale and invalid web metadata. The previous smoke would proceed past all four responses.",
+        "Ten staging rollback tests passed. The release script accepts matching API and web revisions, rejects public routes serving another build, rejects unavailable database readiness, and invokes rollback on mismatches. Existing optional dependency readiness semantics and the private object-store probe remain in effect.",
+        "Bash syntax, ShellCheck and git diff --check passed."
+      ],
+      "limitations": [
+        "Local shell and Docker Compose fixtures. The public v0.5.1 stage is unchanged and the exact v0.6.0 candidate rehearsal and receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-public-staging-revision-smoke",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "514ca4ee644f429019db75df766b330c57ee549e8353e0fbe862045938754a81"
+        },
+        {
+          "file": "checks.json",
+          "sha256": "9d919147583cb66697e504071a95f8ce13cd3121a12ae2f395b6210beefc659e"
         }
       ]
     }

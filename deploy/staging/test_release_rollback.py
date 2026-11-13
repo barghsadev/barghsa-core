@@ -213,6 +213,47 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
                 self.assertEqual(result.returncode, code, result.stderr)
                 self.assertEqual(result.stdout.splitlines(), expected)
 
+    def test_public_smoke_checks_candidate_revision_before_promotion(self):
+        text = RELEASE.read_text()
+        smoke = text[text.index('for health in live ready; do'):
+                     text.index('\n[[ $(curl --silent', text.index('for health in live ready; do'))]
+        script = f'''set -euo pipefail
+APP_PUBLIC_URL=https://staging.example.test
+commit=$1
+curl() {{
+  case "$*" in
+    *"$APP_PUBLIC_URL/api/health/live") printf '%s' "$LIVE" ;;
+    *"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$READY" ;;
+    *"$APP_PUBLIC_URL/release.json?commit=$commit") printf '%s' "$WEB" ;;
+    *"$APP_PUBLIC_URL/") printf 'login' ;;
+    *) return 98 ;;
+  esac
+}}
+trap 'echo rollback' ERR
+{smoke}
+echo promote
+'''
+        commit = 'a' * 40
+        ready = {'status': 'ok', 'checks': {'postgresql': {'status': 'ok'}}, 'commit': commit}
+        for name, api, web, expected in (
+            ('matching', ready, {'commit': commit}, None),
+            ('degraded', {**ready, 'status': 'degraded'}, {'commit': commit}, None),
+            ('previous-api', {**ready, 'commit': 'b' * 40}, {'commit': commit}, 'Invalid staging ready'),
+            ('missing-api-revision', {**ready, 'commit': None}, {'commit': commit}, 'Invalid staging ready'),
+            ('invalid-schema', {**ready, 'checks': {'postgresql': {'status': 'down'}}},
+             {'commit': commit}, 'Invalid staging ready'),
+            ('previous-web', ready, {'commit': 'b' * 40}, 'Staging web release does not match'),
+            ('invalid-web', ready, [], 'Staging web release does not match'),
+        ):
+            with self.subTest(name=name):
+                result = subprocess.run(['bash', '-c', script, 'public-smoke', commit],
+                                        capture_output=True, text=True, env={**os.environ,
+                                            'LIVE': '{"status":"ok"}', 'READY': json.dumps(api), 'WEB': json.dumps(web)})
+                self.assertEqual(result.returncode, bool(expected), result.stderr)
+                self.assertEqual(result.stdout.strip(), 'rollback' if expected else 'promote')
+                if expected:
+                    self.assertIn(expected, result.stderr)
+
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()
         loaded = text[text.index('commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}'):
