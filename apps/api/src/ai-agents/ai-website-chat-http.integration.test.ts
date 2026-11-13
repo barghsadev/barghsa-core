@@ -10,6 +10,9 @@ import type { KnowledgeAnswer } from './ai-knowledge-chat.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let provider: ReturnType<typeof createServer>;
+let collector: ReturnType<typeof createServer>;
+let providerTraceparent: string | string[] | undefined;
+const traces: Array<{ service: string | undefined; span: Record<string, unknown> }> = [];
 let worker: ChildProcess | undefined;
 let modelId: string;
 let agentId: string;
@@ -29,6 +32,29 @@ const secret = 'owned-website-fixture-' + 'a'.repeat(32);
 const originalEmbedding = process.env.KB_EMBEDDING_BASE_URL;
 
 beforeAll(async () => {
+  collector = createServer(async (request, response) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(Buffer.from(chunk));
+    const { resourceSpans } = JSON.parse(Buffer.concat(chunks).toString('utf8')) as {
+      resourceSpans: {
+        resource: { attributes: { key: string; value: { stringValue: string } }[] };
+        scopeSpans: { spans: Record<string, unknown>[] }[];
+      }[];
+    };
+    for (const resource of resourceSpans) {
+      const service = resource.resource.attributes.find(({ key }) => key === 'service.name')?.value
+        .stringValue;
+      for (const scope of resource.scopeSpans)
+        for (const span of scope.spans) traces.push({ service, span });
+    }
+    response.writeHead(200, { 'content-type': 'application/json' }).end('{}');
+  });
+  collector.listen(0, '127.0.0.1');
+  await once(collector, 'listening');
+  const collectorAddress = collector.address();
+  if (!collectorAddress || typeof collectorAddress === 'string')
+    throw new Error('Missing trace collector port');
+  const collectorEndpoint = `http://127.0.0.1:${collectorAddress.port}/v1/traces`;
   provider = createServer(async (request, response) => {
     response.setHeader('content-type', 'application/json');
     if (request.url === '/v1/embeddings') {
@@ -36,6 +62,7 @@ beforeAll(async () => {
       return;
     }
     const chunks: Buffer[] = [];
+    providerTraceparent = request.headers.traceparent;
     for await (const chunk of request) chunks.push(Buffer.from(chunk));
     messages = JSON.parse(Buffer.concat(chunks).toString()).messages as typeof messages;
     calls++;
@@ -67,7 +94,20 @@ beforeAll(async () => {
   process.env.AI_INFERENCE_URL = aiBase;
   process.env.AI_INFERENCE_SHARED_SECRET = secret;
   try {
-    http = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 10, '127.0.0.1');
+    http = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      undefined,
+      '',
+      10,
+      '127.0.0.1',
+      false,
+      {
+        endpoint: '',
+        intervalMs: 1000,
+        timeoutMs: 1000,
+        traces: { endpoint: collectorEndpoint, sampleRate: 1 },
+      }
+    );
   } finally {
     if (previousUrl === undefined) delete process.env.AI_INFERENCE_URL;
     else process.env.AI_INFERENCE_URL = previousUrl;
@@ -146,6 +186,10 @@ beforeAll(async () => {
       AI_MODEL_ENCRYPTION_KEY: 'a5'.repeat(32),
       AI_MODEL_BASE_URL_ALLOWLIST: '127.0.0.1',
       NODE_ENV: 'production',
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: collectorEndpoint,
+      OTEL_EXPORTER_OTLP_TRACES_HEADERS: '',
+      OTEL_EXPORTER_OTLP_HEADERS: '',
+      OTEL_TRACE_SUCCESS_SAMPLE_RATE: '1',
     },
   });
   await vi.waitFor(
@@ -161,6 +205,7 @@ beforeAll(async () => {
 }, 30_000);
 
 beforeEach(async () => {
+  providerTraceparent = undefined;
   calls = 0;
   messages = [];
   beforeReply = undefined;
@@ -212,6 +257,7 @@ afterAll(async () => {
     await stopped;
   }
   await http?.close();
+  if (collector) await new Promise<void>((done) => collector.close(() => done()));
   provider?.closeAllConnections();
   await new Promise<void>((done) => provider?.close(() => done()));
   if (originalEmbedding === undefined) delete process.env.KB_EMBEDDING_BASE_URL;
@@ -228,7 +274,13 @@ it('answers anonymously through the compiled private worker using only published
   expect(await (await fetch(http.base + '/api/public/knowledge/availability')).json()).toEqual({
     available: true,
   });
-  const result = await ask({ message: 'Explain the published guidance.' });
+  const traceId = '91'.repeat(16),
+    incoming = '92'.repeat(8);
+  const message = 'Explain the published guidance.';
+  const result = await ask(
+    { message },
+    { traceparent: `00-${traceId}-${incoming}-01`, baggage: 'private-trace-fixture=discard' }
+  );
   expect(result.status).toBe(200);
   const body = (await result.json()) as KnowledgeAnswer;
   expect(body).toMatchObject({
@@ -248,6 +300,28 @@ it('answers anonymously through the compiled private worker using only published
   expect(body).not.toHaveProperty('conversationId');
   expect(calls).toBe(1);
   expect(worker?.pid).not.toBe(http.process.pid);
+  const find = (serviceName: string, name: string) =>
+    traces.find(
+      ({ service, span }) =>
+        service === serviceName && span.name === name && span.traceId === traceId
+    )?.span;
+  const request = () => find('barghsa-api', 'POST /api/public/knowledge/questions');
+  const client = () => find('barghsa-api', 'ai.inference.request');
+  const inference = () => find('barghsa-ai-inference', 'ai.inference.complete');
+  await expect.poll(() => request(), { timeout: 7000 }).toMatchObject({ parentSpanId: incoming });
+  await expect
+    .poll(() => client(), { timeout: 7000 })
+    .toMatchObject({ kind: 3, parentSpanId: request()?.spanId });
+  await expect
+    .poll(() => inference(), { timeout: 7000 })
+    .toMatchObject({
+      kind: 2,
+      parentSpanId: client()?.spanId,
+    });
+  expect(providerTraceparent).toBeUndefined();
+  const exported = JSON.stringify([request(), client(), inference()]);
+  for (const privateValue of [message, secret, reply, 'PUBLIC_GUIDANCE', 'private-trace-fixture'])
+    expect(exported).not.toContain(privateValue);
   expect(
     (
       await http.pool.query(

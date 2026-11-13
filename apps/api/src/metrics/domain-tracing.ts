@@ -58,3 +58,7 @@ export function traceNotificationOutboxInsert<Result>(run: () => Promise<Result>
     run
   );
 }
+
+export function traceAiInferenceRequest<Result>(run: () => Promise<Result>) {
+  return traceOperation('ai.inference.request', { kind: SpanKind.CLIENT }, run);
+}

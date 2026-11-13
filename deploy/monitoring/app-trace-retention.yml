@@ -10,6 +10,9 @@ services:
   worker:
     environment: *tempo-trace-environment
     networks: [trace-ingest]
+  ai-inference:
+    environment: *tempo-trace-environment
+    networks: [trace-ingest]
 
 networks:
   trace-ingest:

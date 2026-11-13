@@ -31,7 +31,7 @@ export function extractTraceparent(value: unknown) {
 }
 
 export function createTraceProvider(
-  serviceName: 'barghsa-api' | 'barghsa-worker'
+  serviceName: 'barghsa-api' | 'barghsa-worker' | 'barghsa-ai-inference'
 ): TracerProvider | undefined {
   const endpoint = process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT?.trim();
   if (!endpoint) return undefined;

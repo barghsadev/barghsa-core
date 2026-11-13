@@ -1,6 +1,9 @@
 import { timingSafeEqual } from 'node:crypto';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { Pool } from 'pg';
+import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
+import { operatorLogTrace } from '@barghsa/shared/operator-logging';
+import { extractTraceparent } from '@barghsa/shared/telemetry';
 import {
   AiModelSecrets,
   completeChat,
@@ -73,6 +76,7 @@ export function createAiInferenceServer(options: {
   secrets?: AiModelSecrets;
   completion?: (input: ChatCompletionInput) => Promise<ChatCompletionResult>;
   maxConcurrency?: number;
+  tracer?: Tracer;
 }) {
   if (options.secret.length < 32)
     throw new Error('AI_INFERENCE_SHARED_SECRET must be at least 32 characters');
@@ -115,51 +119,67 @@ export function createAiInferenceServer(options: {
       reply(res, 503, { error: 'AI_INFERENCE_BUSY' });
       return;
     }
+    const span = options.tracer?.startSpan(
+      'ai.inference.complete',
+      { kind: SpanKind.SERVER },
+      extractTraceparent(req.headers.traceparent)
+    );
     active += 1;
-    let providerStarted = false;
-    try {
-      const body = await readRequest(req);
-      const model = (
-        await options.pool.query<ModelRow>(
-          'SELECT provider_type,base_url,model_name,api_token,is_enabled,last_test_status FROM ai_models WHERE id=$1',
-          [body.modelId]
+    const complete = async () => {
+      let providerStarted = false;
+      try {
+        const body = await readRequest(req);
+        const model = (
+          await options.pool.query<ModelRow>(
+            'SELECT provider_type,base_url,model_name,api_token,is_enabled,last_test_status FROM ai_models WHERE id=$1',
+            [body.modelId]
+          )
+        ).rows[0];
+        if (
+          !model ||
+          model.is_enabled !== true ||
+          model.last_test_status !== 'passed' ||
+          model.provider_type !== body.expected.providerType ||
+          model.base_url !== body.expected.baseUrl ||
+          model.model_name !== body.expected.modelName
+        ) {
+          reply(res, 409, { error: 'AI_MODEL_CHANGED' });
+          return;
+        }
+        const apiToken = model.api_token ? secrets.decryptToken(model.api_token) : null;
+        providerStarted = true;
+        const result = await completion({
+          providerType: model.provider_type,
+          baseUrl: model.base_url,
+          modelName: model.model_name,
+          apiToken,
+          messages: body.request.messages,
+          temperature: body.request.temperature,
+          maxTokens: body.request.maxTokens,
+        });
+        reply(res, 200, result);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'request_too_large')
+          reply(res, 413, { error: 'VALIDATION:INPUT:INVALID' });
+        else if (
+          error instanceof SyntaxError ||
+          (error instanceof Error && error.message === 'invalid_request')
         )
-      ).rows[0];
-      if (
-        !model ||
-        model.is_enabled !== true ||
-        model.last_test_status !== 'passed' ||
-        model.provider_type !== body.expected.providerType ||
-        model.base_url !== body.expected.baseUrl ||
-        model.model_name !== body.expected.modelName
-      ) {
-        reply(res, 409, { error: 'AI_MODEL_CHANGED' });
-        return;
+          reply(res, 400, { error: 'VALIDATION:INPUT:INVALID' });
+        else if (providerStarted) reply(res, 502, { error: 'AI_INFERENCE_PROVIDER_FAILED' });
+        else reply(res, 503, { error: 'AI_INFERENCE_UNAVAILABLE' });
       }
-      const apiToken = model.api_token ? secrets.decryptToken(model.api_token) : null;
-      providerStarted = true;
-      const result = await completion({
-        providerType: model.provider_type,
-        baseUrl: model.base_url,
-        modelName: model.model_name,
-        apiToken,
-        messages: body.request.messages,
-        temperature: body.request.temperature,
-        maxTokens: body.request.maxTokens,
-      });
-      reply(res, 200, result);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'request_too_large')
-        reply(res, 413, { error: 'VALIDATION:INPUT:INVALID' });
-      else if (
-        error instanceof SyntaxError ||
-        (error instanceof Error && error.message === 'invalid_request')
-      )
-        reply(res, 400, { error: 'VALIDATION:INPUT:INVALID' });
-      else if (providerStarted) reply(res, 502, { error: 'AI_INFERENCE_PROVIDER_FAILED' });
-      else reply(res, 503, { error: 'AI_INFERENCE_UNAVAILABLE' });
+    };
+    try {
+      if (span) await operatorLogTrace.run(span.spanContext(), complete);
+      else await complete();
     } finally {
       active -= 1;
+      if (span) {
+        span.setAttribute('http.response.status_code', res.statusCode);
+        if (res.statusCode >= 500) span.setStatus({ code: SpanStatusCode.ERROR });
+        span.end();
+      }
     }
   });
   server.requestTimeout = 30_000;

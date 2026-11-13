@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T15:49:45+00:00",
+  "updated": "2026-11-13T15:55:57+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -153845,7 +153845,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -153909,7 +153910,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -154449,6 +154450,14 @@
                 "packages/db/src/schema/ai-model-test-jobs.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -157050,7 +157059,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -157134,7 +157144,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -157214,7 +157224,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -157410,7 +157420,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -157418,7 +157428,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/README.md",
@@ -158459,6 +158469,17 @@
                 "apps/worker/src/knowledge-bases/processing-runner.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -609943,7 +609964,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -610007,7 +610029,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -610547,6 +610569,14 @@
                 "packages/db/src/schema/ai-model-test-jobs.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -610684,7 +610714,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -610748,7 +610779,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -611288,6 +611319,14 @@
                 "packages/db/src/schema/ai-model-test-jobs.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -611427,7 +611466,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -611491,7 +611531,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -612031,6 +612071,14 @@
                 "packages/db/src/schema/ai-model-test-jobs.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -612168,7 +612216,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -612232,7 +612281,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -612772,6 +612821,14 @@
                 "packages/db/src/schema/ai-model-test-jobs.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -620022,7 +620079,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -620094,7 +620152,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -620242,7 +620300,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -620250,7 +620308,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -620688,6 +620746,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -620810,7 +620878,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -620882,7 +620951,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -621030,7 +621099,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -621038,7 +621107,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -621476,6 +621545,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -621596,7 +621675,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -621668,7 +621748,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -621816,7 +621896,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -621824,7 +621904,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -622262,6 +622342,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -622382,7 +622472,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -622454,7 +622545,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -622602,7 +622693,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -622610,7 +622701,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -623072,6 +623163,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -623686,7 +623787,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -623758,7 +623860,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -623906,7 +624008,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -623914,7 +624016,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -624352,6 +624454,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -624530,7 +624642,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -624614,7 +624727,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -624694,7 +624807,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -624890,7 +625003,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -624898,7 +625011,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/README.md",
@@ -625963,6 +626076,17 @@
                 "apps/worker/src/knowledge-bases/processing-runner.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -626238,7 +626362,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -626310,7 +626435,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -626458,7 +626583,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -626466,7 +626591,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -626904,6 +627029,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -627023,7 +627158,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -627095,7 +627231,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -627243,7 +627379,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -627251,7 +627387,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -627689,6 +627825,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -627809,7 +627955,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -627881,7 +628028,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -628029,7 +628176,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -628037,7 +628184,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -628475,6 +628622,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -628596,7 +628753,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -628668,7 +628826,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -628816,7 +628974,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -628824,7 +628982,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -629286,6 +629444,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -629405,7 +629573,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -629477,7 +629646,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -629625,7 +629794,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -629633,7 +629802,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -630071,6 +630240,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -630190,7 +630369,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "status": "done",
@@ -630262,7 +630442,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -630410,7 +630590,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -630418,7 +630598,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -630856,6 +631036,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -657042,7 +657232,8 @@
         "batches": [
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-existing-ai-quotas-and-budgets",
@@ -657092,7 +657283,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -657104,7 +657295,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "docs/decisions/ai-assistant-delivery.md",
@@ -657125,6 +657316,15 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -685655,7 +685855,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Instrument the web server and add the applicable API and worker instrumentation beyond request and notification outbox spans. Verify the configured stack on staging."
+        "Instrument the web server and verify remaining applicable API and worker instrumentation. The compiled dedicated inference process now emits authenticated internal server spans, verified at a local OTLP collector. Verify the configured stack on staging."
       ],
       "owner": null,
       "depends_on": [],
@@ -685688,11 +685888,18 @@
           "packages/db/src/transaction-pool.ts",
           "packages/shared/package.json",
           "packages/shared/src/operator-logging.ts",
-          "packages/shared/src/telemetry.ts"
+          "packages/shared/src/telemetry.ts",
+          "apps/api/src/ai-agents/ai-inference-client.ts",
+          "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "apps/api/src/metrics/domain-tracing.ts",
+          "apps/worker/src/ai-inference/main.ts",
+          "apps/worker/src/ai-inference/server.ts",
+          "deploy/monitoring/app-trace-retention.yml"
         ],
         "batches": [
           "release-0.6-api-request-tracing",
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": null
       }
@@ -685727,7 +685934,8 @@
         "batches": [
           "release-0.6-domain-postgresql-tracing",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-domain-postgresql-tracing",
@@ -685746,7 +685954,7 @@
             },
             {
               "path": "apps/api/src/metrics/domain-tracing.ts",
-              "sha256": "0599e5c9b5a95d9d57254c48805eef9710466de70c33b692cd729334ca99f7aa"
+              "sha256": "6a877cfde9d6d3db0f7837bcdac877bc3ec30fc6dabfeab750e74c240577940a"
             },
             {
               "path": "apps/api/src/metrics/outbox-trace.integration.test.ts",
@@ -685758,7 +685966,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             }
           ],
           "source_renewals": [
@@ -685833,6 +686041,15 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/metrics/domain-tracing.ts",
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -685853,7 +686070,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify cross-process HTTP propagation through the deployed edge, web server and trusted service calls. The API accepts a valid W3C parent, restarts invalid or duplicate context, and excludes baggage and tracestate."
+        "Verify cross-process HTTP propagation through the deployed edge, web server and trusted service calls. The compiled API to dedicated inference request now preserves exact W3C ancestry across both processes in a local collector. External model provider calls omit the internal trace header. The API accepts a valid W3C parent, restarts invalid or duplicate context, and excludes baggage and tracestate."
       ],
       "owner": null,
       "depends_on": [],
@@ -685870,10 +686087,18 @@
           "apps/api/src/metrics/telemetry-http.integration.test.ts",
           "apps/api/src/test/http-fixture.ts",
           "docs/operations/structured-logging.md",
-          "pnpm-lock.yaml"
+          "pnpm-lock.yaml",
+          "apps/api/src/ai-agents/ai-inference-client.ts",
+          "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "apps/api/src/metrics/domain-tracing.ts",
+          "apps/worker/src/ai-inference/main.ts",
+          "apps/worker/src/ai-inference/server.ts",
+          "deploy/monitoring/app-trace-retention.yml",
+          "packages/shared/src/telemetry.ts"
         ],
         "batches": [
-          "release-0.6-api-request-tracing"
+          "release-0.6-api-request-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": null
       }
@@ -685925,7 +686150,8 @@
           "release-0.6-notification-outbox-tracing",
           "release-0.6-validated-outbox-trace-constraint",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -685972,7 +686198,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -686016,7 +686242,7 @@
             },
             {
               "path": "packages/shared/src/telemetry.ts",
-              "sha256": "6acc1efb29ac474acf1f4d95642f80f18d32dcc432a12d9ca397c4995e49d4f1"
+              "sha256": "908bfbf2bf2af973147e8453822867391a1746af54a1b75002dc273a8a7c361a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -686157,6 +686383,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "docs/operations/structured-logging.md",
+                "packages/shared/src/telemetry.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -686397,7 +686632,8 @@
           "release-0.6-notification-outbox-tracing",
           "release-0.6-validated-outbox-trace-constraint",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -686444,7 +686680,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -686488,7 +686724,7 @@
             },
             {
               "path": "packages/shared/src/telemetry.ts",
-              "sha256": "6acc1efb29ac474acf1f4d95642f80f18d32dcc432a12d9ca397c4995e49d4f1"
+              "sha256": "908bfbf2bf2af973147e8453822867391a1746af54a1b75002dc273a8a7c361a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -686629,6 +686865,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "docs/operations/structured-logging.md",
+                "packages/shared/src/telemetry.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -686700,7 +686945,8 @@
         "batches": [
           "release-0.6-structured-operator-logs",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -686748,7 +686994,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -686836,7 +687082,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -687041,6 +687287,15 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts",
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -687112,7 +687367,8 @@
         "batches": [
           "release-0.6-structured-operator-logs",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -687160,7 +687416,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -687248,7 +687504,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -687453,6 +687709,15 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts",
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -687999,7 +688264,8 @@
         "batches": [
           "release-0.6-structured-operator-logs",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-structured-operator-logs",
@@ -688047,7 +688313,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -688135,7 +688401,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -688340,6 +688606,15 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts",
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -688372,7 +688647,8 @@
         "batches": [
           "release-0.6-loki-shipping",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-loki-shipping",
@@ -688384,7 +688660,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "deploy/monitoring/operator-logs.alloy",
@@ -688463,6 +688739,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -691798,7 +692082,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-ai-provider-attempts-and-durable-budget-metrics",
@@ -691834,7 +692119,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
@@ -691914,6 +692199,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -699218,7 +699511,8 @@
         "batches": [
           "release-0.6-grafana-trace-search",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-grafana-trace-search",
@@ -699230,7 +699524,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "60fa72578e48726909ec167c7d76b19bcc7758d6ae66178c28271688c7f893aa"
+              "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -699301,6 +699595,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -699451,7 +699753,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-process-error-reporting",
@@ -699503,7 +699806,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -699803,6 +700106,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -699852,7 +700163,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-process-error-reporting",
@@ -699904,7 +700216,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -700204,6 +700516,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -700313,7 +700633,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -700377,7 +700698,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -700862,6 +701183,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/worker/src/ai-inference/main.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -701616,7 +701945,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -701644,7 +701974,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -701813,6 +702143,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -701847,7 +702185,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -701875,7 +702214,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -702044,6 +702383,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -702079,7 +702426,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -702107,7 +702455,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -702276,6 +702624,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -702620,7 +702976,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -702648,7 +703005,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -702817,6 +703174,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ]
         }
@@ -953879,7 +954244,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -953959,7 +954325,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -954039,7 +954405,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -954764,6 +955130,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -954938,7 +955313,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -955018,7 +955394,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -955098,7 +955474,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -955823,6 +956199,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -955999,7 +956384,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -956079,7 +956465,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -956159,7 +956545,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -956884,6 +957270,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -957058,7 +957453,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -957138,7 +957534,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -957218,7 +957614,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -957943,6 +958339,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -958116,7 +958521,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -958196,7 +958602,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -958276,7 +958682,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -959001,6 +959407,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -959701,7 +960116,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -959781,7 +960197,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -959861,7 +960277,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -960586,6 +961002,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -960760,7 +961185,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -960840,7 +961266,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -960920,7 +961346,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -961645,6 +962071,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -961820,7 +962255,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -961900,7 +962336,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -961980,7 +962416,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -962706,6 +963142,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -962879,7 +963324,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -962959,7 +963405,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -963039,7 +963485,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -963764,6 +964210,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -963936,7 +964391,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -964016,7 +964472,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -964096,7 +964552,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -964821,6 +965277,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -964993,7 +965458,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -965073,7 +965539,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -965153,7 +965619,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -965878,6 +966344,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -966050,7 +966525,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-inference-http-tracing"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -966130,7 +966606,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -966210,7 +966686,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -966936,6 +967412,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -1035156,7 +1035641,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -1035236,7 +1035721,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+              "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
@@ -1036908,7 +1037393,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -1036916,7 +1037401,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -1040152,6 +1040637,17 @@
                 "packages/db/src/schema/knowledge-bases.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "presentation_renewals": [
@@ -1040556,7 +1041052,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1040733,7 +1041230,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+              "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -1042445,7 +1042942,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
-              "sha256": "f956482bd937438c5eb40191fa3208f6d529caa00611f28e11dbf44959283414"
+              "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -1042453,7 +1042950,7 @@
             },
             {
               "path": "apps/worker/src/ai-inference/server.ts",
-              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+              "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -1045591,6 +1046088,16 @@
                 "packages/db/src/schema/knowledge-bases.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-inference-http-tracing",
+              "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+              "paths": [
+                "apps/api/src/ai-agents/ai-inference-client.ts",
+                "apps/worker/src/ai-inference/main.ts",
+                "apps/worker/src/ai-inference/server.ts"
+              ],
+              "scope": "The dedicated inference request adds canonical W3C ancestry and bounded spans with fixed metadata. Existing API output, shared-secret and model authority checks, response bounds, provider requests and isolation are covered by passing regressions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1046012,7 +1046519,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-service-workflow-recovery",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-inference-http-tracing"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1220776,6 +1221284,151 @@
         {
           "file": "documents-lint.log",
           "sha256": "8f6c4366f8c49daed2647d4fc1d562bd8854d9013f1dc8202f350d0de3dd22a3"
+        }
+      ]
+    },
+    "release-0.6-inference-http-tracing": {
+      "batch": "release-0.6-inference-http-tracing",
+      "base_commit": "8916148d4a85c653a1eeec3ec7ad143a198e0c93",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.01.02",
+        "06-security-testing-observability.md#T-06.13.01.04",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.02.08",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.14.01.08",
+        "06-security-testing-observability.md#T-06.16.01.04",
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "07-ui-ux-design.md#T-07.20.01.01",
+        "07-ui-ux-design.md#T-07.20.01.02",
+        "07-ui-ux-design.md#T-07.20.01.03",
+        "07-ui-ux-design.md#T-07.20.01.04",
+        "07-ui-ux-design.md#T-07.20.01.05",
+        "07-ui-ux-design.md#T-07.20.01.07",
+        "07-ui-ux-design.md#T-07.20.01.08",
+        "07-ui-ux-design.md#T-07.21.01.01",
+        "07-ui-ux-design.md#T-07.21.01.02",
+        "07-ui-ux-design.md#T-07.21.01.03",
+        "07-ui-ux-design.md#T-07.21.01.04",
+        "07-ui-ux-design.md#T-07.21.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/ai-agents/ai-inference-client.ts",
+        "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+        "apps/api/src/metrics/domain-tracing.ts",
+        "apps/worker/src/ai-inference/main.ts",
+        "apps/worker/src/ai-inference/server.ts",
+        "deploy/monitoring/app-trace-retention.yml",
+        "docs/operations/structured-logging.md",
+        "packages/shared/src/telemetry.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+          "sha256": "85be2948a662a37c3ff73a680a9d5f14a83ebabf39ed7544aa8275a9b109ad3f"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "sha256": "c5c993bbda1ccf36318eec5181b7507da5be2831f304a3e986128ef917b727cc"
+        },
+        {
+          "path": "apps/api/src/metrics/domain-tracing.ts",
+          "sha256": "6a877cfde9d6d3db0f7837bcdac877bc3ec30fc6dabfeab750e74c240577940a"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/main.ts",
+          "sha256": "b0bb0dadfb04975efd74ab8e81996dce37b82f2432237375535a258e1d5de3a7"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.ts",
+          "sha256": "5d31de3968f980cb3be88535420626d41bcc5df268fc22b4c5ad7fb271e87245"
+        },
+        {
+          "path": "deploy/monitoring/app-trace-retention.yml",
+          "sha256": "de0bbc97fd9111bbace5132de89efe3e05985b99407a95bbbb5bd190e7f68ea0"
+        },
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "222c5183457627323aded679b7a555edeb828fcc687cca6ee33449344c3f22ea"
+        },
+        {
+          "path": "packages/shared/src/telemetry.ts",
+          "sha256": "908bfbf2bf2af973147e8453822867391a1746af54a1b75002dc273a8a7c361a"
+        }
+      ],
+      "checks": [
+        "A real compiled public API process, a separate compiled inference worker and an OTLP fixture verify exact inbound → API server → API client → authenticated inference server ancestry.",
+        "Trace export contains no tested prompt, reply, retrieved reference, shared secret or baggage. The controlled upstream provider sees no internal trace header.",
+        "48 API and eight inference-worker tests passed. The 30 cases in the changed HTTP file passed again with the final typed fixture. Five build tasks, affected typechecks, lint and formatting passed. Rendered Compose retains existing private networks and published ports and adds the collector network only to the intended senders."
+      ],
+      "limitations": [
+        "The trace collector was a local fixture. Web instrumentation and deployed readback remain separate acceptance requirements.",
+        "Initial build and typecheck identified optional-field and incoming-header typing errors. Final build, typechecks and affected tests passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-inference-http-tracing",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "c9f03d7a545b4352cbc7ced744c34fa0bc58fac7dd076b4f81932b1c3ea76b8a"
+        },
+        {
+          "file": "api-http-final.log",
+          "sha256": "84837669beda06dd87e25e06e3d942c62a50deded053599f792af890f3ffe87f"
+        },
+        {
+          "file": "worker.log",
+          "sha256": "4aa4fdd58d71a2b04a3feac41c92eae99b4d592b5e7c23dfa4bed10bbcbece09"
+        },
+        {
+          "file": "build.log",
+          "sha256": "1ebf06af654f560050152563956058f05be8825bb3d4b032cae1640807daedf2"
+        },
+        {
+          "file": "types.log",
+          "sha256": "5c95ede360c50db4f15b3a1c40991ec5fd4ff4dc8a11dbe0da37cfcb89dbcdac"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "1697765529f3567de8494b7c6fdea9fc262df15983ee82262a3d214c9d747a67"
+        },
+        {
+          "file": "compose.log",
+          "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
         }
       ]
     }

@@ -199,8 +199,13 @@ and credentials.
 On the configured collector, match an API request and notification worker
 span by trace ID, and check their parent relationship and corresponding
 logs. The API span uses the registered route template. The worker starts a
-new trace when a row has no parent. Web instrumentation and specialized worker
-queues require separate verification.
+new trace when a row has no parent. For AI completions, match
+`ai.inference.request` from the API to its `ai.inference.complete` child in
+`barghsa-ai-inference`. The API sends its canonical parent only to the
+configured internal inference service. The service extracts it after
+authenticating the request. Provider calls omit this header. Prompts, replies,
+model IDs and credentials stay out of both spans. Verify this relationship
+on the deployed collector alongside the separate web and queue checks.
 [W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)
 
 The Jaeger rehearsal used the v2.23.0 source with Go 1.27.4 and the
@@ -221,7 +226,7 @@ Use `deploy/monitoring/trace-retention.yml` with verified immutable Alloy
 and Tempo images. Supply `BARGHSA_ALLOY_IMAGE`, `BARGHSA_TEMPO_IMAGE`,
 `BARGHSA_TRACE_INGEST_NETWORK`, `BARGHSA_TEMPO_QUERY_NETWORK` and
 `BARGHSA_TEMPO_STORAGE_ENV_FILE` in the operator's Compose environment.
-Create separate internal networks for approved API and worker senders and
+Create separate internal networks for approved API, worker and inference senders and
 for authenticated Grafana query access. The service publishes no host ports.
 Tempo reaches its S3 endpoint through a separate network.
 
@@ -234,7 +239,7 @@ storage and retention. Keep the `tempo-data` volume for the WAL and
 scheduler state across service recreation. Validate the configuration with
 `docker compose config --quiet`.
 
-Use `deploy/monitoring/app-trace-retention.yml` for API and worker writers
+Use `deploy/monitoring/app-trace-retention.yml` for API, worker and inference writers
 assigned to this collector. It connects those services to the sender network
 and sends their sanitized spans to Alloy for sampling. The collector selects
 10% of ordinary traces for the 7-day tenant. It preserves error spans and

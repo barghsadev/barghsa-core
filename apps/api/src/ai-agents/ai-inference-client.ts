@@ -4,6 +4,8 @@ import {
   type ChatCompletionInput,
   type ChatCompletionResult,
 } from '@barghsa/shared/ai-models';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
+import { traceAiInferenceRequest } from '../metrics/domain-tracing.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
 
 // A 32,000-character reply fits even when JSON escapes every UTF-16 code unit.
@@ -58,11 +60,25 @@ export async function completeViaAiWorker(
   } catch {
     throw unavailable();
   }
+  return traceAiInferenceRequest(() => requestCompletion(url, secret, modelId, input));
+}
+
+async function requestCompletion(
+  url: URL,
+  secret: string,
+  modelId: string,
+  input: ChatCompletionInput
+): Promise<ChatCompletionResult> {
+  const parent = currentTraceparent();
   let response: Response;
   try {
     response = await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-ai-inference-token': secret },
+      headers: {
+        'content-type': 'application/json',
+        'x-ai-inference-token': secret,
+        ...(parent ? { traceparent: parent } : {}),
+      },
       body: JSON.stringify({
         modelId,
         expected: {
