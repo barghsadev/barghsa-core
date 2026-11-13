@@ -87,7 +87,8 @@ Keep `receipt-index.json` in the protected approval package. Set `candidate_sha`
 | `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
 | `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
 
-Use JSON indexes for `backup_and_restore` and `staging_and_telegram`. The paths
+Use JSON indexes for `backup_and_restore`, `image_digests_and_scans` and
+`staging_and_telegram`. The paths
 inside both indexes are relative to the same protected approval package.
 
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
@@ -102,6 +103,18 @@ inside both indexes are relative to the same protected approval package.
   candidate, channel, Persian notes and queued image hashes. If the queue
   recorded an optional image failure, keep the warning and resolve any unknown
   Telegram delivery through the [staging runbook](../staging/README.md).
+- Under `image_digests_and_scans`, point `staging_scans` to a JSON object
+  containing `directory`, the relative location of the staged scan artifacts
+  copied into the package. The promotion check compares the vulnerability
+  reports, SBOMs, scan receipts and license report with the staging worker's
+  runtime receipt. Point `production_registry` to a JSON object with
+  `candidate_sha` and `images`. The image map has entries for `app`, `web`
+  and `clamav`, each containing the registry `manifest_digest` and the
+  platform `image_id` from inspecting the pulled image. Both use the
+  `sha256:` prefix. The check binds the recorded platform IDs to staging.
+  The operator must verify the registry manifests and retain the separate
+  scan and license receipts for any stateful images reused by staging.
+  Guarded rollout requires the plan's app and web IDs to match this report.
 
 In `core_service_report`, set `status` to `passed`, `scope` to
 `core_service_recovery`, `candidate_sha` to the full candidate SHA, and

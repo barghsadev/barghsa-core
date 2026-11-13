@@ -158,6 +158,11 @@ def verify_production_approval(plan, plan_digest, report_path, approval_path, no
     commit = plan['candidate']['commit']
     require(report.get('status') == 'ready_for_owner_review' and report.get('version') == '0.9.0'
             and report.get('candidate_sha') == commit, 'production_promotion_report_mismatch')
+    images = report.get('verified_staging_images')
+    ids = images.get('image_ids') if isinstance(images, dict) else None
+    require(isinstance(ids, dict) and all(
+        ids.get(scope) == plan['candidate'][scope + '_image'] for scope in ('app', 'web')
+    ), 'production_promotion_image_mismatch')
     backup = report.get('verified_backup')
     checked_at = report.get('checked_at')
     require(finite(checked_at, 1, now) and isinstance(backup, dict)

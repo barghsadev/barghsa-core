@@ -293,7 +293,58 @@ def verify_release_receipts(index_path, path, fingerprint, version, sha):
                 or not warning['message']):
             raise ValueError('A screenshot receipt is required for the queued images')
     return {'summary_message_id': message_id, 'image_message_ids': message_ids,
-            'album_unconfirmed': bool(images and not album), 'sha256': digests}
+            'album_unconfirmed': bool(images and not album), 'sha256': digests}, job
+
+
+def verify_image_receipts(index_path, path, fingerprint, job, sha):
+    data, digests = receipt_bundle(index_path, path, fingerprint, ('staging_scans', 'production_registry'))
+    # Use a portable relative path to the copied scan directory. The staging
+    # worker's absolute path identifies where the original reports were saved.
+    directory = index_path.resolve().parent
+    scans = data['staging_scans']
+    location = scans.get('directory')
+    if not isinstance(location, str) or not location or Path(location).is_absolute():
+        raise ValueError('Use a relative staging image scan directory')
+    license_path = receipt_path(directory, str(Path(location) / 'release-licenses.json'), 'staging licenses')
+    scan_directory = (directory / location).resolve()
+    if license_path.parent != scan_directory:
+        raise ValueError('Staging license report must be in the scan directory')
+
+    runtime = job.get('runtime_images')
+    if not isinstance(runtime, dict) or runtime.get('schema_version') != 1 or runtime.get('commit') != sha:
+        raise ValueError('Deployment receipt is missing verified runtime images for this candidate')
+    ids = runtime.get('image_ids')
+    if (not isinstance(ids, dict) or set(ids) != {'app', 'web', 'postgres', 'clamav'}
+            or not all(matches(r'sha256:[a-f0-9]{64}', value) for value in ids.values())):
+        raise ValueError('Deployment receipt has invalid runtime image identities')
+    scan_index = runtime['image_scans']['images']
+    if not isinstance(scan_index, dict) or set(scan_index) not in ({'app', 'web'}, set(ids)):
+        raise ValueError('Deployment receipt has an invalid runtime scan index')
+    includes_stateful = 'postgres' in scan_index
+    for index in range(1, len(scan_index) + 1):
+        for suffix in ('image.json', 'vulnerabilities.json', 'sbom.cdx.json'):
+            artifact = receipt_path(directory, str(Path(location) / f'{index}-{suffix}'), 'staging image scan')
+            if artifact.parent != scan_directory:
+                raise ValueError('Staging image scan artifacts must be in the scan directory')
+    queue = runpy.run_path(str(ROOT / 'deploy/staging/release-queue.py'))
+    observed = queue['verify_image_scans'](scan_directory, ids, includes_stateful)
+    if scan_index != observed['images']:
+        raise ValueError('Staging image scan receipts differ from the deployed receipts')
+    licensed_ids = {scope: ids[scope] for scope in ('app', 'web')}
+    if includes_stateful:
+        licensed_ids.update({'postgres-staging': ids['postgres'], 'clamav': ids['clamav']})
+    license_sha = queue['verify_image_licenses'](scan_directory, sha, licensed_ids)
+    if license_sha != runtime.get('license_sha256'):
+        raise ValueError('Staging license report differs from the deployed receipt')
+    registry = data['production_registry']
+    if registry.get('candidate_sha') != sha or set(registry.get('images', {})) != {'app', 'web', 'clamav'}:
+        raise ValueError('Production registry receipt must identify the candidate runtime images')
+    for scope, entry in registry['images'].items():
+        if (not isinstance(entry, dict) or not matches(r'sha256:[a-f0-9]{64}', entry.get('manifest_digest'))
+                or entry.get('image_id') != ids[scope]):
+            raise ValueError('Production registry image differs from the verified staging image')
+    return {'image_ids': ids, 'scanned_images': scan_index,
+            'license_sha256': license_sha, 'production_registry': registry['images'], 'sha256': digests}
 
 
 def main():
@@ -323,8 +374,10 @@ def main():
         checked_at = time.time()
         backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
                                         hashes['backup_and_restore'], checked_at, sha)
-        release = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
-                                          hashes['staging_and_telegram'], version, sha)
+        release, job = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
+                                               hashes['staging_and_telegram'], version, sha)
+        images = verify_image_receipts(args.receipt_index, paths['image_digests_and_scans'],
+                                       hashes['image_digests_and_scans'], job, sha)
     except ValueError as error:
         # JSON parse errors can include arbitrary input. Report a fixed failure for them.
         message = ('Invalid verification response or receipt JSON'
@@ -339,6 +392,7 @@ def main():
                       'checked_at': checked_at,
                       'ci': ci_url, 'browser': browser_url, 'browser_counts': counts,
                       'operational_receipt_sha256': hashes, 'verified_backup': backup,
+                      'verified_staging_images': images,
                       'verified_staging_and_telegram': release}, indent=2))
     return 0
 

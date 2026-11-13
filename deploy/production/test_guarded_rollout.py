@@ -253,6 +253,9 @@ class IsolatedRolloutTest(unittest.TestCase):
             report = root / 'promotion.json'
             report_data = {'status': 'ready_for_owner_review', 'version': '0.9.0',
                            'candidate_sha': CANDIDATE['commit'], 'checked_at': now - 2,
+                           'verified_staging_images': {'image_ids': {
+                               'app': CANDIDATE['app_image'], 'web': CANDIDATE['web_image'],
+                           }},
                            'verified_backup': {'backup_age_seconds': 60}}
             report.write_text(json.dumps(report_data))
             report.chmod(0o600)
@@ -290,6 +293,12 @@ class IsolatedRolloutTest(unittest.TestCase):
             approval.chmod(0o644)
             self.assertIn('unsafe_annotation_file', execute(*paths).stderr)
             approval.chmod(0o600)
+            for scope in ('app', 'web'):
+                wrong_images = {**report_data['verified_staging_images']['image_ids'], scope: 'sha256:' + 'f' * 64}
+                report.write_text(json.dumps({**report_data, 'verified_staging_images': {'image_ids': wrong_images}}))
+                self.assertIn('production_promotion_image_mismatch', execute(*paths).stderr)
+                self.assertFalse(receipt.exists())
+                self.assertEqual(json.loads(state.read_text())['changes'], [])
             report.write_text(json.dumps({**report_data, 'checked_at': now - 86400}))
             self.assertIn('production_backup_evidence_stale', execute(*paths).stderr)
             report.write_text(json.dumps(report_data))

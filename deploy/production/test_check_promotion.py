@@ -257,7 +257,68 @@ class StructuredReceiptTest(unittest.TestCase):
     def verify_release(self, entries):
         fingerprint = self.write_bundle(entries)
         with patch.object(promotion, 'ROOT', self.root):
-            return promotion.verify_release_receipts(self.index, self.bundle, fingerprint, '0.9.0', SHA)
+            result, _ = promotion.verify_release_receipts(self.index, self.bundle, fingerprint, '0.9.0', SHA)
+            return result
+
+    def test_promotion_binds_staged_image_ids_to_scan_and_registry_evidence(self):
+        job = self.release()['deployment']
+        ids = {scope: 'sha256:' + digit * 64
+               for scope, digit in zip(('app', 'web', 'postgres', 'clamav'), 'abcd')}
+        registry = {'candidate_sha': SHA, 'images': {
+            scope: {'manifest_digest': 'sha256:' + digit * 64, 'image_id': ids[scope]}
+            for scope, digit in zip(('app', 'web', 'clamav'), 'ef0')
+        }}
+        for scopes in (('app', 'web'), ('postgres', 'clamav', 'app', 'web')):
+            with self.subTest(scopes=scopes):
+                directory = self.root / 'scans'
+                directory.mkdir(exist_ok=True)
+                scans = {}
+                for index, scope in enumerate(scopes, 1):
+                    raw = b'fixture artifact'
+                    for suffix in ('vulnerabilities.json', 'sbom.cdx.json'):
+                        (directory / f'{index}-{suffix}').write_bytes(raw)
+                    receipt = json.dumps({'image_id': ids[scope], 'blocked': False,
+                                          'report_sha256': hashlib.sha256(raw).hexdigest(),
+                                          'sbom_sha256': hashlib.sha256(raw).hexdigest()}).encode()
+                    (directory / f'{index}-image.json').write_bytes(receipt)
+                    scans[scope] = {'index': index, 'receipt_sha256': hashlib.sha256(receipt).hexdigest()}
+                licensed = {('postgres-staging' if scope == 'postgres' else scope): ids[scope] for scope in scopes}
+                report = {'commit': SHA, 'images': licensed, 'packages': [
+                    {'scope': scope, 'status': 'allowed'} for scope in (*licensed, 'browser')
+                ]}
+                path = directory / 'release-licenses.json'
+                raw_report = json.dumps(report).encode()
+                path.write_bytes(raw_report)
+                job['runtime_images'] = {'schema_version': 1, 'commit': SHA, 'image_ids': ids,
+                                         'image_scans': {'directory': '/worker/scans', 'images': scans},
+                                         'license_sha256': hashlib.sha256(raw_report).hexdigest()}
+                bundle = {'staging_scans': {'directory': 'scans'}, 'production_registry': registry}
+                fingerprint = self.write_bundle(bundle)
+                result = promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
+                self.assertEqual(result['image_ids'], ids)
+                self.assertEqual(result['scanned_images'], scans)
+                self.assertEqual(result['production_registry'], registry['images'])
+                for suffix in ('image.json', 'sbom.cdx.json', 'vulnerabilities.json'):
+                    with self.subTest(suffix=suffix):
+                        artifact = directory / f'1-{suffix}'
+                        original = artifact.read_bytes()
+                        artifact.write_bytes(original + b' ')
+                        with self.assertRaises(ValueError):
+                            promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
+                        artifact.write_bytes(original)
+                path.write_bytes(raw_report + b' ')
+                with self.assertRaisesRegex(ValueError, 'license report differs'):
+                    promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
+                path.write_bytes(raw_report)
+                for field, value in (('image_id', ids['web']), ('manifest_digest', 'latest')):
+                    invalid_registry = deepcopy(bundle)
+                    invalid_registry['production_registry']['images']['app'][field] = value
+                    invalid = self.write_bundle(invalid_registry)
+                    with self.assertRaisesRegex(ValueError, 'registry image differs'):
+                        promotion.verify_image_receipts(self.index, self.bundle, invalid, job, SHA)
+                fingerprint = self.write_bundle(bundle)
+                with self.assertRaisesRegex(ValueError, 'missing verified runtime images'):
+                    promotion.verify_image_receipts(self.index, self.bundle, fingerprint, {}, SHA)
 
     def test_requires_confirmed_channel_messages_and_exact_deployed_notes_and_album(self):
         entries = self.release()
