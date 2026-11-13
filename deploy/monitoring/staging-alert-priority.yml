@@ -1,0 +1,10 @@
+services:
+  alertmanager:
+    volumes:
+      - ./staging-alertmanager-priority.yml:/etc/alertmanager/alertmanager.yml:ro
+      - type: bind
+        source: ${BARGHSA_OPERATIONS_PRIORITY_CONFIG_DIR:?Set the protected priority route configuration directory}
+        target: /run/priority-routes
+        read_only: true
+        bind:
+          create_host_path: false

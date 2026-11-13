@@ -112431,7 +112431,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -114719,6 +114719,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -118480,7 +118488,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -118949,6 +118957,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -119100,7 +119116,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             }
           ],
           "checks": [
@@ -119273,6 +119289,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -130822,7 +130846,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -131626,6 +131650,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -132249,7 +132281,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -133053,6 +133085,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -133676,7 +133716,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -134480,6 +134520,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -135104,7 +135152,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -135908,6 +135956,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -136531,7 +136587,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -137335,6 +137391,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -137910,7 +137974,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -138662,6 +138726,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -139246,7 +139318,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -139825,6 +139897,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -140316,7 +140396,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -141120,6 +141200,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -598900,7 +598988,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -599607,6 +599695,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -601795,7 +601891,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -602648,6 +602744,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -708455,7 +708559,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -708829,6 +708933,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -710890,7 +711002,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             }
           ],
           "source_renewals": [
@@ -711152,6 +711264,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -711254,7 +711374,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -711380,6 +711500,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -712033,7 +712161,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -712312,6 +712440,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -712404,7 +712540,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -712745,6 +712881,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -713203,7 +713347,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             }
           ],
           "checks": [
@@ -713444,6 +713588,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -713633,7 +713785,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the P1 pager or phone and P2 team channel and task with controlled delivery receipts on the authorized deployed receivers. Include firing and recovery for the authentication-failure P1 alert.",
-        "Verify the P3 working-hours review board and operator access. Disposable PostgreSQL proved deduplicated firing and resolved notices to the current active admin inbox for all four P3 warnings with trusted dashboard and runbook links. Deployed routing and readback remain open."
+        "Verify the P3 working-hours review board and operator access. Disposable PostgreSQL proved deduplicated firing and resolved notices to the current active admin inbox for all four P3 warnings with trusted dashboard and runbook links. Deployed routing and readback remain open.",
+        "The opt-in staging priority routes now deliver P1 to on-call, P2 to the team/task endpoint and P3 to the review endpoint while retaining native scoped inbox delivery and the watchdog. Local Alertmanager and TLS fixture checks passed. Approved destination configuration and actual page, task and board receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -713680,7 +713833,8 @@
           "release-0.6-reconciliation-review",
           "release-0.6-tls-expiry-warning",
           "release-0.6-storage-sms-review",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-priority-routing"
         ],
         "current_acceptance": null
       }
@@ -713769,7 +713923,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             }
           ],
           "checks": [
@@ -714016,6 +714170,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ]
         }
@@ -714347,7 +714509,8 @@
         "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
         "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts.",
         "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open.",
-        "Protected preflight 43503647318 passed the monitoring rule checks with matching inputs. Native deployed counters, rule delivery and authorized external pager readbacks remain required."
+        "Protected preflight 43503647318 passed the monitoring rule checks with matching inputs. Native deployed counters, rule delivery and authorized external pager readbacks remain required.",
+        "Isolated actual Alertmanager delivered P1 fast and P2 slow burn firing and recovery to different TLS fixtures and retained the protected operations route. Deployed scrape, alerts, approved page and team/task receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -714376,7 +714539,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-native-journey-availability",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-priority-routing"
         ],
         "current_acceptance": null
       }
@@ -722191,7 +722355,8 @@
         "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery. Include removal and restoration of the discovered target in the controlled reporting-outage rehearsal.",
         "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver.",
         "Local Prometheus rules now page for fresh timestamps with missing check results or incomplete successes, and recover when complete results return. Explicit failures retain the six-minute check alert. Verify on the deployed runner and pager route.",
-        "The protected CI check now includes synthetic failure, incomplete reporting and recovery rule tests. Local workflow-step execution passed. The live target and pager rehearsal remain required."
+        "The protected CI check now includes synthetic failure, incomplete reporting and recovery rule tests. Local workflow-step execution passed. The live target and pager rehearsal remain required.",
+        "The priority routing layer now accepts an approved HTTPS P1 receiver for staging/core synthetic alerts while preserving the private operations route. Verify the real independent runner, Alertmanager and pager with a controlled firing and recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -722220,7 +722385,8 @@
           "release-0.6-synthetic-staging-scrape",
           "release-0.6-synthetic-target-loss",
           "release-0.6-synthetic-result-completeness",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-priority-routing"
         ],
         "current_acceptance": null
       }
@@ -1065034,7 +1065200,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1068128,6 +1068294,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "presentation_renewals": [
@@ -1070763,7 +1070937,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+              "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1073759,6 +1073933,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-priority-routing",
+              "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1079288,7 +1079470,8 @@
         "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending.",
         "dfe73b34a reached protected main after all seven preflight jobs passed. Verified the five image reports and unchanged license review scope. The loaded PostgreSQL replacement and retained scanner each match their hosted package and license scope. Final strict tests, exact staging acceptance and actual live receipts remain open.",
         "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts.",
-        "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open."
+        "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open.",
+        "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback."
       ],
       "owner": null,
       "depends_on": [],
@@ -1079588,7 +1079771,8 @@
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-grafana-supported-alternative-images",
-          "release-0.6-retained-scan-binding"
+          "release-0.6-retained-scan-binding",
+          "release-0.6-priority-routing"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1255829,6 +1256013,92 @@
         {
           "file": "native-restore.log",
           "sha256": "6c32e2844b802bf4599f60fd600799625b818e730a4e1bce7436ce5b90d73fb5"
+        }
+      ]
+    },
+    "release-0.6-priority-routing": {
+      "batch": "release-0.6-priority-routing",
+      "base_commit": "af00b358517da90b129201c98c71a257c1acd135",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.05",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/staging-alert-priority.yml",
+        "deploy/monitoring/staging-alertmanager-priority.yml",
+        "docs/operations/notification-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-alert-priority.yml",
+          "sha256": "406b9b6604803fa05d9e270f9fea7597eac403a4645e4e32b943dc945bb845b6"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager-priority.yml",
+          "sha256": "b889c2fdc3eb14a8ed0e5264059df816ab08965cf0cee84ee0c8becbd3c90eb1"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "dd14172379b3d9fd31e63aaf383ff4e3a31f187877a3d26491be5bb59ebb0a77"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
+        }
+      ],
+      "checks": [
+        "Pinned Alertmanager 0.34.1 validated the unchanged timers and exact route configuration. Amtool checked all three priorities, watchdog exclusivity, foreign environments, wrong database and unclassified alerts. Normalized Compose changed only Alertmanager and retained its private token mount.",
+        "The same binary delivered firing and resolved notifications to the three isolated TLS destinations with shortened fixture intervals. The private operations webhook received bearer-authenticated firing and recovery, the watchdog received firing only, and a redirect was not followed. Fixture records contain only controlled data.",
+        "Formatting and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "No staged monitoring configuration or external provider changed. The fixture did not establish receipt creation in an approved pager, team task system or review board. The first fixture attempt had no receiver runtime image for the host architecture. The subsequent run used the correct local fixture image."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-priority-routing",
+      "execution_receipts": [
+        {
+          "file": "run-fixture.py",
+          "sha256": "2769b4dda09e8311f984bb8321668cfc83afe487420882ab1d4c040047028b49"
+        },
+        {
+          "file": "amtool.log",
+          "sha256": "7abeebe52c15326de4ffb5c06e98a9cac67da3c7b4b4d8c17c444d45c64fc9a0"
+        },
+        {
+          "file": "native-receipts.json",
+          "sha256": "4805b99a13c7cdf58d8f5862c1db921d8961ddeff61351ec60e38b4888bd77aa"
+        },
+        {
+          "file": "alertmanager.log",
+          "sha256": "bb56a7907cc61980c4fb584f1741119b3840eb7f8b7538cb0c4f8de76006a31a"
         }
       ]
     }

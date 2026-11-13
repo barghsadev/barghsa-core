@@ -1,0 +1,66 @@
+route:
+  receiver: barghsa-operations
+  group_by: [alertname, environment, database]
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 4h
+  routes:
+    - receiver: barghsa-watchdog
+      matchers: ['alertname="OperationsWatchdog"']
+      group_wait: 5s
+      group_interval: 15s
+      repeat_interval: 1m
+    - receiver: barghsa-on-call
+      matchers: ['environment="staging"', 'database="core"', 'priority="P1"']
+      continue: true
+    - receiver: barghsa-team
+      matchers: ['environment="staging"', 'database="core"', 'priority="P2"']
+      continue: true
+    - receiver: barghsa-review
+      matchers: ['environment="staging"', 'database="core"', 'priority="P3"']
+      continue: true
+    - receiver: barghsa-operations
+receivers:
+  - name: barghsa-operations
+    webhook_configs:
+      - url: http://operations:9094/operations/alerts
+        send_resolved: true
+        http_config:
+          authorization:
+            type: Bearer
+            credentials_file: /run/secrets/operations-webhook-token
+  - name: barghsa-watchdog
+    webhook_configs:
+      - url_file: /run/secrets/operations-watchdog-url
+        send_resolved: false
+        timeout: 10s
+        http_config:
+          follow_redirects: false
+  - name: barghsa-on-call
+    webhook_configs:
+      - url_file: /run/priority-routes/on-call-url
+        send_resolved: true
+        timeout: 10s
+        http_config:
+          follow_redirects: false
+  - name: barghsa-team
+    webhook_configs:
+      - url_file: /run/priority-routes/team-url
+        send_resolved: true
+        timeout: 10s
+        http_config:
+          follow_redirects: false
+  - name: barghsa-review
+    webhook_configs:
+      - url_file: /run/priority-routes/review-url
+        send_resolved: true
+        timeout: 10s
+        http_config:
+          follow_redirects: false
+inhibit_rules:
+  - source_matchers: ['alertname="NotificationDeadLettersAccumulating"']
+    target_matchers: ['alertname="NotificationDeadLettersPending"']
+    equal: [environment, database]
+  - source_matchers: ['alertname="NotificationOutboxBacklogCritical"']
+    target_matchers: ['alertname="NotificationOutboxBacklog"']
+    equal: [environment, database]

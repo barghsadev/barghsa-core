@@ -62,6 +62,25 @@ Validate configuration with `promtool check config`, the existing `promtool test
 
 The optional watchdog overlay sends the monitoring heartbeat to an independent receiver. Follow the [alert delivery watchdog runbook](../runbooks/alert-delivery.md) for protected configuration and missing-heartbeat and recovery receipts.
 
+### Priority delivery
+
+After the destinations have been approved, add `staging-alert-priority.yml`
+to the staging monitoring Compose command. Set
+`BARGHSA_OPERATIONS_PRIORITY_CONFIG_DIR` to a protected directory containing
+`on-call-url`, `team-url` and `review-url`. Each file contains one approved
+HTTPS Alertmanager webhook URL. Grant access only to the Alertmanager runtime
+user and keep URLs out of logs. The P1 endpoint must page the on-call operator.
+The P2 endpoint must notify the owning team and open a deduplicated task.
+The P3 endpoint must post to the working-hours review board.
+
+Priority delivery retains the native inbox and existing inhibition and watchdog
+routes. Only explicit staging/core P1, P2 and P3 labels select external
+destinations. Receivers should use the alert fingerprint and start time to
+deduplicate notifications and associate recovery with the original event.
+Verify the resulting pager, task and review-board receipts for firing and
+recovery, including one corresponding native inbox receipt per event. A webhook
+response alone establishes destination acceptance. [Alertmanager webhook configuration](https://prometheus.io/docs/alerting/latest/configuration/#webhook_config).
+
 ### Independent synthetic runner
 
 Once the independent runner and its private HTTPS exporter are approved, add
