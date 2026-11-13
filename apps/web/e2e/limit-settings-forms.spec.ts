@@ -9,64 +9,66 @@ import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
 
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
-    test(`limit form batch retains raw input and saves reviewed values (${locale}, dark=${dark})`, async ({
-      page,
-    }, info) => {
-      await setupCatalogueForms(page, locale, dark);
-      const otp = await mockOtpStepUp(page);
-      await page.route('**/api/admin/approval-requests?*', (route) => route.fulfill({ json: [] }));
-      const contract = (key: string) => adminText(`admin.contractLimits.${key}`, locale);
-      const wallet = (key: string) => tWalletLimit(`admin.walletLimit.${key}`, locale);
-      const threshold = (key: string) => tWalletReceipts(`admin.receiptThreshold.${key}`, locale);
-      const cases = [
-        {
-          name: 'contract',
-          url: '/admin/contract-limits',
-          path: 'contract-electricity-limits',
-          form: adminText('admin.settings.contractTerms', locale),
-          label: contract,
-          selector: '#contract-limit-leadTimeDays',
-          field: 'leadTimeDays',
-          raw: locale === 'fa' ? ' ۱۴ ' : ' 14 ',
-          invalid: '1e3',
-          initial: { maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 0 },
-          receipt: { maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 14 },
-          body: {
-            max_quantity_increase_percent: 20,
-            max_contract_duration_months: 24,
-            lead_time_days: 14,
-          },
+    const contract = (key: string) => adminText(`admin.contractLimits.${key}`, locale);
+    const wallet = (key: string) => tWalletLimit(`admin.walletLimit.${key}`, locale);
+    const threshold = (key: string) => tWalletReceipts(`admin.receiptThreshold.${key}`, locale);
+    const cases = [
+      {
+        name: 'contract',
+        url: '/admin/contract-limits',
+        path: 'contract-electricity-limits',
+        form: adminText('admin.settings.contractTerms', locale),
+        label: contract,
+        selector: '#contract-limit-leadTimeDays',
+        field: 'leadTimeDays',
+        raw: locale === 'fa' ? ' ۱۴ ' : ' 14 ',
+        invalid: '1e3',
+        initial: { maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 0 },
+        receipt: { maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 14 },
+        body: {
+          max_quantity_increase_percent: 20,
+          max_contract_duration_months: 24,
+          lead_time_days: 14,
         },
-        {
-          name: 'wallet',
-          url: '/admin/wallet-receipts',
-          path: 'wallet-top-up-limit',
-          form: wallet('title'),
-          label: wallet,
-          selector: '#online-top-up-limit',
-          field: 'limitIrR',
-          raw: locale === 'fa' ? ' ۲۵۰٬۰۰۰ ' : ' 250,000 ',
-          invalid: '12,5',
-          initial: { limitIrR: 2_000_000_000, version: 0 },
-          receipt: { limitIrR: 250000, version: 1 },
-          body: { limit_irr: 250000, expected_version: 0 },
-        },
-        {
-          name: 'threshold',
-          url: '/admin/approval-requests',
-          path: 'dual-approval-threshold',
-          form: threshold('title'),
-          label: threshold,
-          selector: '#receipt-threshold',
-          field: 'thresholdIrR',
-          raw: locale === 'fa' ? ' ٢٥٠٬٠٠٠ ' : ' 250,000 ',
-          invalid: '9007199254740992',
-          initial: { thresholdIrR: 100000 },
-          receipt: { thresholdIrR: 250000 },
-          body: { threshold_irr: 250000 },
-        },
-      ];
-      for (const item of cases) {
+      },
+      {
+        name: 'wallet',
+        url: '/admin/wallet-receipts',
+        path: 'wallet-top-up-limit',
+        form: wallet('title'),
+        label: wallet,
+        selector: '#online-top-up-limit',
+        field: 'limitIrR',
+        raw: locale === 'fa' ? ' ۲۵۰٬۰۰۰ ' : ' 250,000 ',
+        invalid: '12,5',
+        initial: { limitIrR: 2_000_000_000, version: 0 },
+        receipt: { limitIrR: 250000, version: 1 },
+        body: { limit_irr: 250000, expected_version: 0 },
+      },
+      {
+        name: 'threshold',
+        url: '/admin/approval-requests',
+        path: 'dual-approval-threshold',
+        form: threshold('title'),
+        label: threshold,
+        selector: '#receipt-threshold',
+        field: 'thresholdIrR',
+        raw: locale === 'fa' ? ' ٢٥٠٬٠٠٠ ' : ' 250,000 ',
+        invalid: '9007199254740992',
+        initial: { thresholdIrR: 100000 },
+        receipt: { thresholdIrR: 250000 },
+        body: { threshold_irr: 250000 },
+      },
+    ];
+    for (const item of cases) {
+      test(`${item.name} limit retains raw input and saves reviewed values (${locale}, dark=${dark})`, async ({
+        page,
+      }, info) => {
+        await setupCatalogueForms(page, locale, dark);
+        const otp = await mockOtpStepUp(page);
+        await page.route('**/api/admin/approval-requests?*', (route) =>
+          route.fulfill({ json: [] })
+        );
         let value: unknown = item.initial,
           mode = 'field',
           reads = 0;
@@ -163,6 +165,6 @@ for (const locale of ['en', 'fa'] as const)
             .getByRole('status')
             .filter({ hasText: item.label('saved') })
         ).toHaveCount(0);
-      }
-    });
+      });
+    }
   }

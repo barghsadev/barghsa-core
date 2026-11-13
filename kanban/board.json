@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:30:44+00:00",
+  "updated": "2026-11-13T10:37:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Its email job was skipped. The 44-pixel workspace header and six AI catalogue scrolling failures were reproduced and corrected with targeted browser proof. Triage the remaining knowledge, registration and shard outcomes and obtain a clean scheduled rollup on the final candidate.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header and AI catalogue corrections address the shard-one deterministic failures. WebKit shard five exceeded its job budget while retrying a combined limit-settings test. All 36 isolated settings cases passed locally. Knowledge and registration had 39 local passes without retries. Signed-in auth entry still needs triage, and a clean scheduled rollup and delivery remain required.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21793,7 +21793,8 @@
           "release-0.6-price-dialog-opening",
           "release-0.6-gate-readback",
           "release-0.6-nightly-header-target",
-          "release-0.6-nightly-ai-catalogue-scroll"
+          "release-0.6-nightly-ai-catalogue-scroll",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": null
       }
@@ -134654,7 +134655,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -134830,7 +134832,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -136210,6 +136212,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -136456,7 +136466,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -136632,7 +136643,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -138012,6 +138023,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -145577,7 +145596,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -145753,7 +145773,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -147133,6 +147153,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -656281,7 +656309,8 @@
         "batches": [
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-critical-form-recovery"
+          "release-0.6-critical-form-recovery",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "batch": "release-0.6-critical-form-recovery",
@@ -656449,7 +656478,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
@@ -656622,6 +656651,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ]
         }
@@ -816060,7 +816097,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
           "release-0.6-sentry-version-tag",
-          "release-0.6-nightly-ai-catalogue-scroll"
+          "release-0.6-nightly-ai-catalogue-scroll",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -816408,7 +816446,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/e2e/maintenance-forms.spec.ts",
@@ -819250,6 +819288,14 @@
                 "apps/web/e2e/ai-catalogue-tables.spec.ts"
               ],
               "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ]
         }
@@ -994119,7 +994165,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-nightly-limit-settings-isolation"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -994139,7 +994186,7 @@
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
-              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+              "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -994350,6 +994397,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Waits for the actual lazy import within React act before checking the same recovery button. All product code and recovery assertions match their previous source."
+            },
+            {
+              "batch": "release-0.6-nightly-limit-settings-isolation",
+              "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+              "paths": [
+                "apps/web/e2e/limit-settings-forms.spec.ts"
+              ],
+              "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -1194082,6 +1194137,68 @@
         {
           "file": "staging-favicon-csp-20261113.txt",
           "sha256": "dcbb5d72b722bfbbd68b376381d6d4232afdf97b37be781c772648d6b18f3fca"
+        }
+      ]
+    },
+    "release-0.6-nightly-limit-settings-isolation": {
+      "batch": "release-0.6-nightly-limit-settings-isolation",
+      "base_commit": "b3022407133726a60163e3e68edec3647d6a9268",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "06-security-testing-observability.md#T-06.09.03.09",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.30.02.09"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/limit-settings-forms.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+          "sha256": "ab124fdc97c47235c341f8340daef31a44953c5d3d80523186441607864a01af"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        }
+      ],
+      "checks": [
+        "Hosted WebKit shard five hit its 60-minute job timeout. The first three combined limit-settings cases had nine 30-second timeouts. Traces showed the contract leg consumed 21 to 23 seconds before the wallet leg on loaded Linux runners.",
+        "Each settings journey now has an isolated browser case and fixture. Both languages, both themes and all assertions including the reviewed payload, OTP, private diagnostics, draft preservation, focus and axe checks remain. The job and case deadlines are unchanged.",
+        "All 36 settings cases passed without retries on WebKit, mobile Safari and Firefox revision 1575, the pinned hosted runtime. The combined replay had three separate signed-in entry failures and is recorded as failed. Earlier local Firefox 1572 crashed during axe as already documented.",
+        "The separate unchanged knowledge and registration suites passed all 39 cases without retries on WebKit, mobile Safari and mobile Chrome. This does not close their earlier hosted flakes."
+      ],
+      "limitations": [
+        "The full matrix, observed intermittent signed-in entry, scheduled email and release gate are pending. The timed-out hosted shard remains invalid."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-form-outcomes",
+      "execution_receipts": [
+        {
+          "file": "webkit-5.log",
+          "sha256": "ba838398337bc89703c8da4ee87b649b4bdd6cfc87ebcd2c90d36aaf5b08a713"
+        },
+        {
+          "file": "limits-and-entry.log",
+          "sha256": "aa297af9eaa979efed024d6374cfa00cc4ebb1243240a87559e677935c9b56fc"
+        },
+        {
+          "file": "limits-split-and-entry.log",
+          "sha256": "08d867ad9234cf2057e52ac44e36644c5c626d284452158d2686c1aee037cf4e"
+        },
+        {
+          "file": "limits-scoped-results.json",
+          "sha256": "2a753868a957741f8e9185fb1872c3587ea237c5896213a18dca268c16a78c53"
+        },
+        {
+          "file": "baseline.log",
+          "sha256": "f990e507c256abdbcf8a14f969961c2cb560ea7dca21abad3ecdd7e439104e9f"
         }
       ]
     }
