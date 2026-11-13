@@ -2925,6 +2925,114 @@
         ]
       }
     },
+    "/api/admin/config/electricity-contract-template/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateElectricityTemplate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate a reviewed preliminary electricity template selection",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/electricity-contract-template/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageElectricityTemplate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a preliminary electricity template recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/electricity-contract-template/rollback-history": {
+      "get": {
+        "operationId": "AdminController_electricityTemplateHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous preliminary electricity template selections",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/electricity-order-draft-ttl": {
       "get": {
         "operationId": "AdminController_getElectricityOrderDraftTtl",
@@ -18239,6 +18347,114 @@
           }
         },
         "summary": "Set retention for onboarding, electricity, saving and solar drafts",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wizard-draft-ttl/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateWizardDraftTtl",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate a reviewed wizard draft retention revision",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wizard-draft-ttl/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageWizardDraftTtl",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a wizard draft retention recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wizard-draft-ttl/rollback-history": {
+      "get": {
+        "operationId": "AdminController_wizardDraftTtlHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous wizard draft retention revisions",
         "tags": [
           "Admin"
         ]

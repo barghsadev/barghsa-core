@@ -44,6 +44,9 @@ const base = '/api/admin/config';
 type Copy = (key: string) => string;
 type Kind = 'rules' | 'recovery' | 'retention' | 'template';
 const GreenRulesRecovery = lazy(() => import('../components/GreenRulesRecovery.js'));
+const ElectricitySettingRecovery = lazy(
+  () => import('../components/ElectricitySettingRecovery.js')
+);
 function GreenEditor({
   label,
   safety,
@@ -230,12 +233,21 @@ function GreenEditor({
     </section>
   );
 }
-function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Copy }) {
+type RecoverableEditorProps = CatalogueEditorProps & { label: Copy; onRecovered: () => void };
+
+function RetentionEditor({ label, onRecovered, ...props }: RecoverableEditorProps) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
     messages = { days: label('invalidRetention') };
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const onRecoveryBusy = (busy: boolean) => {
+    setRecoveryBusy(busy);
+    props.onBusyChange?.(busy);
+  };
   const editor = useCatalogueEditor<RetentionSetting, RetentionDraft>({
     ...props,
+    disabled: props.disabled || recoveryBusy,
     identity: 'wizard-draft-ttl',
     path: `${base}/wizard-draft-ttl`,
     validate: validRetention,
@@ -336,15 +348,46 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
           }}
         />
       )}
+      <Button
+        type="button"
+        variant="outline"
+        aria-expanded={showRecovery}
+        aria-controls={showRecovery ? 'draft-retention-recovery' : undefined}
+        disabled={props.disabled || recoveryBusy || !!editor.action || !editor.resource.data}
+        onClick={() => setShowRecovery((value) => !value)}
+      >
+        {label('retentionRecoveryTitle')}
+      </Button>
+      {showRecovery && editor.resource.data && (
+        <div id="draft-retention-recovery">
+          <Suspense fallback={<LoadingStatus>{label('settingsRecoveryLoading')}</LoadingStatus>}>
+            <ElectricitySettingRecovery
+              setting="wizard-draft-ttl"
+              label={label}
+              disabled={props.disabled || !!editor.action}
+              onBusyChange={onRecoveryBusy}
+              onDenied={editor.deny}
+              onActivated={onRecovered}
+            />
+          </Suspense>
+        </div>
+      )}
     </section>
   );
 }
-function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Copy }) {
+function TemplateEditor({ label, onRecovered, ...props }: RecoverableEditorProps) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
     messages = { versionId: label('invalidTemplate') };
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const onRecoveryBusy = (busy: boolean) => {
+    setRecoveryBusy(busy);
+    props.onBusyChange?.(busy);
+  };
   const editor = useCatalogueEditor<TemplateSetting, TemplateDraft>({
     ...props,
+    disabled: props.disabled || recoveryBusy,
     identity: 'electricity-contract-template',
     path: `${base}/electricity-contract-template`,
     validate: validTemplateSetting,
@@ -460,6 +503,31 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
           }}
         />
       )}
+      <Button
+        type="button"
+        variant="outline"
+        aria-expanded={showRecovery}
+        aria-controls={showRecovery ? 'contract-template-recovery' : undefined}
+        disabled={props.disabled || recoveryBusy || !!editor.action || !setting}
+        onClick={() => setShowRecovery((value) => !value)}
+      >
+        {label('templateRecoveryTitle')}
+      </Button>
+      {showRecovery && setting && (
+        <div id="contract-template-recovery">
+          <Suspense fallback={<LoadingStatus>{label('settingsRecoveryLoading')}</LoadingStatus>}>
+            <ElectricitySettingRecovery
+              setting="electricity-contract-template"
+              options={setting.options}
+              label={label}
+              disabled={props.disabled || !!editor.action}
+              onBusyChange={onRecoveryBusy}
+              onDenied={editor.deny}
+              onActivated={onRecovered}
+            />
+          </Suspense>
+        </div>
+      )}
     </section>
   );
 }
@@ -573,6 +641,7 @@ export default function AdminElectricityRulesPage() {
             disabled={!!active && active !== 'retention'}
             onBusyChange={retentionBusy}
             onDenied={scope.deny}
+            onRecovered={() => setRevision((value) => value + 1)}
             refreshVersion={revision}
           />
           <TemplateEditor
@@ -580,6 +649,7 @@ export default function AdminElectricityRulesPage() {
             disabled={!!active && active !== 'template'}
             onBusyChange={templateBusy}
             onDenied={scope.deny}
+            onRecovered={() => setRevision((value) => value + 1)}
             refreshVersion={revision}
           />
         </>

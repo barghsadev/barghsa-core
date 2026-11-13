@@ -64,6 +64,11 @@ import {
   greenRecoveryStageBody,
 } from './green-electricity-recovery.js';
 import { assertWalletLimitFields } from './limit-settings-fields.js';
+import {
+  activateElectricitySetting,
+  stageElectricitySetting,
+  type ElectricitySettingRoute,
+} from './electricity-setting-recovery.js';
 
 import {
   STAFF_ASSIGNMENT_WORK_TYPES,
@@ -2512,6 +2517,105 @@ export class AdminController {
     }
     return this.adminService.setElectricityContractTemplate(
       parsed.data.versionId,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Get('config/wizard-draft-ttl/rollback-history')
+  @ApiOperation({ summary: 'Read previous wizard draft retention revisions' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  wizardDraftTtlHistory(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    return this.electricitySettingHistory('wizard-draft-ttl', req, query);
+  }
+
+  @Get('config/electricity-contract-template/rollback-history')
+  @ApiOperation({ summary: 'Read previous preliminary electricity template selections' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  electricityTemplateHistory(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    return this.electricitySettingHistory('electricity-contract-template', req, query);
+  }
+
+  @Post('config/wizard-draft-ttl/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a wizard draft retention recovery draft' })
+  @ApiZodBody(stageElectricitySetting)
+  stageWizardDraftTtl(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.stageElectricitySetting('wizard-draft-ttl', req, body);
+  }
+
+  @Post('config/electricity-contract-template/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a preliminary electricity template recovery draft' })
+  @ApiZodBody(stageElectricitySetting)
+  stageElectricityTemplate(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.stageElectricitySetting('electricity-contract-template', req, body);
+  }
+
+  @Post('config/wizard-draft-ttl/rollback-activate')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Activate a reviewed wizard draft retention revision' })
+  @ApiZodBody(activateElectricitySetting)
+  activateWizardDraftTtl(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.activateElectricitySetting('wizard-draft-ttl', req, body);
+  }
+
+  @Post('config/electricity-contract-template/rollback-activate')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Activate a reviewed preliminary electricity template selection' })
+  @ApiZodBody(activateElectricitySetting)
+  activateElectricityTemplate(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.activateElectricitySetting('electricity-contract-template', req, body);
+  }
+
+  private electricitySettingHistory(
+    setting: ElectricitySettingRoute,
+    req: AuthenticatedRequest,
+    query: unknown
+  ) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = activationHistoryQuery.safeParse(query);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery history query');
+    return this.adminService.electricityRecoveryHistory(
+      setting,
+      req.session,
+      parsed.data.beforeVersion
+    );
+  }
+
+  private stageElectricitySetting(
+    setting: ElectricitySettingRoute,
+    req: AuthenticatedRequest,
+    body: unknown
+  ) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = stageElectricitySetting.safeParse(body);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery draft request');
+    return this.adminService.stageElectricityRecovery(
+      setting,
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  private activateElectricitySetting(
+    setting: ElectricitySettingRoute,
+    req: AuthenticatedRequest,
+    body: unknown
+  ) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = activateElectricitySetting.safeParse(body);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery activation request');
+    return this.adminService.activateElectricityRecovery(
+      setting,
+      parsed.data,
       req.session,
       req.ip ?? 'unknown'
     );

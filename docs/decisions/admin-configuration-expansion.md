@@ -29,3 +29,13 @@ eligible receipt. Team administration retains membership, leads, assignment
 strategies and escalation routing. Keeping these existing controls does not
 waive the expanded requirements above. Current task status and evidence are
 maintained only in `kanban/board.json`.
+
+Wizard draft retention and preliminary electricity contract template selections
+use the existing versioned `app_config` keys and audit history. On the
+electricity rules page, open the setting’s history, review an earlier revision
+and save it as a recovery draft. A separate staff verification step activates
+the exact draft as a new revision. A newer save invalidates a draft based on
+the old revision. Template recovery rechecks that the selected template
+remains active and its placeholders are supported. An explicit selection of
+**No template** can also be recovered. Existing submitted orders and contracts
+keep their captured terms.

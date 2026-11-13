@@ -449,6 +449,15 @@ export const fa: Record<string, string> = {
     'عدد صحیح از ۰ تا ۳۶۵۰۰ وارد کنید. صفر به معنی مجاز بودن شروع از امروز است.',
   'admin.green.ruleEditor': 'ویرایش قواعد برق سبز',
   'admin.green.recoveryTitle': 'تاریخچه قواعد برق سبز',
+  'admin.green.retentionRecoveryTitle': 'تاریخچه نگهداری پیش‌نویس‌ها',
+  'admin.green.templateRecoveryTitle': 'تاریخچه انتخاب قالب قرارداد',
+  'admin.green.settingsRecoveryLoading': 'در حال بارگذاری تاریخچه تنظیمات…',
+  'admin.green.settingsRecoveryReadError': 'بارگذاری تاریخچه تنظیمات ممکن نشد.',
+  'admin.green.settingsRecoveryStageConfirm': 'این مقدار را به‌عنوان پیش‌نویس بازیابی ذخیره کنید.',
+  'admin.green.settingsRecoveryActivateConfirm':
+    'مقدار بررسی‌شده را به‌عنوان نسخه جدید تنظیمات فعال کنید.',
+  'admin.green.settingsRecoveryConflict':
+    'تنظیمات یا پیش‌نویس تغییر کرده است. تاریخچه را دوباره بارگذاری کنید.',
   'admin.green.recoveryLoading': 'در حال دریافت تاریخچه قواعد…',
   'admin.green.recoveryReadError': 'دریافت تاریخچه قواعد انجام نشد.',
   'admin.green.recoveryEmpty': 'نسخه منتشرشده قبلی برای بازیابی وجود ندارد.',
@@ -1462,6 +1471,15 @@ export const en: Record<string, string> = {
     'Enter an integer from 0 to 36500. Zero permits a start date of today.',
   'admin.green.ruleEditor': 'Edit green-electricity rules',
   'admin.green.recoveryTitle': 'Green rules history',
+  'admin.green.retentionRecoveryTitle': 'Draft retention history',
+  'admin.green.templateRecoveryTitle': 'Contract template selection history',
+  'admin.green.settingsRecoveryLoading': 'Loading settings history…',
+  'admin.green.settingsRecoveryReadError': 'Settings history could not be loaded.',
+  'admin.green.settingsRecoveryStageConfirm': 'Save this value as a recovery draft for review.',
+  'admin.green.settingsRecoveryActivateConfirm':
+    'Activate the reviewed value as a new settings revision.',
+  'admin.green.settingsRecoveryConflict':
+    'The setting or draft changed. Refresh the history before continuing.',
   'admin.green.recoveryLoading': 'Loading rule history…',
   'admin.green.recoveryReadError': 'Rule history could not be loaded.',
   'admin.green.recoveryEmpty': 'There are no earlier published revisions to recover.',

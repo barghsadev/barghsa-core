@@ -61,6 +61,118 @@ async function reads(page: Page) {
     route.fulfill({ json: templateSetting })
   );
 }
+
+for (const locale of ['en', 'fa'] as const)
+  test(`wizard retention and template history recover reviewed values (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    await reads(page);
+    const label = (key: string) => t(`admin.green.${key}`, locale);
+    let days = 13;
+    let selected = templateId as string | null;
+    await page.route(`**${base}/wizard-draft-ttl`, (route) => route.fulfill({ json: { days } }));
+    await page.route(`**${base}/electricity-contract-template`, (route) =>
+      route.fulfill({ json: { ...templateSetting, selectedVersionId: selected } })
+    );
+    const settings = [
+      {
+        path: 'wizard-draft-ttl',
+        title: 'retentionRecoveryTitle',
+        region: 'draft-retention-recovery',
+        field: '#electricity-draft-ttl',
+        before: '13',
+        after: '7',
+        config: { days: 7 },
+        apply: () => {
+          days = 7;
+        },
+      },
+      {
+        path: 'electricity-contract-template',
+        title: 'templateRecoveryTitle',
+        region: 'contract-template-recovery',
+        field: '#electricity-contract-template',
+        before: templateId,
+        after: '',
+        config: { versionId: null },
+        apply: () => {
+          selected = null;
+        },
+      },
+    ];
+    await page.goto('/admin/electricity-rules');
+    for (const { path, title, region, field, before, after, config, apply } of settings) {
+      const revision = { id: '33333333-3333-4333-8333-333333333333', version: 1, config };
+      const draft = {
+        id: '44444444-4444-4444-8444-444444444444',
+        baseVersion: 2,
+        sourceId: revision.id,
+        sourceVersion: 1,
+        config,
+      };
+      let pending: typeof draft | null = null;
+      let version = 2;
+      const commands: unknown[] = [];
+      await page.route(`**${base}/${path}/rollback-history`, (route) =>
+        route.fulfill({
+          json: {
+            baseVersion: version,
+            items: [revision],
+            draft: pending,
+            nextBeforeVersion: null,
+          },
+        })
+      );
+      await page.route(`**${base}/${path}/rollback-draft`, (route) => {
+        commands.push(route.request().postDataJSON());
+        pending = draft;
+        return route.fulfill({ status: 201, json: draft });
+      });
+      await page.route(`**${base}/${path}/rollback-activate`, (route) => {
+        commands.push(route.request().postDataJSON());
+        version = 3;
+        pending = null;
+        apply();
+        return route.fulfill({ json: { config, version, draftId: draft.id } });
+      });
+      const toggle = page.getByRole('button', { name: label(title), exact: true });
+      await expect(page.locator(field)).toHaveValue(before);
+      await toggle.click();
+      const panel = page.locator(`#${region}`);
+      const dialog = page.getByRole('dialog');
+      const confirm = dialog.getByRole('button', {
+        name: locale === 'fa' ? 'تأیید' : 'Confirm',
+        exact: true,
+      });
+      await panel
+        .getByRole('button', {
+          name: label('recoveryStage').replace('{version}', locale === 'fa' ? '۱' : '1'),
+          exact: true,
+        })
+        .click();
+      await expect(dialog).toContainText(label('settingsRecoveryStageConfirm'));
+      await confirm.click();
+      const activate = panel.getByRole('button', { name: label('recoveryActivate'), exact: true });
+      await expect(activate).toBeVisible();
+      await expect(page.locator(field)).toHaveValue(before);
+      expect(commands).toEqual([{ sourceId: revision.id, expectedVersion: 2 }]);
+      expect((await new AxeBuilder({ page }).include(`#${region}`).analyze()).violations).toEqual(
+        []
+      );
+      await activate.click();
+      await expect(dialog).toContainText(label('settingsRecoveryActivateConfirm'));
+      await confirm.click();
+      await expect(page.locator(field)).toHaveValue(after);
+      await expect(activate).toHaveCount(0);
+      expect(commands).toEqual([
+        { sourceId: revision.id, expectedVersion: 2 },
+        { draftId: draft.id, expectedVersion: 2 },
+      ]);
+      await toggle.click();
+    }
+  });
+
 for (const locale of ['en', 'fa'] as const)
   test(`green rules recovery keeps the active revision until separate confirmation (${locale})`, async ({
     page,

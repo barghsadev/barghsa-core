@@ -94,11 +94,18 @@ function mapReceiptSubmitError(status: number): ReceiptError {
 }
 
 function receiptErrorText(error: ReceiptError, locale: Locale) {
-  if (error === 'maintenance') return tMaintenance('title', locale);
-  if (error === 'upload') return t('wallet.page.receiptUploadError', locale);
-  if (error === 'conflict') return t('wallet.page.conflict', locale);
-  if (error === 'unconfirmed') return t('wallet.page.receiptUnconfirmed', locale);
-  return t('wallet.page.receiptGenericError', locale);
+  return error === 'maintenance'
+    ? tMaintenance('title', locale)
+    : t(
+        error === 'upload'
+          ? 'wallet.page.receiptUploadError'
+          : error === 'conflict'
+            ? 'wallet.page.conflict'
+            : error === 'unconfirmed'
+              ? 'wallet.page.receiptUnconfirmed'
+              : 'wallet.page.receiptGenericError',
+        locale
+      );
 }
 
 /**
@@ -679,12 +686,11 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   dir="ltr"
                   value={amountInput}
                   disabled={onlineLocked}
-                  aria-describedby={[
-                    'top-up-amount-hint',
-                    online.errors.amount ? online.errorId('amount') : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
+                  aria-describedby={
+                    online.errors.amount
+                      ? `top-up-amount-hint ${online.errorId('amount')}`
+                      : 'top-up-amount-hint'
+                  }
                   onChange={(event) => {
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
                   }}
@@ -885,12 +891,11 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                       type="file"
                       accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
                       disabled={receiptLocked}
-                      aria-describedby={[
-                        'receipt-file-hint',
-                        receipt.errors.file ? receipt.errorId('file') : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      aria-describedby={
+                        receipt.errors.file
+                          ? `receipt-file-hint ${receipt.errorId('file')}`
+                          : 'receipt-file-hint'
+                      }
                       onChange={(event) => {
                         const file = event.target.files?.[0] ?? null;
                         setReceiptFile(file);

@@ -19,6 +19,15 @@ import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
 import { withStaffReadAuthority, type StaffReadActor } from './staff-read-authority.js';
 import {
+  electricitySettingHistory,
+  electricitySettingKeys,
+  electricitySettingLock,
+  electricityRecoveryDraftEvent,
+  readElectricitySettingDraft,
+  type ElectricityRecoveryConfig,
+  type ElectricitySettingRoute,
+} from './electricity-setting-recovery.js';
+import {
   GREEN_HISTORY_PAGE_SIZE,
   GREEN_RECOVERY_EVENT,
   readGreenRuleDraft,
@@ -1749,127 +1758,211 @@ export class AdminService {
 
   async setElectricityContractTemplate(
     versionId: string | null,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: StaffReadActor,
     ip: string
   ) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
-      await requireSessionStepUp(client, actor);
-      await client.query("SELECT pg_advisory_xact_lock(hashtext('electricity-contract-template'))");
-      if (versionId !== null) {
-        const version = (
-          await client.query<{ placeholders: string[] }>(
-            `SELECT v.placeholders FROM contract_template_versions v
-             JOIN contract_templates t ON t.id=v.template_id
-             WHERE v.id=$1 AND t.status='active' FOR SHARE OF v,t`,
-            [versionId]
-          )
-        ).rows[0];
-        if (
-          !version ||
-          !version.placeholders.every((name) => ['date', 'customerName', 'amount'].includes(name))
-        ) {
-          throw new InputFieldException(['versionId']);
-        }
-      }
-      const previous = (
-        await client.query<{ value: unknown; version: number }>(
-          "SELECT value,version FROM app_config WHERE key='electricity.contract_template_version_id' FOR UPDATE"
-        )
-      ).rows[0];
-      const version = (
-        await client.query<{ version: number }>(
-          `INSERT INTO app_config(key,value,version,updated_at)
-           VALUES('electricity.contract_template_version_id',$1::jsonb,1,NOW())
-           ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
-             version=app_config.version+1,updated_at=NOW()
-           RETURNING version`,
-          [JSON.stringify(versionId)]
-        )
-      ).rows[0]!.version;
-      await client.query(
-        "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
-      );
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
-         VALUES($1,$2,'config_change',$3::jsonb,$4,$5,NOW())`,
-        [
-          uuidv7(),
-          actor.userId,
-          JSON.stringify({
-            key: 'electricity.contract_template_version_id',
-            previousValue: previous?.value ?? null,
-            previousVersion: previous?.version ?? 0,
-            newValue: versionId,
-            version,
-          }),
-          uuidv7(),
-          ip,
-        ]
-      );
-      const receipt = await this.getElectricityContractTemplate(client);
-      await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
-      return receipt;
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+    const setting = 'electricity-contract-template';
+    return this.writeElectricitySetting(setting, actor, async (client) => {
+      await this.persistElectricitySetting(client, setting, { versionId }, actor, ip);
+      return this.getElectricityContractTemplate(client);
+    });
   }
 
   async setElectricityOrderDraftTtl(
     days: number,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: StaffReadActor,
     ip: string
   ): Promise<{ days: number }> {
+    const setting = 'wizard-draft-ttl';
+    return this.writeElectricitySetting(setting, actor, async (client) => {
+      await this.persistElectricitySetting(client, setting, { days }, actor, ip);
+      return { days };
+    });
+  }
+
+  electricityRecoveryHistory(
+    setting: ElectricitySettingRoute,
+    actor: StaffReadActor,
+    before?: number
+  ) {
+    return withStaffReadAuthority(actor, 'admin:catalogue:edit', async (client) => {
+      await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [
+        electricitySettingLock[setting],
+      ]);
+      const baseVersion = (await this.electricitySettingRow(client, setting))?.version ?? 0;
+      const history = await electricitySettingHistory(
+        client,
+        setting,
+        Math.min(baseVersion, before ?? baseVersion)
+      );
+      return {
+        baseVersion,
+        ...history,
+        draft: await readElectricitySettingDraft(client, setting, baseVersion),
+      };
+    });
+  }
+
+  stageElectricityRecovery(
+    setting: ElectricitySettingRoute,
+    input: { sourceId: string; expectedVersion: number },
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    return this.writeElectricitySetting(setting, actor, async (client) => {
+      const baseVersion = (await this.electricitySettingRow(client, setting))?.version ?? 0;
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Setting revision changed');
+      const {
+        items: [source],
+      } = await electricitySettingHistory(client, setting, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException('Setting revision not found');
+      await this.validateElectricityRecoveryValue(client, source.config);
+      const current = await readElectricitySettingDraft(client, setting, baseVersion);
+      if (current?.sourceId === source.id) return current;
+      const draft = {
+        id: uuidv7(),
+        baseVersion,
+        sourceId: source.id,
+        sourceVersion: source.version,
+        config: source.config,
+      };
+      await client.query(
+        `INSERT INTO audit_log (id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,$3,$4::jsonb,$5,$6,clock_timestamp())`,
+        [
+          draft.id,
+          actor.userId,
+          electricityRecoveryDraftEvent,
+          JSON.stringify({ key: electricitySettingKeys[setting], ...draft }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          ip,
+        ]
+      );
+      return draft;
+    });
+  }
+
+  activateElectricityRecovery(
+    setting: ElectricitySettingRoute,
+    input: { draftId: string; expectedVersion: number },
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    return this.writeElectricitySetting(setting, actor, async (client) => {
+      const baseVersion = (await this.electricitySettingRow(client, setting))?.version ?? 0;
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Setting revision changed');
+      const draft = await readElectricitySettingDraft(client, setting, baseVersion);
+      if (draft?.id !== input.draftId) throw new ConflictException('Recovery draft changed');
+      const version = await this.persistElectricitySetting(
+        client,
+        setting,
+        draft.config,
+        actor,
+        ip,
+        draft
+      );
+      return { config: draft.config, version, draftId: draft.id };
+    });
+  }
+
+  private async electricitySettingRow(client: PoolClient, setting: ElectricitySettingRoute) {
+    const { rows } = await client.query<{ value: unknown; version: number }>(
+      'SELECT value,version FROM app_config WHERE key=$1',
+      [electricitySettingKeys[setting]]
+    );
+    return rows[0];
+  }
+
+  private async validateElectricityRecoveryValue(
+    client: PoolClient,
+    config: ElectricityRecoveryConfig
+  ) {
+    if ('days' in config || config.versionId === null) return;
+    const { rows } = await client.query<{ placeholders: string[] }>(
+      `SELECT v.placeholders FROM contract_template_versions v
+       JOIN contract_templates t ON t.id=v.template_id
+       WHERE v.id=$1 AND t.status='active' FOR SHARE OF v,t`,
+      [config.versionId]
+    );
+    if (!rows[0]?.placeholders.every((name) => ['date', 'customerName', 'amount'].includes(name))) {
+      throw new InputFieldException(['versionId']);
+    }
+  }
+
+  private async persistElectricitySetting(
+    client: PoolClient,
+    setting: ElectricitySettingRoute,
+    config: ElectricityRecoveryConfig,
+    actor: StaffReadActor,
+    ip: string,
+    draft?: NonNullable<Awaited<ReturnType<typeof readElectricitySettingDraft>>>
+  ) {
+    await this.validateElectricityRecoveryValue(client, config);
+    const key = electricitySettingKeys[setting];
+    const previous = (
+      await client.query<{ value: unknown; version: number }>(
+        'SELECT value,version FROM app_config WHERE key=$1 FOR UPDATE',
+        [key]
+      )
+    ).rows[0];
+    const newValue = 'days' in config ? config.days : config.versionId;
+    const { rows } = await client.query<{ version: number }>(
+      `INSERT INTO app_config(key,value,version,updated_at)
+       VALUES($2,$1::jsonb,1,NOW())
+       ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
+         version=app_config.version+1,updated_at=NOW()
+       RETURNING version`,
+      [JSON.stringify(newValue), key]
+    );
+    const version = rows[0]!.version;
+    await client.query(
+      "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
+    );
+    await client.query(
+      `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+       VALUES($1,$2,'config_change',$3::jsonb,$4,$5,NOW())`,
+      [
+        uuidv7(),
+        actor.userId,
+        JSON.stringify({
+          key,
+          previousValue: previous?.value ?? null,
+          previousVersion: previous?.version ?? 0,
+          newValue,
+          version,
+          ...(draft && {
+            action: 'rollback_activated',
+            draftId: draft.id,
+            sourceId: draft.sourceId,
+            sourceVersion: draft.sourceVersion,
+          }),
+        }),
+        correlationIdStorage.getStore() ?? uuidv7(),
+        ip,
+      ]
+    );
+    return version;
+  }
+
+  private async writeElectricitySetting<T>(
+    setting: ElectricitySettingRoute,
+    actor: StaffReadActor,
+    write: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
       await requireSessionStepUp(client, actor);
-      await client.query("SELECT pg_advisory_xact_lock(hashtext('electricity-order-draft-ttl'))");
-      const previous = (
-        await client.query<{ value: unknown; version: number }>(
-          "SELECT value,version FROM app_config WHERE key='electricity.order_draft_ttl_days' FOR UPDATE"
-        )
-      ).rows[0];
-      const version = (
-        await client.query<{ version: number }>(
-          `INSERT INTO app_config(key,value,version,updated_at)
-         VALUES('electricity.order_draft_ttl_days',$1::jsonb,1,NOW())
-         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
-           version=app_config.version+1,updated_at=NOW()
-         RETURNING version`,
-          [JSON.stringify(days)]
-        )
-      ).rows[0]!.version;
-      await client.query(
-        "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
-      );
-      await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
-         VALUES($1,$2,'config_change',$3::jsonb,$4,$5,NOW())`,
-        [
-          uuidv7(),
-          actor.userId,
-          JSON.stringify({
-            key: 'electricity.order_draft_ttl_days',
-            previousValue: previous?.value ?? null,
-            previousVersion: previous?.version ?? 0,
-            newValue: days,
-            version,
-          }),
-          uuidv7(),
-          ip,
-        ]
-      );
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        electricitySettingLock[setting],
+      ]);
+      const result = await write(client);
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
-      return { days };
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

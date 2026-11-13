@@ -105,6 +105,77 @@ async function submit(host: HTMLElement, kind: Kind) {
   await act(async () => button(host, buttons[kind]).click());
   await flush(() => expect(dialog).not.toBeNull());
 }
+
+it.each([
+  {
+    title: 'Draft retention history',
+    setting: 'wizard-draft-ttl',
+    config: { days: 12 },
+    other: 'template',
+  },
+  {
+    title: 'Contract template selection history',
+    setting: 'electricity-contract-template',
+    config: { versionId: null },
+    other: 'retention',
+  },
+] as const)(
+  'restores $title through an exact reviewed draft and activation',
+  async ({ title, setting, config, other }) => {
+    const item = { id: '33333333-3333-4333-8333-333333333333', version: 1, config };
+    const draft = {
+      id: '44444444-4444-4444-8444-444444444444',
+      baseVersion: 2,
+      sourceId: item.id,
+      sourceVersion: item.version,
+      config,
+    };
+    let history = {
+      baseVersion: 2,
+      items: [item],
+      nextBeforeVersion: null,
+      draft: null as typeof draft | null,
+    };
+    const view = await mount((path) =>
+      path === `/api/admin/config/${setting}/rollback-history`
+        ? Response.json(history)
+        : defaultRead(path)
+    );
+    try {
+      await act(async () => button(view.host, title).click());
+      await act(async () => vi.dynamicImportSettled());
+      await flush(() => expect(button(view.host, 'Draft from revision 1')).not.toBeNull());
+      await act(async () => button(view.host, 'Draft from revision 1').click());
+      await flush(() =>
+        expect(dialog?.action).toMatchObject({
+          path: `/api/admin/config/${setting}/rollback-draft`,
+          body: { sourceId: item.id, expectedVersion: 2 },
+        })
+      );
+      await act(async () => dialog?.onPendingChange?.(true));
+      expect(field(view.host, other).matches(':disabled')).toBe(true);
+      history = { ...history, draft };
+      await act(async () => {
+        await dialog!.onSuccess(draft);
+      });
+      await flush(() => expect(button(view.host, 'Activate recovery draft')).not.toBeNull());
+      await act(async () => button(view.host, 'Activate recovery draft').click());
+      expect(dialog?.action).toMatchObject({
+        path: `/api/admin/config/${setting}/rollback-activate`,
+        body: { draftId: draft.id, expectedVersion: 2 },
+      });
+      await expect(dialog!.onSuccess({ draftId: draft.id, version: 4, config })).rejects.toThrow();
+      history = { ...history, baseVersion: 3, draft: null };
+      await act(async () => {
+        await dialog!.onSuccess({ draftId: draft.id, version: 3, config });
+      });
+      expect(within(view.host).queryByRole('dialog')).toBeNull();
+    } finally {
+      await view.close();
+    }
+  }
+);
+
 it('prepares a green recovery draft and requires an exact separate activation receipt', async () => {
   const original = greenConfig;
   let published = {
