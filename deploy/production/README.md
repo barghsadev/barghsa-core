@@ -135,6 +135,18 @@ between those two pools. The migration and job-worker procedures remain
 separate from traffic switching. Use the [rollback runbook](../../docs/runbooks/bad-deployment.md)
 if traffic cannot be restored and verified.
 
+For `scope.environment` set to `production`, the rollout requires the exact
+promotion report and a protected owner authorization record. Save the report
+before requesting approval. The record must contain `status` set to `approved`,
+the candidate `version` and `candidate_sha`, the exact plan `scope`,
+`plan_sha256`, `promotion_report_sha256`, `approved_by`, `approved_at` in UTC
+epoch seconds, and `authorization_reference` pointing to the owner's explicit
+approval of that plan. Save both JSON files as mode `0600` owned by the rollout
+operator, in the protected evidence directory. The guard checks the hashes
+before invoking any adapter and checks that the verified backup is still under
+24 hours old. An updated plan or report needs matching owner authorization.
+The rollout receipt records both hashes without including the approval text.
+
 Use `guarded-rollout.py` on the authorized ingress operator's host. It checks
 candidate smoke at zero traffic, advances through the configured percentages
 and waits for a fresh observation window at each percentage, including 100.
@@ -147,7 +159,9 @@ previous pool's readback.
 ```sh
 python3 deploy/production/guarded-rollout.py \
   --plan /protected/release-evidence/rollout-plan.json \
-  --receipt /protected/release-evidence/rollout-receipt.jsonl
+  --receipt /protected/release-evidence/rollout-receipt.jsonl \
+  --promotion-report /protected/release-evidence/promotion-report.json \
+  --owner-approval /protected/release-evidence/owner-approval.json
 ```
 
 Prepare one protected JSON plan for the approved environment. Keep plans for

@@ -1,5 +1,6 @@
 from contextlib import redirect_stderr
 import fcntl
+from hashlib import sha256
 import importlib.util
 import io
 import json
@@ -216,6 +217,74 @@ print(json.dumps(result))
 
 
 class IsolatedRolloutTest(unittest.TestCase):
+    def test_production_cli_binds_owner_approval_before_any_ingress_call(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            now = time.time()
+            selected = plan(now)
+            selected['scope'] = {'environment': 'production', 'database': 'core'}
+            selected['baseline']['scope'] = selected['scope']
+            hook = root / 'fixture-hook.py'
+            hook.write_text(FIXTURE)
+            state = root / 'traffic.json'
+            state.write_text(json.dumps({'weight': 0, 'changes': []}))
+            for kind in ('route', 'observe'):
+                selected[kind] = [sys.executable, str(hook), str(state), kind, 'healthy']
+            config = root / 'plan.json'
+            config.write_text(json.dumps(selected))
+            receipt = root / 'receipt.jsonl'
+            report = root / 'promotion.json'
+            report_data = {'status': 'ready_for_owner_review', 'version': '0.9.0',
+                           'candidate_sha': CANDIDATE['commit'], 'checked_at': now - 2,
+                           'verified_backup': {'backup_age_seconds': 60}}
+            report.write_text(json.dumps(report_data))
+            report.chmod(0o600)
+            approval = root / 'approval.json'
+            approval_data = {'status': 'approved', 'version': '0.9.0',
+                             'candidate_sha': CANDIDATE['commit'], 'scope': selected['scope'],
+                             'plan_sha256': sha256(config.read_bytes()).hexdigest(),
+                             'promotion_report_sha256': sha256(report.read_bytes()).hexdigest(),
+                             'approved_by': 'Fixture owner', 'authorization_reference': 'fixture approval',
+                             'approved_at': now - 1}
+
+            def execute(*arguments):
+                return subprocess.run(
+                    [sys.executable, str(SCRIPT), '--plan', str(config), '--receipt', str(receipt), *arguments],
+                    text=True, capture_output=True, timeout=15,
+                )
+
+            paths = ('--promotion-report', str(report), '--owner-approval', str(approval))
+            self.assertIn('production_approval_required', execute().stderr)
+            for data, error in (
+                ({**approval_data, 'scope': {'environment': 'production', 'database': 'other'}}, 'production_approval_mismatch'),
+                ({**approval_data, 'plan_sha256': 'd' * 64}, 'production_approval_mismatch'),
+                ({**approval_data, 'promotion_report_sha256': 'e' * 64}, 'production_approval_mismatch'),
+                ({**approval_data, 'authorization_reference': ''}, 'production_authorization_invalid'),
+            ):
+                with self.subTest(error=error):
+                    approval.write_text(json.dumps(data))
+                    approval.chmod(0o600)
+                    result = execute(*paths)
+                    self.assertEqual(result.returncode, 1)
+                    self.assertIn(error, result.stderr)
+                    self.assertFalse(receipt.exists())
+                    self.assertEqual(json.loads(state.read_text())['changes'], [])
+            approval.write_text(json.dumps(approval_data))
+            approval.chmod(0o644)
+            self.assertIn('unsafe_annotation_file', execute(*paths).stderr)
+            approval.chmod(0o600)
+            report.write_text(json.dumps({**report_data, 'checked_at': now - 86400}))
+            self.assertIn('production_backup_evidence_stale', execute(*paths).stderr)
+            report.write_text(json.dumps(report_data))
+            self.assertFalse(receipt.exists())
+            result = execute(*paths)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            plan_record = json.loads(receipt.read_text().splitlines()[0])
+            self.assertEqual(plan_record['approval_sha256'], sha256(approval.read_bytes()).hexdigest())
+            self.assertEqual(plan_record['promotion_report_sha256'], approval_data['promotion_report_sha256'])
+            self.assertNotIn('fixture approval', receipt.read_text())
+            self.assertEqual(json.loads(state.read_text())['changes'], [5, 100])
+
     def run_fixture(self, fault):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

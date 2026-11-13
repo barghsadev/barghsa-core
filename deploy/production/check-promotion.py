@@ -320,8 +320,9 @@ def main():
                     '--promotion', '--report', str(directory / 'quarantine.json'))
             counts = verify_browser_rollup(args.browser_run, directory)
         verify_staging(version, sha)
+        checked_at = time.time()
         backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
-                                        hashes['backup_and_restore'], time.time(), sha)
+                                        hashes['backup_and_restore'], checked_at, sha)
         release = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
                                           hashes['staging_and_telegram'], version, sha)
     except ValueError as error:
@@ -335,6 +336,7 @@ def main():
               file=sys.stderr)
         return 1
     print(json.dumps({'status': 'ready_for_owner_review', 'version': version, 'candidate_sha': sha,
+                      'checked_at': checked_at,
                       'ci': ci_url, 'browser': browser_url, 'browser_counts': counts,
                       'operational_receipt_sha256': hashes, 'verified_backup': backup,
                       'verified_staging_and_telegram': release}, indent=2))

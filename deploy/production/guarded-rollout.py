@@ -14,6 +14,8 @@ import sys
 import tempfile
 import time
 
+from release_evidence import ReleaseEvidenceError, protected_file
+
 
 MAX_JSON_BYTES = 65536
 SERVICES = ('electricity', 'saving', 'solar', 'consultation')
@@ -130,6 +132,41 @@ def validate_plan(plan, now):
             and os.path.isabs(command[0]),
             'invalid_' + key + '_command',
         )
+
+
+def protected_json(path):
+    with protected_file(path) as source:
+        content = source.read(MAX_JSON_BYTES + 1)
+    require(len(content) <= MAX_JSON_BYTES, 'approval_input_too_large')
+    value = json.loads(content)
+    require(isinstance(value, dict), 'invalid_approval_input')
+    return value, sha256(content).hexdigest()
+
+
+def verify_production_approval(plan, plan_digest, report_path, approval_path, now):
+    require(report_path is not None and approval_path is not None, 'production_approval_required')
+    report, report_digest = protected_json(report_path)
+    approval, approval_digest = protected_json(approval_path)
+    commit = plan['candidate']['commit']
+    require(report.get('status') == 'ready_for_owner_review' and report.get('version') == '0.9.0'
+            and report.get('candidate_sha') == commit, 'production_promotion_report_mismatch')
+    backup = report.get('verified_backup')
+    checked_at = report.get('checked_at')
+    require(finite(checked_at, 1, now) and isinstance(backup, dict)
+            and finite(backup.get('backup_age_seconds'), 0, 86400)
+            and backup['backup_age_seconds'] + now - checked_at < 86400,
+            'production_backup_evidence_stale')
+    require(approval.get('status') == 'approved' and approval.get('version') == report['version']
+            and approval.get('candidate_sha') == commit and approval.get('scope') == plan['scope']
+            and approval.get('plan_sha256') == plan_digest
+            and approval.get('promotion_report_sha256') == report_digest,
+            'production_approval_mismatch')
+    approver = approval.get('approved_by')
+    reference = approval.get('authorization_reference')
+    require(isinstance(approver, str) and 0 < len(approver.strip()) <= 200
+            and isinstance(reference, str) and 0 < len(reference.strip()) <= 2048
+            and finite(approval.get('approved_at'), checked_at, now), 'production_authorization_invalid')
+    return {'approval_sha256': approval_digest, 'promotion_report_sha256': report_digest}
 
 
 def hook(plan, kind, *, timeout=None, **fields):
@@ -315,6 +352,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plan', required=True, type=Path)
     parser.add_argument('--receipt', required=True, type=Path)
+    parser.add_argument('--promotion-report', type=Path)
+    parser.add_argument('--owner-approval', type=Path)
     args = parser.parse_args()
     os.umask(0o077)
     try:
@@ -324,18 +363,24 @@ def main():
         require(len(content) <= MAX_JSON_BYTES, 'plan_too_large')
         plan = json.loads(content)
         validate_plan(plan, time.time())
+        plan_digest = sha256(content).hexdigest()
         with (plan_path.parent / '.rollout.lock').open('a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            approval = {}
+            if plan['scope']['environment'] == 'production':
+                approval = verify_production_approval(
+                    plan, plan_digest, args.promotion_report, args.owner_approval, time.time()
+                )
             with args.receipt.open('x') as receipt:
                 def record(event, **fields):
                     receipt.write(json.dumps({'event': event, 'recorded_at': time.time(), **fields}) + '\n')
                     receipt.flush()
                     os.fsync(receipt.fileno())
 
-                record('plan', sha256=sha256(content).hexdigest(), scope=plan['scope'],
-                       candidate=plan['candidate'], previous=plan['previous'])
+                record('plan', sha256=plan_digest, scope=plan['scope'],
+                       candidate=plan['candidate'], previous=plan['previous'], **approval)
                 return roll_out(plan, record)
-    except RolloutError as error:
+    except (RolloutError, ReleaseEvidenceError) as error:
         print(str(error), file=sys.stderr)
         return 1
     except (OSError, ValueError, TypeError, RecursionError):

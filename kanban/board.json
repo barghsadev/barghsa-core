@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T13:44:46+00:00",
+  "updated": "2026-11-13T13:52:17+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8168,7 +8168,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8188,7 +8189,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8390,6 +8391,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -12344,7 +12353,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -12356,7 +12366,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12629,6 +12639,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -19349,7 +19367,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19361,7 +19380,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19517,6 +19536,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -19578,7 +19605,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19590,7 +19618,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19746,6 +19774,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -21652,7 +21688,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. Bind the checked report, actual image and off-server backup readbacks, and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
+        "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. The guarded production CLI now binds the exact plan and checked report to the protected owner authorization record and checks backup age. Still verify actual image and off-server backup readbacks and rehearse approved canary provisioning and ingress.",
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks."
       ],
       "owner": null,
@@ -21693,7 +21729,8 @@
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": null
       }
@@ -21838,7 +21875,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic run 43437113471 is in progress at protected-main commit 347938359. It does not certify the scheduled gate or report delivery.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21933,7 +21970,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-knowledge-query-error",
           "release-0.6-auth-entry-http-boundary",
-          "release-0.6-auth-entry-mounted-handoff"
+          "release-0.6-auth-entry-mounted-handoff",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": null
       }
@@ -31433,7 +31471,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -31454,7 +31493,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -31859,6 +31898,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -33946,7 +33993,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -33974,7 +34022,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             }
           ],
           "checks": [
@@ -34134,6 +34182,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -650153,7 +650209,8 @@
         ],
         "batches": [
           "release-0.6-runtime-secret-resolution",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -650165,7 +650222,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -650213,6 +650270,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -671744,7 +671809,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -671766,7 +671832,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
@@ -671984,6 +672050,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -672419,7 +672493,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -672441,11 +672516,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
@@ -672758,6 +672833,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -672871,7 +672955,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -672882,7 +672967,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -673131,6 +673216,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -673600,7 +673693,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -673621,7 +673715,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -673830,6 +673924,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -673872,7 +673974,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -673893,7 +673996,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -674102,6 +674205,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -680192,7 +680303,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -680216,7 +680328,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -680413,6 +680525,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -689962,7 +690082,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -690010,7 +690131,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -690195,6 +690316,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -690468,7 +690597,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -690516,7 +690646,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -690732,6 +690862,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -691784,7 +691922,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -691804,7 +691943,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -691926,6 +692065,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -692027,7 +692174,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -692047,7 +692195,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -692169,6 +692317,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -692208,7 +692364,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-production-approval-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -692228,7 +692385,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+              "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -692350,6 +692507,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-production-approval-binding",
+              "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
             }
           ]
         }
@@ -1202018,6 +1202183,92 @@
         {
           "file": "promotion.log",
           "sha256": "3c3ae0732e4bc0064fc0a08e4ee6395f1c97f3ef32da02170909a9d946ab5457"
+        }
+      ]
+    },
+    "release-0.6-production-approval-binding": {
+      "batch": "release-0.6-production-approval-binding",
+      "base_commit": "b92778c11e810c929a76ff726dc28c0f1072457c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/test_guarded_rollout.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "4687e8e52760b0c99341b44c73c9035e08252e4246d11934afff60f38267352e"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "bcac07be3030936fbc9a6b280c9e6b7fc12eab103f80cab42e0645cd2bee970c"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "f039c9501da800759f075e2b17b904331a6cf018404a676870dbb0d7d06eec04"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "1676dbfca1ca79bf72b86da0c3ebe3dee39765d698b59907f1428c44a17e5ea9"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        }
+      ],
+      "checks": [
+        "The guarded production command verifies the exact candidate, environment/database, plan bytes and checked promotion report against the protected owner authorization record before any ingress or monitoring adapter can run. It checks that the recorded backup is still younger than 24 hours.",
+        "Sixteen rollout and ten promotion tests passed. The native isolated adapter rejects missing, mismatched and improperly protected approval and stale backup evidence before touching traffic, and confirms that the correct fixture records both hashes without copying authorization details.",
+        "Manual browser run 43437113471 was dispatched and verified at protected-main commit 347938359. It tests the updated auth, header, registration, knowledge and limit settings together in all 40 hosted shards."
+      ],
+      "limitations": [
+        "Authorization records are operator-owned protected files and must point to the owner’s explicit approval. The isolated fixture did not exercise any real production ingress, issue an approval, or supply production credentials.",
+        "The browser run is diagnostic and has no recorded result yet. The clean scheduled candidate run and actual report delivery remain mandatory."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-production-approval-binding",
+      "execution_receipts": [
+        {
+          "file": "rollout.log",
+          "sha256": "2b3afb1096b1973616b7128c8613799b47b03f5411dbb2db2629f4d12963f74c"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "49226794a885d668c18245d50038f19d5526b4e6f503d3f04711e82d0dc787fe"
+        },
+        {
+          "file": "browser-dispatch.json",
+          "sha256": "96ab9cf52774d82d53a27596cecb31ff1606775b2f3d9508cd4a5151f2e28298"
         }
       ]
     }
