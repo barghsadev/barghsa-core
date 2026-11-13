@@ -926,6 +926,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/profile-verification-policy/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read audited verification policy activations */
+        get: operations["VerificationPolicyController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/security-rate-limits": {
         parameters: {
             query?: never;
@@ -13525,6 +13542,12 @@ export interface operations {
                         allowManualOverride: boolean;
                         autoVerifyStaff: boolean;
                     };
+                } | {
+                    /** @enum {string} */
+                    action: "restore";
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
                 };
             };
         };
@@ -13564,6 +13587,48 @@ export interface operations {
                             autoVerifyStaff: boolean;
                         } | null;
                         version: number;
+                    };
+                };
+            };
+        };
+    };
+    VerificationPolicyController_history: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: {
+                            /** Format: uuid */
+                            id: string;
+                            policy: {
+                                INDIVIDUAL: {
+                                    documents: ("national_id" | "birth_certificate" | "registration_notice" | "articles_of_association" | "representative_authority")[];
+                                    expiryDays: number | null;
+                                    required: boolean;
+                                };
+                                LEGAL: {
+                                    documents: ("national_id" | "birth_certificate" | "registration_notice" | "articles_of_association" | "representative_authority")[];
+                                    expiryDays: number | null;
+                                    required: boolean;
+                                };
+                                allowManualOverride: boolean;
+                                autoVerifyStaff: boolean;
+                            };
+                            version: number;
+                        }[];
+                        nextBeforeVersion: number | null;
                     };
                 };
             };

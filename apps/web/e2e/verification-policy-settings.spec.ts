@@ -10,6 +10,56 @@ import {
 } from '@barghsa/shared/verification';
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`reviews a prior verification policy before preparing a recovery draft (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const text = (key: Parameters<typeof copy>[0]) => copy(key, locale);
+    const path = '/api/admin/config/profile-verification-policy';
+    const id = '00000000-0000-4000-8000-000000000051';
+    const oldPolicy = structuredClone(DEFAULT_VERIFICATION_POLICY);
+    oldPolicy.LEGAL.documents = ['registration_notice'];
+    let view: VerificationPolicyView = {
+      active: DEFAULT_VERIFICATION_POLICY,
+      draft: null,
+      version: 4,
+    };
+    const commands: unknown[] = [];
+    await page.route(`**${path}/history`, (route) =>
+      route.fulfill({
+        json: { items: [{ id, version: 2, policy: oldPolicy }], nextBeforeVersion: null },
+      })
+    );
+    await page.route(`**${path}`, (route) => {
+      if (route.request().method() === 'PUT') {
+        commands.push(route.request().postDataJSON());
+        view = { ...view, draft: oldPolicy, version: 5 };
+      }
+      return route.fulfill({ json: view });
+    });
+    await page.goto('/admin/verification');
+    const section = page.getByRole('region', { name: text('policyTitle'), exact: true });
+    await section.getByRole('button', { name: text('policyHistory') }).click();
+    await section.getByRole('button', { name: text('policyRestore') }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText(text('registration_notice'), { exact: true })).toBeVisible();
+    expect(commands).toEqual([]);
+    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    expect(commands).toEqual([{ action: 'restore', sourceId: id, expectedVersion: 4 }]);
+    expect(view.active).toEqual(DEFAULT_VERIFICATION_POLICY);
+    await expect(
+      section
+        .getByRole('group', { name: text('LEGAL'), exact: true })
+        .getByRole('checkbox', { name: text('registration_notice'), exact: true })
+    ).toBeChecked();
+    await expect(
+      section.getByRole('button', { name: text('activate'), exact: true })
+    ).toBeEnabled();
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
   test(`verification read denial withdraws all three settings and late replies (${locale})`, async ({
     page,
   }) => {

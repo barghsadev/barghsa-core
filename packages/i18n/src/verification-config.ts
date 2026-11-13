@@ -5,6 +5,11 @@ const en = {
   policyWarning:
     'Required profiles still follow the active verification mode. Expiry uses the last successful verification and applies immediately after activation; older approvals with no recorded verification date require review when expiry is enabled. Staff auto-verification applies only to newly created staff profiles.',
   policySaved: 'Verification requirements saved at the confirmed revision.',
+  policyHistory: 'Verification requirements history',
+  policyHistoryEmpty: 'No previous activations on this page.',
+  policyRestore: 'Prepare recovery draft',
+  policyRestoreReview:
+    'Replace the saved draft with these requirements. Activation is a separate step.',
   INDIVIDUAL: 'Individual profiles',
   LEGAL: 'Legal profiles',
   policyRequired: 'Require identity verification for commercial orders',
@@ -126,6 +131,11 @@ const fa: Record<keyof typeof en, string> = {
   policyWarning:
     'الزام احراز هویت پروفایل تابع روش فعال است. انقضا از آخرین تأیید موفق محاسبه می‌شود و پس از فعال‌سازی اعمال می‌شود؛ تأییدهای قدیمی فاقد تاریخ ثبت‌شده با فعال‌شدن انقضا نیازمند بررسی هستند. تأیید خودکار کارکنان فقط برای پروفایل جدید ایجادشده در مسیر محافظت‌شده کارکنان است.',
   policySaved: 'الزامات احراز هویت در نسخه تأییدشده ذخیره شد.',
+  policyHistory: 'تاریخچه الزامات احراز هویت',
+  policyHistoryEmpty: 'در این صفحه سابقه‌ای از فعال‌سازی وجود ندارد.',
+  policyRestore: 'آماده‌سازی پیش‌نویس بازیابی',
+  policyRestoreReview:
+    'این الزامات جایگزین پیش‌نویس ذخیره‌شده می‌شوند. فعال‌سازی در مرحله‌ای جداگانه انجام می‌شود.',
   INDIVIDUAL: 'پروفایل‌های حقیقی',
   LEGAL: 'پروفایل‌های حقوقی',
   policyRequired: 'الزام احراز هویت برای سفارش تجاری',

@@ -7,6 +7,7 @@ import {
   VERIFICATION_DOCUMENT_TYPES,
   VERIFICATION_PROFILE_TYPES,
   isVerificationPolicyView,
+  isVerificationPolicy,
   verificationPolicyBasis,
   type VerificationPolicy,
   type VerificationPolicyView,
@@ -14,11 +15,40 @@ import {
 import { verificationConfigText as copy } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
+import { useCatalogueResource } from '../hooks/useCatalogueResource.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { CONFIG_AUDIT_ID } from '@barghsa/shared/admin';
 import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ConfigPreviewCard } from './ConfigPreviewCard.js';
 
 const path = '/api/admin/config/profile-verification-policy';
+type Revision = { id: string; version: number; policy: VerificationPolicy };
+type History = { items: Revision[]; nextBeforeVersion: number | null };
+type PolicyCommand = { expectedVersion: number } & (
+  | { action: 'draft' | 'activate'; policy: VerificationPolicy }
+  | { action: 'restore'; sourceId: string }
+);
+type Review = TeamAction & { body: PolicyCommand; policy: VerificationPolicy };
+const historyVersion = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value > 0 && value <= 2_147_483_647;
+function isHistory(value: unknown): value is History {
+  if (!value || typeof value !== 'object') return false;
+  const { items, nextBeforeVersion } = value as Partial<History>;
+  return (
+    Array.isArray(items) &&
+    items.length <= 20 &&
+    items.every(
+      (entry: Revision) =>
+        entry &&
+        typeof entry.id === 'string' &&
+        CONFIG_AUDIT_ID.test(entry.id) &&
+        historyVersion(entry.version) &&
+        isVerificationPolicy(entry.policy)
+    ) &&
+    (nextBeforeVersion === null || historyVersion(nextBeforeVersion))
+  );
+}
 const basis = (value: VerificationPolicyView) =>
   JSON.stringify([
     value.version,
@@ -28,14 +58,17 @@ const basis = (value: VerificationPolicyView) =>
 export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: () => void }) {
   const locale = useLocale(),
     text = (key: Parameters<typeof copy>[0]) => copy(key, locale);
+  const numbers = useNumberFormatting(locale);
   const [draft, setDraft] = useState<VerificationPolicy>(
     structuredClone(DEFAULT_VERIFICATION_POLICY)
   );
   const [expiry, setExpiry] = useState({ INDIVIDUAL: '', LEGAL: '' });
   const [invalid, setInvalid] = useState(false),
     [saved, setSaved] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null),
+  const [action, setAction] = useState<Review | null>(null),
     [pending, setPending] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [beforeVersion, setBeforeVersion] = useState<number | null>(null);
   const epoch = useRef(0),
     capturedEpoch = useRef(0),
     actionRef = useRef(action);
@@ -66,6 +99,23 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
   );
   const blocked = !state.ready || state.changed || state.uncertain;
   const busy = pending || !!action;
+  const { deny } = state.scope;
+  const denyHistory = useCallback(
+    (status?: 401 | 403) => {
+      deny(status);
+      onReadDenied?.();
+    },
+    [deny, onReadDenied]
+  );
+  const history = useCatalogueResource(
+    { ...state.scope, deny: denyHistory },
+    showHistory
+      ? `${path}/history${beforeVersion === null ? '' : `?beforeVersion=${beforeVersion}`}`
+      : null,
+    isHistory
+  );
+  const currentVersion = state.current?.version ?? 0;
+  const olderPage = history.data?.nextBeforeVersion ?? null;
   function proposal(): VerificationPolicy | null {
     const value = structuredClone(draft);
     for (const type of VERIFICATION_PROFILE_TYPES) {
@@ -76,9 +126,10 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
     }
     return value;
   }
-  function prepare(kind: 'draft' | 'activate') {
+  function prepare(command: 'draft' | 'activate' | Revision) {
     if (blocked || busy || !state.current) return;
-    const policy = proposal();
+    const kind = typeof command === 'string' ? command : 'restore';
+    const policy = typeof command === 'string' ? proposal() : command.policy;
     if (!policy) {
       setInvalid(true);
       const invalidType = VERIFICATION_PROFILE_TYPES.find(
@@ -98,13 +149,18 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
     setInvalid(false);
     setSaved(false);
     capturedEpoch.current = epoch.current;
+    const expectedVersion = state.current.version;
     setAction({
       path,
       method: 'PUT',
       requiresPassword: kind === 'activate',
-      title: text(kind === 'activate' ? 'activate' : 'save'),
-      description: text('policyWarning'),
-      body: { action: kind, policy, expectedVersion: state.current.version },
+      title: text(kind === 'restore' ? 'policyRestore' : kind === 'activate' ? 'activate' : 'save'),
+      description: text(kind === 'restore' ? 'policyRestoreReview' : 'policyWarning'),
+      body:
+        typeof command === 'string'
+          ? { action: command, policy, expectedVersion }
+          : { action: 'restore', sourceId: command.id, expectedVersion },
+      policy,
       forbiddenMessage: text('forbidden'),
       conflictMessage: text('conflict'),
     });
@@ -266,6 +322,71 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
           </fieldset>
         </form>
       )}
+      {state.current && !state.scope.denied && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-expanded={showHistory}
+          disabled={busy}
+          onClick={() => {
+            setShowHistory(!showHistory);
+            setBeforeVersion(null);
+          }}
+        >
+          {text('policyHistory')}
+        </Button>
+      )}
+      {showHistory && state.current && !state.scope.denied && (
+        <section aria-label={text('policyHistory')} className="space-y-3 border-t pt-4">
+          {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+          {history.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
+          {history.error && (
+            <Button type="button" variant="outline" onClick={history.retry}>
+              {text('policyReload')}
+            </Button>
+          )}
+          {!history.loading && !history.error && history.data && (
+            <>
+              {history.data.items.length === 0 && <p>{text('policyHistoryEmpty')}</p>}
+              {history.data.items.length > 0 && (
+                <ul className="divide-y">
+                  {history.data.items.map((revision) => (
+                    <li
+                      key={revision.id}
+                      className="flex flex-wrap items-center justify-between gap-3 py-2"
+                    >
+                      <span>
+                        {text('rateRecoveryVersion').replace(
+                          '{version}',
+                          numbers.number(revision.version, { useGrouping: false })
+                        )}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={blocked || busy || revision.version > currentVersion}
+                        onClick={() => prepare(revision)}
+                      >
+                        {text('policyRestore')}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {beforeVersion !== null && (
+                <Button type="button" variant="ghost" onClick={() => setBeforeVersion(null)}>
+                  {text('rateRecoveryLatest')}
+                </Button>
+              )}
+              {olderPage !== null && (
+                <Button type="button" variant="ghost" onClick={() => setBeforeVersion(olderPage)}>
+                  {text('rateRecoveryOlder')}
+                </Button>
+              )}
+            </>
+          )}
+        </section>
+      )}
       <Button
         type="button"
         variant="outline"
@@ -280,6 +401,7 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
       {action && (
         <TeamActionDialog
           action={action}
+          summary={action.body.action === 'restore' ? summary(action.policy) : undefined}
           onClose={withdraw}
           onDenied={state.denyCommand}
           onPendingChange={setPending}
@@ -292,26 +414,23 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
               state.scope.denied
             )
               return;
-            const body = action.body as {
-              action: 'draft' | 'activate';
-              policy: VerificationPolicy;
-              expectedVersion: number;
-            };
+            const { body, policy } = action;
             if (
               !isVerificationPolicyView(result) ||
               result.version !== body.expectedVersion + 1 ||
-              (body.action === 'draft'
+              (body.action !== 'activate'
                 ? !result.draft ||
-                  verificationPolicyBasis(result.draft) !== verificationPolicyBasis(body.policy) ||
+                  verificationPolicyBasis(result.draft) !== verificationPolicyBasis(policy) ||
                   verificationPolicyBasis(result.active) !==
                     verificationPolicyBasis(state.current!.active)
                 : result.draft !== null ||
-                  verificationPolicyBasis(result.active) !== verificationPolicyBasis(body.policy))
+                  verificationPolicyBasis(result.active) !== verificationPolicyBasis(policy))
             ) {
               state.unconfirmed();
               throw new Error('Unconfirmed verification policy');
             }
             if (!state.accept(result)) return;
+            if (body.action === 'activate' && showHistory) history.retry();
             setSaved(true);
             withdraw();
           }}

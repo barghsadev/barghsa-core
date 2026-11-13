@@ -4,12 +4,21 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Header,
   HttpCode,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   isVerificationPolicy,
   VERIFICATION_DOCUMENT_TYPES,
@@ -22,6 +31,7 @@ import { InputFieldException } from '../common/input-field.exception.js';
 import {
   changeVerificationPolicy,
   readVerificationPolicyConfig,
+  readVerificationPolicyHistory,
 } from './verification-policy-config.js';
 
 const requirementSchema: SchemaObject = {
@@ -59,13 +69,27 @@ const viewSchema: SchemaObject = {
     version: { type: 'integer', minimum: 0 },
   },
 };
-const schema = z
+const policyChange = z
   .object({
     action: z.enum(['draft', 'activate']),
     expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
     policy: z.custom<VerificationPolicy>(isVerificationPolicy),
   })
   .strict();
+const restoreChange = z.strictObject({
+  action: z.literal('restore'),
+  expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+  sourceId: z.uuid(),
+});
+const changeSchema = z.discriminatedUnion('action', [policyChange, restoreChange]);
+const historyQuery = z.strictObject({
+  beforeVersion: z
+    .string()
+    .regex(/^[1-9]\d{0,9}$/)
+    .transform(Number)
+    .pipe(z.number().int().max(2_147_483_647))
+    .optional(),
+});
 @ApiTags('Admin verification policy')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
@@ -78,24 +102,76 @@ export class VerificationPolicyController {
     if (!hasStaffPermission(req, 'admin:config:read')) throw new ForbiddenException();
     return readVerificationPolicyConfig();
   }
+  @Get('history')
+  @Header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+  @ApiOperation({ summary: 'Read audited verification policy activations' })
+  @ApiQuery({
+    name: 'beforeVersion',
+    required: false,
+    schema: { type: 'integer', minimum: 1, maximum: 2147483647 },
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['items', 'nextBeforeVersion'],
+      properties: {
+        items: {
+          type: 'array',
+          maxItems: 20,
+          items: {
+            type: 'object',
+            required: ['id', 'version', 'policy'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              version: { type: 'integer', minimum: 1 },
+              policy: policySchema,
+            },
+          },
+        },
+        nextBeforeVersion: { type: 'integer', nullable: true, minimum: 1 },
+      },
+    },
+  })
+  history(@Query() query: unknown, @Req() req: AuthenticatedRequest) {
+    if (!hasStaffPermission(req, 'admin:config:read')) throw new ForbiddenException();
+    const parsed = historyQuery.safeParse(query);
+    if (!parsed.success) throw new InputFieldException(['beforeVersion']);
+    return readVerificationPolicyHistory(req.session, parsed.data.beforeVersion);
+  }
   @Put()
   @ApiResponse({ status: 200, schema: viewSchema })
   @HttpCode(200)
   @ApiOperation({ summary: 'Save or activate exact versioned verification requirements' })
   @ApiBody({
     schema: {
-      type: 'object',
-      required: ['action', 'expectedVersion', 'policy'],
-      properties: {
-        action: { type: 'string', enum: ['draft', 'activate'] },
-        expectedVersion: { type: 'integer', minimum: 0 },
-        policy: policySchema,
-      },
+      oneOf: [
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['action', 'expectedVersion', 'policy'],
+          properties: {
+            action: { type: 'string', enum: ['draft', 'activate'] },
+            expectedVersion: { type: 'integer', minimum: 0 },
+            policy: policySchema,
+          },
+        },
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['action', 'expectedVersion', 'sourceId'],
+          properties: {
+            action: { type: 'string', enum: ['restore'] },
+            expectedVersion: { type: 'integer', minimum: 0 },
+            sourceId: { type: 'string', format: 'uuid' },
+          },
+        },
+      ],
     },
   })
   write(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:config:write')) throw new ForbiddenException();
-    const parsed = schema.safeParse(body);
+    const parsed = changeSchema.safeParse(body);
     if (!parsed.success) throw new InputFieldException(['policy']);
     return changeVerificationPolicy(parsed.data, req.session, req.ip ?? 'unknown');
   }

@@ -55,6 +55,13 @@ beforeEach(async () => {
   );
 });
 const read = () => fetch(http.base + path, { headers });
+const history = (query = '') => fetch(http.base + path + '/history' + query, { headers });
+const restore = (sourceId: string, expectedVersion: number) =>
+  fetch(http.base + path, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ action: 'restore', sourceId, expectedVersion }),
+  });
 const write = (policy: VerificationPolicy, action = 'draft', expectedVersion = 0) =>
   fetch(http.base + path, {
     method: 'PUT',
@@ -222,6 +229,57 @@ it('rejects malformed policy, revoked authority and missing CSRF before changing
       )
     ).rows
   ).toEqual([]);
+});
+it('restores an audited activation as a new draft and requires separate step-up to publish it', async () => {
+  const first = structuredClone(DEFAULT_VERIFICATION_POLICY);
+  first.LEGAL.documents = ['registration_notice'];
+  const second = structuredClone(first);
+  second.LEGAL.expiryDays = 21;
+  expect((await write(first)).status).toBe(200);
+  expect((await write(first, 'activate', 1)).status).toBe(200);
+  expect((await write(second, 'draft', 2)).status).toBe(200);
+  expect((await write(second, 'activate', 3)).status).toBe(200);
+
+  const response = await history('?beforeVersion=4');
+  expect(response.status).toBe(200);
+  expect(response.headers.get('cache-control')).toBe(
+    'private, no-cache, no-store, must-revalidate'
+  );
+  const revisions = (await response.json()) as {
+    items: { id: string; version: number; policy: VerificationPolicy }[];
+  };
+  expect(revisions.items).not.toContainEqual(expect.objectContaining({ version: 4 }));
+  const source = revisions.items.find(
+    (item) =>
+      item.policy.LEGAL.documents.includes('registration_notice') && item.policy.autoVerifyStaff
+  );
+  expect(source).toEqual({ id: expect.any(String), version: 2, policy: first });
+  if (!source) throw new Error('Missing verification policy revision');
+  const { id } = source;
+  expect((await history('?beforeVersion=0')).status).toBe(400);
+  expect((await restore(randomUUID(), 4)).status).toBe(404);
+  expect((await restore(id, 3)).status).toBe(409);
+
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    session,
+  ]);
+  expect((await restore(id, 4)).status).toBe(200);
+  expect(await (await read()).json()).toEqual({ active: second, draft: first, version: 5 });
+  expect((await write(first, 'activate', 5)).status).toBe(403);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+    session,
+  ]);
+  expect((await write(first, 'activate', 5)).status).toBe(200);
+  expect(await (await read()).json()).toEqual({ active: first, draft: null, version: 6 });
+  const audit = await http.pool.query(
+    `SELECT metadata::jsonb->>'action' AS action, metadata::jsonb->'restoredFrom' AS source
+    FROM audit_log WHERE metadata IS JSON OBJECT AND metadata::jsonb#>>'{restoredFrom,id}'=$1
+    ORDER BY created_at`,
+    [id]
+  );
+  expect(audit.rows).toEqual(
+    ['restore', 'activate'].map((action) => ({ action, source: { id, version: 2 } }))
+  );
 });
 it('rolls back activation and its revision if durable audit fails', async () => {
   expect((await write(DEFAULT_VERIFICATION_POLICY)).status).toBe(200);
