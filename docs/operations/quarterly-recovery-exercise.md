@@ -1,21 +1,24 @@
 # Quarterly recovery exercise
 
 Operations coordinates the quarterly exercise with the database operator,
-Security and Finance. Run the hosted checks from the approved review ref before
-reviewing the target environment.
+Security and Finance. GitHub Actions runs the hosted fixtures on the default
+branch at 04:17 UTC on January 1, April 1, July 1 and October 1. Use that run
+when it matches the approved review revision. For a different revision,
+dispatch the workflow from the approved review ref.
 
 ```sh
 gh workflow run storage-recovery-quarterly.yml --ref "$REVIEW_REF"
-gh run view "$REVIEW_RUN_ID" --json headSha,event,status,conclusion
+gh run view "$REVIEW_RUN_ID" --json headSha,event,status,conclusion,jobs
 gh run download "$REVIEW_RUN_ID" --dir "$REVIEW_EVIDENCE_DIR"
 shasum -a 256 -c "$REVIEW_EVIDENCE_DIR/quarterly-operator-review/review-sources.sha256"
 ```
 
-Use the run ID for the manual dispatch. Confirm its full commit SHA matches the
-review ref. Run the checksum command from a checkout of that revision. The
-operator artifact reports the outcome of each job and binds the procedures to
-that commit. The storage job also keeps its existing independent quarterly
-schedule.
+For a scheduled run, omit the dispatch command and use the scheduled run ID.
+Confirm the run's full commit SHA matches the approved revision. Check the
+event, attempt and all three fixture outcomes in
+`quarterly-operator-review/outcomes.json` against GitHub Actions. Run the
+checksum command from a checkout of that revision. Retain the packet even
+when a job fails, and resolve failed or skipped fixture checks before review.
 
 ## Recovery and review
 

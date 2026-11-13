@@ -1,4 +1,4 @@
-name: Quarterly object storage recovery
+name: Quarterly recovery and access review
 
 on:
   schedule:
@@ -63,7 +63,6 @@ jobs:
 
   database-recovery:
     name: Rehearse PostgreSQL and configuration recovery
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -88,7 +87,6 @@ jobs:
 
   access-and-incident:
     name: Verify access inventory and incident recovery controls
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -132,7 +130,7 @@ jobs:
 
   review-packet:
     name: Bind the exercise results and operator procedures to the revision
-    if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' }}
+    if: ${{ !cancelled() }}
     needs: [recover, database-recovery, access-and-incident]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -149,9 +147,12 @@ jobs:
           packet="$RUNNER_TEMP/quarterly-review"
           mkdir -p "$packet"
           jq -n --arg sha "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" \
+            --arg attempt "$GITHUB_RUN_ATTEMPT" --arg event "$GITHUB_EVENT_NAME" \
             --arg storage "$OBJECT_RECOVERY" --arg database "$DATABASE_RECOVERY" \
             --arg access_incident "$ACCESS_AND_INCIDENT" \
-            '{source_sha: $sha, run_id: $run, scope: "isolated-fixtures", jobs: {object_recovery: $storage, database_recovery: $database, access_and_incident: $access_incident}}' \
+            '{source_sha: $sha, run_id: $run, run_attempt: $attempt, event: $event,
+              scope: "isolated-fixtures", jobs: {object_recovery: $storage,
+              database_recovery: $database, access_and_incident: $access_incident}}' \
             > "$packet/outcomes.json"
           sha256sum docs/operations/quarterly-recovery-exercise.md \
             docs/operations/backup/postgresql-restore-runbook.md \

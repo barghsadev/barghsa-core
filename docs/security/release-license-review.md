@@ -61,9 +61,15 @@ read back from every installed package. Each of these web package entries
 passes the existing allowlist. The fixture scan found one medium zlib
 finding and zero high or critical findings. Its SBOM SHA-256 is
 `30cdbd1c2c7387e1cff56c3fce81762a2de562d2cc6d7c4c340ac49dd6548922`.
-The 387 hosted dispositions still require named sign-off. Confirm the
-telemetry package scopes, notices and scan results on the final immutable
-Linux amd64 images.
+Hosted preflight `0614369c` reproduced all 848 earlier rows on Linux amd64
+and added the same 11 Apache-2.0 web packages. All five CycloneDX SBOMs and
+vulnerability reports match their image receipts, with zero high or
+critical findings. The report-only license inventory contains 859 rows,
+including 472 allowed and the same 387 awaiting named disposition. Its
+SHA-256 is
+`8daf77014ddbdd918a1170609be3b881571f6c2cfc4ee355d56c86b14aceede6`.
+Read back the installed notices and strict gate results on the final
+immutable release images. [Hosted Linux amd64 image job](https://github.com/barghsadev/barghsa-core/actions/runs/43468289014/job/132033194129).
 
 ## Reviewer and approval
 

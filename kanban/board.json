@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T16:58:47+00:00",
+  "updated": "2026-11-13T17:07:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22298,7 +22298,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Confirm their web scope and the unchanged review-required set on the final Linux amd64 images.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -22356,7 +22356,8 @@
           "release-0.6-postgres-restore-readback",
           "release-0.6-refreshed-license-review",
           "release-0.6-license-inventory-reuse",
-          "release-0.6-web-license-delta"
+          "release-0.6-web-license-delta",
+          "release-0.6-amd64-license-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -23324,7 +23325,8 @@
       "launch_required": true,
       "remaining": [
         "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
-        "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files."
+        "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files.",
+        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
       ],
       "owner": null,
       "depends_on": [],
@@ -23364,7 +23366,8 @@
           "release-0.6-hosted-quarterly-storage-recovery",
           "release-0.6-quarterly-storage-schedule-activation",
           "release-0.6-quarterly-manual-exercise",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": null
       }
@@ -23385,7 +23388,8 @@
       "launch_required": true,
       "remaining": [
         "Run the approved quarterly review for the production-equivalent environment. The read-only staging report and migrated PostgreSQL checks verify the automated staff, masked credential and database login inventory.",
-        "Reconcile exact credential issuance and last use with protected provider and runtime inventories, identify external service account owners, and record the signed access and threat-model review with follow-up owners."
+        "Reconcile exact credential issuance and last use with protected provider and runtime inventories, identify external service account owners, and record the signed access and threat-model review with follow-up owners.",
+        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
       ],
       "owner": null,
       "depends_on": [],
@@ -23425,7 +23429,8 @@
         ],
         "batches": [
           "release-0.6-quarterly-access-review",
-          "release-0.6-quarterly-manual-exercise"
+          "release-0.6-quarterly-manual-exercise",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": null
       }
@@ -33024,7 +33029,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -33052,7 +33058,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
@@ -33169,6 +33175,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -33907,7 +33921,8 @@
           "release-0.6-journey-budget-burndown",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -33939,7 +33954,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
@@ -34152,6 +34167,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -47836,7 +47859,8 @@
           "release-0.6-license-review-roles",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-web-server-tracing",
-          "release-0.6-web-license-delta"
+          "release-0.6-web-license-delta",
+          "release-0.6-amd64-license-readback"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -47992,7 +48016,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "11fe1873257336c20ce26e841c4e4ade4f082dc00d60d89e48d38b725c8a2b1e"
+              "sha256": "7118aa8b6c46175a9f5a6478238a26d81aee5fd75bf801d4c529e77da7a018a7"
             }
           ],
           "checks": [
@@ -48500,6 +48524,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "Additive web-runtime inventory and hosted receipt evidence. Existing license policy and accepted criteria are preserved."
+            },
+            {
+              "batch": "release-0.6-amd64-license-readback",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Only the Linux amd64 hosted readback was added to the reviewer packet. No shipped bytes, allowed license policy or accepted task behavior changed."
             }
           ],
           "presentation_renewals": [
@@ -671230,7 +671262,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Confirm their web scope and the unchanged review-required set on the final Linux amd64 images.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Hosted Linux amd64 image job 132033194129 on 0614369c verified all 859 rows, including the 11 Apache-2.0 web entries and the same exact 387 review-required rows. Verify installed notices and strict gate results on the final immutable release images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
         "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt."
@@ -671286,7 +671318,8 @@
           "release-0.6-postgres-restore-readback",
           "release-0.6-refreshed-license-review",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-web-license-delta"
+          "release-0.6-web-license-delta",
+          "release-0.6-amd64-license-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -671431,7 +671464,8 @@
         "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
         "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately.",
         "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence.",
-        "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts."
+        "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts.",
+        "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -671479,7 +671513,8 @@
           "release-0.6-portable-staging-images",
           "release-0.6-postgres-package-alignment",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-web-license-delta"
+          "release-0.6-web-license-delta",
+          "release-0.6-amd64-license-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -688391,7 +688426,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the installed timer on the approved dedicated backup host, execute its isolated restore against an authenticated off-server backup and independent baseline, and retain measured RPO/RTO and failure-alert receipts."
+        "Read back the installed timer on the approved dedicated backup host, execute its isolated restore against an authenticated off-server backup and independent baseline, and retain measured RPO/RTO and failure-alert receipts.",
+        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
       ],
       "owner": null,
       "depends_on": [],
@@ -688405,7 +688441,8 @@
         ],
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
-          "release-0.6-quarterly-manual-exercise"
+          "release-0.6-quarterly-manual-exercise",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": null
       }
@@ -688437,7 +688474,8 @@
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-hosted-quarterly-storage-recovery",
           "release-0.6-quarterly-storage-schedule-activation",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "kind": "default-branch-schedule-and-exact-hosted-cases",
@@ -688445,7 +688483,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/storage-recovery-quarterly.yml",
-              "sha256": "c53acbf6b7b961d513be0546579aaac4ff6bf41c339ea01de05b46123fd69184"
+              "sha256": "df93404ff451b7586dfe3ab1832451f034752c38a478a99ef5b6d589706448d6"
             },
             {
               "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
@@ -688457,7 +688495,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
@@ -688557,6 +688595,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                ".github/workflows/storage-recovery-quarterly.yml",
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -692893,7 +692940,8 @@
         ],
         "batches": [
           "release-0.6-quarterly-manual-exercise",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "batch": "release-0.6-quarterly-manual-exercise",
@@ -692901,15 +692949,15 @@
           "source_evidence": [
             {
               "path": ".github/workflows/storage-recovery-quarterly.yml",
-              "sha256": "c53acbf6b7b961d513be0546579aaac4ff6bf41c339ea01de05b46123fd69184"
+              "sha256": "df93404ff451b7586dfe3ab1832451f034752c38a478a99ef5b6d589706448d6"
             },
             {
               "path": "docs/operations/quarterly-recovery-exercise.md",
-              "sha256": "124d177ec579c95cf9eb43672a782823083df26fd4fc9daf657d3a0192b3bfc1"
+              "sha256": "7fd79628480b23e4297024f7adb1f6183f7122e9bf87aac0257c19b50adcdbd7"
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             },
             {
               "path": "package.json",
@@ -692980,6 +693028,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                ".github/workflows/storage-recovery-quarterly.yml",
+                "docs/operations/quarterly-recovery-exercise.md",
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -709446,7 +709504,8 @@
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-quarterly-storage-recovery"
+          "release-0.6-quarterly-storage-recovery",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -709454,7 +709513,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -709490,6 +709549,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -709733,7 +709800,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-quarterly-scheduled-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -709799,7 +709867,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "8bd93227dd80f59fcf89e561e9697e112a3769b9f97ae9240ec62e8d5517f7cf"
+              "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
             }
           ],
           "source_renewals": [
@@ -710002,6 +710070,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-quarterly-scheduled-fixtures",
+              "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
             }
           ]
         }
@@ -1235755,6 +1235831,205 @@
         {
           "file": "predecessor-132023029209.log",
           "sha256": "e5ebe0064ed8cc27c9323a74bbd36938104d1d157192deb6b2d4747b7859d9e9"
+        }
+      ]
+    },
+    "release-0.6-quarterly-scheduled-fixtures": {
+      "batch": "release-0.6-quarterly-scheduled-fixtures",
+      "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-05.05.04",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.11.04.04",
+        "06-security-testing-observability.md#T-06.11.04.05",
+        "06-security-testing-observability.md#T-06.12.05.03",
+        "06-security-testing-observability.md#T-06.17.01.04",
+        "06-security-testing-observability.md#T-06.17.01.08"
+      ],
+      "changed_paths": [
+        ".github/workflows/storage-recovery-quarterly.yml",
+        "docs/operations/quarterly-recovery-exercise.md",
+        "docs/runbooks/storage-outage.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/storage-recovery-quarterly.yml",
+          "sha256": "df93404ff451b7586dfe3ab1832451f034752c38a478a99ef5b6d589706448d6"
+        },
+        {
+          "path": "docs/operations/quarterly-recovery-exercise.md",
+          "sha256": "7fd79628480b23e4297024f7adb1f6183f7122e9bf87aac0257c19b50adcdbd7"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "3573c9c4136ada7c97cacd95e8d16294fb4b5862ca237c03ec78655bac8961f6"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "sha256": "91fa8a2c904018eb58b3a4b7f08ac305936e97c13e957a37859083bd54ea97d3"
+        },
+        {
+          "path": "packages/db/src/quarterly-access-review.migrated.test.ts",
+          "sha256": "28b266059f152d3f4d787b51e0486a89c1eb9ac7a9c3052106939572f3a61052"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "d030334b1f7363a3ff85eaedbf77ed8496f127ed322a72e682b03d1040b1fe99"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+        },
+        {
+          "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
+          "sha256": "a7a26cd9f28ae62b27333764d7f0bb8800b573bf4298b5e33fec9c06595561ce"
+        }
+      ],
+      "checks": [
+        "The existing quarterly schedule now runs all three fixture jobs. actionlint and the focused check verified the schedule, dependencies and unchanged executable fixture steps.",
+        "Executed the packet step with scheduled, manual and push contexts. Verified the complete success, failure or skipped outcomes, run and attempt identity, and all nine file hashes.",
+        "Historical hosted manual run 43171754708 passed the same fixture jobs. The corrected hosted job outputs remain available separately."
+      ],
+      "limitations": [
+        "Hosted execution of the revised workflow and the first actual scheduled run remain pending. The backup-host timer, measured off-server recovery and signed access/threat-model review remain separate criteria."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-scheduled-fixtures",
+      "execution_receipts": [
+        {
+          "file": "validation.log",
+          "sha256": "f48b06e5e64cafa10214c1bacec9ebbc3c2a8aee3223ec9c292c1bb958555262"
+        },
+        {
+          "file": "check-workflow.py",
+          "sha256": "b977228a725940f3c0227b82fdadc963436ba37aa0cf39bdd213e63dff43f00e"
+        },
+        {
+          "file": "schedule/quarterly-review/outcomes.json",
+          "sha256": "9a31ef96f9b69c7b9ec52b72184fb214dd33697e3b78b2422e85c425e91e4db7"
+        },
+        {
+          "file": "schedule/quarterly-review/review-sources.sha256",
+          "sha256": "252bc74bfde54d8fb4c5ee20e4f7e116250217bf77720f6bbc9800be065d57b8"
+        },
+        {
+          "file": "workflow_dispatch/quarterly-review/outcomes.json",
+          "sha256": "d880dfcdcbaef772fac321b8da000ce57a2697e3f65bfc34f6e4dffc9635ed7b"
+        },
+        {
+          "file": "push/quarterly-review/outcomes.json",
+          "sha256": "76ef8338eabdf90db096983a8b8df73c5c1279ca2c580547fbaa53611c5a679e"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-manual-exercise/corrected/quarterly-operator-review/outcomes.json",
+          "sha256": "0b7682f12a97f55f7c731c79f4d7f2c2644d4cc8db44500b81edd93e9480ffd8"
+        }
+      ]
+    },
+    "release-0.6-amd64-license-readback": {
+      "batch": "release-0.6-amd64-license-readback",
+      "base_commit": "0614369c83e43dee945cda797d19018ff66f668b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "7118aa8b6c46175a9f5a6478238a26d81aee5fd75bf801d4c529e77da7a018a7"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1234d2cb59978e5f79dfcd4ad7222202174d08bf677d00c8c082de2d8ad3bc5b"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "5316c0ab8fcfac0464598964557549b30674274810a6fb8f1550fa04fe8a488c"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "8403f43c0a4c78b10871fc6e3805fe623a87573b7f8cbca777cb14e272924b56"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Hosted run 43468289014 image job 132033194129 passed on 0614369c. Verified the five Linux amd64 image IDs against the license report, and the exact CycloneDX and vulnerability bytes against each receipt.",
+        "The inventory contains 859 rows. It preserves all 848 previous rows and adds only the eleven Apache-2.0 OpenTelemetry packages in the web scope. The exact 387 review-required rows are unchanged.",
+        "The five reports have zero high and critical findings. Existing medium, low and unknown results remain in the matched reports."
+      ],
+      "limitations": [
+        "The license report ran in report-only mode. Named package dispositions, installed notices on the final release and strict license evidence are still required. Hosted image receipts do not certify the deployed images."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-amd64-license-readback",
+      "execution_receipts": [
+        {
+          "file": "run.json",
+          "sha256": "d8bafd1133f80b9e4c1cf06b9fae616d53ad8465773c4f200e49f1df5f776e92"
+        },
+        {
+          "file": "verify.py",
+          "sha256": "90dc3108361f1e80c1c7e9476fec5eda51778ba6fd956f009a84ab92dac91ae0"
+        },
+        {
+          "file": "verify.log",
+          "sha256": "0264352d0dd3a36de7c0e4c3aeb1918c13f8a8cddf0127d9bfb7fa77c569739c"
+        },
+        {
+          "file": "verified.json",
+          "sha256": "396abb9bd579ab947df6733dec5033b798c4d737be7cc96345b3ca6158897a9f"
+        },
+        {
+          "file": "current/release-licenses.json",
+          "sha256": "8daf77014ddbdd918a1170609be3b881571f6c2cfc4ee355d56c86b14aceede6"
+        },
+        {
+          "file": "current/1-image.json",
+          "sha256": "4a4622414947ac9fd0f1cf13f5f12072d9c235e836fd69174f3bc214c18150d2"
+        },
+        {
+          "file": "current/2-image.json",
+          "sha256": "7085fe7aa2dc8ed822f27def5e1ddeb045810afd9893c83f9c1df0d6e0e0b3f3"
+        },
+        {
+          "file": "current/3-image.json",
+          "sha256": "994fece007d92ebdd92574303e60fac06d8e9acf57e91b373cebdaaa63b08973"
+        },
+        {
+          "file": "current/4-image.json",
+          "sha256": "f5add0af18d8756a2b697266d376bb35ba3c32dd5e4c23ebce7a78cac0326c47"
+        },
+        {
+          "file": "current/5-image.json",
+          "sha256": "67cb1616ffed89f9bcc6d9a2e516698a2cc4bb43696076fd4bab1f3afaecfabf"
         }
       ]
     }
