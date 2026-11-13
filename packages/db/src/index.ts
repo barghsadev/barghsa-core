@@ -4,8 +4,10 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
 import { X509Certificate } from 'node:crypto';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { createOperatorLogger, currentTraceparent } from '@barghsa/shared/operator-logging';
 import { wrapTransactionPoolClient } from './transaction-pool.js';
+import { traceClientQueries } from './query-tracing.js';
 import { permitsPilotSchemaTransition } from './pilot-schema-transition.js';
 
 export { PILOT_SCHEMA_TRANSITION_VERSION } from './pilot-schema-transition.js';
@@ -327,7 +329,7 @@ export function wrapClientQuery(
 }
 
 /**
- * Attach the slow-query logging and query-timeout guard to a pool. Registered
+ * Attach query timeouts, slow-query logging and tracing to a pool. Registered
  * per-client via the pool's `connect` event.
  */
 function attachClientQueryHooks(
@@ -335,17 +337,20 @@ function attachClientQueryHooks(
   timeoutPolicy: QueryTimeoutPolicy,
   transactionConfig?: DbPoolConfig
 ): void {
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    typeof timeoutPolicy === 'number' &&
-    timeoutPolicy <= 0 &&
-    !transactionConfig
-  )
-    return;
-
+  const guardQueries =
+    process.env.NODE_ENV === 'production' ||
+    typeof timeoutPolicy !== 'number' ||
+    !(timeoutPolicy <= 0) ||
+    Boolean(transactionConfig);
+  const connect = pool.connect.bind(pool);
+  // pg-pool can hand a waiting callback a client in the previous borrower's context.
+  pool.connect = ((callback?: Parameters<Pool['connect']>[0]) =>
+    callback ? connect(AsyncLocalStorage.bind(callback)) : connect()) as Pool['connect'];
   pool.on('connect', (client: Client) => {
-    const query = wrapClientQuery(client, timeoutPolicy, !!transactionConfig);
-    client.query = transactionConfig
+    const query = guardQueries
+      ? wrapClientQuery(client, timeoutPolicy, !!transactionConfig)
+      : client.query;
+    const execute = transactionConfig
       ? wrapTransactionPoolClient(client, query, {
           statementTimeout: transactionConfig.statementTimeout ?? DEFAULT_STATEMENT_TIMEOUT,
           lockTimeout: transactionConfig.lockTimeout ?? DEFAULT_LOCK_TIMEOUT,
@@ -360,6 +365,7 @@ function attachClientQueryHooks(
                 : timeoutPolicy.write,
         })
       : query;
+    client.query = traceClientQueries(execute, client);
   });
 }
 

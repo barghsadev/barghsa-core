@@ -124,6 +124,62 @@ it('preserves callbacks, query configs and explicit uniform settings', async () 
   expect((await db.query('SELECT 1 AS value')).rows).toEqual([{ value: 1 }]);
 });
 
+it('keeps trace parents separate when a queued query inherits a released client', async () => {
+  const db = await pool({ poolMax: 1, statementTimeout: '200ms', queryTimeout: 0 });
+  const { currentTraceparent, operatorLogTrace } = await import('@barghsa/shared/operator-logging');
+  const { operationTracer } = await import('@barghsa/shared/telemetry');
+  const end = vi.fn();
+  const setStatus = vi.fn();
+  const startSpan = vi.fn((_name, _options, _context) => ({ setStatus, end }));
+  const tracer = { startSpan } as unknown as Parameters<typeof operationTracer.run>[0];
+  const traceId = '71'.repeat(16);
+  const caller = { traceId, spanId: '72'.repeat(8), traceFlags: 1 };
+  const previous = { traceId: '73'.repeat(16), spanId: '74'.repeat(8), traceFlags: 1 };
+  const traceparent = `00-${traceId}-${caller.spanId}-01`;
+  const held = await db.connect();
+  let released = false;
+  try {
+    const waiting = operationTracer.run(tracer, () =>
+      operatorLogTrace.run(
+        caller,
+        () =>
+          new Promise((resolve, reject) => {
+            db.query(
+              {
+                text: "SELECT $1::text AS value, current_setting('barghsa.traceparent') AS parent",
+                values: ['private fixture value'],
+              },
+              (error, result) =>
+                error ? reject(error) : resolve({ rows: result.rows, parent: currentTraceparent() })
+            );
+          })
+      )
+    );
+    expect(db.waitingCount).toBe(1);
+    operationTracer.run(tracer, () => operatorLogTrace.run(previous, () => held.release()));
+    released = true;
+    expect(await waiting).toEqual({
+      rows: [{ value: 'private fixture value', parent: traceparent }],
+      parent: traceparent,
+    });
+    await operationTracer.run(tracer, () =>
+      operatorLogTrace.run(caller, async () => {
+        await expect(db.query('SELECT pg_sleep(0.4)')).rejects.toMatchObject({ code: '57014' });
+      })
+    );
+    await db.query('SELECT 1');
+    expect(startSpan).toHaveBeenCalledTimes(2);
+    for (const [name, options] of startSpan.mock.calls) {
+      expect(name).toBe('postgresql.query');
+      expect(options).toEqual({ kind: 2, attributes: { 'db.system.name': 'postgresql' } });
+    }
+    expect(setStatus.mock.calls).toEqual([[{ code: 2 }]]);
+    expect(end).toHaveBeenCalledTimes(2);
+  } finally {
+    if (!released) held.release();
+  }
+});
+
 it('expires queued reads without executing their side effects', async () => {
   const db = await pool({ readTimeoutMs: 100, writeTimeoutMs: 1000 });
   await db.query('CREATE SEQUENCE pooled_queue_effect');

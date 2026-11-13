@@ -5,10 +5,13 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { createServer as createCollector } from 'node:http';
 import { SpanKind } from '@opentelemetry/api';
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-import { createTraceProvider, extractTraceparent } from '@barghsa/shared/telemetry';
+import {
+  createTraceProvider,
+  extractTraceparent,
+  operationTracer,
+} from '@barghsa/shared/telemetry';
 import type { Redis } from 'ioredis';
 import { afterEach, expect, it, vi } from 'vitest';
-import { apiOperationTracer } from '../metrics/domain-tracing.js';
 import { RedisModule, REDIS_CLIENT } from './redis.module.js';
 
 afterEach(() => vi.unstubAllEnvs());
@@ -145,7 +148,7 @@ it('exports bounded Redis spans under the request parent without command data', 
       extractTraceparent(`00-${traceId}-f929292929292929-00`)
     );
     try {
-      await apiOperationTracer.run(tracer, () =>
+      await operationTracer.run(tracer, () =>
         operatorLogTrace.run(parent.spanContext(), async () => {
           expect(await redis.get(secret)).toBe(secret);
           await expect(redis.eval(secret, 0)).rejects.toThrow(secret);

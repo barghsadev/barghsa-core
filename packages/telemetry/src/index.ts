@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { ROOT_CONTEXT, SpanKind, SpanStatusCode, defaultTextMapGetter } from '@opentelemetry/api';
 import { W3CTraceContextPropagator, hrTimeToMilliseconds } from '@opentelemetry/core';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
@@ -25,6 +26,22 @@ export async function collectorAgent(protocol: string, timeoutMs: number) {
 }
 
 const propagation = new W3CTraceContextPropagator();
+export const operationTracer = new AsyncLocalStorage<Tracer>();
+
+export function startPostgresSpan(traceparent: string) {
+  const span = operationTracer
+    .getStore()
+    ?.startSpan(
+      'postgresql.query',
+      { kind: SpanKind.CLIENT, attributes: { 'db.system.name': 'postgresql' } },
+      extractTraceparent(traceparent)
+    );
+  if (!span) return undefined;
+  return (failed: boolean) => {
+    if (failed) span.setStatus({ code: SpanStatusCode.ERROR });
+    span.end();
+  };
+}
 
 export function extractTraceparent(value: unknown) {
   return typeof value === 'string' && value.length <= 512 && !value.includes(',')

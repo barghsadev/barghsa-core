@@ -1,1 +1,7 @@
-export { collectorAgent, createTraceProvider, extractTraceparent } from '@barghsa/telemetry';
+export {
+  collectorAgent,
+  createTraceProvider,
+  extractTraceparent,
+  operationTracer,
+  startPostgresSpan,
+} from '@barghsa/telemetry';

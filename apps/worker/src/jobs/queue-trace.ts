@@ -1,6 +1,6 @@
 import { SpanKind, SpanStatusCode, type Span, type Tracer } from '@opentelemetry/api';
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-import { extractTraceparent } from '@barghsa/shared/telemetry';
+import { extractTraceparent, operationTracer } from '@barghsa/shared/telemetry';
 
 export async function withQueueTrace<T>(
   tracer: Tracer | undefined,
@@ -11,7 +11,9 @@ export async function withQueueTrace<T>(
   if (!tracer) return process();
   const span = tracer.startSpan(name, { kind: SpanKind.CONSUMER }, extractTraceparent(parent));
   try {
-    return await operatorLogTrace.run(span.spanContext(), () => process(span));
+    return await operationTracer.run(tracer, () =>
+      operatorLogTrace.run(span.spanContext(), () => process(span))
+    );
   } catch (error) {
     span.setStatus({ code: SpanStatusCode.ERROR });
     throw error;

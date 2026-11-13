@@ -7,7 +7,7 @@ import type { QueryPool } from './channel-scheduling.js';
 import type { QueryResultRow } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-import { extractTraceparent } from '@barghsa/shared/telemetry';
+import { extractTraceparent, operationTracer } from '@barghsa/shared/telemetry';
 import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications';
 import {
@@ -113,7 +113,8 @@ export async function runOutboxPoll(
 
   const settled = await Promise.allSettled(
     rows.map((row) => {
-      const span = options?.tracer?.startSpan(
+      const tracer = options?.tracer;
+      const span = tracer?.startSpan(
         'notification.outbox.process',
         {
           kind: SpanKind.CONSUMER,
@@ -270,9 +271,9 @@ export async function runOutboxPoll(
           await lease?.stop();
         }
       };
-      if (!span) return process();
-      return operatorLogTrace
-        .run(span.spanContext(), process)
+      if (!span || !tracer) return process();
+      return operationTracer
+        .run(tracer, () => operatorLogTrace.run(span.spanContext(), process))
         .catch((error: unknown) => {
           span.setStatus({ code: SpanStatusCode.ERROR });
           throw error;

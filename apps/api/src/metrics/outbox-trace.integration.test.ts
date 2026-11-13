@@ -9,7 +9,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 import { fetchWithPreauth } from '../test/public-auth.js';
 import { failPasswordSink, passwordNoticeState } from '../test/password-notification-proof.js';
 
-it('traces the domain operation, PostgreSQL outbox insert and worker handling the same notice', async () => {
+it('traces the domain operation, PostgreSQL queries and worker handling the same notice', async () => {
   const spans: { service: string | undefined; span: Record<string, unknown> }[] = [];
   const collector = createServer(async (request, response) => {
     const chunks: Buffer[] = [];
@@ -81,6 +81,14 @@ it('traces the domain operation, PostgreSQL outbox insert and worker handling th
     const api = (id: string) => findSpan('barghsa-api', `POST ${route}`, id);
     const domain = (id: string) => findSpan('barghsa-api', 'auth.password.change', id);
     const insert = (id: string) => findSpan('barghsa-api', 'notification.outbox.insert', id);
+    const queries = (serviceName: string, id: string) =>
+      spans
+        .filter(
+          ({ service, span }) =>
+            service === serviceName && span.traceId === id && span.name === 'postgresql.query'
+        )
+        .map(({ span }) => span);
+    const queryAttributes = [{ key: 'db.system.name', value: { stringValue: 'postgresql' } }];
     await expect
       .poll(() => api(failureTraceId), { timeout: 7000 })
       .toMatchObject({
@@ -95,6 +103,16 @@ it('traces the domain operation, PostgreSQL outbox insert and worker handling th
       parentSpanId: domain(failureTraceId)?.spanId,
       status: { code: 2 },
     });
+    expect(queries('barghsa-api', failureTraceId)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          parentSpanId: insert(failureTraceId)?.spanId,
+          kind: 3,
+          attributes: queryAttributes,
+          status: { code: 2 },
+        }),
+      ])
+    );
 
     const response = await changePassword(traceId);
     expect(response.status).toBe(200);
@@ -123,6 +141,20 @@ it('traces the domain operation, PostgreSQL outbox insert and worker handling th
         { key: 'db.collection.name', value: { stringValue: 'notification_outbox' } },
       ]),
     });
+    expect(queries('barghsa-api', traceId)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          parentSpanId: domain(traceId)?.spanId,
+          kind: 3,
+          attributes: queryAttributes,
+        }),
+        expect.objectContaining({
+          parentSpanId: insert(traceId)?.spanId,
+          kind: 3,
+          attributes: queryAttributes,
+        }),
+      ])
+    );
     expect(notice[0].trace_parent).toBe(`00-${traceId}-${domain(traceId)?.spanId}-01`);
     const database = fixture.pool.options.connectionString;
     if (!database) throw new Error('Missing isolated database connection');
@@ -165,6 +197,15 @@ it('traces the domain operation, PostgreSQL outbox insert and worker handling th
     );
     const worker = findSpan('barghsa-worker', 'notification.outbox.process', traceId);
     expect(worker).toMatchObject({ traceId, parentSpanId: domain(traceId)?.spanId, kind: 5 });
+    expect(queries('barghsa-worker', traceId)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          parentSpanId: worker?.spanId,
+          kind: 3,
+          attributes: queryAttributes,
+        }),
+      ])
+    );
     expect(worker?.spanId).not.toBe(domain(traceId)?.spanId);
     expect(
       findSpan('barghsa-worker', 'notification.outbox.process', failureTraceId)

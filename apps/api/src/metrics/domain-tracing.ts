@@ -1,18 +1,15 @@
-import { AsyncLocalStorage } from 'node:async_hooks';
 import {
   ROOT_CONTEXT,
   SpanKind,
   SpanStatusCode,
   trace,
   type SpanOptions,
-  type Tracer,
 } from '@opentelemetry/api';
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-
-export const apiOperationTracer = new AsyncLocalStorage<Tracer>();
+import { operationTracer } from '@barghsa/shared/telemetry';
 
 function traceOperation<Result>(name: string, options: SpanOptions, run: () => Promise<Result>) {
-  const tracer = apiOperationTracer.getStore();
+  const tracer = operationTracer.getStore();
   const parent = operatorLogTrace.getStore();
   if (!tracer || !parent) return run();
 

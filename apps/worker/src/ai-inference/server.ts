@@ -3,7 +3,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import type { Pool } from 'pg';
 import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-import { extractTraceparent } from '@barghsa/shared/telemetry';
+import { extractTraceparent, operationTracer } from '@barghsa/shared/telemetry';
 import {
   AiModelSecrets,
   completeChat,
@@ -119,7 +119,8 @@ export function createAiInferenceServer(options: {
       reply(res, 503, { error: 'AI_INFERENCE_BUSY' });
       return;
     }
-    const span = options.tracer?.startSpan(
+    const tracer = options.tracer;
+    const span = tracer?.startSpan(
       'ai.inference.complete',
       { kind: SpanKind.SERVER },
       extractTraceparent(req.headers.traceparent)
@@ -171,7 +172,8 @@ export function createAiInferenceServer(options: {
       }
     };
     try {
-      if (span) await operatorLogTrace.run(span.spanContext(), complete);
+      if (tracer && span)
+        await operationTracer.run(tracer, () => operatorLogTrace.run(span.spanContext(), complete));
       else await complete();
     } finally {
       active -= 1;

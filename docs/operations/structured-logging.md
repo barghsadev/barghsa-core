@@ -204,6 +204,14 @@ trigger writers. The direct pool captures it on explicit transaction start.
 The transaction pool also sets it for the transactions it opens around
 standalone statements. Existing rows and untraced writers have no parent.
 
+Application queries through either pool add a `postgresql.query` client span
+under the active API, worker or inference span. It carries only the database
+system and marks rejected, failed or cancelled queries with error status.
+Transaction-pool housekeeping stays inside the corresponding application query
+span. Check the parent IDs and status in the deployed collector using successful
+and rolled-back synthetic requests. Keep SQL, parameters, database addresses
+and error messages out of the exported record.
+
 Enable the same protected endpoint in the worker to export
 `notification.outbox.process` spans with the stored parent. In a forced
 password change, both the insert and worker spans link to the domain span.

@@ -3,7 +3,7 @@ import { createRedisClient, RedisConfigSchema, type RedisConfig } from '@barghsa
 import { operatorLogTrace } from '@barghsa/shared/operator-logging';
 import { ROOT_CONTEXT, SpanKind, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Redis } from 'ioredis';
-import { apiOperationTracer } from '../metrics/domain-tracing.js';
+import { operationTracer } from '@barghsa/shared/telemetry';
 
 const tracedCommands = new Set([
   'del',
@@ -21,7 +21,7 @@ function traceRedisCommands(client: Redis): void {
   const send = client.sendCommand.bind(client);
   const observed = new WeakSet<Parameters<Redis['sendCommand']>[0]>();
   client.sendCommand = (command, stream) => {
-    const tracer = apiOperationTracer.getStore();
+    const tracer = operationTracer.getStore();
     const parent = operatorLogTrace.getStore();
     if (!tracer || !parent || observed.has(command)) return send(command, stream);
 

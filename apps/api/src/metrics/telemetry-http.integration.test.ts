@@ -16,6 +16,8 @@ type Trace = {
   attributes: { key: string; value: Record<string, unknown> }[];
 };
 const traces: Trace[] = [];
+const readinessSpan = (traceId: string) =>
+  traces.find((span) => span.traceId === traceId && span.name === 'GET /api/health/ready');
 beforeAll(async () => {
   receiver = createServer(async (request, response) => {
     const chunks: Buffer[] = [];
@@ -142,7 +144,7 @@ it('returns 503 for incompatible schema metadata while liveness stays available'
   }
   expect((await fetch(`${fixture.base}/api/health/ready`)).status).toBe(200);
   await expect
-    .poll(() => traces.find((span) => span.traceId === traceId), { timeout: 7000 })
+    .poll(() => readinessSpan(traceId), { timeout: 7000 })
     .toMatchObject({
       name: 'GET /api/health/ready',
       traceId,
@@ -197,7 +199,7 @@ it.each([
     }
     expect(await response).toEqual(abort ? { error: 'AbortError' } : { status: 200 });
     await expect
-      .poll(() => traces.find((span) => span.traceId === traceId), { timeout: 7000 })
+      .poll(() => readinessSpan(traceId), { timeout: 7000 })
       .toMatchObject({
         traceId,
         parentSpanId,
@@ -209,8 +211,22 @@ it.each([
               ]),
             }),
       });
-    expect(traces.filter((span) => span.traceId === traceId)).toHaveLength(1);
-  }
+    const request = readinessSpan(traceId);
+    const dbSpans = () => traces.filter((span) => span.traceId === traceId && span !== request);
+    if (!abort) await expect.poll(dbSpans, { timeout: 3000 }).toHaveLength(1);
+    const children = dbSpans();
+    for (const child of children) {
+      expect(child).toMatchObject({
+        name: 'postgresql.query',
+        parentSpanId: request?.spanId,
+        attributes: [{ key: 'db.system.name', value: { stringValue: 'postgresql' } }],
+      });
+    }
+    expect(
+      traces.filter((span) => span.traceId === traceId && span.name === request?.name)
+    ).toHaveLength(1);
+  },
+  12_000
 );
 
 it('logs an independent valid context for duplicate trace headers without recording the raw URL', async () => {
