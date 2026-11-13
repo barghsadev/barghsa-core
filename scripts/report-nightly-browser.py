@@ -6,10 +6,10 @@ import os
 import re
 from pathlib import Path
 
+from browser_workflow_identity import PROJECTS, SHARDS, run_identity
+
 
 COUNTS = ("expected", "unexpected", "flaky", "skipped", "runner_errors")
-PROJECTS = ("chromium", "firefox", "webkit", "mobile-chrome", "mobile-safari")
-SHARDS = range(1, 9)
 
 
 def read_json(path):
@@ -25,17 +25,6 @@ def valid_counts(value):
     )
 
 
-def run_identity(env):
-    sha = env.get("GITHUB_SHA", "")
-    run_id = env.get("GITHUB_RUN_ID", "")
-    attempt = env.get("GITHUB_RUN_ATTEMPT", "")
-    if not re.fullmatch(r"[0-9a-f]{40}", sha) or not all(
-        re.fullmatch(r"[1-9][0-9]{0,19}", value) for value in (run_id, attempt)
-    ):
-        raise ValueError("Expected a GitHub commit, run ID and attempt")
-    return {"commit": sha, "run_id": int(run_id), "run_attempt": int(attempt)}
-
-
 def summarize_shards(directory, identity):
     totals = dict.fromkeys(COUNTS, 0)
     missing, failed = [], []
@@ -49,6 +38,8 @@ def summarize_shards(directory, identity):
                 not valid_counts(result)
                 or result.get("schema_version") != 1
                 or result.get("status") not in ("passed", "failed")
+                or any(type(result.get(key)) is not type(value) or result[key] != value
+                       for key, value in {**identity, "project": project, "shard": shard}.items())
             ):
                 missing.append(name)
                 continue

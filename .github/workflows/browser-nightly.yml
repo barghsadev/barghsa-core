@@ -120,7 +120,9 @@ jobs:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes
         if: always()
-        run: python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "${{ runner.temp }}/browser-outcomes.json"
+        run: |
+          python3 scripts/check-browser-results.py --input apps/web/test-results/results.json \
+            --report "$RUNNER_TEMP/browser-outcomes.json" --project "${{ matrix.project }}" --shard "${{ matrix.shard }}"
       - name: Upload shard outcome counts
         if: always()
         uses: actions/upload-artifact@v4

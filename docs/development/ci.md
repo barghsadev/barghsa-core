@@ -28,7 +28,9 @@ continue to run on the push. Full CI and manual release checks run their own tes
 The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
 Download `nightly-browser-summary-attempt-<n>` for the attempt shown in GitHub
-Actions. The report records the commit, run ID and attempt. A partial rerun
+Actions. Each shard receipt records the commit, run ID, attempt and the project
+and shard verified against Playwright's report. The rollup requires all 40
+receipts to match those values. A partial rerun
 leaves the new attempt's rollup incomplete when earlier shards did not run
 again. Keep the original evidence and use a fresh dispatch or rerun all jobs
 when a complete new release check is required. Historical runs without

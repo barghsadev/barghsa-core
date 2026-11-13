@@ -7682,7 +7682,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -7690,7 +7691,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -7775,6 +7776,10 @@
             {
               "path": "scripts/browser-projects.mjs",
               "sha256": "e0a3a2e38d0f3cdbc813be151f11807acb6f5c8e8c4c69993e18b49f0f028f72"
+            },
+            {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -8013,6 +8018,15 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -8498,7 +8512,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8506,7 +8521,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -8525,8 +8540,12 @@
               "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/check-browser-results.py",
-              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+              "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -8542,7 +8561,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/test-browser-flake-gate.mjs",
@@ -8550,7 +8569,7 @@
             },
             {
               "path": "scripts/test_check_browser_results.py",
-              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+              "sha256": "cd91aa940744ad1435462b2a2377542ae782aaf304bdf006094dffbfc2777bda"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -8558,7 +8577,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
+              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
             }
           ],
           "checks": [
@@ -8747,6 +8766,19 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/check-browser-results.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_check_browser_results.py",
+                "scripts/test_report_nightly_browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -21417,7 +21449,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21429,7 +21462,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "AGENTS.md",
@@ -21663,6 +21696,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -23248,7 +23289,8 @@
       "remaining": [
         "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup. Firefox shard 5 reported one provider-boundary fixture flake after a rejected HTTPS navigation. The explicit fixture now uses a fresh page within the same proxied context. All 36 repeated cases passed without retries across Chromium, WebKit and pinned Firefox 1575. Browser artifacts and the strict rollup now bind the candidate commit, run and attempt. A partial rerun stays incomplete when earlier shards are absent. Verify all 40 shards on one hosted attempt of the final immutable candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
-        "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
+        "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required.",
+        "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -23276,20 +23318,23 @@
           "historically_skipped": true
         },
         "changed_paths": [
+          ".github/workflows/browser-nightly.yml",
           "apps/api/scripts/http-test-server.cjs",
           "apps/web/e2e/consumer-theme.spec.ts",
+          "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "apps/web/e2e/local-network.spec.ts",
           "apps/web/e2e/registration-feature.spec.ts",
           "apps/web/e2e/team.spec.ts",
+          "apps/web/src/pages/SolarRequestDetailPage.tsx",
           "audit/skipped-work-handoff.md",
-          ".github/workflows/browser-nightly.yml",
           "docs/development/ci.md",
+          "scripts/browser_workflow_identity.py",
+          "scripts/check-browser-results.py",
           "scripts/email-nightly-browser-report.py",
           "scripts/report-nightly-browser.py",
+          "scripts/test_check_browser_results.py",
           "scripts/test_email_nightly_browser_report.py",
-          "scripts/test_report_nightly_browser.py",
-          "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-          "apps/web/src/pages/SolarRequestDetailPage.tsx",
-          "apps/web/e2e/local-network.spec.ts"
+          "scripts/test_report_nightly_browser.py"
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
@@ -23348,7 +23393,8 @@
           "release-0.6-solar-back-touch-target",
           "release-0.6-firefox-provider-fixture",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": null
       }
@@ -32277,7 +32323,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -32294,7 +32341,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "eslint.config.mjs",
@@ -32564,6 +32611,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -32944,7 +32999,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -32986,7 +33042,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "eslint.config.mjs",
@@ -33264,6 +33320,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -35882,7 +35946,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35913,7 +35978,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "package.json",
@@ -36421,6 +36486,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -36779,7 +36852,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36804,7 +36878,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -36883,6 +36957,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -680261,7 +680343,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -680269,7 +680352,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "vitest.config.ts",
@@ -680547,6 +680630,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -681033,7 +681124,8 @@
           "release-0.6-gate-readback",
           "release-0.6-postgres-package-alignment",
           "release-0.6-related-test-selector-acceptance",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -681053,7 +681145,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -681085,6 +681177,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -684059,7 +684159,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "batch": "release-0.6-critical-form-recovery",
@@ -684070,64 +684171,8 @@
           ],
           "source_evidence": [
             {
-              "path": "docs/design/accessibility.md",
-              "sha256": "e1e012d5d27003f4b740399290489910cf01eba88472932bdaebb6a4cd3a6c10"
-            },
-            {
-              "path": "pnpm-lock.yaml",
-              "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
-            },
-            {
-              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "c18c6cec31514fc03b305d2405d302a8ed072e400d3cdceb71c55a1c4e8e1d4a"
-            },
-            {
-              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "a4497ced8a450c8fc99097e099915932d4ae6e13c7c8eef60dd5a1e54bf93aaf"
-            },
-            {
-              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
-            },
-            {
-              "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
-            },
-            {
-              "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
-            },
-            {
-              "path": "apps/web/src/pages/WalletPage.tsx",
-              "sha256": "931d3ec0afa0212b87a55745079f972e38e7e41c4336ae599cc52d026e179af6"
-            },
-            {
-              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
-              "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
-            },
-            {
-              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
-            },
-            {
-              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
-            },
-            {
-              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
-            },
-            {
-              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-              "sha256": "355411908b82ecdd8a28a851d667624e450b93de5e1e4d8603dd40ba9a2018be"
-            },
-            {
-              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "782b217311c9a1fe305d90c8dd37e6780b91b313b82aad9c5c92610e9a82a8a3"
-            },
-            {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
@@ -684372,6 +684417,66 @@
             {
               "path": "apps/web/e2e/wallet-limit.spec.ts",
               "sha256": "6c7496c2f5ee5b238875e714bd7e6f6e2f95df7e6e8db963ce205dbc830c8671"
+            },
+            {
+              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+              "sha256": "782b217311c9a1fe305d90c8dd37e6780b91b313b82aad9c5c92610e9a82a8a3"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "355411908b82ecdd8a28a851d667624e450b93de5e1e4d8603dd40ba9a2018be"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "a4497ced8a450c8fc99097e099915932d4ae6e13c7c8eef60dd5a1e54bf93aaf"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationsPage.tsx",
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+            },
+            {
+              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+              "sha256": "c18c6cec31514fc03b305d2405d302a8ed072e400d3cdceb71c55a1c4e8e1d4a"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "931d3ec0afa0212b87a55745079f972e38e7e41c4336ae599cc52d026e179af6"
+            },
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "e1e012d5d27003f4b740399290489910cf01eba88472932bdaebb6a4cd3a6c10"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+            },
+            {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
             }
           ],
           "source_renewals": [
@@ -684459,6 +684564,15 @@
                 "apps/web/e2e/electricity-settings-forms.spec.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -684622,7 +684736,8 @@
           "release-0.6-compose-postgres17-acceptance",
           "release-0.6-authentication-failure-alert",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -684696,7 +684811,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -684892,6 +685007,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -684932,7 +685055,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -684940,7 +685064,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -685057,6 +685181,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -685097,7 +685229,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -685105,7 +685238,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -685222,6 +685355,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -685273,7 +685414,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -685305,7 +685447,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -685527,6 +685669,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -687920,7 +688070,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -687952,7 +688103,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -688175,6 +688326,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -688209,7 +688368,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-coverage-required-check",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -688257,7 +688417,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -688346,6 +688506,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -689311,7 +689479,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-solar-back-touch-target",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
@@ -689319,7 +689488,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -689354,8 +689523,12 @@
               "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -689410,6 +689583,16 @@
                 "scripts/report-nightly-browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -689710,7 +689893,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -689718,7 +689902,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -689730,7 +689914,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -689741,8 +689925,12 @@
               "sha256": "9484a3e4fb196ad0839a4215072377ade5192928321b8d87b7014e14b11d7c91"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/check-browser-results.py",
-              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+              "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -689750,7 +689938,7 @@
             },
             {
               "path": "scripts/test_check_browser_results.py",
-              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+              "sha256": "cd91aa940744ad1435462b2a2377542ae782aaf304bdf006094dffbfc2777bda"
             }
           ],
           "checks": [
@@ -689932,6 +690120,18 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "docs/development/ci.md",
+                "scripts/check-browser-results.py",
+                "scripts/test_check_browser_results.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -689980,7 +690180,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-firefox-provider-fixture",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -690060,7 +690261,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -690172,6 +690373,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -696007,7 +696216,8 @@
         ],
         "batches": [
           "release-0.6-coverage-required-check",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -696019,7 +696229,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -696122,6 +696332,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ]
         }
@@ -697031,7 +697249,8 @@
           "release-0.6-exact-storage-receipt-locator",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-reuse-affected-preflight"
+          "release-0.6-reuse-affected-preflight",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -697149,7 +697368,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-independent-critical-defect-fixture"
+          "release-0.6-independent-critical-defect-fixture",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -697163,7 +697383,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -697190,8 +697410,12 @@
               "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/check-browser-results.py",
-              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+              "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -697199,11 +697423,11 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/test_check_browser_results.py",
-              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+              "sha256": "cd91aa940744ad1435462b2a2377542ae782aaf304bdf006094dffbfc2777bda"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -697211,7 +697435,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
+              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
             }
           ],
           "source_renewals": [
@@ -697435,6 +697659,19 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/check-browser-results.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_check_browser_results.py",
+                "scripts/test_report_nightly_browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -697887,7 +698124,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -697901,7 +698139,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -697924,12 +698162,16 @@
               "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/check-flaky-tests.py",
               "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             }
           ],
           "source_renewals": [
@@ -698288,6 +698530,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -698818,7 +699070,8 @@
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -698826,7 +699079,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -698837,8 +699090,12 @@
               "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
             },
             {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+            },
+            {
               "path": "scripts/check-browser-results.py",
-              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+              "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
             },
             {
               "path": "scripts/check-dependency-audit.mjs",
@@ -698858,7 +699115,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/web-navigation-paths.mjs",
@@ -698956,6 +699213,17 @@
                 "scripts/report-nightly-browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/check-browser-results.py",
+                "scripts/report-nightly-browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -699259,7 +699527,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -699272,7 +699541,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -699285,6 +699554,10 @@
             {
               "path": "docs/flaky-test-quarantine.md",
               "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+            },
+            {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -699300,7 +699573,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -699308,7 +699581,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
+              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
             }
           ],
           "source_renewals": [
@@ -699516,6 +699789,17 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -699561,7 +699845,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -699574,7 +699859,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "84845a295365d6867e5fbbaa9e8650634aec1e2543df23dc57619bc3fca88044"
+              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -699587,6 +699872,10 @@
             {
               "path": "docs/flaky-test-quarantine.md",
               "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+            },
+            {
+              "path": "scripts/browser_workflow_identity.py",
+              "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -699602,7 +699891,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "6928a7a92bd9ea45d0732347cd58bfca1a8fad5144a26d4eb0a0302cbad6d4cf"
+              "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -699610,7 +699899,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "e41321fbeacaf943d45afab13579a70bbda2a04f1aad1f2287c73dff1f4e2b55"
+              "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
             }
           ],
           "source_renewals": [
@@ -699818,6 +700107,17 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py",
+                "scripts/browser_workflow_identity.py"
+              ],
+              "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
             }
           ]
         }
@@ -1026349,7 +1026649,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1026713,7 +1027014,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1027109,6 +1027410,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1027306,7 +1027615,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1027670,7 +1027980,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1028066,6 +1028376,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1028263,7 +1028581,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1028627,7 +1028946,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1029023,6 +1029342,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1029221,7 +1029548,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1029585,7 +1029913,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1029981,6 +1030309,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1030178,7 +1030514,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1030542,7 +1030879,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1030938,6 +1031275,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1031135,7 +1031480,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1031499,7 +1031845,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1031895,6 +1032241,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1032092,7 +1032446,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1032456,7 +1032811,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1032852,6 +1033207,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1033050,7 +1033413,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1033414,7 +1033778,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1033810,6 +1034174,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1034007,7 +1034379,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1034371,7 +1034744,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1034767,6 +1035140,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1034964,7 +1035345,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1035328,7 +1035710,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "3a140460c894513e67dc9965f29b16fb7a4f7e5a7e2ff3644cbd3b12a20756a2"
+              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1035724,6 +1036106,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-nightly-exact-shard-evidence",
+              "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
             }
           ],
           "presentation_renewals": [
@@ -1075026,7 +1075416,8 @@
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
         "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open.",
         "A stale BuildKit archive stage could rebuild the older glibc packages. The refreshed build matches all 241 hosted PostgreSQL package rows and the strict package gate remains open. The isolated native restore of both databases passed, with matching data and collation and the current service preserved. Staging WAL archiving is off, the checked host has no backup job, and its Docker filesystem was 93% full. Obtain the approved backup destination, verify recoverable backups and capacity, and preserve the old image and volume before any live cutover.",
-        "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover."
+        "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
+        "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports."
       ],
       "owner": null,
       "depends_on": [],
@@ -1075319,7 +1075710,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-protected-main-and-staging-capacity-readback",
-          "release-0.6-independent-critical-defect-fixture"
+          "release-0.6-independent-critical-defect-fixture",
+          "release-0.6-nightly-exact-shard-evidence"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1075343,91 +1075735,37 @@
           "strict_inventory_match_run": 42902282297
         },
         "changed_paths": [
-          ".github/workflows/ci.yml",
-          "scripts/install-ci-pdf-renderer.sh",
-          "deploy/production/README.md",
-          "deploy/production/check-promotion.py",
-          "deploy/production/test_check_promotion.py",
-          "README.md",
-          "package.json",
-          "scripts/setup-dev.mjs",
-          "deploy/monitoring/operations-watchdog.yml",
-          "deploy/monitoring/staging-alertmanager.yml",
-          "deploy/monitoring/staging-prometheus.yml",
-          "deploy/monitoring/staging-watchdog.yml",
-          "docs/operations/notification-monitoring.md",
-          "docs/runbooks/alert-delivery.md",
-          "deploy/monitoring/notification-alerts.yml",
-          "deploy/monitoring/notification-alerts.test.yml",
-          "packages/i18n/src/workspace.ts",
-          "docs/operations/service-objectives.md",
-          "packages/shared/src/notifications/operations-alert-links.ts",
-          "packages/shared/src/notifications/operations-alert-links.test.ts",
-          "apps/worker/src/operations/alerts.integration.test.ts",
-          "apps/web/src/pages/notification-inbox-navigation.test.tsx",
-          "deploy/production/record-release-annotation.py",
-          "deploy/production/release_evidence.py",
-          "deploy/production/record-sentry-deploy.py",
-          "deploy/production/test_sentry_deploy.py",
           ".github/actions/sentry-release-deploy/action.yml",
-          "deploy/monitoring/api-pressure-alerts.yml",
-          "deploy/monitoring/api-pressure-alerts.test.yml",
-          "deploy/monitoring/staging-compose.yml",
-          "apps/worker/src/operations/alerts.ts",
-          "docs/runbooks/api-pressure.md",
-          "docs/security/release-license-review.md",
-          "packages/shared/src/storage/s3-storage-provider.ts",
-          "packages/shared/src/storage/storage.test.ts",
-          "docs/operations/storage-configuration.md",
-          "docs/development/ci.md",
-          "deploy/pilot/nginx.conf",
-          "deploy/staging/nginx.conf",
-          "scripts/check-proxy-tls.mjs",
-          "scripts/proxy-fixture.mjs",
-          "docs/security/content-security-policy.md",
-          "deploy/staging/README.md",
-          "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md",
-          "deploy/staging/Dockerfile.postgres",
-          "deploy/staging/build-postgres-image.sh",
-          "deploy/staging/deploy.sh",
-          "deploy/staging/test_notify_release.py",
-          "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py",
-          "deploy/monitoring/staging-synthetic.yml",
+          ".github/workflows/browser-nightly.yml",
+          ".github/workflows/ci.yml",
+          ".github/workflows/load-weekly.yml",
+          ".github/workflows/storage-recovery-quarterly.yml",
+          "Dockerfile.base",
+          "README.md",
           "apps/api/openapi.json",
           "apps/api/src/admin/admin.controller.ts",
-          "apps/api/src/public/branding-http.integration.test.ts",
-          "apps/api/src/public/branding.controller.test.ts",
-          "apps/api/src/public/branding.controller.ts",
-          "apps/web/e2e/branding-theme.spec.ts",
-          "apps/web/index.html",
-          "apps/web/src/lib/brand-config.ts",
-          "apps/web/src/lib/theme.ts",
-          "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "apps/web/src/pages/branding-settings.test.tsx",
-          "apps/web/src/providers/BrandThemeProvider.test.tsx",
-          "apps/web/src/providers/BrandThemeProvider.tsx",
-          "docs/design/design-system.md",
-          "packages/api-client/src/openapi.generated.ts",
-          "packages/i18n/src/branding.ts",
-          "packages/i18n/src/shell.ts",
+          "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "apps/api/src/admin/dual-approval.controller.test.ts",
+          "apps/api/src/admin/dual-approval.controller.ts",
+          "apps/api/src/admin/staff-creation-http.integration.test.ts",
+          "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+          "apps/api/src/admin/verification-mode-http.integration.test.ts",
+          "apps/api/src/app.factory.ts",
+          "apps/api/src/app.module.ts",
+          "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "apps/api/src/common/correlation-id.middleware.ts",
+          "apps/api/src/common/correlation-logger.test.ts",
+          "apps/api/src/common/correlation-logger.ts",
+          "apps/api/src/crm/crm-verification.integration.test.ts",
+          "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "apps/api/src/main.ts",
           "apps/api/src/maintenance/maintenance-http.integration.test.ts",
           "apps/api/src/maintenance/maintenance.controller.ts",
           "apps/api/src/maintenance/maintenance.service.ts",
-          "apps/web/e2e/maintenance-forms.spec.ts",
-          "apps/web/e2e/maintenance.spec.ts",
-          "apps/web/src/components/MaintenanceRecovery.tsx",
-          "apps/web/src/lib/maintenance-form.ts",
-          "apps/web/src/pages/AdminMaintenancePage.tsx",
-          "docs/runbooks/bad-deployment.md",
-          "packages/i18n/src/maintenance.ts",
-          ".github/workflows/browser-nightly.yml",
-          "scripts/email-nightly-browser-report.py",
-          "scripts/report-nightly-browser.py",
-          "scripts/test_email_nightly_browser_report.py",
-          "scripts/test_report_nightly_browser.py",
+          "apps/api/src/metrics/database-telemetry.test.ts",
+          "apps/api/src/metrics/database-telemetry.ts",
+          "apps/api/src/metrics/http-request-metrics.ts",
           "apps/api/src/orders/order-access-http.integration.test.ts",
           "apps/api/src/orders/orders.controller.ts",
           "apps/api/src/profiles/addresses-http.integration.test.ts",
@@ -1075437,52 +1075775,48 @@
           "apps/api/src/profiles/legal-profiles.service.ts",
           "apps/api/src/profiles/onboarding.controller.ts",
           "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "apps/api/src/profiles/profile-form-input-fields.test.ts",
           "apps/api/src/profiles/profile-write-http.integration.test.ts",
           "apps/api/src/profiles/profiles.controller.ts",
+          "apps/api/src/public/branding-http.integration.test.ts",
+          "apps/api/src/public/branding.controller.test.ts",
+          "apps/api/src/public/branding.controller.ts",
+          "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "apps/api/src/storage/storage-config.service.ts",
+          "apps/api/src/test/http-fixture.ts",
           "apps/api/src/tos/tos-commercial-http.integration.test.ts",
           "apps/api/src/tos/tos.controller.ts",
-          "apps/web/e2e/consultation-forms.spec.ts",
-          "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-          "apps/web/e2e/service-wizard-navigation.spec.ts",
-          "docs/design/accessibility.md",
-          "apps/api/src/documents/document-http.integration.test.ts",
-          "docs/operations/clamav-signatures.md",
-          "apps/api/src/test/http-fixture.ts",
-          "apps/web/e2e/rollout-smoke.spec.ts",
-          "scripts/run-fast-tests.mjs",
-          "scripts/run-fast-tests.test.mjs",
-          "deploy/staging/release-queue.py",
-          "deploy/staging/test_release_queue.py",
-          "apps/api/src/admin/dual-approval-http.integration.test.ts",
-          "apps/api/src/admin/dual-approval.controller.ts",
-          "apps/api/src/admin/staff-creation-http.integration.test.ts",
-          "apps/api/src/admin/staff-mutation-http.integration.test.ts",
-          "apps/api/src/admin/verification-mode-http.integration.test.ts",
           "apps/api/src/verification/provider-registration.test.ts",
           "apps/api/src/verification/verification-provider-config-http.integration.test.ts",
           "apps/api/src/verification/verification-provider.controller.test.ts",
           "apps/api/src/verification/verification-provider.controller.ts",
           "apps/api/src/verification/verification-provider.service.ts",
-          "docs/operations/preflight/provider-secret-review.sql",
-          "docs/security/security-verification.md",
-          "apps/api/src/profiles/profile-form-input-fields.test.ts",
-          "docs/operations/preflight/quarterly-access-review.sql",
-          "docs/operations/quarterly-access-review.md",
-          "docs/threat-model.md",
-          "packages/db/src/quarterly-access-review.migrated.test.ts",
           "apps/web/e2e/approval-queue.spec.ts",
+          "apps/web/e2e/branding-theme.spec.ts",
+          "apps/web/e2e/consultation-forms.spec.ts",
           "apps/web/e2e/critical-accessibility.ts",
+          "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "apps/web/e2e/maintenance-forms.spec.ts",
+          "apps/web/e2e/maintenance.spec.ts",
+          "apps/web/e2e/rollout-smoke.spec.ts",
+          "apps/web/e2e/service-wizard-navigation.spec.ts",
           "apps/web/e2e/wallet-invoice-payment.spec.ts",
-          "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
-          "apps/api/src/app.factory.ts",
-          "apps/api/src/app.module.ts",
-          "apps/api/src/common/correlation-id.middleware.ts",
-          "apps/api/src/common/correlation-logger.test.ts",
-          "apps/api/src/common/correlation-logger.ts",
-          "apps/api/src/csp-report/csp-report-http.integration.test.ts",
-          "apps/api/src/main.ts",
-          "apps/api/src/metrics/http-request-metrics.ts",
+          "apps/web/index.html",
           "apps/web/server.js",
+          "apps/web/src/components/MaintenanceRecovery.tsx",
+          "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "apps/web/src/lib/brand-config.ts",
+          "apps/web/src/lib/maintenance-form.ts",
+          "apps/web/src/lib/storage-policy-form.ts",
+          "apps/web/src/lib/theme.ts",
+          "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "apps/web/src/pages/AdminStorageConfig.test.tsx",
+          "apps/web/src/pages/AdminStorageConfig.tsx",
+          "apps/web/src/pages/branding-settings.test.tsx",
+          "apps/web/src/pages/notification-inbox-navigation.test.tsx",
+          "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "apps/web/src/providers/BrandThemeProvider.tsx",
           "apps/web/test/server-shutdown.spec.ts",
           "apps/worker/src/ai-inference/main.ts",
           "apps/worker/src/ai-models/test-runner.test.ts",
@@ -1075498,50 +1075832,111 @@
           "apps/worker/src/jobs/poller-group.ts",
           "apps/worker/src/main.ts",
           "apps/worker/src/notifications/outbox-reader.test.ts",
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
           "apps/worker/src/operator-log.ts",
+          "apps/worker/src/runtime-log-safety.test.ts",
           "apps/worker/src/service-targets/breach-scanner.ts",
           "apps/worker/src/service-targets/escalation-scanner.ts",
-          "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-          "apps/worker/src/wallet/reconciliation-scanner.ts",
-          "deploy/single/nginx.conf",
-          "docs/operations/structured-logging.md",
-          "packages/db/src/index.test.ts",
-          "packages/db/src/index.ts",
-          "packages/db/src/query-cancellation.integration.test.ts",
-          "packages/shared/package.json",
-          "packages/shared/src/operator-logging.test.ts",
-          "packages/shared/src/operator-logging.ts",
-          "pnpm-lock.yaml",
-          "scripts/test-pilot-proxy.py",
-          "apps/api/src/admin/dual-approval.controller.test.ts",
-          ".github/workflows/load-weekly.yml",
-          "packages/shared/src/finance/wallet-reconciliation.test.ts",
-          "packages/shared/stryker.config.mjs",
-          "packages/shared/vitest.mutation.config.ts",
-          "Dockerfile.base",
-          "apps/worker/src/runtime-log-safety.test.ts",
-          ".github/workflows/storage-recovery-quarterly.yml",
-          "docs/operations/quarterly-recovery-exercise.md",
-          "docs/runbooks/storage-outage.md",
-          "packages/db/scripts/backup/run_physical_backup_tests.py",
-          "apps/api/src/storage/storage-config-http.integration.test.ts",
-          "apps/api/src/storage/storage-config.service.ts",
-          "apps/web/src/lib/storage-policy-form.ts",
-          "apps/web/src/pages/AdminStorageConfig.test.tsx",
-          "apps/web/src/pages/AdminStorageConfig.tsx",
           "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
           "apps/worker/src/storage/multipart-cleanup.ts",
-          "docs/operations/storage-retention.md",
-          "packages/i18n/src/storage-policy-forms.ts",
-          "packages/shared/src/storage/runtime-config.ts",
-          "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-          "apps/api/src/crm/crm-verification.integration.test.ts",
-          "apps/api/src/metrics/database-telemetry.test.ts",
-          "apps/api/src/metrics/database-telemetry.ts",
+          "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "apps/worker/src/wallet/reconciliation-scanner.ts",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "deploy/monitoring/notification-alerts.test.yml",
+          "deploy/monitoring/notification-alerts.yml",
+          "deploy/monitoring/operations-watchdog.yml",
+          "deploy/monitoring/staging-alertmanager.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-synthetic.yml",
+          "deploy/monitoring/staging-watchdog.yml",
+          "deploy/pilot/nginx.conf",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/record-release-annotation.py",
+          "deploy/production/record-sentry-deploy.py",
+          "deploy/production/release_evidence.py",
+          "deploy/production/test_check_promotion.py",
+          "deploy/production/test_sentry_deploy.py",
+          "deploy/single/nginx.conf",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/README.md",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/nginx.conf",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
+          "docs/design/accessibility.md",
+          "docs/design/design-system.md",
+          "docs/development/ci.md",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/operations/clamav-signatures.md",
+          "docs/operations/notification-monitoring.md",
           "docs/operations/postgresql-monitoring.md",
+          "docs/operations/preflight/provider-secret-review.sql",
+          "docs/operations/preflight/quarterly-access-review.sql",
+          "docs/operations/quarterly-access-review.md",
+          "docs/operations/quarterly-recovery-exercise.md",
+          "docs/operations/service-objectives.md",
+          "docs/operations/storage-configuration.md",
+          "docs/operations/storage-retention.md",
+          "docs/operations/structured-logging.md",
+          "docs/runbooks/alert-delivery.md",
+          "docs/runbooks/api-pressure.md",
+          "docs/runbooks/bad-deployment.md",
+          "docs/runbooks/storage-outage.md",
+          "docs/security/content-security-policy.md",
+          "docs/security/release-license-review.md",
+          "docs/security/security-verification.md",
+          "docs/threat-model.md",
+          "package.json",
+          "packages/api-client/src/openapi.generated.ts",
+          "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
+          "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "packages/db/src/index.test.ts",
+          "packages/db/src/index.ts",
+          "packages/db/src/quarterly-access-review.migrated.test.ts",
+          "packages/db/src/query-cancellation.integration.test.ts",
+          "packages/i18n/src/branding.ts",
+          "packages/i18n/src/maintenance.ts",
+          "packages/i18n/src/shell.ts",
+          "packages/i18n/src/storage-policy-forms.ts",
+          "packages/i18n/src/workspace.ts",
+          "packages/shared/package.json",
+          "packages/shared/src/finance/wallet-reconciliation.test.ts",
+          "packages/shared/src/notifications/operations-alert-links.test.ts",
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "packages/shared/src/operator-logging.test.ts",
+          "packages/shared/src/operator-logging.ts",
+          "packages/shared/src/storage/runtime-config.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts",
+          "packages/shared/src/storage/storage.test.ts",
+          "packages/shared/stryker.config.mjs",
+          "packages/shared/vitest.mutation.config.ts",
+          "pnpm-lock.yaml",
+          "scripts/browser_workflow_identity.py",
+          "scripts/check-browser-results.py",
+          "scripts/check-proxy-tls.mjs",
+          "scripts/check-release-licenses.py",
           "scripts/ci_preflight_receipt.py",
+          "scripts/email-nightly-browser-report.py",
+          "scripts/install-ci-pdf-renderer.sh",
+          "scripts/proxy-fixture.mjs",
+          "scripts/report-nightly-browser.py",
+          "scripts/run-fast-tests.mjs",
+          "scripts/run-fast-tests.test.mjs",
+          "scripts/setup-dev.mjs",
+          "scripts/test-pilot-proxy.py",
+          "scripts/test_check_browser_results.py",
+          "scripts/test_check_release_licenses.py",
           "scripts/test_ci_preflight_receipt.py",
-          "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
+          "scripts/test_email_nightly_browser_report.py",
+          "scripts/test_report_nightly_browser.py"
         ]
       }
     },
@@ -1249472,6 +1249867,136 @@
         {
           "file": "local-checks.json",
           "sha256": "2bd2006a1f8acae0cd01ccb104ea4ec09466d5874a5d4382ea3d9d679f37e2ac"
+        }
+      ]
+    },
+    "release-0.6-nightly-exact-shard-evidence": {
+      "batch": "release-0.6-nightly-exact-shard-evidence",
+      "base_commit": "21c90c0157cb296de58ff73c1118345ed3e90e5a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.09.03.09",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/browser-nightly.yml",
+        "docs/development/ci.md",
+        "scripts/browser_workflow_identity.py",
+        "scripts/check-browser-results.py",
+        "scripts/report-nightly-browser.py",
+        "scripts/test_check_browser_results.py",
+        "scripts/test_report_nightly_browser.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+        },
+        {
+          "path": "scripts/browser_workflow_identity.py",
+          "sha256": "485f62ac0f5f80215845585e87342e353498b5b5e149975c8ab6001acd62d29b"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "ddefd62cb8ce5017a98648d99e3d45c7ba87cb6dd328f31d2c190c4165355bc9"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "74b030ecb6ca8d167c20c858752b4a552f01d89aeea151f29f02058462a303d7"
+        },
+        {
+          "path": "scripts/test_check_browser_results.py",
+          "sha256": "cd91aa940744ad1435462b2a2377542ae782aaf304bdf006094dffbfc2777bda"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "50b809f1b0b4f21a42dcdbccd7f33d8184059b18628e2bf80985adb085847e1b"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
+        },
+        {
+          "path": "scripts/email-nightly-browser-report.py",
+          "sha256": "4634fa5c457414008c9634e5c489f20f4e0f641436ab161dfa3eaa17b503649f"
+        },
+        {
+          "path": "scripts/test_email_nightly_browser_report.py",
+          "sha256": "cadee637438fe9f82aef69ab1a1f9e0d262253f64e38bc1651a73e91bc4a9ed0"
+        }
+      ],
+      "checks": [
+        "Three browser reporter tests and thirteen nightly rollup and email tests passed. Valid Playwright shard evidence binds the commit, run, attempt, project and shard. Invalid counts, mismatched browser or shard, wrong workflow identity and incomplete reruns cannot become a passing rollup.",
+        "The saved Playwright reports from Firefox 5/8 and Mobile Chrome 7/8 on diagnostic run 43437113471 retained their actual failure and one flaky case each. The reporter refused each report when asked to validate a different shard.",
+        "Eleven production promotion tests passed. Workflow validation with actionlint, Prettier and git diff --check passed."
+      ],
+      "limitations": [
+        "Local tool and fixture checks. The exact release candidate still needs a complete hosted browser matrix, scheduled receipt and authorized mailbox delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-exact-shard-evidence",
+      "execution_receipts": [
+        {
+          "file": "fixture-firefox-5.json",
+          "sha256": "6603529ee2c492106fba2d7935660c9fc3cf736ba8da3b9efbe97b0f2195f9b1"
+        },
+        {
+          "file": "fixture-firefox-6.json",
+          "sha256": "0734e7984f65ddf49051d1e2c012a5e35fb3b71b7d14e18029215d764645089b"
+        },
+        {
+          "file": "fixture-mobile-chrome-7.json",
+          "sha256": "906a967e8c1fb9734abe72d08481310974efff2eda0192434d72c68a7e5a9c72"
+        },
+        {
+          "file": "fixture-mobile-chrome-8.json",
+          "sha256": "0734e7984f65ddf49051d1e2c012a5e35fb3b71b7d14e18029215d764645089b"
+        },
+        {
+          "file": "local-checks.json",
+          "sha256": "e210166d2e75046c9e4c3a770c6846bef5ba801c356df5cb72ce78dc87821430"
         }
       ]
     }

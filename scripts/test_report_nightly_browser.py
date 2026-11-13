@@ -27,6 +27,7 @@ class NightlyBrowserReportTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         result = dict.fromkeys(nightly.COUNTS, 0)
         result.update(schema_version=1, status="passed", expected=2)
+        result.update({**IDENTITY, "run_attempt": attempt, "project": project, "shard": shard})
         result.update(updates)
         path.write_text(json.dumps(result))
         return path
@@ -65,6 +66,19 @@ class NightlyBrowserReportTests(unittest.TestCase):
         self.assertEqual(summary["reported_shards"], 1)
         self.assertEqual(summary["counts"]["flaky"], 2)
         self.assertIn("browser-outcome-webkit-1", summary["missing_or_invalid_shards"])
+
+    def test_wrong_shard_or_workflow_receipts_are_incomplete_even_with_pass_counts(self):
+        for key, value in (("commit", "b" * 40), ("run_id", 2), ("run_attempt", 2),
+                           ("project", "webkit"), ("shard", 2), ("shard", True)):
+            with self.subTest(key=key, value=value):
+                path = self.write_shard("chromium", 1)
+                receipt = json.loads(path.read_text())
+                receipt[key] = value
+                path.write_text(json.dumps(receipt))
+                summary = nightly.summarize_shards(self.root, IDENTITY)
+                self.assertEqual(summary["status"], "incomplete")
+                self.assertEqual(summary["reported_shards"], 0)
+                self.assertIn("browser-outcome-chromium-1", summary["missing_or_invalid_shards"])
 
     def test_history_distinguishes_reported_results_from_unknown_flakes(self):
         self.write_shard("chromium", 1, status="failed", flaky=3)
