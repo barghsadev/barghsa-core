@@ -30,14 +30,22 @@ scp_args=(-P "$port" -o BatchMode=yes)
 images=()
 postgres_id=
 clamav_id=
-if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.env'; then
-  stateful=$(ssh "${ssh_args[@]}" "$remote" \
-    "grep -E '^BARGHSA_(POSTGRES|CLAMAV)_IMAGE=' /etc/barghsa/staging/active-images.env")
+postgres_volume=barghsa-staging_pgdata
+stateful=$(ssh "${ssh_args[@]}" "$remote" \
+  "if test -e /etc/barghsa/staging/active-images.env; then grep -E '^BARGHSA_(POSTGRES_IMAGE|POSTGRES_VOLUME|CLAMAV_IMAGE)=' /etc/barghsa/staging/active-images.env; fi")
+if [[ -n "$stateful" ]]; then
   postgres_image=$(printf '%s\n' "$stateful" | sed -n 's/^BARGHSA_POSTGRES_IMAGE=//p')
   clamav_image=$(printf '%s\n' "$stateful" | sed -n 's/^BARGHSA_CLAMAV_IMAGE=//p')
+  if [[ "$stateful" == *BARGHSA_POSTGRES_VOLUME=* ]]; then
+    postgres_volume=$(printf '%s\n' "$stateful" | sed -n 's/^BARGHSA_POSTGRES_VOLUME=//p')
+  fi
   [[ "$postgres_image" =~ ^barghsa-postgres:vps-[a-z0-9._-]+$ &&
      "$clamav_image" =~ ^barghsa-clamav:vps-[a-z0-9._-]+$ ]] || {
     echo 'Invalid active stateful image tags on VPS' >&2
+    exit 1
+  }
+  [[ "$postgres_volume" =~ ^barghsa-staging_pgdata([._-][a-z0-9][a-z0-9._-]*)?$ ]] || {
+    echo 'Invalid active PostgreSQL volume name on VPS' >&2
     exit 1
   }
   echo 'Keeping the existing PostgreSQL and ClamAV images and volumes' >&2
@@ -132,6 +140,7 @@ BARGHSA_APP_IMAGE_ID=$app_id
 BARGHSA_WEB_IMAGE=$web_image
 BARGHSA_WEB_IMAGE_ID=$web_id
 BARGHSA_POSTGRES_IMAGE=$postgres_image
+BARGHSA_POSTGRES_VOLUME=$postgres_volume
 BARGHSA_CLAMAV_IMAGE=$clamav_image
 EOF
 if [[ -n "$postgres_id" ]]; then

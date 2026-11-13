@@ -213,6 +213,10 @@ ClamAV IDs to their separately verified scan and SBOM receipts. Record
 registry manifest digests separately when publishing to a registry.
 Subsequent releases preserve
 `/etc/barghsa/staging/runtime.env` and Docker volumes.
+The active image manifest also records `BARGHSA_POSTGRES_VOLUME`. Older
+manifests use `barghsa-staging_pgdata`. Normal releases carry the recorded name
+forward, require the active volume to exist, and verify the actual PostgreSQL
+mount before migration and again before accepting the deployment.
 For SBOMs generated from a saved image, verify the running Docker image ID
 against the archive descriptor, then verify the selected platform manifest,
 config and layer digests. The scanner can report the config digest when the

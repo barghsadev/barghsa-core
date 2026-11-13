@@ -15,6 +15,7 @@ set -a
 # Root-owned configuration only.
 # shellcheck source=/dev/null
 source "$runtime"
+BARGHSA_POSTGRES_VOLUME=barghsa-staging_pgdata
 # shellcheck source=/dev/null
 source "$candidate"
 set +a
@@ -67,7 +68,12 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
     BARGHSA_CLAMAV_IMAGE) clamav_id=$loaded_id ;;
   esac
 done
-if [[ -r "$active" ]]; then
+[[ "$BARGHSA_POSTGRES_VOLUME" =~ ^barghsa-staging_pgdata([._-][a-z0-9][a-z0-9._-]*)?$ ]] || {
+  echo 'Invalid candidate PostgreSQL volume name' >&2
+  exit 1
+}
+if [[ -e "$active" ]]; then
+  [[ -r "$active" ]] || { echo 'Active staging manifest is unreadable' >&2; exit 1; }
   for key in BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
     previous=$(sed -n "s/^${key}=//p" "$active")
     [[ "$previous" == "${!key}" ]] || {
@@ -75,18 +81,48 @@ if [[ -r "$active" ]]; then
       exit 1
     }
   done
+  previous_volume=barghsa-staging_pgdata
+  if grep -q '^BARGHSA_POSTGRES_VOLUME=' "$active"; then
+    previous_volume=$(sed -n 's/^BARGHSA_POSTGRES_VOLUME=//p' "$active")
+  fi
+  [[ "$BARGHSA_POSTGRES_VOLUME" == "$previous_volume" ]] || {
+    echo 'PostgreSQL volume changed; cut over separately after a backup' >&2
+    exit 1
+  }
+  docker volume inspect "$BARGHSA_POSTGRES_VOLUME" >/dev/null || {
+    echo 'The active PostgreSQL volume is missing' >&2
+    exit 1
+  }
+elif [[ "$BARGHSA_POSTGRES_VOLUME" != barghsa-staging_pgdata ]]; then
+  echo 'A new staging installation requires the default PostgreSQL volume' >&2
+  exit 1
 fi
 
 dc=(docker compose --env-file "$runtime" --env-file "$candidate" -f "$compose")
 "${dc[@]}" config --quiet
 
+verify_postgres_mount() {
+  local mount
+  mount=$(docker container inspect --format \
+    '{{range .Mounts}}{{if eq .Destination "/var/lib/postgresql/data"}}{{.Type}}:{{.Name}}:{{.RW}}{{end}}{{end}}' "$1") || return
+  if [[ "$mount" != "volume:$BARGHSA_POSTGRES_VOLUME:true" ]]; then
+    echo 'PostgreSQL data mount differs from the active volume' >&2
+    return 1
+  fi
+}
+
 verify_running_image() {
-  local service=$1 expected_id=$2 container running_id
-  container=$("${dc[@]}" ps -q "$service") || return
+  local service=$1 expected_id=$2 container=${3:-} running_id
+  if [[ -z "$container" ]]; then
+    container=$("${dc[@]}" ps -q "$service") || return
+  fi
   running_id=$(docker container inspect --format '{{.Image}}' "$container") || return
   if [[ "$running_id" != "$expected_id" ]]; then
     printf 'Running image ID differs from the candidate manifest: %s\n' "$service" >&2
     return 1
+  fi
+  if [[ "$service" == postgres ]]; then
+    verify_postgres_mount "$container" || return
   fi
 }
 
@@ -97,6 +133,13 @@ rollback() {
     local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
     # Compose gives exported shell variables priority over the previous manifest.
     if ! (
+      if ! verify_running_image postgres "$postgres_id"; then
+        echo 'PostgreSQL image or volume could not be verified for rollback' >&2
+        if ! "${previous[@]}" stop worker web api ai-inference; then
+          echo 'Stopping the staging application after the failed PostgreSQL check also failed' >&2
+        fi
+        exit 1
+      fi
       unset BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE
       if ! "${previous[@]}" run --rm --no-deps api node -e '
 const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
@@ -125,6 +168,11 @@ const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
   fi
   exit "$status"
 }
+# Check an existing container, including a stopped one, before Compose can start it.
+postgres_container=$("${dc[@]}" ps --all -q postgres)
+if [[ -n "$postgres_container" ]]; then
+  verify_running_image postgres "$postgres_id" "$postgres_container"
+fi
 trap rollback ERR
 
 # These images are pinned by digest; a cached exact image needs no registry round trip.

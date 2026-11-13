@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:57:58+00:00",
+  "updated": "2026-11-13T10:17:39+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11107,7 +11107,8 @@
       "remaining": [
         "Repeat migration-before-start, compatible rollout and rollback, and backup/restore verification on the designated production-equivalent topology. The isolated production Compose migration service has verified the canonical journal and rejects a mismatched expected version.",
         "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence.",
-        "The isolated 0288-to-0289 migration and idempotent repeat pass on the retained Debian and Ubuntu trial runtimes. The old image correctly rejects the migrated database and returns HTTP readiness 200 with its preserved 0288 database. Verify the final staging cutover and recovery on the production-equivalent topology."
+        "The isolated 0288-to-0289 migration and idempotent repeat pass on the retained Debian and Ubuntu trial runtimes. The old image correctly rejects the migrated database and returns HTTP readiness 200 with its preserved 0288 database. Verify the final staging cutover and recovery on the production-equivalent topology.",
+        "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. Verify the separate logical cutover and matching rollback pair on staging, then repeat on the designated production-equivalent topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -11290,7 +11291,8 @@
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-schema-aware-staging-rollback",
-          "release-0.6-staging-migration-writer-stop"
+          "release-0.6-staging-migration-writer-stop",
+          "release-0.6-staging-postgres-volume-guard"
         ],
         "current_acceptance": null
       }
@@ -13204,7 +13206,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             }
           ],
           "checks": [
@@ -13263,6 +13265,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -18413,7 +18423,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -18545,6 +18555,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -28504,11 +28522,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -28710,6 +28728,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -31145,11 +31172,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -31517,6 +31544,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -92619,7 +92655,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -93955,6 +93991,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -153111,11 +153155,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -153123,7 +153167,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -154088,6 +154132,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -501261,7 +501315,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -502290,6 +502344,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -502539,7 +502601,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -503568,6 +503630,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -503816,7 +503886,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -504845,6 +504915,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -587163,7 +587241,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -587703,6 +587781,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -606946,7 +607032,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -606954,7 +607040,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -607371,6 +607457,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -607725,7 +607820,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -607733,7 +607828,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -608150,6 +608245,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -608502,7 +608606,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -608510,7 +608614,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -608927,6 +609031,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -609279,7 +609392,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -609287,7 +609400,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -609728,6 +609841,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -610574,7 +610696,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -610582,7 +610704,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -610999,6 +611121,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -611543,11 +611674,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -611555,7 +611686,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -612544,6 +612675,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -613051,7 +613192,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -613059,7 +613200,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -613476,6 +613617,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -613827,7 +613977,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -613835,7 +613985,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -614252,6 +614402,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -614604,7 +614763,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -614612,7 +614771,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -615029,6 +615188,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -615382,7 +615550,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -615390,7 +615558,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -615831,6 +615999,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -616182,7 +616359,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -616190,7 +616367,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -616607,6 +616784,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -616958,7 +617144,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -616966,7 +617152,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -617383,6 +617569,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -619960,7 +620155,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -620088,6 +620283,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -620160,7 +620363,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -620339,6 +620542,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -626957,7 +627168,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -627183,6 +627394,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -627236,7 +627455,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -627317,6 +627536,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -627800,7 +628027,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -628026,6 +628253,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -628293,7 +628528,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -628413,6 +628648,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -640937,7 +641180,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -641078,6 +641321,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -643887,7 +644138,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -644113,6 +644364,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -646402,7 +646661,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -646544,6 +646803,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -649521,7 +649788,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -649628,6 +649895,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -650356,7 +650631,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/threat-model.md",
@@ -650408,6 +650683,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -650456,7 +650739,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/security/authorization.md",
@@ -650744,6 +651027,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -673001,7 +673292,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "packages/shared/src/operator-logging.ts",
@@ -673040,6 +673331,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -674225,7 +674524,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -674469,6 +674768,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -676699,7 +677006,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+              "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -676973,6 +677280,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -683428,7 +683743,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/deployment.md",
@@ -683665,6 +683980,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -683773,7 +684096,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/deployment.md",
@@ -684010,6 +684333,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -684128,7 +684459,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+              "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -684188,7 +684519,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "docs/deployment.md",
@@ -684591,6 +684922,15 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -687426,11 +687766,11 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+              "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -687642,6 +687982,15 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/compose.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ]
         }
@@ -1013773,15 +1014122,15 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+              "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1013797,7 +1014146,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1016596,6 +1016945,17 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "presentation_renewals": [
@@ -1019157,15 +1019517,15 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "836672db148c9fa238f975e94c420bfaa000c3d67d4c1fc7376156e0372a38f4"
+              "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "868faf5f5ac95049244059891aaee8a8c073a10e13050c31c8b5a84d619712f5"
+              "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "8cd7745cd7aecb3680696b90d30d3cfed91bda786a1b58753ac9919609464155"
+              "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1019181,7 +1019541,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "e194ed8ba18dbb22ab63216b779e36e6dafc12dd3fffc4b434c167e98668cc80"
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1021882,6 +1022242,17 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging now stops the previous writers before migration. A stop failure uses the existing schema-aware rollback path. The release queue, image identity and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-postgres-volume-guard",
+              "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/compose.yml",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1027123,7 +1027494,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "Preflight 43310381340 passed Verify monorepo integrity and 44b94a3e reached protected main. Main run 43315917435 stopped its secret job at the random fixture self-test before scanning history. The deterministic fixture passed with the pinned Linux and macOS scanners. The exact successor and strict release gates remain open."
+        "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1027407,7 +1027778,8 @@
           "release-0.6-protected-main-test-reuse",
           "release-0.6-protected-main-complete",
           "release-0.6-main-integrity-5aa2db96",
-          "release-0.6-deterministic-secret-scan-fixture"
+          "release-0.6-deterministic-secret-scan-fixture",
+          "release-0.6-staging-postgres-volume-guard"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1191643,6 +1192015,118 @@
         {
           "file": "staging-release-tests.log",
           "sha256": "9f9dd7f05b43e5faa700d660a86064a1fdc258ac05d9777aaa2f7a279561ecab"
+        }
+      ]
+    },
+    "release-0.6-staging-postgres-volume-guard": {
+      "batch": "release-0.6-staging-postgres-volume-guard",
+      "base_commit": "0ab6737d7aa09a8ec9557fab9ea363a196ee4dbc",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/compose.yml",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py",
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "734a216fd72d7edea2c567cc3d0e929a0fc7530960a7f11c563e59555ad2038a"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "eef22564aad0d81e4ee16ba44258ce958da05049a4689726e29ade37d8ca01c6"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "837dcd9960f7fe11cfb227a485920b7c6ef78011a8d26fa96d40c850806dcf3f"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "328b417afc5ba9256e6be080f12cb653dd7f2ba3230d6bd65802a3ea61f10d17"
+        }
+      ],
+      "checks": [
+        "Verified protected main b9e0fa856 from required GitHub preflight 43321674107. Staging v0.5.1 still mounts the writable legacy named PostgreSQL volume.",
+        "The normal deploy copies the active volume selection into the new manifest. A failed SSH read does not select bootstrap. The release refuses an absent or changed existing volume and confirms the exact writable mount and image before starting an existing container, before applying migrations, and before accepting the rollout.",
+        "All 28 release queue and rollback cases passed. The final rollback suite passed all nine tests, including an additional injected mount change after migration admission, and seven AI runtime checks passed. ShellCheck and formatting passed."
+      ],
+      "limitations": [
+        "The new guard was exercised in shell and Compose tests. The live read confirmed only the existing mount. The logical cutover, deployment on an accepted v0.6.0 candidate, and production-equivalent recovery are still pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-postgres-volume-guard",
+      "execution_receipts": [
+        {
+          "file": "staging-release-tests.log",
+          "sha256": "ba88f9f57243554e32b85009e90e6df20580bf09a8bc9286409be1fc5421626e"
+        },
+        {
+          "file": "rollback-final.log",
+          "sha256": "3d26f1579fa3d08386c26e4d111c45db9e3af77bd0c4c671a4c3dc647b886efe"
+        },
+        {
+          "file": "ai-runtime.log",
+          "sha256": "351050462d5b8c96af76242f0ba47100ce1089b27f769776587546d4e9701a31"
+        },
+        {
+          "file": "live-mount.log",
+          "sha256": "ab887cf91d7f0e9824f15910565208657f321199e948cbd337ec040aaf4250e0"
         }
       ]
     }

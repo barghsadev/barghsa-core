@@ -53,3 +53,13 @@ while writes are paused through cutover verification.
 Keep the original cluster stopped and protected until the recovery window closes. The previous volume can serve as a rollback while no new writes have been accepted. After new writes, switching back could lose data; stop traffic and use the approved recovery or roll-forward procedure. Rehearse backup and WAL recovery independently on the new operating system. See the [PostgreSQL restore runbook](postgresql-restore-runbook.md) and [PostgreSQL collation guidance](https://www.postgresql.org/docs/16/sql-altercollation.html).
 
 The normal application release retains the active database image. The production application uses a separate PostgreSQL service; this staging image rehearsal does not authorize a production database change.
+
+Use a separate cutover under the staging release lock for a restored volume.
+Name the new volume `barghsa-staging_pgdata-<cutover-id>` and mount it at
+`/var/lib/postgresql/data`. Preserve the previous active manifest and verify the
+replacement image and volume on the stopped-writes topology before updating
+`/etc/barghsa/staging/active-images.env`. Record the paired
+`BARGHSA_POSTGRES_IMAGE` and `BARGHSA_POSTGRES_VOLUME` values together. The
+ordinary release rejects a different volume and checks the mounted volume
+before any migrations. For a pre-write rollback, use the preserved manifest
+with its original image and volume.

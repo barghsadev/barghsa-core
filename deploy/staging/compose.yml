@@ -224,6 +224,7 @@ networks:
 
 volumes:
   pgdata:
+    name: ${BARGHSA_POSTGRES_VOLUME:-barghsa-staging_pgdata}
   redisdata:
   objectdata:
   clamavdata:
