@@ -41,6 +41,10 @@ import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 import { ApplicationToaster } from '../components/ApplicationToaster.js';
 import { SkipLink } from '../components/SkipLink.js';
 
+const AuthEntryLoading = lazy(() =>
+  import('../components/RouteSkeleton.js').then((module) => ({ default: module.RouteSkeleton }))
+);
+
 export const Route = createRootRoute({
   beforeLoad: async ({ location, preload, abortController }) => {
     if (import.meta.env.PROD && isAuthEntryPath(location.pathname) !== __BARGHSA_AUTH_ENTRY__) {
@@ -49,7 +53,10 @@ export const Route = createRootRoute({
     }
     if (isAuthEntryPath(location.pathname)) {
       const session = await readSessionContext(abortController.signal);
-      if (session !== null) throw redirect({ to: '/app', replace: true });
+      if (session !== null) {
+        if (authEntry) return { appSession: null, isStaff: false, handoffToApp: true };
+        throw redirect({ to: '/app', replace: true });
+      }
     }
     if (location.pathname === '/app' || location.pathname.startsWith('/app/')) {
       const session = await readSessionContext(abortController.signal);
@@ -75,7 +82,7 @@ export const Route = createRootRoute({
     return { appSession: null, isStaff: false };
   },
   shellComponent: RouteShell,
-  component: RootComponent,
+  component: authEntry ? AuthEntryRoot : RootComponent,
 });
 
 function RouteShell({ children }: { children: ReactNode }) {
@@ -105,6 +112,24 @@ function needsProfile(pathname: string, isStaff: boolean): boolean {
     pathname !== '/admin' &&
     !pathname.startsWith('/admin/')
   );
+}
+
+function AuthEntryRoot() {
+  const { handoffToApp } = Route.useRouteContext();
+  // Leave the auth bundle after the root mounts so an early session response
+  // cannot race the router's initial transition. The app reads authority again.
+  useEffect(() => {
+    if (!handoffToApp) return;
+    rememberEntryLocale();
+    window.location.replace('/app');
+  }, [handoffToApp]);
+  if (handoffToApp)
+    return (
+      <Suspense>
+        <AuthEntryLoading />
+      </Suspense>
+    );
+  return <RootComponent />;
 }
 
 function RootComponent() {

@@ -37,6 +37,8 @@ for (const path of ['/login', '/register', '/register/verify', '/forgot-password
     await expect(page.getByText('private-login@example.test', { exact: true })).toHaveCount(0);
     release();
     await expect(page).toHaveURL(/\/app$/);
+    await expect(page.locator('main[data-area="admin"]')).toBeVisible();
+    await expect.poll(() => reads).toBeGreaterThanOrEqual(2);
   });
 
 test('an expired session can use the public form without loading workspace data', async ({

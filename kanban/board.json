@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T13:04:30+00:00",
+  "updated": "2026-11-13T13:16:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21765,7 +21765,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The intermittent signed-in auth entry remains open. Obtain a clean scheduled rollup and verified report delivery on the final candidate. The instrumented auth replay recorded eight failures despite 72 completed workspace HTTP responses. Failures also reproduced without Playwright traces. A native same-origin fixture confirmed the failure without browser interception. The direct document redirect experiment also failed verification.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21859,7 +21859,8 @@
           "release-0.6-nightly-auth-entry-triage",
           "release-0.6-registration-consent-timing",
           "release-0.6-knowledge-query-error",
-          "release-0.6-auth-entry-http-boundary"
+          "release-0.6-auth-entry-http-boundary",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": null
       }
@@ -24738,7 +24739,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "source-bound-timezone-and-direction-checks",
@@ -24774,7 +24776,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "packages/ui/src/direction-provider.ts",
@@ -24853,6 +24855,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -41549,7 +41559,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-public-registration-privacy",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -41625,7 +41636,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/app.tsx",
@@ -42265,6 +42276,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -53980,7 +53999,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -54020,7 +54040,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -54663,6 +54683,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -96960,7 +96988,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -97196,7 +97225,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -97532,6 +97561,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -112435,7 +112472,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -112547,7 +112585,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -112852,6 +112890,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -113005,7 +113051,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -113117,7 +113164,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -113422,6 +113469,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -113605,7 +113660,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -113717,7 +113773,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -114022,6 +114078,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -114184,7 +114248,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -114296,7 +114361,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -114601,6 +114666,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -196040,7 +196113,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -196164,7 +196238,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -196858,6 +196932,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -628784,7 +628866,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The live v0.5.1 report-only logs contain three same-origin inline style reports at the exact Sonner empty-style insertion instruction. The pinned patch resolves the native report on the local candidate with CSP enforcement and preserves the approved CSS hash. The favicon remains verified. Verify the patch on the exact staged candidate, complete the representative full-week report-only review and exercise the customer and staff journeys before enforcement. The owner-activated favicon matched in Chromium and WebKit on November 13, and the staging API recorded zero violations from November 12 21:35 UTC to November 13 10:28 UTC."
+        "The owner-activated PNG matched in Chromium and WebKit at 10:28 UTC on November 13. A later audited activation at 13:00:44 UTC restored the external favicon. Restore the same-origin PNG through the staff workflow and read back the served bytes and CSP reports. The pinned Sonner patch resolved its earlier native inline-style report locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise customer and staff journeys before enforcement."
       ],
       "owner": null,
       "depends_on": [],
@@ -628799,7 +628881,8 @@
           "release-0.6-published-staging-favicon",
           "release-0.6-staging-favicon-csp-followup",
           "release-0.6-sonner-csp-style-insertion",
-          "release-0.6-staging-favicon-live-recheck"
+          "release-0.6-staging-favicon-live-recheck",
+          "release-0.6-staging-favicon-later-activation"
         ],
         "current_acceptance": null
       }
@@ -655996,7 +656079,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-dashboard-testing-library"
+          "release-0.6-dashboard-testing-library",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "source-bound-dashboard-workspace-testing-library",
@@ -656053,11 +656137,21 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/test/render-workspace.tsx",
               "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -660738,7 +660832,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "source-bound-new-device-mfa-and-session-revocation-browser-journey",
@@ -660750,7 +660845,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -660795,6 +660890,16 @@
             "The older browser was authenticated before revocation and returns to sign-in on a fresh navigation afterward. The current browser still loads its current session after reload. The six exact local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing customer and staff session-expiry cases also passed. Focused format, lint and diff checks passed. The browser uses controlled API responses and performs no live OTP or account mutation.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
+            }
           ]
         }
       }
@@ -662021,7 +662126,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -662053,7 +662159,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -662189,6 +662295,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -737984,7 +738098,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -738352,7 +738467,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -738781,6 +738896,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -739059,7 +739182,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -739427,7 +739551,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -739856,6 +739980,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -740133,7 +740265,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -740501,7 +740634,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -740930,6 +741063,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -741373,7 +741514,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -741389,7 +741531,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -741529,7 +741671,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -741923,6 +742065,15 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -743282,7 +743433,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -743298,7 +743450,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -743438,7 +743590,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -743832,6 +743984,15 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -748856,7 +749017,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-nightly-ai-catalogue-scroll",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -749212,7 +749374,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -749978,6 +750140,14 @@
                 "apps/web/e2e/knowledge-policy-membership.spec.ts"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -750116,7 +750286,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-nightly-ai-catalogue-scroll",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -750472,7 +750643,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -751238,6 +751409,14 @@
                 "apps/web/e2e/knowledge-policy-membership.spec.ts"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -752132,7 +752311,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-nightly-ai-catalogue-scroll",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -752488,7 +752668,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -753254,6 +753434,14 @@
                 "apps/web/e2e/knowledge-policy-membership.spec.ts"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -811612,7 +811800,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -812604,7 +812793,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -813846,6 +814035,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -813971,7 +814168,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -814963,7 +815161,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -816205,6 +816403,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -816381,7 +816587,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-sentry-version-tag",
           "release-0.6-nightly-ai-catalogue-scroll",
-          "release-0.6-nightly-limit-settings-isolation"
+          "release-0.6-nightly-limit-settings-isolation",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -819021,7 +819228,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -819579,6 +819786,14 @@
                 "apps/web/e2e/limit-settings-forms.spec.ts"
               ],
               "scope": "Separates contract, wallet and dual-approval journeys by test so they have isolated route fixtures and the standard per-case deadline. Every existing assertion remains. All 36 settings cases passed across the three targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -819704,7 +819919,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -820716,7 +820932,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -821951,6 +822167,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -822076,7 +822300,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -823068,7 +823293,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -824310,6 +824535,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -824435,7 +824668,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -825427,7 +825661,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -826669,6 +826903,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -826794,7 +827036,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -827786,7 +828029,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -829028,6 +829271,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -829153,7 +829404,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -830145,7 +830397,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -831387,6 +831639,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -831512,7 +831772,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -832504,7 +832765,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -833746,6 +834007,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -833871,7 +834140,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -834863,7 +835133,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -836105,6 +836375,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -836230,7 +836508,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -837222,7 +837501,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -838464,6 +838743,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -838589,7 +838876,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -839581,7 +839869,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -840823,6 +841111,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -840948,7 +841244,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -841940,7 +842237,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -843182,6 +843479,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -843307,7 +843612,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -844299,7 +844605,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -845541,6 +845847,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -846555,7 +846869,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -847547,7 +847862,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -848789,6 +849104,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -848914,7 +849237,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -849906,7 +850230,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
@@ -851148,6 +851472,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         }
@@ -867549,7 +867881,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -867753,7 +868086,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -867985,7 +868318,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -868543,6 +868876,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -868758,7 +869100,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -868962,7 +869305,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -869194,7 +869537,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -869752,6 +870095,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -869967,7 +870319,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -870171,7 +870524,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -870403,7 +870756,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -870961,6 +871314,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -871176,7 +871538,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -871380,7 +871743,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -871612,7 +871975,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -872170,6 +872533,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -872385,7 +872757,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -872589,7 +872962,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -872821,7 +873194,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -873379,6 +873752,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -873591,7 +873973,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -873959,7 +874342,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -874388,6 +874771,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -874665,7 +875056,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -875033,7 +875425,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -875462,6 +875854,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -875739,7 +876139,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -876107,7 +876508,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -876536,6 +876937,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -876813,7 +877222,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -877181,7 +877591,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -877610,6 +878020,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -877891,7 +878309,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -878259,7 +878678,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -878688,6 +879107,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -878965,7 +879392,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -879333,7 +879761,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -879762,6 +880190,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -880040,7 +880476,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-process-error-reporting",
-          "release-0.6-stakeholder-first-look"
+          "release-0.6-stakeholder-first-look",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -880408,7 +880845,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -880837,6 +881274,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -881115,7 +881560,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -881483,7 +881929,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -881912,6 +882358,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -882190,7 +882644,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -882558,7 +883013,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -882987,6 +883442,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -883265,7 +883728,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -883633,7 +884097,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -884062,6 +884526,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -884340,7 +884812,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -884708,7 +885181,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -885137,6 +885610,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -885415,7 +885896,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -885783,7 +886265,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -886212,6 +886694,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -886490,7 +886980,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -886858,7 +887349,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -887287,6 +887778,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -887565,7 +888064,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -887933,7 +888433,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -888362,6 +888862,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -888640,7 +889148,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -889008,7 +889517,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -889437,6 +889946,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -889717,7 +890234,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -889921,7 +890439,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -890153,7 +890671,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -890711,6 +891229,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -890926,7 +891453,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -891130,7 +891658,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -891362,7 +891890,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -891920,6 +892448,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -892135,7 +892672,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -892339,7 +892877,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -892571,7 +893109,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -893129,6 +893667,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -893344,7 +893891,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -893548,7 +894096,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -893780,7 +894328,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -894338,6 +894886,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -894553,7 +895110,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -894757,7 +895315,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -894989,7 +895547,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -895547,6 +896105,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -895762,7 +896329,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -895966,7 +896534,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -896198,7 +896766,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -896756,6 +897324,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -896971,7 +897548,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -897175,7 +897753,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -897407,7 +897985,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -897965,6 +898543,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -898180,7 +898767,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -898384,7 +898972,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -898616,7 +899204,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -899174,6 +899762,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -899389,7 +899986,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -899593,7 +900191,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -899825,7 +900423,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -900383,6 +900981,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -900598,7 +901205,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -900802,7 +901410,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -901034,7 +901642,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -901592,6 +902200,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -901807,7 +902424,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -902011,7 +902629,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -902243,7 +902861,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -902801,6 +903419,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -903016,7 +903643,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -903220,7 +903848,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+              "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -903452,7 +904080,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
@@ -904010,6 +904638,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/e2e/auth-entry-session.spec.ts",
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -982624,7 +983261,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -982948,7 +983586,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -983359,6 +983997,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -983553,7 +984199,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -983877,7 +984524,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -984288,6 +984935,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -984482,7 +985137,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -984806,7 +985462,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -985217,6 +985873,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -985412,7 +986076,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -985736,7 +986401,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -986147,6 +986812,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -986341,7 +987014,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -986665,7 +987339,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -987076,6 +987750,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -987270,7 +987952,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -987594,7 +988277,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -988005,6 +988688,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -988199,7 +988890,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -988523,7 +989215,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -988934,6 +989626,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -989129,7 +989829,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -989453,7 +990154,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -989864,6 +990565,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -990058,7 +990767,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -990382,7 +991092,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -990793,6 +991503,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -990987,7 +991705,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -991311,7 +992030,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -991722,6 +992441,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -1003882,7 +1004609,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -1007844,6 +1008571,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -1008165,7 +1008900,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-auth-entry-mounted-handoff"
         ]
       }
     },
@@ -1015704,7 +1016440,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -1018879,6 +1019615,14 @@
                 "apps/web/src/components/CatalogueQueryEditor.tsx"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "presentation_renewals": [
@@ -1019272,7 +1020016,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1021113,7 +1021858,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app/notifications.tsx",
@@ -1024186,6 +1024931,14 @@
                 "apps/web/src/components/CatalogueQueryEditor.tsx"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1024596,7 +1025349,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1027703,7 +1028457,7 @@
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
-              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+              "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -1029120,6 +1029874,14 @@
                 "apps/web/src/components/CatalogueQueryEditor.tsx"
               ],
               "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
+            },
+            {
+              "batch": "release-0.6-auth-entry-mounted-handoff",
+              "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+              "paths": [
+                "apps/web/src/routes/__root.tsx"
+              ],
+              "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
             }
           ]
         },
@@ -1029274,7 +1030036,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-mounted-handoff"
         ]
       }
     },
@@ -1029976,7 +1030739,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "Live staging serves the original favicon as a sealed same-origin asset. Three retained inline style reports were traced to the deployed Sonner stylesheet insertion. The candidate fixes it locally under the original CSP. Read back the exact staged fix and complete representative report-only review and the real customer and staff journeys before enforcement.",
+        "The owner-activated PNG matched in Chromium and WebKit at 10:28 UTC on November 13. A later audited activation at 13:00:44 UTC restored the external favicon. Restore the same-origin PNG through the staff workflow and read back the served bytes and CSP reports. The pinned Sonner patch resolved its earlier native inline-style report locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise customer and staff journeys before enforcement.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "On live v0.5.1, ClamD loaded daily 28181. Official DNS and the EU mirror matched main 63, daily 28181 and bytecode 339. All three detached signatures and archive hashes verified. The live daemon accepted a clean input and detected the standard EICAR fixture. Hosted preflight separately proved the sealed document lifecycle against a real ClamAV daemon. Verify signature freshness, sealed application receipts, scanner outage recovery and alert delivery on the final application and operational topology.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts."
@@ -1030021,7 +1030784,8 @@
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-favicon-csp-followup",
           "release-0.6-sonner-csp-style-insertion",
-          "release-0.6-staging-favicon-live-recheck"
+          "release-0.6-staging-favicon-live-recheck",
+          "release-0.6-staging-favicon-later-activation"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1195038,6 +1195802,216 @@
         {
           "file": "native-restore.log",
           "sha256": "20ac428ba7538f40bfcc45051a7a787bb6b9ef4056b6bed03ea12fcbd2770428"
+        }
+      ]
+    },
+    "release-0.6-auth-entry-mounted-handoff": {
+      "batch": "release-0.6-auth-entry-mounted-handoff",
+      "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-06.02.04",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-09.01.02",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "05-notifications-documents-ai.md#T-05.02.02",
+        "05-notifications-documents-ai.md#T-05.02.03",
+        "05-notifications-documents-ai.md#T-05.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "06-security-testing-observability.md#T-06.09.03.05",
+        "06-security-testing-observability.md#T-06.10.03.04",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/routes/__root.tsx",
+        "apps/web/e2e/auth-entry-session.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "3b424d936210d1be347e5c2b6ebe6826ba44cd1436dd60ec235881541ab45de6"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "03deb3091711a09ab8e0ec51ea14bb1dc4e6ccac0bf3870600094301c1fe975b"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "scripts/check-auth-transfer.mjs",
+          "sha256": "5a23ff527130ee3ffc86d20c716ccd5d22430f108dd3350166d847e7cf7a8690"
+        }
+      ],
+      "checks": [
+        "The same-origin native timing control reproduced three failures in 60 immediate reads and zero in 60 delayed reads. The production auth root now performs the document handoff after mounting. It keeps the loading state and does not render a public form for the verified session.",
+        "The final production build passed all 120 same-origin cases with no browser interception or retries. Firefox, WebKit and mobile Safari each covered immediate and delayed authority on five entry URLs. Each run required a visible staff workspace and a fresh authority read.",
+        "The existing auth and locale suites passed 115 cases across five browser projects. All 50 auth-session cases also passed with the added workspace and second-read assertions. Nineteen bootstrap and locale unit cases, web typecheck, lint and formatting passed.",
+        "All 102 Size Limit budgets passed. Measured delayed register transfer was 149.72 KB gzip against the 150 KB budget. The scoped auth component keeps the existing workspace entry point and wallet stayed within its 300 KB budget."
+      ],
+      "limitations": [
+        "The native server fixture uses controlled session authority. The clean scheduled 40-shard report and verified mailbox delivery on the exact candidate are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-auth-entry",
+      "execution_receipts": [
+        {
+          "file": "auth-timing-final-fixture.spec.txt",
+          "sha256": "0815e2fade1f785d1448a8b77a2a59778bba0d34cba7ce0e41f3b186e4e3b475"
+        },
+        {
+          "file": "native-timing-corrected.log",
+          "sha256": "cf018a2b83749520ecee6563a77c978669d415cd91aa1100283f5e4f1a87454d"
+        },
+        {
+          "file": "effect-final-native.log",
+          "sha256": "33dd0a13160f2c7cef9fcc1d4de2ff01940405e117d038dbaf6d90b4eb0fa78c"
+        },
+        {
+          "file": "effect-final-native-events.jsonl",
+          "sha256": "1160d4cb7cdffbc2b770462c7a706b74c153cfd143f86cc52d2075f583857c87"
+        },
+        {
+          "file": "effect-scoped-browser.log",
+          "sha256": "589cfbca0a163c15a753db44bf172432bc4f7854df79acec1f9eb8c4b6c23f2f"
+        },
+        {
+          "file": "effect-scoped-regression.log",
+          "sha256": "49f7d7ad4d3e0c6f8a732ca8cc62db2e36fffa932010339169a0239b2b869db1"
+        },
+        {
+          "file": "effect-scoped-bundle.log",
+          "sha256": "6e480413d3614db59770059459343872bf82982732a11ff882ecafb78006bfa9"
+        },
+        {
+          "file": "effect-scoped-transfer.log",
+          "sha256": "fcc9d2d1b6328743591fad440b5734ae23f0baddc7055b099f55fac793a365b3"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-later-activation": {
+      "batch": "release-0.6-staging-favicon-later-activation",
+      "base_commit": "0cbb699bbb78d1165758536b7816565ca82728a6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/api/src/admin/brand-config.service.ts",
+          "sha256": "f68745d434ad76011dc7ad1f2f7a466a36546d33ff5e1fefeb1f918486e46f1a"
+        },
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "b5fb754d77b44e0d7b893d3c5ed68042ff26d682fd3e1af107331082a5defef5"
+        }
+      ],
+      "checks": [
+        "On staging v0.5.1 the owner-activated PNG matched the intended bytes in Chromium and WebKit at 10:28 UTC.",
+        "A later audited branding activation at 13:00:44 UTC changed only faviconUrl and restored the external asset. The live config again returns that URL and the previously public sealed PNG returns HTTP 404.",
+        "The current API container logged eight report-only img-src violations against the external domain and one separate inline style-src-elem violation after 12:45 UTC."
+      ],
+      "limitations": [
+        "Restore the sealed same-origin favicon through the staff activation flow and verify the served bytes and report stream again. The later activation preserves its audited history.",
+        "The staged Sonner fix, representative report-only review and customer and staff enforcement rehearsal remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
+      "execution_receipts": [
+        {
+          "file": "staging-favicon-live-20261113.json",
+          "sha256": "5a84af185bcb5d50412b3fc60d190235c1af401d0e9955c7bb2cc83825551d6c"
+        },
+        {
+          "file": "staging-favicon-csp-20261113.txt",
+          "sha256": "dcbb5d72b722bfbbd68b376381d6d4232afdf97b37be781c772648d6b18f3fca"
+        },
+        {
+          "file": "staging-favicon-later-activation-20261113.json",
+          "sha256": "cfacf2948e6636e10b83821936b1f0472ea2ae1cfa7261e6d993ae805d822b29"
         }
       ]
     }
