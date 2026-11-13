@@ -39,6 +39,18 @@ beforeEach(async () => {
   );
 });
 const read = () => fetch(http.base + '/api/admin/config/service-workflows', { headers });
+const history = (query = '') =>
+  fetch(http.base + '/api/admin/config/service-workflows/history' + query, { headers });
+const restore = (
+  sourceId: string,
+  expectedVersion: number,
+  requestHeaders: Record<string, string> = headers
+) =>
+  fetch(http.base + '/api/admin/config/service-workflows/restore', {
+    method: 'POST',
+    headers: requestHeaders,
+    body: JSON.stringify({ sourceId, expectedVersion }),
+  });
 const write = (policy: unknown, expectedVersion = 0) =>
   fetch(http.base + '/api/admin/config/service-workflows', {
     method: 'PUT',
@@ -188,4 +200,84 @@ it('rolls policy, version and delivery-related history back when the audit write
   expect(
     (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0].version
   ).toBe(before);
+});
+
+it('recovers an existing audited version with current grants, step-up and an exact version', async () => {
+  const sourceId = randomUUID();
+  const policy = proposal();
+  // This audit shape predates explicit activation and restore provenance.
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+    VALUES($1,'workflow-editor','config_change',$2::jsonb,$3,'127.0.0.1')`,
+    [
+      sourceId,
+      JSON.stringify({ key: SERVICE_WORKFLOW_CONFIG_KEY, next: { policy, version: 1 } }),
+      randomUUID(),
+    ]
+  );
+  await http.pool.query('INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,2)', [
+    SERVICE_WORKFLOW_CONFIG_KEY,
+    JSON.stringify(DEFAULT_SERVICE_WORKFLOWS),
+  ]);
+  expect((await history('?beforeVersion=bad')).status).toBe(400);
+  const listed = await history('?beforeVersion=2');
+  expect(listed.status).toBe(200);
+  expect(await listed.json()).toMatchObject({
+    items: expect.arrayContaining([{ id: sourceId, version: 1, value: policy }]),
+  });
+  expect((await restore(randomUUID(), 2)).status).toBe(404);
+  expect((await restore(sourceId, 1)).status).toBe(409);
+  expect((await restore(sourceId, 2, { ...headers, 'X-CSRF-Token': 'invalid' })).status).toBe(403);
+  const retiredSource = randomUUID();
+  const retiredPolicy = proposal();
+  retiredPolicy.ticket_urgent.escalation.from.id = 'retired-role';
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+    VALUES($1,'workflow-editor','config_change',$2::jsonb,$3,'127.0.0.1')`,
+    [
+      retiredSource,
+      JSON.stringify({
+        key: SERVICE_WORKFLOW_CONFIG_KEY,
+        next: { policy: retiredPolicy, version: 1 },
+      }),
+      randomUUID(),
+    ]
+  );
+  expect((await restore(retiredSource, 2)).status).toBe(409);
+  expect(await (await read()).json()).toMatchObject({
+    policy: DEFAULT_SERVICE_WORKFLOWS,
+    version: 2,
+  });
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    session,
+  ]);
+  expect((await restore(sourceId, 2)).status).toBe(403);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+    session,
+  ]);
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='workflow-editor'",
+    [JSON.stringify(grants.slice(0, 1))]
+  );
+  expect((await history()).status).toBe(403);
+  expect((await restore(sourceId, 2)).status).toBe(403);
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions=$1::jsonb WHERE role_id='workflow-editor'",
+    [JSON.stringify(grants)]
+  );
+  const replies = await Promise.all([restore(sourceId, 2), restore(sourceId, 2)]);
+  expect(replies.map((r) => r.status).sort()).toEqual([200, 409]);
+  expect(await (await read()).json()).toMatchObject({ policy, version: 3 });
+  const { rows } = await http.pool.query(
+    `SELECT metadata::jsonb AS data FROM audit_log
+     WHERE metadata::jsonb->'restoredFrom'->>'id'=$1`,
+    [sourceId]
+  );
+  expect(rows).toHaveLength(1);
+  expect(rows[0].data).toMatchObject({
+    action: 'activate',
+    restoredFrom: { id: sourceId, version: 1 },
+    next: { policy, version: 3 },
+  });
+  expect((await restore(randomUUID(), 3)).status).toBe(404);
 });

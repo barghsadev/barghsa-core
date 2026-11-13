@@ -23,11 +23,16 @@ vi.mock('./TeamActionDialog.js', () => ({
   },
 }));
 let host: HTMLDivElement, root: Root, view: ServiceWorkflowView, status: number;
+let revisions: {
+  items: { id: string; version: number; value: ServiceWorkflowView['policy'] }[];
+  nextBeforeVersion: number | null;
+};
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   harness.locale = 'en';
   harness.command = null;
   status = 200;
+  revisions = { items: [], nextBeforeVersion: null };
   view = {
     policy: structuredClone(DEFAULT_SERVICE_WORKFLOWS),
     version: 0,
@@ -36,7 +41,9 @@ beforeEach(() => {
   };
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () => Response.json(view, { status }))
+    vi.fn(async (path: string) =>
+      Response.json(path.includes('/history?') ? revisions : view, { status })
+    )
   );
   host = document.createElement('div');
   document.body.append(host);
@@ -134,4 +141,28 @@ it('clears private configuration and withdraws confirmation when current authori
   await act(async () => harness.command!.onUnconfirmed());
   await vi.waitFor(() => expect(host.querySelector('form')).toBeNull());
   expect(host.textContent).toContain('access changed');
+});
+
+it('reviews a prior audited policy and sends only its identity and the current version', async () => {
+  view.version = 2;
+  const prior = structuredClone(DEFAULT_SERVICE_WORKFLOWS);
+  prior.ticket_urgent = { hours: 8, notification: 'breach', email: false, escalation: null };
+  const id = '10000000-0000-4000-8000-000000000001';
+  revisions.items = [{ id, version: 1, value: prior }];
+  await mount();
+  const button = (label: string) =>
+    [...host.querySelectorAll('button')].find((item) => item.textContent === label);
+  await act(async () => button('Previous workflow versions')!.click());
+  await vi.waitFor(() => expect(button('Review restore of version 1')).toBeDefined());
+  await act(async () => button('Review restore of version 1')!.click());
+  expect(harness.command?.action).toMatchObject({
+    method: 'POST',
+    requiresPassword: true,
+    path: '/api/admin/config/service-workflows/restore',
+    body: { sourceId: id, expectedVersion: 2 },
+  });
+  expect(harness.command?.action.body).toEqual({ sourceId: id, expectedVersion: 2 });
+  await act(async () => harness.command!.onSuccess({ ...view, policy: prior, version: 3 }));
+  expect(host.textContent).toContain('Workflow targets and rules saved.');
+  expect(host.querySelector<HTMLInputElement>('#workflow-hours-ticket_urgent')?.value).toBe('8');
 });

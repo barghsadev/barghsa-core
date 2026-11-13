@@ -1065,6 +1065,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/service-workflows/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read prior audited service workflow policy versions */
+        get: operations["ServiceWorkflowController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/service-workflows/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate an audited workflow policy as a new version with recent staff step-up */
+        post: operations["ServiceWorkflowController_restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/wallet-top-up-limit": {
         parameters: {
             query?: never;
@@ -14981,6 +15015,1105 @@ export interface operations {
                             notification: "breach" | "escalation";
                         } | null;
                     };
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        policy: {
+                            consultation: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            electricity_contract: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            electricity_order: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            saving_contract: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            saving_order: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            solar_contract: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            solar_order: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            ticket_high: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached" | "ticket_priority";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            ticket_low: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached" | "ticket_priority";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            ticket_normal: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached" | "ticket_priority";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            ticket_urgent: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached" | "ticket_priority";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                            verification: {
+                                email: boolean;
+                                escalation: {
+                                    afterHours: number;
+                                    /** @enum {string} */
+                                    condition: "sla_breached";
+                                    email: boolean;
+                                    from: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "any";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                    to: {
+                                        /** @enum {string|null} */
+                                        id: null;
+                                        /** @enum {string} */
+                                        kind: "admins";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "role";
+                                    } | {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "team";
+                                    };
+                                } | null;
+                                hours: number;
+                                /**
+                                 * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                 * @enum {string}
+                                 */
+                                notification: "breach" | "escalation";
+                            } | null;
+                        };
+                        roles: {
+                            id: string;
+                            name: string;
+                        }[];
+                        teams: {
+                            id: string;
+                            name: string;
+                        }[];
+                        version: number;
+                    };
+                };
+            };
+        };
+    };
+    ServiceWorkflowController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: {
+                            /** Format: uuid */
+                            id: string;
+                            value: {
+                                consultation: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                electricity_contract: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                electricity_order: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                saving_contract: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                saving_order: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                solar_contract: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                solar_order: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                ticket_high: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached" | "ticket_priority";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                ticket_low: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached" | "ticket_priority";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                ticket_normal: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached" | "ticket_priority";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                ticket_urgent: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached" | "ticket_priority";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                                verification: {
+                                    email: boolean;
+                                    escalation: {
+                                        afterHours: number;
+                                        /** @enum {string} */
+                                        condition: "sla_breached";
+                                        email: boolean;
+                                        from: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "any";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                        to: {
+                                            /** @enum {string|null} */
+                                            id: null;
+                                            /** @enum {string} */
+                                            kind: "admins";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "role";
+                                        } | {
+                                            id: string;
+                                            /** @enum {string} */
+                                            kind: "team";
+                                        };
+                                    } | null;
+                                    hours: number;
+                                    /**
+                                     * @description Escalation-only delivery requires a non-null rule. Inbox is always included when delivery fires.
+                                     * @enum {string}
+                                     */
+                                    notification: "breach" | "escalation";
+                                } | null;
+                            };
+                            version: number;
+                        }[];
+                        nextBeforeVersion: number | null;
+                    };
+                };
+            };
+        };
+    };
+    ServiceWorkflowController_restore: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
                 };
             };
         };

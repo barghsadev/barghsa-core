@@ -4,7 +4,9 @@ import {
   ForbiddenException,
   Get,
   HttpCode,
+  Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -25,7 +27,12 @@ import {
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { InputFieldException } from '../common/input-field.exception.js';
-import { readServiceWorkflows, saveServiceWorkflows } from './service-workflow-config.js';
+import { activationHistoryQuery } from './config-activation-history.js';
+import {
+  readServiceWorkflows,
+  readServiceWorkflowHistory,
+  saveServiceWorkflows,
+} from './service-workflow-config.js';
 
 const audience = (source: boolean): SchemaObject => ({
   oneOf: [
@@ -114,12 +121,35 @@ const view: SchemaObject = {
   required: ['policy', 'version', 'roles', 'teams'],
   properties: { policy, version: { type: 'integer', minimum: 0 }, roles: option, teams: option },
 };
+const revisionPage: SchemaObject = {
+  type: 'object',
+  required: ['items', 'nextBeforeVersion'],
+  properties: {
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['id', 'version', 'value'],
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          version: { type: 'integer', minimum: 1 },
+          value: policy,
+        },
+      },
+    },
+    nextBeforeVersion: { type: 'integer', minimum: 1, nullable: true },
+  },
+};
 const schema = z
   .object({
     policy: z.custom<ServiceWorkflowPolicy>(isServiceWorkflowPolicy),
     expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
   })
   .strict();
+const restoreSchema = z.strictObject({
+  sourceId: z.uuid(),
+  expectedVersion: z.number().int().min(0).max(2_147_483_647),
+});
 @ApiTags('Admin service workflows')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
@@ -141,6 +171,44 @@ export class ServiceWorkflowController {
     this.authorize(req);
     return readServiceWorkflows();
   }
+  @Get('history')
+  @ApiOperation({ summary: 'Read prior audited service workflow policy versions' })
+  @ApiResponse({ status: 200, schema: revisionPage })
+  history(@Query() query: unknown, @Req() req: AuthenticatedRequest) {
+    this.authorize(req);
+    const parsed = activationHistoryQuery.safeParse(query);
+    if (!parsed.success) throw new InputFieldException(['beforeVersion']);
+    return readServiceWorkflowHistory(req.session, parsed.data.beforeVersion);
+  }
+
+  @Post('restore')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Activate an audited workflow policy as a new version with recent staff step-up',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['sourceId', 'expectedVersion'],
+      properties: {
+        sourceId: { type: 'string', format: 'uuid' },
+        expectedVersion: { type: 'integer', minimum: 0, maximum: 2_147_483_647 },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, schema: view })
+  restore(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    this.authorize(req);
+    const parsed = restoreSchema.safeParse(body);
+    if (!parsed.success) throw new InputFieldException(['sourceId']);
+    return saveServiceWorkflows(
+      { sourceId: parsed.data.sourceId },
+      parsed.data.expectedVersion,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
   @Put()
   @HttpCode(200)
   @ApiOperation({
@@ -160,7 +228,7 @@ export class ServiceWorkflowController {
     const parsed = schema.safeParse(body);
     if (!parsed.success) throw new InputFieldException(['policy']);
     return saveServiceWorkflows(
-      parsed.data.policy,
+      { policy: parsed.data.policy },
       parsed.data.expectedVersion,
       req.session,
       req.ip ?? 'unknown'

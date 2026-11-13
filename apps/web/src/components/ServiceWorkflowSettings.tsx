@@ -16,11 +16,34 @@ import {
 } from '@barghsa/shared/admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
+import { useCatalogueResource } from '../hooks/useCatalogueResource.js';
 import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import type { CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
 
 const path = '/api/admin/config/service-workflows';
+type Revision = { id: string; version: number; value: ServiceWorkflowPolicy };
+type RevisionPage = { items: Revision[]; nextBeforeVersion: number | null };
+type WorkflowAction = TeamAction & { reviewedPolicy: ServiceWorkflowPolicy };
+const revisionVersion = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 2_147_483_647;
+function isRevisionPage(value: unknown): value is RevisionPage {
+  if (!value || typeof value !== 'object') return false;
+  const page = value as RevisionPage;
+  return (
+    Array.isArray(page.items) &&
+    page.items.length <= 20 &&
+    (page.nextBeforeVersion === null || revisionVersion(page.nextBeforeVersion)) &&
+    page.items.every(
+      (item) =>
+        item &&
+        typeof item.id === 'string' &&
+        /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(item.id) &&
+        revisionVersion(item.version) &&
+        isServiceWorkflowPolicy(item.value)
+    )
+  );
+}
 const basis = (v: ServiceWorkflowView) =>
   JSON.stringify([v.version, serviceWorkflowBasis(v.policy), v.roles, v.teams]);
 type Duration = { value: string; unit: 'hours' | 'days' };
@@ -57,11 +80,15 @@ export function ServiceWorkflowSettings({
   );
   const [raw, setRaw] = useState<Times>(() => times(DEFAULT_SERVICE_WORKFLOWS));
   const [selected, setSelected] = useState<ServiceWorkflowKey>('ticket_urgent');
-  const [action, setAction] = useState<TeamAction | null>(null),
+  const [action, setAction] = useState<WorkflowAction | null>(null),
     [pending, setPending] = useState(false);
   const [invalid, setInvalid] = useState(false),
     [saved, setSaved] = useState(false);
   const [invalidField, setInvalidField] = useState('');
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyCursor, setHistoryCursor] = useState<{ version: number; before: number } | null>(
+    null
+  );
   const epoch = useRef(0),
     captured = useRef(0),
     actionRef = useRef(action),
@@ -80,6 +107,14 @@ export function ServiceWorkflowSettings({
     setSaved(false);
   }, []);
   const state = useSettingsSnapshot(path, isServiceWorkflowView, basis, reset, withdraw, onDenied);
+  const version = state.current?.version ?? 0;
+  const before =
+    historyCursor && historyCursor.version === version ? historyCursor.before : version;
+  const history = useCatalogueResource(
+    { ...state.scope, deny: state.denyCommand },
+    historyOpen && before > 1 ? `${path}/history?beforeVersion=${before}` : null,
+    isRevisionPage
+  );
   const busy = pending || !!action,
     blocked = disabled || !state.ready || state.changed || state.uncertain;
   useEffect(() => {
@@ -152,6 +187,32 @@ export function ServiceWorkflowSettings({
       title: text('save'),
       description: text('confirm'),
       body: { policy, expectedVersion: state.current.version },
+      reviewedPolicy: policy,
+      forbiddenMessage: text('forbidden'),
+      conflictMessage: text('changed'),
+    });
+  }
+  function prepareRestore(revision: Revision) {
+    if (
+      blocked ||
+      busy ||
+      !state.current ||
+      history.loading ||
+      history.error ||
+      revision.version >= before
+    )
+      return;
+    captured.current = epoch.current;
+    setSaved(false);
+    setInvalid(false);
+    setAction({
+      path: `${path}/restore`,
+      method: 'POST',
+      requiresPassword: true,
+      title: text('restoreVersion').replace('{version}', String(revision.version)),
+      description: text('restoreConfirm'),
+      body: { sourceId: revision.id, expectedVersion: state.current.version },
+      reviewedPolicy: revision.value,
       forbiddenMessage: text('forbidden'),
       conflictMessage: text('changed'),
     });
@@ -470,6 +531,70 @@ export function ServiceWorkflowSettings({
           </Button>
         </form>
       )}
+      {state.current && version > 1 && !state.scope.denied && (
+        <section className="space-y-3" aria-label={text('history')}>
+          <Button
+            type="button"
+            variant="outline"
+            aria-expanded={historyOpen}
+            disabled={busy}
+            onClick={() => {
+              setHistoryCursor(null);
+              setHistoryOpen(!historyOpen);
+            }}
+          >
+            {text('history')}
+          </Button>
+          {historyOpen && (
+            <>
+              {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+              {history.error && (
+                <Alert variant="destructive">
+                  {text('historyError')}{' '}
+                  <Button type="button" variant="outline" onClick={history.retry}>
+                    {text('refresh')}
+                  </Button>
+                </Alert>
+              )}
+              {history.data && !history.loading && !history.error && (
+                <>
+                  {history.data.items.length === 0 && <p>{text('historyEmpty')}</p>}
+                  <ul className="flex flex-wrap gap-2">
+                    {history.data.items
+                      .filter((revision) => revision.version < before)
+                      .map((revision) => (
+                        <li key={revision.id}>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={blocked || busy}
+                            onClick={() => prepareRestore(revision)}
+                          >
+                            {text('restoreVersion').replace('{version}', String(revision.version))}
+                          </Button>
+                        </li>
+                      ))}
+                  </ul>
+                  {history.data.nextBeforeVersion !== null &&
+                    history.data.nextBeforeVersion < before && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={busy}
+                        onClick={() => {
+                          const cursor = history.data?.nextBeforeVersion;
+                          if (cursor) setHistoryCursor({ version, before: cursor });
+                        }}
+                      >
+                        {text('historyOlder')}
+                      </Button>
+                    )}
+                </>
+              )}
+            </>
+          )}
+        </section>
+      )}
       {action && (
         <TeamActionDialog
           action={action}
@@ -479,15 +604,14 @@ export function ServiceWorkflowSettings({
           onPendingChange={setPending}
           onDenied={state.denyCommand}
           onUnconfirmed={state.unconfirmed}
-          summary={summary((action.body as { policy: ServiceWorkflowPolicy }).policy)}
+          summary={summary(action.reviewedPolicy)}
           onSuccess={async (result) => {
             if (captured.current !== epoch.current || actionRef.current !== action) return;
             if (
               !isServiceWorkflowView(result) ||
               !state.current ||
               result.version !== state.current.version + 1 ||
-              serviceWorkflowBasis(result.policy) !==
-                serviceWorkflowBasis((action.body as { policy: ServiceWorkflowPolicy }).policy)
+              serviceWorkflowBasis(result.policy) !== serviceWorkflowBasis(action.reviewedPolicy)
             ) {
               state.unconfirmed();
               throw new Error('Unconfirmed workflow policy');

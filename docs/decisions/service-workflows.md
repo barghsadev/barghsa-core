@@ -60,6 +60,11 @@ Configuration writes require both service-target and escalation capabilities,
 CSRF, current session and recent password step-up. They compare the saved version
 and current role/team references, then audit the old/new policy atomically.
 Unknown save receipts hold the editor until a fresh read and explicit reset.
+Use **Previous workflow versions** to review an earlier audited policy. The
+confirmation displays its durations and routing. Restoring activates the exact
+audited policy as a new version after password step-up. The server checks the
+current version and role/team references again, and records the source revision
+with the new activation. A policy with a retired role or team needs a new edit.
 Retain migration `0280` on binary rollback. An older worker does not enforce these
 targets, and its healthy process alone cannot certify them. Restore the enforcing
 worker before relying on these operational deadlines.

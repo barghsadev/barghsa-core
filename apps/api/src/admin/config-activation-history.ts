@@ -18,7 +18,7 @@ export const activationHistoryQuery = z.strictObject({
 export async function configActivations<T>(
   client: PoolClient,
   key: string,
-  field: 'active' | 'mode',
+  field: 'active' | 'mode' | 'policy',
   valid: (value: unknown) => value is T,
   options: { beforeVersion?: number | undefined; sourceId?: string } = {}
 ) {
@@ -30,7 +30,8 @@ export async function configActivations<T>(
        FROM audit_log CROSS JOIN LATERAL (
          SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
        ) safe
-       WHERE event='config_change' AND data->>'key'=$1 AND data->>'action'='activate'
+       WHERE event='config_change' AND data->>'key'=$1
+         AND (data->>'action'='activate' OR ($2='policy' AND NOT (data ? 'action')))
          AND ($3::text IS NULL OR id=$3)
      )
      SELECT id,version::text,value FROM revisions WHERE version>0

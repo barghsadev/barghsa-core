@@ -8,6 +8,62 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`staff reviews and activates a previous workflow version (${locale})`, async ({ page }) => {
+    await page.setViewportSize({ width: locale === 'fa' ? 390 : 1440, height: 900 });
+    await setupCatalogueForms(page, locale, false);
+    const copy = (key: string) => tServiceSettings(`workflow.${key}`, locale);
+    const path = '/api/admin/config/service-workflows';
+    const sourceId = '10000000-0000-4000-8000-000000000001';
+    const prior = structuredClone(DEFAULT_SERVICE_WORKFLOWS);
+    prior.ticket_urgent = { hours: 8, notification: 'breach', email: false, escalation: null };
+    let view: ServiceWorkflowView = {
+      policy: DEFAULT_SERVICE_WORKFLOWS,
+      version: 2,
+      roles: [],
+      teams: [],
+    };
+    const requests: unknown[] = [];
+    let stepUps = 0;
+    await page.route(`**${path}`, (route) => {
+      expect(route.request().method()).toBe('GET');
+      return route.fulfill({ json: view });
+    });
+    await page.route(`**${path}/history?*`, (route) =>
+      route.fulfill({
+        json: { items: [{ id: sourceId, version: 1, value: prior }], nextBeforeVersion: null },
+      })
+    );
+    await page.route('**/api/auth/step-up', (route) => {
+      stepUps++;
+      return route.fulfill({ json: { verified: true } });
+    });
+    await page.route(`**${path}/restore`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      requests.push(route.request().postDataJSON());
+      view = { ...view, policy: prior, version: 3 };
+      return route.fulfill({ json: view });
+    });
+    await page.goto('/admin/service-targets');
+    const section = page.getByRole('region', { name: copy('title'), exact: true });
+    await section.getByRole('button', { name: copy('history'), exact: true }).press('Enter');
+    const restore = section.getByRole('button', {
+      name: copy('restoreVersion').replace('{version}', '1'),
+      exact: true,
+    });
+    await restore.press('Enter');
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(copy('ticket_urgent'));
+    expect(requests).toEqual([]);
+    await dialog.locator('#team-step-up-password').fill('test-only');
+    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(section.locator('#workflow-hours-ticket_urgent')).toHaveValue('8');
+    expect(stepUps).toBe(1);
+    expect(requests).toEqual([{ sourceId, expectedVersion: 2 }]);
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
   test(`service workflow follows both grants and clears on session expiry (${locale})`, async ({
     page,
   }) => {
