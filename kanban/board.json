@@ -7786,7 +7786,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -7830,7 +7831,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -8162,6 +8163,14 @@
                 "apps/web/e2e/solar-construction-progress.spec.ts"
               ],
               "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ]
         }
@@ -23848,7 +23857,8 @@
         "Hosted diagnostic 43518112352 was dispatched on exact 287b601d2 with both targeted fixes. The clean final scheduled execution and actual delivery are still required.",
         "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required.",
         "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open.",
-        "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required."
+        "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required.",
+        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -23958,7 +23968,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retention-settings-browser",
           "release-0.6-solar-queue-browser",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": null
       }
@@ -24561,7 +24572,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-shared-username-normalization",
@@ -24609,7 +24621,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -24965,6 +24977,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ]
         }
@@ -37864,7 +37884,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -37936,7 +37957,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -38504,6 +38525,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -38669,7 +38698,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -38741,7 +38771,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -39309,6 +39339,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -39607,7 +39645,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -39679,7 +39718,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -40247,6 +40286,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -40403,7 +40450,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -40475,7 +40523,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -41043,6 +41091,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -41213,7 +41269,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -41285,7 +41342,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -41853,6 +41910,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -42024,7 +42089,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -42096,7 +42162,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -42664,6 +42730,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -42834,7 +42908,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -42906,7 +42981,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -43474,6 +43549,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -43648,7 +43731,8 @@
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -43720,7 +43804,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -44288,6 +44372,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -744360,7 +744452,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -744852,7 +744945,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -745628,6 +745721,14 @@
                 "packages/i18n/src/admin-ui-messages.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -750132,7 +750233,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-registration-request-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -750624,7 +750726,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+              "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -751400,6 +751502,14 @@
                 "packages/i18n/src/admin-ui-messages.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-registration-request-observation",
+              "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
             }
           ],
           "presentation_renewals": [
@@ -1079729,7 +1079839,8 @@
         "d19812d0a reached protected main after the required integrity check and its contributing jobs succeeded. The five hosted image receipts, affected-test receipt and exact package review scope were verified. Full final coverage, strict license acceptance and the external operational gates remain open.",
         "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts.",
         "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open.",
-        "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback."
+        "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback.",
+        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080031,7 +1080142,8 @@
           "release-0.6-grafana-supported-alternative-images",
           "release-0.6-retained-scan-binding",
           "release-0.6-priority-routing",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-registration-request-observation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1256635,6 +1256747,86 @@
         {
           "file": "native-exact-image/native-restore.log",
           "sha256": "a181bc207906a85ebb395196f25783827e5849c6befb30f24ece78ff91871675"
+        }
+      ]
+    },
+    "release-0.6-registration-request-observation": {
+      "batch": "release-0.6-registration-request-observation",
+      "base_commit": "9711e99ae6ff44437d49dcbead34e6107b16b402",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-06.01.02",
+        "02-auth-users-admin.md#T-01.01.01",
+        "02-auth-users-admin.md#T-01.01.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-01.01.05",
+        "02-auth-users-admin.md#T-01.01.06",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-01.02.02",
+        "02-auth-users-admin.md#T-01.02.03",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/registration-feature.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "77f2f5d6403229de45b3e13d0b0a7a52395529e1437713bcc5b1abd5af604266"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "4a7633d847ca5de962b59ace71ec38f4a10527417c4f2c852b921b21876a0fcd"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Hosted Firefox shard 6 on 287b601d2 recorded 339 expected, one skipped, one flaky and zero unexpected or runner errors. The failed attempt observed the OTP control disabled before the intercepted verify request incremented its counter.",
+        "The corrected test waits for both asynchronous requests while preserving exact counts, payloads, mutual exclusion checks and the elapsed cooldown. Fresh production app and auth outputs verified 30 focused Persian and English cases across pinned Firefox 1575, Chromium and WebKit without retries.",
+        "Changed-file ESLint, Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The hosted result is a failed shard from a manual diagnostic. Final clean 40-shard, schedule, coverage and mailbox delivery evidence remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-registration-request-observation",
+      "execution_receipts": [
+        {
+          "file": "hosted-firefox-6-outcome.json",
+          "sha256": "6fa61f733415645d46c06dc0234820eae65799ba6e582561f72b09f92ebb1d88"
+        },
+        {
+          "file": "hosted-firefox-6-results.json",
+          "sha256": "380290b17f4f23f44c698e5384984bd0c0142054de919e2e90d1a1db0ac2cefd"
+        },
+        {
+          "file": "build-diff.txt",
+          "sha256": "28f93395ebc7d46e07b1bb6f4135e9b0d7f0aa46ff0652eba3dd7b786d44a570"
+        },
+        {
+          "file": "build.log",
+          "sha256": "e576c6393c88b11996189a4f0aed80d3c26ae2b6451fb5066d317c884550137f"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "7c0d12247ea2c2ebd911886a83a8ad91253180343ecd111dbcd146a5516a6285"
         }
       ]
     }

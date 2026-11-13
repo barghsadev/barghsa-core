@@ -176,7 +176,7 @@ for (const locale of ['fa', 'en']) {
       await digits.first().fill('۱۲۳۴۵۶');
       await expect(digits.first()).toBeDisabled();
       await expect(resend).toBeDisabled();
-      expect(verifies).toBe(1);
+      await expect.poll(() => verifies).toBe(1);
       expect(resends).toBe(0);
       release();
       await expect(digits.first()).toBeEnabled();
@@ -188,6 +188,7 @@ for (const locale of ['fa', 'en']) {
       });
       await resend.click();
       await expect(digits.first()).toBeDisabled();
+      await expect.poll(() => resends).toBe(1);
       expect(verifies).toBe(1);
       release();
       await expect(digits.first()).toBeEnabled();
