@@ -260,8 +260,9 @@ label, system_id = sys.argv[1:]
 manifest = json.load(sys.stdin)
 if (not re.fullmatch(r"[0-9]+", system_id) or manifest["version"] != 1
         or manifest["label"] != label or manifest["system_id"] != system_id
+        or manifest.get("upload_verified") is not True
         or not re.fullmatch(r"[a-f0-9]{64}", manifest["sha256"])):
-    sys.exit("Encrypted backup receipt does not match the running staging database")
+    sys.exit("Verified encrypted backup receipt is missing or does not match the running staging database")
 print("BARGHSA_STAGING_MIGRATION_BACKUP_V1", json.dumps(manifest, separators=(",", ":")))
 ' "$backup_label" "$database_system_id"
 fi

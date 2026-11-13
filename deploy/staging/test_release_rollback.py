@@ -326,7 +326,11 @@ docker() {{
   if [[ "$mode" == backup-failed ]]; then return 23; fi
   local system=123456
   if [[ "$mode" == wrong-database ]]; then system=456789; fi
-  printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}"}}\\n' "${{@: -1}}" "$system"
+  if [[ "$mode" == prior-backup-image ]]; then
+    printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}"}}\\n' "${{@: -1}}" "$system"
+    return
+  fi
+  printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}","upload_verified":true}}\\n' "${{@: -1}}" "$system"
 }}
 trap 'status=$?; echo rollback; exit "$status"' ERR
 {text[start:end]}
@@ -336,6 +340,7 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
             ('stop-failed', ['stop worker api ai-inference', 'rollback'], 19),
             ('backup-failed', ['stop worker api ai-inference', 'rollback'], 23),
             ('wrong-database', ['stop worker api ai-inference', 'rollback'], 1),
+            ('prior-backup-image', ['stop worker api ai-inference', 'rollback'], 1),
             ('protected', ['stop worker api ai-inference', 'verified backup', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
         ):
             with self.subTest(mode=mode):
@@ -347,6 +352,7 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
                     marker, receipt = observed[1].split(' ', 1)
                     self.assertEqual(marker, 'BARGHSA_STAGING_MIGRATION_BACKUP_V1')
                     self.assertEqual(json.loads(receipt)['system_id'], '123456')
+                    self.assertIs(json.loads(receipt)['upload_verified'], True)
                     observed[1] = 'verified backup'
                 self.assertEqual(observed, expected)
 

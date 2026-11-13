@@ -215,10 +215,23 @@ def backup(store, label):
         encrypted = root / "full.tar.gpg"
         crypt(archive, encrypted)
         blob = f"blobs/{uuid.uuid4().hex}.tar.gpg"
-        store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
         meta.update(blob=blob, size=encrypted.stat().st_size, sha256=digest(encrypted))
+        store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
+        response = store.get(blob)
+        received = hashlib.sha256()
+        size = 0
+        try:
+            for block in response["Body"].iter_chunks(chunk_size=1024 * 1024):
+                size += len(block)
+                if size > meta["size"]:
+                    raise BackupError("Uploaded backup checksum mismatch")
+                received.update(block)
+        finally:
+            response["Body"].close()
+        if size != meta["size"] or received.hexdigest() != meta["sha256"]:
+            raise BackupError("Uploaded backup checksum mismatch")
         store.put(key, json.dumps(meta).encode(), ContentType="application/json")
-        print(json.dumps(meta))
+        print(json.dumps({**meta, "upload_verified": True}))
 
 
 def wal_name(value):

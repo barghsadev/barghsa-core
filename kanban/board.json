@@ -16673,7 +16673,8 @@
         "Live staging verified archive_mode=off, no matching host backup units, no protected host backup env and no backup keys in its runtime env. The approved separate backup host and protected storage destination remain required.",
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
         "Protected staging migrations can now create a verified encrypted checkpoint after quiescing writers. The native PostgreSQL image passed backup upload and isolated recovery over HTTPS. Configure a dedicated replication role and the approved protected destination and key. The live scheduled backup, WAL/PITR and pager evidence remain open.",
-        "The staging PostgreSQL Compose overlay now signs and encrypts WAL using the existing archiver. The isolated HTTPS fixture on the exact Ubuntu image uploaded a completed WAL segment and recovered the requested target with the earlier commit present and the later one absent. Provision the live protected destination, key, schedule and monitored retention to close this task."
+        "The staging PostgreSQL Compose overlay now signs and encrypts WAL using the existing archiver. The isolated HTTPS fixture on the exact Ubuntu image uploaded a completed WAL segment and recovered the requested target with the earlier commit present and the later one absent. Provision the live protected destination, key, schedule and monitored retention to close this task.",
+        "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -16756,7 +16757,8 @@
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-postgres-disk-capacity",
           "release-0.6-protected-stage-migration-backup",
-          "release-0.6-staging-wal-archive"
+          "release-0.6-staging-wal-archive",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -16778,7 +16780,8 @@
       "launch_required": true,
       "remaining": [
         "Production dataset recovery and core-service RTO including provisioning/cutover/application readiness remain unmeasured. The local verifier reports database RTO and leaves core-service RTO null.",
-        "The exact staging PostgreSQL candidate restored the physical backup and encrypted archive to the selected point using the staged Compose archiver. The production-equivalent backup, configuration and object recovery, timed business recovery and alert receipts remain open."
+        "The exact staging PostgreSQL candidate restored the physical backup and encrypted archive to the selected point using the staged Compose archiver. The production-equivalent backup, configuration and object recovery, timed business recovery and alert receipts remain open.",
+        "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -16833,7 +16836,8 @@
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-postgres-restore-readback",
-          "release-0.6-staging-wal-archive"
+          "release-0.6-staging-wal-archive",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -19936,7 +19940,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -19956,7 +19961,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20137,6 +20142,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -20733,7 +20746,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -20769,7 +20783,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "13550d93fd1c6ccb051da8a75697c9a09f3ab505538e78a34ef7cec6ecdbf9de"
+              "sha256": "a02805cea7c9f5fce4fc37b5e6383ac53b1ddbbef55ebcf193b3a888da6787b2"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -20835,6 +20849,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "Adds a dedicated S3 namespace for operator logs. Existing backup callers keep the exact postgres prefix. Native MinIO read/write and eight existing backup safety checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -23419,7 +23441,8 @@
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt.",
         "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job.",
-        "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open."
+        "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open.",
+        "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23473,7 +23496,8 @@
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-scan-binding",
-          "release-0.6-protected-stage-migration-backup"
+          "release-0.6-protected-stage-migration-backup",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": null
       }
@@ -23671,7 +23695,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23691,15 +23716,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "f6d75a61d20255a969e6454dfb461d612f03341fbd49c11b05c12df8764767b8"
+              "sha256": "a77e3b3b1e1499948469279582ff2352fd3868b47b262b1c1609212027030d34"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23785,6 +23810,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -31374,7 +31409,8 @@
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-web-server-tracing",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31429,7 +31465,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31726,6 +31762,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -34480,7 +34524,8 @@
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34510,7 +34555,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34526,7 +34571,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
+              "sha256": "a5702982d77a667568af02a3b37f4b3c135e7f519b268f5dd7b67af279bbd3e2"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -35011,6 +35056,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -98632,7 +98686,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -98780,7 +98835,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -100213,6 +100268,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -162211,7 +162274,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -162583,7 +162647,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -162595,7 +162659,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -163727,6 +163791,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -612732,7 +612805,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -612904,7 +612978,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -613520,6 +613594,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -633483,7 +633565,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -633723,7 +633806,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634210,6 +634293,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -634336,7 +634427,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634576,7 +634668,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635063,6 +635155,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -635187,7 +635287,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635427,7 +635528,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635914,6 +636015,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -636038,7 +636147,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -636278,7 +636388,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636789,6 +636899,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -637407,7 +637525,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -637647,7 +637766,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638134,6 +638253,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -638320,7 +638447,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -638692,7 +638820,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -638704,7 +638832,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -639860,6 +639988,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -640139,7 +640276,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -640379,7 +640517,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640866,6 +641004,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -640989,7 +641135,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -641229,7 +641376,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641716,6 +641863,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -641840,7 +641995,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642080,7 +642236,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642567,6 +642723,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -642692,7 +642856,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -642932,7 +643097,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643443,6 +643608,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -643566,7 +643739,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -643806,7 +643980,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644293,6 +644467,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -644416,7 +644598,8 @@
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -644656,7 +644839,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645143,6 +645326,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -670353,7 +670544,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -670365,7 +670557,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -670555,6 +670747,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -679317,7 +679517,8 @@
         "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt.",
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
         "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending.",
-        "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet."
+        "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet.",
+        "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -679374,7 +679575,8 @@
           "release-0.6-amd64-license-readback",
           "release-0.6-license-candidate-39619e439",
           "release-0.6-staging-preflight-readback",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -679525,7 +679727,8 @@
         "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
         "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence.",
         "Protected preflight 43510245617 at d19812d0a verified all five hosted image scan subjects and their SBOM and scan digests. The approved cutover and exact deployed and registry receipts remain open.",
-        "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open."
+        "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open.",
+        "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -679580,7 +679783,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-retained-scan-binding",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -714355,7 +714559,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -714371,7 +714576,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
+              "sha256": "a5702982d77a667568af02a3b37f4b3c135e7f519b268f5dd7b67af279bbd3e2"
             }
           ],
           "checks": [
@@ -714490,6 +714695,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -719125,7 +719338,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -719145,7 +719359,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d5b4175b7612eafacbd0701caf361bc8f4c3ee49695ffd845835755e631c7230"
+              "sha256": "2870dfb9e61bcc037cdf39bff8f6af58d7c2a45ce289ed8d4b308dbdf9961cff"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -719768,6 +719982,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         }
@@ -1051906,7 +1052128,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d5b4175b7612eafacbd0701caf361bc8f4c3ee49695ffd845835755e631c7230"
+              "sha256": "2870dfb9e61bcc037cdf39bff8f6af58d7c2a45ce289ed8d4b308dbdf9961cff"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1052016,6 +1052238,14 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ]
         },
@@ -1052025,7 +1052255,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-immutable-board-readiness",
           "release-0.6-postgres-cutover-preflight",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-backup-object-readback"
         ]
       }
     },
@@ -1065159,7 +1065390,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1065183,7 +1065414,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1068309,6 +1068540,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "presentation_renewals": [
@@ -1068727,7 +1068967,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-backup-object-readback"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1070896,7 +1071137,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8b7c141b9e58b27ac310a9c8b0e1414a95a8ad6c45dec2aab523aa0d50e8a4f3"
+              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1070920,7 +1071161,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "48941779e6145134119c2bc89f7b3034db990fdce1c5967486a8ba4dcb15c871"
+              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1073948,6 +1074189,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
+            },
+            {
+              "batch": "release-0.6-backup-object-readback",
+              "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1074383,7 +1074633,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-backup-object-readback"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1080037,7 +1080288,8 @@
         "The protected HTTP payment sandbox is configured and the compiled v0.6.0 adapter verified an existing settled synthetic fixture against it. A production merchant remains required. Staging cache maintenance preserved all tagged images, volumes, containers and the active manifest. The latest data filesystem readback is 93% used with 6,253,801,472 free bytes. Verify approved off-server backup, recovery and cutover capacity before any database image change.",
         "The replacement PostgreSQL image 7dee39bc is loaded on staging and has matching isolated restore, scan and package evidence. Staging is still on the original database. At readback it had 6,259,064,832 free bytes, or 93% use, and archive_mode still off. The approved off-server backup, recovery and live cutover remain open.",
         "The non-disposable release path now uses the verified encrypted backup helper and dedicated replication configuration. A native TLS backup/restore fixture passed. Live readback still shows no protected staging backup env or key and 6,257,975,296 free bytes (93% usage). Retain the approved off-server backup and measured restore before cutting over.",
-        "The opt-in staging WAL overlay is wired into the normal release and rollback. An isolated TLS storage rehearsal verified encrypted WAL and native point-in-time replay on the prepared image. Complete separate authorized provisioning and cutover before enabling it on live staging, then obtain the measured recovery and monitoring receipts."
+        "The opt-in staging WAL overlay is wired into the normal release and rollback. An isolated TLS storage rehearsal verified encrypted WAL and native point-in-time replay on the prepared image. Complete separate authorized provisioning and cutover before enabling it on live staging, then obtain the measured recovery and monitoring receipts.",
+        "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080092,7 +1080344,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-protected-stage-migration-backup",
-          "release-0.6-staging-wal-archive"
+          "release-0.6-staging-wal-archive",
+          "release-0.6-backup-object-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1256200,6 +1256453,188 @@
         {
           "file": "main-sha.txt",
           "sha256": "4e87797cff542949ff46f7b1992577a0a099e006257ae0cc80bf7fbd85425ef1"
+        }
+      ]
+    },
+    "release-0.6-backup-object-readback": {
+      "batch": "release-0.6-backup-object-readback",
+      "base_commit": "036abc6f947ca9d50261054bacc62874c00580b8",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/Dockerfile.postgres",
+        "deploy/staging/README.md",
+        "deploy/staging/build-postgres-image.sh",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_rollback.py",
+        "docs/operations/backup/postgresql-image-upgrade.md",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/test_physical_backup.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+        },
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "2ee9bd18c788b9c70123ad452ab177b598eb6eeb3b6d59018634d8ddf648b834"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "2870dfb9e61bcc037cdf39bff8f6af58d7c2a45ce289ed8d4b308dbdf9961cff"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "a77e3b3b1e1499948469279582ff2352fd3868b47b262b1c1609212027030d34"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "8b6dccf10edc049f07e39a3ec0497d0ac16c766db3101ffbea0addb1bd1ee92a"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "a5702982d77a667568af02a3b37f4b3c135e7f519b268f5dd7b67af279bbd3e2"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "a02805cea7c9f5fce4fc37b5e6383ac53b1ddbbef55ebcf193b3a888da6787b2"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "92c867f0383ac750b239ec6d5eb2c512c4bc11f8081909a94c2c4c2b9e93f1b1"
+        }
+      ],
+      "checks": [
+        "All 33 physical backup and recovery cases passed in 74.265 seconds. A same-size corrupted remote upload produced no completion marker. The positive receipt records verified upload while the stored manifest retains its schema.",
+        "All 13 rollback, 21 queue and 15 notifier cases passed. The old backup receipt cannot reach migration. The staging builder fixture requires refreshed installation stages. ShellCheck, Python parsing, formatting and whitespace checks passed.",
+        "The initial cached build refreshed Ubuntu indices but reused the install layer and produced glibc 2.39-0ubuntu8.9. The fixed builder rebuilt the dependent stages and installed libc-bin, libc6 and locales 2.39-0ubuntu8.12.",
+        "The exact rebuilt Linux amd64 image dbb54d6c8c53 matched its SBOM and passed the high and critical gate. All 241 package and license rows match preflight 43518087320, including 217 pending dispositions. The listed installed notices were verified.",
+        "The exact image used signed HTTPS storage to verify the encrypted backup and archive WAL. A native recovery included the earlier fixture commit and excluded the later one. The isolated rehearsal completed in 35.960 seconds."
+      ],
+      "limitations": [
+        "The rebuilt image and recovery checks ran in isolation. Live cutover, staging deployment, actual off-server storage and Telegram confirmation are outstanding.",
+        "Readback transfers the encrypted object a second time in bounded chunks. Exact production-equivalent transfer time and full service recovery are still unmeasured."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-object-readback",
+      "execution_receipts": [
+        {
+          "file": "physical-backup-final-tests.log",
+          "sha256": "f2197c0caa9a7e2cdabd1703cb0506d4029d95e06c1774eb12a7b45c6b70c027"
+        },
+        {
+          "file": "rollback-tests.log",
+          "sha256": "067a6f7b27e8e7cedb1de9c3c41317396898724c80ef9c3a23e0fbd3a8fce678"
+        },
+        {
+          "file": "staging-publication-tests.log",
+          "sha256": "2975910502d754aa27f515ccc3b7bc93436a85f5e5b23e250a345df364fb8a8d"
+        },
+        {
+          "file": "staging-notifier-final-tests.log",
+          "sha256": "8f5ce356cb70ef7a4cde4df7c2a665c02120aedb5f5149c9de3dfc0222e2df27"
+        },
+        {
+          "file": "postgres-image-build.log",
+          "sha256": "0cd5977ec86f13ecbe487dce4026e6752443742890023b70fc64cd364c1e1a13"
+        },
+        {
+          "file": "rebuilt-image.txt",
+          "sha256": "742cee36128aa4c6ec77625db841e1939a0ed86298d67272d84c907e20e64edb"
+        },
+        {
+          "file": "postgres-fresh-build.log",
+          "sha256": "cebd42cb3179c1379e6104cf1a62c47fb5faa0df06afa5bbfd87d758aae53eb6"
+        },
+        {
+          "file": "fresh-image.txt",
+          "sha256": "1eb4684a65069ea541d088a5fb7e424b3cd42a7ddea0eb9008ff413c3ceba97d"
+        },
+        {
+          "file": "fresh-glibc-packages.txt",
+          "sha256": "cb08bd34a43aaec67665ec92b94c27933f5edae66110d6e7dd4e72b246867cc3"
+        },
+        {
+          "file": "fresh-image-scan.log",
+          "sha256": "b87a13f35b0debd56e787cca4a8e2df4d126d271bff238a901a347a1889a79ed"
+        },
+        {
+          "file": "fresh-image-scan/1-image.json",
+          "sha256": "2f2015c2bf8dac3bab82bcd1077ec11b7fab17583a5d0377f94fb24e5c1b9510"
+        },
+        {
+          "file": "fresh-image-scan/1-sbom.cdx.json",
+          "sha256": "d9d59882817857f82040a1a6d51408c6e003ad519e15d7a395b6a3e04e374bca"
+        },
+        {
+          "file": "fresh-image-scan/1-vulnerabilities.json",
+          "sha256": "5b85014f9903fb77a8fac48657c49d2f09eab35957495f029f491ce42429d97c"
+        },
+        {
+          "file": "fresh-image-license-comparison.json",
+          "sha256": "cdf698b46fa5f20d608d866cca97043a2ca70c8bfb77ab1b9890643ad2d567e1"
+        },
+        {
+          "file": "native-exact-image.sh",
+          "sha256": "18db41c2b752ef4312a8f1df22551c447c529de2eec55d01a1f3d2575b634792"
+        },
+        {
+          "file": "native-exact-image/run.log",
+          "sha256": "e2c5b763c040a586b57ff61676067ae0909dad7ddfb5ac8f0b6a1215947fba06"
+        },
+        {
+          "file": "native-exact-image/native-full-backup.json",
+          "sha256": "1b1e69fa377c865d469e1b3a8395346c15da51fd454e502bb6b7df5a478d33d4"
+        },
+        {
+          "file": "native-exact-image/native-wal-upload.json",
+          "sha256": "30dd3f497054a68b0f7445d647ea371176e2afb6fba626a819f07ceb51ff7c44"
+        },
+        {
+          "file": "native-exact-image/native-restore.log",
+          "sha256": "a181bc207906a85ebb395196f25783827e5849c6befb30f24ece78ff91871675"
         }
       ]
     }

@@ -58,7 +58,8 @@ encrypted output. Backup errors are fatal; they never create a completion marker
 
 The command uses native tar output to isolate all tablespaces, including ones
 created during backup. It extracts them into private paths, runs `pg_verifybackup`,
-encrypts with GPG AES256 and uploads a unique payload. It publishes
+encrypts with GPG AES256 and uploads a unique payload. It streams that encrypted
+object back from storage to verify its size and SHA-256 before it publishes
 `postgres/<cluster>/full/<label>/manifest.json` last. A duplicate label is rejected.
 The manifest includes the ciphertext digest, size, cluster ID, times and WAL ranges;
 the encrypted metadata must match it during restore. Legacy plaintext `full/` and

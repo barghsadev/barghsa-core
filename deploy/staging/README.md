@@ -323,9 +323,11 @@ outside the checkout.
 For non-disposable installations, the worker stops the preceding writers and
 uses the retained PostgreSQL image's encrypted backup tool against the direct
 database URL. It requires HTTPS, verifies the backup using PostgreSQL's native
-manifest, and records `BARGHSA_STAGING_MIGRATION_BACKUP_V1` for the running
-database system before invoking migrations. A failed upload or mismatched
-receipt enters rollback. Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
+manifest, reads back the encrypted object, and records
+`BARGHSA_STAGING_MIGRATION_BACKUP_V1` for the running database system before
+invoking migrations. A failed upload, readback or mismatched receipt enters
+rollback. The retained PostgreSQL image must provide the readback receipt.
+Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
 to test recovery and provision scheduled backups and WAL/PITR. Configuration
 and uploaded objects require their own backup and restore receipts.
 

@@ -35,7 +35,7 @@ which prevented that user from loading the backup modules.
 From the reviewed checkout, build a new staging tag and scan the resulting
 image. The build uses the existing backup image for the privilege-drop binary,
 its notices and the PostGIS initialization scripts. The staging builder refreshes
-the signed Ubuntu package index even when BuildKit has a cached archive stage.
+the signed Ubuntu package index and reruns the stages that install from it.
 Compare the resulting package versions with the license review before loading
 the image. CI builds and inventories both database images under separate scopes.
 

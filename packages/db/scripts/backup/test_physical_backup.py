@@ -130,9 +130,14 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
             if not backup.missing(error):
                 raise
             cls.store.client.create_bucket(Bucket=cls.store.bucket)
-        with contextlib.redirect_stdout(io.StringIO()):
+        with contextlib.redirect_stdout(io.StringIO()) as outcome:
             backup.backup(cls.store, 'base')
+        receipt = json.loads(outcome.getvalue())
+        if receipt.pop('upload_verified', None) is not True:
+            raise AssertionError('Backup receipt did not verify the upload')
         cls.base = cls.store.manifests()[0][1]
+        if receipt != cls.base:
+            raise AssertionError('Backup receipt differs from its stored manifest')
         cls.sql('INSERT INTO users VALUES (2)')
         cls.target_time = cls.sql('SELECT clock_timestamp()')
         time.sleep(0.05)
@@ -222,6 +227,17 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
             with self.assertRaisesRegex(backup.BackupError, 'gpg failed'):
                 self.prepare('wrong-key-target')
         self.assertFalse((self.root / 'wrong-key-target').exists())
+
+    def test_corrupt_uploaded_backup_never_publishes_completion(self):
+        def upload_corrupted(path, bucket, key):
+            data = Path(path).read_bytes()
+            self.store.client.put_object(Bucket=bucket, Key=key,
+                                         Body=bytes([data[0] ^ 1]) + data[1:])
+
+        with patch.object(self.store.client, 'upload_file', side_effect=upload_corrupted):
+            with self.assertRaisesRegex(backup.BackupError, 'Uploaded backup checksum mismatch'):
+                backup.backup(self.store, 'corrupt-upload')
+        self.assertNotIn('corrupt-upload', [manifest['label'] for _, manifest in self.store.manifests()])
 
     def test_manifest_digest_detects_payload_corruption(self):
         altered = dict(self.base, label='corrupt', sha256='0' * 64)

@@ -409,7 +409,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         f'-t barghsa-postgres-helpers:{tag} .'
                     )
                     postgres = (
-                        'docker buildx build --load --platform linux/amd64 --no-cache-filter ubuntu-archive '
+                        'docker buildx build --load --platform linux/amd64 '
+                        '--no-cache-filter ubuntu-archive,runtime,build,staging '
                         f'--build-arg BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:{tag} '
                         f'-f deploy/staging/Dockerfile.postgres -t barghsa-postgres:{tag} .'
                     )

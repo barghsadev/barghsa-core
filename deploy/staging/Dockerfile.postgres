@@ -56,7 +56,7 @@ RUN postgres_source=https://raw.githubusercontent.com/docker-library/postgres/9d
        | sha256sum -c - \
     && chmod 0755 docker-entrypoint.sh
 
-FROM runtime
+FROM runtime AS staging
 COPY --from=build /out/ /
 COPY --from=build /opt/backup-venv /opt/backup-venv
 COPY --from=build /tmp/postgres-assets/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
