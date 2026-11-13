@@ -55,6 +55,8 @@ The `main` ruleset requires GitHub Actions’ `Verify monorepo integrity` on the
 
 Run `python3 kanban/scripts/board.py ready --release <version>` to list the unresolved count. Accept all assigned launch-required tasks and prerequisite releases. Pass the milestone goal and its gates on the final candidate. Review and run combined acceptance once at this boundary. Fix critical/major issues before acceptance. Record exact checks and source bindings; a prose approval or CLI exit code alone is insufficient.
 
+Prove the staging smoke gate before acceptance with the frozen candidate images and an isolated staging rehearsal. Rehearse migration, compatible rollback or roll-forward, HTTP liveness and readiness, and the private object-store check. Preserve the tested image and database identities. The accepted release worker then runs against live staging and produces the actual release receipts.
+
 Record a confirmed defect on its qualified board task with `defect_severity` set to `P0`, `P1`, `P2` or `P3`. The candidate check blocks acceptance while a P0 or P1 defect through that milestone remains open, including defects outside the launch-required task list. Keep the severity with the task's resolution evidence. The strict browser rollup and promotion quarantine check cover flaky critical tests.
 
 Set root `package.json` SemVer at the release boundary. Write Persian `releases/<version>.md` notes beginning with `برقسا نسخه <version>` and concrete Markdown bullets. Use PATCH for a necessary compatible hotfix, MINOR for a capability milestone and MAJOR for the production launch or an incompatible public contract. Never reuse a published version. Login, emitted release metadata and Telegram show the same version.
@@ -67,6 +69,8 @@ python3 deploy/staging/release-queue.py status
 ```
 
 Record acceptance, push, staging health, Telegram receipt and production promotion separately in the release record. Enqueue is not completed deployment. Diagnose failed jobs before explicit retry. An observation timeout does not authorize restarting a healthy worker. A deployment failure does not freeze independent building.
+
+Before recording `released`, verify the completed queue job, exact live version and commit, migration and health results, private object-store check, and the running app, web and retained stateful image identities against their scan and SBOM receipts. Record these in `staging_receipt` and the confirmed Persian announcement and any delivered album in `telegram_receipt`. Apply the same readback to the next milestone's prerequisite release.
 
 ## Telegram
 

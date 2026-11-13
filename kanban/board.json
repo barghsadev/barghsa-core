@@ -12493,7 +12493,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-migration-backed-dev-setup",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -12509,7 +12510,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -12680,6 +12681,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -21552,7 +21561,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21572,7 +21582,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             },
             {
               "path": "package.json",
@@ -21814,6 +21824,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -23113,7 +23131,7 @@
       "launch_required": true,
       "remaining": [
         "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
-        "The staging entry point now verifies launch-task and exception readiness on the immutable checkout before deployment. Verify an actual accepted v0.6.0 job and its live evidence."
+        "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released."
       ],
       "owner": null,
       "depends_on": [],
@@ -23141,6 +23159,7 @@
           "historically_skipped": true
         },
         "changed_paths": [
+          ".github/workflows/ci.yml",
           "audit/skipped-work-handoff.md",
           "deploy/staging/README.md",
           "deploy/staging/deploy.sh",
@@ -23149,7 +23168,9 @@
           "deploy/staging/test_notify_release.py",
           "deploy/staging/test_release_queue.py",
           "deploy/staging/test_release_rollback.py",
-          ".github/workflows/ci.yml"
+          "kanban/WORKFLOW.md",
+          "kanban/scripts/board.py",
+          "kanban/scripts/test_board.py"
         ],
         "batches": [
           "release-0.6-production-quarantine-guard",
@@ -23157,7 +23178,8 @@
           "release-0.6-runtime-image-binding",
           "release-0.6-staging-image-scans",
           "release-0.6-portable-staging-images",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": null
       }
@@ -37046,7 +37068,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37075,7 +37098,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             }
           ],
           "source_renewals": [
@@ -37158,6 +37181,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -697952,29 +697983,31 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "Run the release worker for the accepted v0.6.0 candidate. Use exact prepared CI images if the local builder remains unavailable. Verify the running image IDs and scan/SBOM evidence for both application images and the retained stateful images, then verify migration, live readiness/liveness, private S3 and Telegram receipts.",
-        "The staging entry point now verifies launch-task and exception readiness on the immutable checkout before deployment. Verify an actual accepted v0.6.0 job and its live evidence."
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
+        "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "deploy/staging/README.md",
-          "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md",
           ".github/workflows/ci.yml",
           "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/README.md",
           "deploy/staging/build-postgres-image.sh",
           "deploy/staging/deploy.sh",
-          "deploy/staging/test_notify_release.py",
-          "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md",
           "deploy/staging/release-queue.py",
-          "deploy/staging/test_release_queue.py"
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/security/release-license-review.md",
+          "kanban/WORKFLOW.md",
+          "kanban/scripts/board.py",
+          "kanban/scripts/test_board.py",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
@@ -697993,7 +698026,8 @@
           "release-0.6-portable-staging-images",
           "release-0.6-staging-paired-restore-rehearsal",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-queue-schema-rehearsal"
+          "release-0.6-queue-schema-rehearsal",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": null
       }
@@ -698034,7 +698068,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -698064,15 +698099,15 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+              "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
+              "sha256": "0c644c67197c978812b62990fce85df455fc878d377ba19ae8b742aa6c6e157d"
             },
             {
               "path": "scripts/browser_workflow_identity.py",
@@ -698345,6 +698380,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md",
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -698808,7 +698853,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -698842,7 +698888,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+              "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
             },
             {
               "path": "scripts/browser_workflow_identity.py",
@@ -699231,6 +699277,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/scripts/board.py"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -720813,7 +720867,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -720841,7 +720896,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+              "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -720849,7 +720904,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
+              "sha256": "0c644c67197c978812b62990fce85df455fc878d377ba19ae8b742aa6c6e157d"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -721004,6 +721059,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -721111,7 +721175,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -721139,7 +721204,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+              "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -721147,7 +721212,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
+              "sha256": "0c644c67197c978812b62990fce85df455fc878d377ba19ae8b742aa6c6e157d"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -721302,6 +721367,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -721347,7 +721421,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -721375,7 +721450,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+              "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -721383,7 +721458,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
+              "sha256": "0c644c67197c978812b62990fce85df455fc878d377ba19ae8b742aa6c6e157d"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -721538,6 +721613,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ]
         }
@@ -1062284,7 +1062368,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -1065279,6 +1065363,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ],
           "presentation_renewals": [
@@ -1065693,7 +1065785,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1067926,7 +1068019,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -1070823,6 +1070916,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-stage-acceptance-and-publication-order",
+              "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1071254,7 +1071355,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-stage-acceptance-and-publication-order"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1251253,6 +1251355,70 @@
         {
           "file": "workflow-step.log",
           "sha256": "47100694bea15c875d921fc8df4f7b5292de05f66eb8270672133693fbfd24a7"
+        }
+      ]
+    },
+    "release-0.6-stage-acceptance-and-publication-order": {
+      "batch": "release-0.6-stage-acceptance-and-publication-order",
+      "base_commit": "a0ce944b147c3f24f69bd9a0fc9dfa3c3830088d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "kanban/WORKFLOW.md",
+        "kanban/scripts/board.py",
+        "kanban/scripts/test_board.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+        },
+        {
+          "path": "kanban/scripts/board.py",
+          "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
+        },
+        {
+          "path": "kanban/scripts/test_board.py",
+          "sha256": "0c644c67197c978812b62990fce85df455fc878d377ba19ae8b742aa6c6e157d"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+        }
+      ],
+      "checks": [
+        "Compared the two tasks against the original staging CI and smoke requirements. The isolated final-candidate rehearsal remains required before acceptance. The live release worker and Telegram receipts are required to record released and accept the next dependent milestone.",
+        "All 24 board and exception tests passed. An accepted candidate can lack its own delivery receipts, but an accepted prerequisite alone is insufficient. Released staging metadata must match the published version and commit.",
+        "All 57 staging release, rollback, queue and notifier tests passed. Board validation, Prettier and git diff --check passed. The v0.6.0 readiness query still reports 108 unresolved launch requirements."
+      ],
+      "limitations": [
+        "This change records no new release acceptance, deployment or notification. The v0.6.0 release rehearsal and live external gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-stage-acceptance-and-publication-order",
+      "execution_receipts": [
+        {
+          "file": "local-checks.json",
+          "sha256": "762ef4328e72ad667025d3e03142b6728e1f437db814a99574fecd1bd6f9e69f"
         }
       ]
     }

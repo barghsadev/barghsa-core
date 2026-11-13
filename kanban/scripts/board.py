@@ -68,8 +68,17 @@ def validate(board, root=ROOT, *, now=None):
             raise ValueError('Invalid release status')
         if r['status'] in {'accepted', 'released'} and not r.get('acceptance'):
             raise ValueError('Release acceptance requires recorded gate evidence')
-        if r['status'] == 'released' and (not r['published_commit'] or not r['staging_receipt'] or not r['telegram_receipt']):
-            raise ValueError('Released milestone requires push, staging and Telegram receipts')
+        if r['status'] in {'accepted', 'released'}:
+            for dependency in r['depends_on']:
+                if releases[dependency]['status'] != 'released':
+                    raise ValueError(f"Release v{r['version']} requires completed staging and Telegram receipts for v{dependency}")
+        if r['status'] == 'released':
+            staging = r['staging_receipt']
+            if not r['published_commit'] or not staging or not r['telegram_receipt']:
+                raise ValueError('Released milestone requires push, staging and Telegram receipts')
+            if (not isinstance(staging, dict) or staging.get('commit') != r['published_commit']
+                    or staging.get('version') != r['version']):
+                raise ValueError(f"Staging receipt must match the published version and commit for v{r['version']}")
         prior.add(r['version'])
     original = [t for t in tasks if t['spec'] is not None]
     original_keys = sorted(t['key'] for t in original)

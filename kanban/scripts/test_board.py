@@ -57,6 +57,15 @@ class BoardIntegrityTests(unittest.TestCase):
         self.board['releases'][0]['depends_on'] = ['1.0.0']
         self.rejects('Invalid release dependency')
 
+    def test_accepted_release_requires_completed_dependency_receipts(self):
+        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}},
+                       published_commit=None, staging_receipt=None, telegram_receipt=None)
+        validate(self.board)
+        dependency = next(r for r in self.board['releases'] if r['version'] == '0.5.0')
+        dependency.update(status='accepted', published_commit=None, staging_receipt=None, telegram_receipt=None)
+        self.rejects('v0.5.1 requires completed staging and Telegram receipts for v0.5.0')
+
     def test_candidate_rejects_open_critical_and_major_defects_outside_launch_scope(self):
         release = next(r for r in self.board['releases'] if r['version'] == '0.6.0')
         release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
@@ -152,6 +161,14 @@ class BoardIntegrityTests(unittest.TestCase):
         self.rejects('requires recorded gate evidence')
         release['acceptance'] = {'review':'synthetic accepted candidate'}
         self.rejects('requires push, staging and Telegram receipts')
+
+    def test_released_milestone_rejects_staging_receipts_from_another_build(self):
+        release = self.board['releases'][0]
+        original = release['staging_receipt']
+        for field, value in (('commit', 'f' * 40), ('version', '9.9.9')):
+            with self.subTest(field=field):
+                release['staging_receipt'] = {**original, field: value}
+                self.rejects('Staging receipt must match the published version and commit')
 
     def test_launch_scope_cannot_accidentally_drop_services(self):
         self.board['launch_scope'] = ['electricity']
