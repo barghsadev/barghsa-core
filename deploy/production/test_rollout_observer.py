@@ -150,6 +150,9 @@ class Rehearsal:
                         self.send_error(503)
                         return
                     payload = {'status': 'ok', 'checks': {'postgresql': {'status': 'ok'}}}
+                    if fixture.fault != f'{kind}-api-revision-missing':
+                        payload['commit'] = ('c' * 40 if fixture.fault == f'{kind}-api-revision-wrong'
+                                             else fixture.config[kind]['revision']['commit'])
                 elif kind != 'candidate' or cookie != 'barghsa_session=' + fixture.config['session_id'] or token:
                     self.send_error(401)
                     return
@@ -350,6 +353,25 @@ class ObserverTest(unittest.TestCase):
             ('candidate', '/api/health/live', None, None),
             ('candidate', '/api/health/ready', None, None),
         ])
+
+    def test_requires_both_api_revisions_before_authenticated_smoke(self):
+        for pool in ('candidate', 'previous'):
+            for issue in ('missing', 'wrong'):
+                fault = f'{pool}-api-revision-{issue}'
+                with self.subTest(fault=fault):
+                    result = self.observe(fault)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertFalse(any(json.loads(result.stdout)['smoke'].values()))
+                    self.assertIn((pool, '/api/health/ready', None, None), self.rehearsal.requests)
+                    self.assertFalse(any(cookie for _, _, cookie, _ in self.rehearsal.requests))
+                    if pool == 'previous':
+                        self.rehearsal.requests.clear()
+                        baseline = self.observe(fault, baseline=True)
+                        self.assertEqual(baseline.returncode, 1)
+                        self.assertEqual(baseline.stderr.strip(), 'previous_release_unready')
+                        self.assertEqual(baseline.stdout, '')
+                        self.assertFalse(any(kind == 'monitoring' for kind, *_ in self.rehearsal.requests))
+                    self.rehearsal.requests.clear()
 
     def test_missing_or_untrustworthy_measurements_fail_closed(self):
         for fault, reason in (

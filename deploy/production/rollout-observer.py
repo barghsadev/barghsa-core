@@ -118,7 +118,8 @@ def release_ready(reader, commit):
             or reader.get('/api/health/live').get('status') != 'ok'):
         return False
     ready = reader.get('/api/health/ready')
-    return ready.get('status') == 'ok' and ready.get('checks', {}).get('postgresql', {}).get('status') == 'ok'
+    return (ready.get('commit') == commit and ready.get('status') == 'ok'
+            and ready.get('checks', {}).get('postgresql', {}).get('status') == 'ok')
 
 
 def customer_matches(user, config):

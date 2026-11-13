@@ -77,7 +77,10 @@ for (const width of [390, 1440]) {
           if (width < 1024) {
             await expect(select).toBeVisible();
             await expect(select.locator('optgroup')).toHaveCount(12);
-            await expect(select.locator('option')).toHaveCount(25);
+            await expect(select.locator('option')).toHaveCount(26);
+            await expect(
+              select.locator('option[value="/admin/operational-retention"]')
+            ).toHaveCount(1);
             await select.focus();
             await expect(select).toBeFocused();
             await select.selectOption('/admin/verification');

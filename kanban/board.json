@@ -23497,7 +23497,8 @@
       "remaining": [
         "Repeat the native browser sign-in with the authorized synthetic account on the exact staged candidate. The isolated hosted case exercises a fresh OTP, the rendered owned dashboard and wallet, and logout revocation. Keep the deployed SHA and actual customer-scope, wallet and logout receipts alongside the observer results.",
         "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
-        "The observer reads the four exact fixture records after checking the dedicated account and owned default profile. Local tests passed for guarded observation and scheduled synthetic checks. The exact staging and production-equivalent receipts remain required."
+        "The observer reads the four exact fixture records after checking the dedicated account and owned default profile. Local tests passed for guarded observation and scheduled synthetic checks. The exact staging and production-equivalent receipts remain required.",
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
       ],
       "owner": null,
       "depends_on": [],
@@ -23539,7 +23540,8 @@
           "release-0.6-rollout-latency-and-readonly-smoke",
           "release-0.6-native-rollout-browser",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": null
       }
@@ -23718,7 +23720,8 @@
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required.",
         "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required.",
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
-        "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending."
+        "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending.",
+        "Manual diagnostic 43504566627 reported four mobile settings count failures after the Operational Retention entry was added. The 26-option assertion now checks that route explicitly. All 16 Chromium and mobile Safari cases passed. The complete hosted attempt and scheduled report delivery remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -23748,6 +23751,7 @@
         "changed_paths": [
           ".github/workflows/browser-nightly.yml",
           "apps/api/scripts/http-test-server.cjs",
+          "apps/web/e2e/admin-settings.spec.ts",
           "apps/web/e2e/consumer-theme.spec.ts",
           "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
           "apps/web/e2e/local-network.spec.ts",
@@ -23824,7 +23828,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-nightly-shared-build",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": null
       }
@@ -700721,25 +700726,26 @@
       "remaining": [
         "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology. The observer now requires the authentication alert and checks both API pools carry the rule selector. Verify the scoped authentication hold during the authorized topology rehearsal.",
         "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images.",
-        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "deploy/production/README.md",
-          "deploy/production/guarded-rollout.py",
-          "deploy/production/test_guarded_rollout.py",
-          "docs/runbooks/bad-deployment.md",
-          "deploy/staging/README.md",
-          "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py",
           "deploy/monitoring/api-pressure-alerts.test.yml",
           "deploy/monitoring/api-pressure-alerts.yml",
           "deploy/monitoring/staging-prometheus.yml",
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
           "deploy/production/rollout-observer.py",
-          "deploy/production/test_rollout_observer.py"
+          "deploy/production/test_guarded_rollout.py",
+          "deploy/production/test_rollout_observer.py",
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py",
+          "docs/runbooks/bad-deployment.md"
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
@@ -700748,7 +700754,8 @@
           "release-0.6-pilot-post-retirement-rollback",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-staging-rollback-image-identity",
-          "release-0.6-local-staging-runner-rehearsal"
+          "release-0.6-local-staging-runner-rehearsal",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": null
       }
@@ -701141,7 +701148,8 @@
       "remaining": [
         "Configure the approved topology with the exact pinned candidate and previous pools, route and image readbacks, dedicated customer fixtures and complete scoped API, journey, wallet and security monitoring.",
         "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
-        "The local guarded observer verifies each service fixture through its detail endpoint with the exact record and profile IDs. The actual staged comparison and rollback receipts remain required."
+        "The local guarded observer verifies each service fixture through its detail endpoint with the exact record and profile IDs. The actual staged comparison and rollback receipts remain required.",
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
       ],
       "owner": null,
       "depends_on": [],
@@ -701163,7 +701171,8 @@
           "release-0.6-post-deploy-observation",
           "release-0.6-native-rollout-browser",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": null
       }
@@ -709350,7 +709359,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -709378,7 +709388,7 @@
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
+              "sha256": "d0b91289efba34edb0b3cac5b6fb856e579eaeaf1b1a51b3ddf5bb9e2fccbbda"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -709388,7 +709398,8 @@
           "checks": [
             "The private Grafana overlay mounts the exact dashboard read-only. It provides UTC month-to-date per-service observed availability and remaining budget, both documented availability tiers, 5-minute and 1-hour burn, completed API p95 and p99 by method, and observed outcome volumes. Idle and unmeasured services remain gaps. The service objectives describe scope, probe coverage and how to compare releases.",
             "Prometheus 3.12.0 promtool executed 17 expectations from the exact seven panel expressions against scoped fixture counter and histogram samples. It verified availability, unused and exceeded budgets at both tiers, both burn windows, p95 and p99, counts, idle and absent-outcome gaps, and exclusion of another environment. The downloaded archive matched its publisher digest.",
-            "Native Grafana OSS 13.3.1 loaded the dashboard with the existing provisioning layout and a private fixture database. Authenticated API readback confirmed all five panels, seven exact expressions, UID and time bounds. Unauthenticated read returned HTTP 401. Compose normalization confirmed the exact read-only bind. The Grafana archive matched its publisher digest. Format and diff checks passed."
+            "Native Grafana OSS 13.3.1 loaded the dashboard with the existing provisioning layout and a private fixture database. Authenticated API readback confirmed all five panels, seven exact expressions, UID and time bounds. Unauthenticated read returned HTTP 401. Compose normalization confirmed the exact read-only bind. The Grafana archive matched its publisher digest. Format and diff checks passed.",
+            "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
           ],
           "limitations": [
             "Creation of the provisioned dashboard is verified in isolated native fixtures. Production and staging require separately measured, scoped journey collector coverage and operator readback. A populated fixture dashboard is not a production SLO receipt.",
@@ -709614,6 +709625,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Observer fixture reads now use authenticated detail GETs after proving account isolation. Existing read-only health, maintenance, telemetry and rollback boundaries were reviewed. The observer, synthetic and guarded rollout suites passed."
+            },
+            {
+              "batch": "release-0.6-rollout-api-revision",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
             }
           ]
         }
@@ -720581,7 +720600,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-web-server-tracing",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -720633,11 +720653,11 @@
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
+              "sha256": "d0b91289efba34edb0b3cac5b6fb856e579eaeaf1b1a51b3ddf5bb9e2fccbbda"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "1ef07227ab6dcc5b024ea320a8b2ff658dd67752ef1eda2690f22eef656b533f"
+              "sha256": "ece26bc5e25d8ea890fb595aa09f1a4e2c70f3658bbf32f4ae9dde4c2b3d17d5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -720646,7 +720666,8 @@
           ],
           "checks": [
             "The compiled API passed all three capability maintenance integration cases with isolated migrated PostgreSQL. During electricity checkout maintenance, the guarded submit returned the typed 503, unrelated saving remained reachable, unauthenticated liveness and readiness both returned 200 and PostgreSQL remained healthy. The existing test verified resumption after clearing the flag. Wallet isolation, validation, staff authority, step-up, versioning and audit cases still passed.",
-            "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior."
+            "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior.",
+            "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
           ],
           "source_renewals": [
             {
@@ -720868,6 +720889,15 @@
                 "deploy/production/test_rollout_observer.py"
               ],
               "scope": "Observer fixture reads now use authenticated detail GETs after proving account isolation. Existing read-only health, maintenance, telemetry and rollback boundaries were reviewed. The observer, synthetic and guarded rollout suites passed."
+            },
+            {
+              "batch": "release-0.6-rollout-api-revision",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
             }
           ]
         }
@@ -721491,7 +721521,8 @@
         "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent. The staging overlay now declares an expected target independently of file discovery. Verify its recording rule when the approved target is installed.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt.",
         "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required.",
-        "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required."
+        "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required.",
+        "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -721525,7 +721556,8 @@
           "release-0.6-gate-readback",
           "release-0.6-synthetic-target-loss",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-rollout-api-revision"
         ],
         "current_acceptance": null
       }
@@ -722006,7 +722038,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The Persian and English admin page saves and exports a versioned, audited operational policy. Current staff access, step-up, CSRF, strict legal-field exclusion and concurrent update checks passed with migrated PostgreSQL. The documented infrastructure apply workflow renders the selected revision for Loki, the Prometheus archive and Tempo. Apply and read back one authorized change on the exact staged monitoring stack before closure."
+        "The Persian and English admin page saves and exports a versioned, audited operational policy. Current staff access, step-up, CSRF, strict legal-field exclusion and concurrent update checks passed with migrated PostgreSQL. The documented infrastructure apply workflow renders the selected revision for Loki, the Prometheus archive and Tempo. Apply and read back one authorized change on the exact staged monitoring stack before closure.",
+        "The mobile settings selector exposes the new Operational Retention route once and retains 12 sections. Sixteen production-browser settings cases passed across widths, locales and themes. The exact deployed retention change and monitoring readback remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -722018,6 +722051,7 @@
           "apps/api/src/admin/operational-retention-http.integration.test.ts",
           "apps/api/src/admin/operational-retention.controller.ts",
           "apps/api/src/auth/navigation.ts",
+          "apps/web/e2e/admin-settings.spec.ts",
           "apps/web/e2e/limit-settings-forms.spec.ts",
           "apps/web/e2e/navigation-fixture.ts",
           "apps/web/src/lib/admin-settings-navigation.ts",
@@ -722041,7 +722075,8 @@
           "packages/shared/src/admin/operational-retention.ts"
         ],
         "batches": [
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": null
       }
@@ -785343,7 +785378,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -785367,7 +785403,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -785860,7 +785896,8 @@
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -786516,6 +786553,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -786659,7 +786704,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -786683,7 +786729,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -787176,7 +787222,8 @@
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -787832,6 +787879,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -788780,7 +788835,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -788804,7 +788860,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -789297,7 +789353,8 @@
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -789953,6 +790010,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -855577,7 +855642,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -855617,7 +855683,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -858389,7 +858455,8 @@
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -858861,6 +858928,14 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -1039103,7 +1039178,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.5.1-admin-sidebar",
           "release-0.6-stakeholder-first-look",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -1039111,7 +1039187,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
@@ -1039138,7 +1039214,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
-            "v0.5.1 reconciles the desktop nesting criterion with the owner-requested single sidebar. See the current hotfix evidence."
+            "v0.5.1 reconciles the desktop nesting criterion with the owner-requested single sidebar. See the current hotfix evidence.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "criterion_result": "Twelve permission-filtered categories, bounded desktop navigation, grouped mobile select, safe destinations, active state and destination focus. Eight bilingual/light-dark desktop/mobile journeys and nine component cases verify actual shell adoption.",
           "limitations": [
@@ -1039191,6 +1039268,14 @@
                 "apps/web/src/pages/AdminLayout.tsx"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -1079200,7 +1079285,8 @@
           "release-0.5.1-admin-shell",
           "release-0.5.1-shell-budget",
           "release-0.6-stakeholder-first-look",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-retention-settings-browser"
         ],
         "current_acceptance": {
           "status": "passed",
@@ -1079208,7 +1079294,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "b6e8cc5ef0448416d88db38ee0ef11cc569eb9f7e94dcce5d3177824b5d92f5a"
+              "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -1079283,7 +1079369,8 @@
             "Reviewed Persian desktop and mobile captures from the built release with synthetic settings data.",
             "Removed programmatic sidebar scrolling from the shared shell. The sidebar uses normal browser scrolling and keeps active link styling and keyboard navigation.",
             "The initial protected preflight exceeded the wallet gzip limit at 300.07 KB. The corrected local merged build measured 299.84 KB against the original 300 KB limit. All 102 original budgets passed in the corrected staging and merged builds.",
-            "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures."
+            "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures.",
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
           "source_renewals": [
@@ -1079327,6 +1079414,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-retention-settings-browser",
+              "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+              "paths": [
+                "apps/web/e2e/admin-settings.spec.ts"
+              ],
+              "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
             }
           ]
         }
@@ -1254240,6 +1254335,117 @@
         {
           "file": "stage-lifecycle-readback.json",
           "sha256": "127de9aa126059037d1c6ca2edbb141b9c076be87326b34badc69e6cd7488198"
+        }
+      ]
+    },
+    "release-0.6-rollout-api-revision": {
+      "batch": "release-0.6-rollout-api-revision",
+      "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.03",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.02"
+      ],
+      "changed_paths": [
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_rollout_observer.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "d0b91289efba34edb0b3cac5b6fb856e579eaeaf1b1a51b3ddf5bb9e2fccbbda"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "ece26bc5e25d8ea890fb595aa09f1a4e2c70f3658bbf32f4ae9dde4c2b3d17d5"
+        }
+      ],
+      "checks": [
+        "The production-equivalent observer checks candidate and previous web metadata, API readiness commit, liveness, and PostgreSQL health before using the protected fixture session. The previous-pool baseline requires its exact API readiness commit before monitoring.",
+        "Thirteen observer tests passed. New cases reject missing and wrong readiness commits in both pools and prove no authenticated request was made. Previous-pool baseline failures send no monitoring query. Eight scheduled probe tests and seventeen guarded-rollout tests also passed.",
+        "The live v0.5.1 API readiness omits its commit even though PostgreSQL is healthy. The revised observer correctly rejects that old API as exact candidate evidence. A read-only EU host check independently reached all three public endpoints over verified TLS 1.3. The protected synthetic configuration is absent there."
+      ],
+      "limitations": [
+        "The first new test included requests from a preceding invocation. The fixture isolates the request list per observation and all assertions then pass. No staged service, synthetic account or production configuration changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollout-api-revision",
+      "execution_receipts": [
+        {
+          "file": "observer.log",
+          "sha256": "f07d37e41c886afc9a094c8e549f164f409486bfb9e8885a9404f950fad2a2a4"
+        },
+        {
+          "file": "public-readback.json",
+          "sha256": "ac72b5c8fd32b460143f6e65a8b4530ba02acf22060e61245ea65cb53dcb070c"
+        }
+      ]
+    },
+    "release-0.6-retention-settings-browser": {
+      "batch": "release-0.6-retention-settings-browser",
+      "base_commit": "7c29113600c77fa0745a2b221db4c1f72f70602c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.18.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.30.01.01",
+        "release-readiness#R-04.03"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/admin-settings.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+          "sha256": "bb77b8313dc76c9b9c08d6aa29df576ddc525971c501948475b6f4555d0b9557"
+        },
+        {
+          "path": "apps/web/src/lib/admin-settings-navigation.ts",
+          "sha256": "4ef77e8ae88bc4853f958167c4d51da20d789d83ddb62b80a67c336fec422b91"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "047b23d1b6aed57bed3ed538fdd2fa53fa160d722624253aa44f16b8ef5b4d81"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "f786da51ebfbe3d5a13615e7d58b1a36800d12c4bfc1c8e91be1b94c1ed9e39c"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings.spec.ts",
+          "sha256": "4bca53a3c637b12b3dddf55831a84124ae09a38996060d8b6176dda958f8dd40"
+        }
+      ],
+      "checks": [
+        "Hosted Chromium shard 1 in run 43504566627 recorded four failures across both languages and themes at 390 px. It observed 26 options against the former 25-option assertion. The desktop variants passed.",
+        "Operational Retention is the one new registered and permission-filtered route. The existing test now requires all 26 options and that route once. Existing settings navigation, confirmations, Axe and overflow assertions passed across all 16 production-browser cases in Chromium and mobile Safari, with no retries.",
+        "The verified prebuilt UI has matching application, design system and localization sources. Web typecheck, scoped lint, format and diff checks passed."
+      ],
+      "limitations": [
+        "The first local invocation put the file after the variadic project selector. It executed no tests and is retained separately. The corrected invocation passed all 16 selected cases. The old hosted result remains failed and final scheduled acceptance is pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-retention-settings-browser",
+      "execution_receipts": [
+        {
+          "file": "browser.log",
+          "sha256": "ac989951ab9ac15792c0a59e79fa2dc3122124dfcc5df99357c051d06f9f8262"
+        },
+        {
+          "file": "source-binding.json",
+          "sha256": "13aaa527e0cb8d8e50356e7eace74699a6c8c23d72c0a612b27ce7b78d3cbb21"
+        },
+        {
+          "file": "hosted-chromium-1.log",
+          "sha256": "658f9604e6cfe0894dcd1da59b8b8e9cc38099081112b308f9157c3e9dcfe89a"
+        },
+        {
+          "file": "selection-error.log",
+          "sha256": "3e918e3d8f651c99711c0fdd79317dace4276fe49809dd2da7192f27dc732a6e"
         }
       ]
     }
