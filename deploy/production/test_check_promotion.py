@@ -110,14 +110,26 @@ class PromotionEvidenceTest(unittest.TestCase):
 
     def test_requires_exact_healthy_staging_readback(self):
         live = {'version': '0.9.0', 'commit': SHA}
-        with patch.object(promotion, 'staging_response', side_effect=[live, {'status': 'ok'}]):
+        checks = {name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')}
+        ready = {'status': 'ok', 'commit': SHA, 'checks': checks}
+        with patch.object(promotion, 'staging_response', side_effect=[live, ready]):
             promotion.verify_staging('0.9.0', SHA)
         with patch.object(promotion, 'staging_response', return_value={**live, 'commit': 'b' * 40}):
             with self.assertRaisesRegex(ValueError, 'different candidate'):
                 promotion.verify_staging('0.9.0', SHA)
-        with patch.object(promotion, 'staging_response', side_effect=[live, {'status': 'degraded'}]):
-            with self.assertRaisesRegex(ValueError, 'must be healthy'):
-                promotion.verify_staging('0.9.0', SHA)
+        for changed in ({'status': 'degraded'}, {'warnings': ['redis-unavailable']}, {'checks': {}},
+                        {'checks': {**checks, 'objectStorage': {'status': 'degraded'}}}):
+            with self.subTest(changed=changed), patch.object(
+                promotion, 'staging_response', side_effect=[live, {**ready, **changed}]
+            ):
+                with self.assertRaisesRegex(ValueError, 'must be healthy'):
+                    promotion.verify_staging('0.9.0', SHA)
+        for revision in (None, 'b' * 40):
+            with self.subTest(revision=revision), patch.object(
+                promotion, 'staging_response', side_effect=[live, {**ready, 'commit': revision}]
+            ):
+                with self.assertRaisesRegex(ValueError, 'API is serving a different candidate'):
+                    promotion.verify_staging('0.9.0', SHA)
 
     def test_hashes_all_receipts_and_refuses_missing_or_escaped_files(self):
         with tempfile.TemporaryDirectory() as temporary:

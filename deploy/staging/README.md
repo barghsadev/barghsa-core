@@ -215,6 +215,8 @@ in `job.json`. Its `image_scans` field indexes the scan receipts and their
 checksums for transferred images. The worker checks the deployed IDs, report
 and SBOM checksums, and license dispositions before announcing. The
 `license_sha256` field binds the passing report to the deployment receipt.
+Release acceptance requires readiness from the exact API commit, healthy
+PostgreSQL, Redis and object storage, and an empty readiness warning list.
 Initialized staging requires `--retained-scans` at enqueue. Use a private
 directory with the passing runtime scanner's numbered PostgreSQL and ClamAV
 receipts, vulnerability reports and CycloneDX SBOMs, in that order. The queue

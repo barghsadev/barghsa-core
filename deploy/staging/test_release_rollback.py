@@ -377,10 +377,18 @@ trap 'echo rollback' ERR
 echo promote
 '''
         commit = 'a' * 40
-        ready = {'status': 'ok', 'checks': {'postgresql': {'status': 'ok'}}, 'commit': commit}
+        checks = {name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')}
+        ready = {'status': 'ok', 'checks': checks, 'commit': commit}
         for name, api, web, expected in (
             ('matching', ready, {'commit': commit}, None),
-            ('degraded', {**ready, 'status': 'degraded'}, {'commit': commit}, None),
+            ('degraded', {**ready, 'status': 'degraded',
+                          'checks': {**checks, 'objectStorage': {'status': 'degraded'}}},
+             {'commit': commit}, 'Invalid staging ready'),
+            ('redis-fallback', {**ready, 'warnings': ['redis-unavailable']},
+             {'commit': commit}, 'Invalid staging ready'),
+            ('absent-storage', {**ready, 'checks': {key: value for key, value in checks.items()
+                                                    if key != 'objectStorage'}},
+             {'commit': commit}, 'Invalid staging ready'),
             ('previous-api', {**ready, 'commit': 'b' * 40}, {'commit': commit}, 'Invalid staging ready'),
             ('missing-api-revision', {**ready, 'commit': None}, {'commit': commit}, 'Invalid staging ready'),
             ('invalid-schema', {**ready, 'checks': {'postgresql': {'status': 'down'}}},

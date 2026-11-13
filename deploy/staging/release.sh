@@ -290,7 +290,9 @@ try:
     body = json.load(sys.stdin)
     status = body.get("status")
     valid = status == "ok" if kind == "live" else (
-        status in ("ok", "degraded") and body["checks"]["postgresql"]["status"] == "ok"
+        status == "ok" and body.get("warnings", []) == []
+        and all(body["checks"][name]["status"] == "ok"
+                for name in ("postgresql", "redis", "objectStorage"))
         and (not commit or body.get("commit") == commit)
     )
 except (ValueError, AttributeError, KeyError, TypeError):

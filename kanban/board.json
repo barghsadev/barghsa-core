@@ -8676,7 +8676,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8696,7 +8697,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8974,6 +8975,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -19978,7 +19987,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -19998,7 +20008,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20195,6 +20205,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -23508,7 +23526,8 @@
         "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job.",
         "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open.",
         "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open.",
-        "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open."
+        "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open.",
+        "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -23564,7 +23583,8 @@
           "release-0.6-retained-scan-binding",
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": null
       }
@@ -23764,7 +23784,8 @@
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23784,15 +23805,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "a77e3b3b1e1499948469279582ff2352fd3868b47b262b1c1609212027030d34"
+              "sha256": "1710ce284ade5c26582217e5f24b28ad4ec514ed11567fb159782a3f5a6704f7"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23896,6 +23917,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -31498,7 +31529,8 @@
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31553,7 +31585,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31866,6 +31898,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -34622,7 +34662,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34652,7 +34693,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35171,6 +35212,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -98874,7 +98923,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -99022,7 +99072,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -100463,6 +100513,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -162463,7 +162521,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -162835,7 +162894,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -162847,7 +162906,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -163996,6 +164055,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -613002,7 +613070,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -613174,7 +613243,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -613798,6 +613867,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -633762,7 +633839,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634002,7 +634080,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634497,6 +634575,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -634624,7 +634710,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634864,7 +634951,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635359,6 +635446,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -635484,7 +635579,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635724,7 +635820,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636219,6 +636315,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -636344,7 +636448,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -636584,7 +636689,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637103,6 +637208,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -637722,7 +637835,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -637962,7 +638076,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638457,6 +638571,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -638645,7 +638767,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -639017,7 +639140,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -639029,7 +639152,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640202,6 +640325,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -640482,7 +640614,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -640722,7 +640855,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641217,6 +641350,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -641341,7 +641482,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -641581,7 +641723,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642076,6 +642218,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -642201,7 +642351,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642441,7 +642592,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642936,6 +643087,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -643062,7 +643221,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -643302,7 +643462,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643821,6 +643981,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -643945,7 +644113,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -644185,7 +644354,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644680,6 +644849,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -644804,7 +644981,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645044,7 +645222,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645539,6 +645717,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -670751,7 +670937,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -670763,7 +670950,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -670969,6 +671156,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -700376,7 +700571,8 @@
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence.",
         "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open.",
-        "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open."
+        "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open.",
+        "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -700425,7 +700621,8 @@
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-scan-binding",
-          "release-0.6-protected-stage-migration-backup"
+          "release-0.6-protected-stage-migration-backup",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": null
       }
@@ -700468,7 +700665,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -700490,11 +700688,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "9696b9df34ab73458190b02d8d03978f6cb2501d01284bea97f3439b8e8a657b"
+              "sha256": "b55808e377cb7b0dc24ab798c2d32a87d33d9bd8a0e1710f41b2fbdd6490c085"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -700822,6 +701020,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -701306,7 +701513,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -701332,11 +701540,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "9696b9df34ab73458190b02d8d03978f6cb2501d01284bea97f3439b8e8a657b"
+              "sha256": "b55808e377cb7b0dc24ab798c2d32a87d33d9bd8a0e1710f41b2fbdd6490c085"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -701763,6 +701971,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -702785,7 +703002,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -702806,7 +703024,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -703089,6 +703307,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -703137,7 +703363,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -703158,7 +703385,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -703441,6 +703668,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -724012,7 +724247,8 @@
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724032,7 +724268,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724228,6 +724464,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -724337,7 +724581,8 @@
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724357,7 +724602,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724553,6 +724798,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -724600,7 +724853,8 @@
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724620,7 +724874,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724816,6 +725070,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ]
         }
@@ -1065775,7 +1066037,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1065799,7 +1066061,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1068944,6 +1069206,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "presentation_renewals": [
@@ -1069364,7 +1069635,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1071533,7 +1071805,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1071557,7 +1071829,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "12f4e811a83781b7c5cca58a5883d39cae88283676f14c14ad2eded19a8dca40"
+              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1074604,6 +1074876,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-exact-healthy-readiness",
+              "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1075041,7 +1075322,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1080701,7 +1080983,8 @@
         "The non-disposable release path now uses the verified encrypted backup helper and dedicated replication configuration. A native TLS backup/restore fixture passed. Live readback still shows no protected staging backup env or key and 6,257,975,296 free bytes (93% usage). Retain the approved off-server backup and measured restore before cutting over.",
         "The opt-in staging WAL overlay is wired into the normal release and rollback. An isolated TLS storage rehearsal verified encrypted WAL and native point-in-time replay on the prepared image. Complete separate authorized provisioning and cutover before enabling it on live staging, then obtain the measured recovery and monitoring receipts.",
         "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover.",
-        "The verified retained stateful images must be present by ID in the release worker local Docker. The stage worker enforces exact package dispositions and preserves the retained-image reports. The approved storage, database cutover and actual deployment and registry receipts remain open."
+        "The verified retained stateful images must be present by ID in the release worker local Docker. The stage worker enforces exact package dispositions and preserves the retained-image reports. The approved storage, database cutover and actual deployment and registry receipts remain open.",
+        "Require fully healthy PostgreSQL, Redis and storage from the exact API SHA in addition to the candidate web revision and signed storage probe. The earlier v0.5.1 API response lacks the revision field. The staged replacement and protected operational receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080758,7 +1081041,8 @@
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-healthy-readiness"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1257251,6 +1257535,105 @@
         {
           "file": "retained-licenses.json",
           "sha256": "69971e8f9940ac9843b10f7261df2d1215b9ae2f8ff00c1e6bd7f4212f0095da"
+        }
+      ]
+    },
+    "release-0.6-exact-healthy-readiness": {
+      "batch": "release-0.6-exact-healthy-readiness",
+      "base_commit": "6d2910791033306cdd1ed32ea15fce04eb16bf3f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "b55808e377cb7b0dc24ab798c2d32a87d33d9bd8a0e1710f41b2fbdd6490c085"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "1710ce284ade5c26582217e5f24b28ad4ec514ed11567fb159782a3f5a6704f7"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        }
+      ],
+      "checks": [
+        "The 13 staging rollback and 11 production approval cases passed. Tests refuse degraded or missing storage, a Redis fallback warning, an incompatible database, and missing or mismatched API revision before promotion.",
+        "Read-only live HTTPS returned v0.5.1 with all three dependencies healthy and no warning. Passing the actual readiness envelope through the revised staged probe rejected its missing API revision. This readback did not perform any release or live writes.",
+        "ShellCheck, documentation formatting and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The success and failure paths are tested in isolation. Actual readiness and rollback on the final release, approved backup, database cutover and allocation of external operating destinations remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-exact-healthy-readiness",
+      "execution_receipts": [
+        {
+          "file": "staging-tests.log",
+          "sha256": "71df9aad9a49ffba8aae6ae385e6892af68f84367fd162f599fbd87acc2f40e2"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "9620dbd3336de5f425a9243681b70da76d44d781948f6fe9530efa7a3b57144a"
+        },
+        {
+          "file": "live-probe-boundary.json",
+          "sha256": "ded26f9b1dd68c5fb62112e268374b416aa790f68bf84984dc65270cdf33a8b3"
         }
       ]
     }

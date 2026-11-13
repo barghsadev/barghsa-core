@@ -112,7 +112,13 @@ def verify_staging(version, sha):
     if live['version'] != version or live['commit'] != sha:
         raise ValueError('Staging is serving a different candidate')
     readiness = staging_response('/api/health/ready')
-    if readiness['status'] != 'ok':
+    if not isinstance(readiness, dict) or readiness.get('commit') != sha:
+        raise ValueError('Staging API is serving a different candidate')
+    checks = readiness.get('checks')
+    if (readiness.get('status') != 'ok' or readiness.get('warnings', []) != []
+            or not isinstance(checks, dict) or any(
+                not isinstance(checks.get(name), dict) or checks[name].get('status') != 'ok'
+                for name in ('postgresql', 'redis', 'objectStorage'))):
         raise ValueError('Staging readiness must be healthy')
 
 
