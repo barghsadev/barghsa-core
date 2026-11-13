@@ -60,8 +60,18 @@ class BoardIntegrityTests(unittest.TestCase):
     def test_candidate_rejects_open_critical_and_major_defects_outside_launch_scope(self):
         release = next(r for r in self.board['releases'] if r['version'] == '0.6.0')
         release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
-        defect = next(t for t in self.board['tasks'] if t['release'] == '0.6.0' and t['status'] == 'verify')
-        defect['launch_required'] = False
+        defect = {
+            'key': 'release-readiness#test-open-defect',
+            'title': 'Open defect fixture',
+            'requirement': 'Resolve the defect before acceptance.',
+            'status': 'verify',
+            'release': release['version'],
+            'launch_required': False,
+            'spec': None,
+            'depends_on': [],
+            'evidence': {'batches': []},
+        }
+        self.board['tasks'].append(defect)
         for severity in ('P0', 'P1'):
             with self.subTest(severity=severity):
                 defect['defect_severity'] = severity

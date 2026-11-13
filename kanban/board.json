@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T18:35:46+00:00",
+  "updated": "2026-11-13T18:38:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -696848,7 +696848,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-independent-critical-defect-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -696886,7 +696887,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
+              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
             },
             {
               "path": "scripts/check-browser-results.py",
@@ -697126,6 +697127,14 @@
                 "scripts/test_report_nightly_browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-independent-critical-defect-fixture",
+              "base_commit": "2cd49e9298d9eccaff970fa5f984fe1b7714bcab",
+              "paths": [
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
             }
           ]
         }
@@ -719172,7 +719181,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-independent-critical-defect-fixture"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -719208,7 +719218,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
+              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -719347,6 +719357,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-independent-critical-defect-fixture",
+              "base_commit": "2cd49e9298d9eccaff970fa5f984fe1b7714bcab",
+              "paths": [
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
             }
           ]
         }
@@ -719452,7 +719470,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-independent-critical-defect-fixture"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -719488,7 +719507,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
+              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -719627,6 +719646,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-independent-critical-defect-fixture",
+              "base_commit": "2cd49e9298d9eccaff970fa5f984fe1b7714bcab",
+              "paths": [
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
             }
           ]
         }
@@ -719670,7 +719697,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-independent-critical-defect-fixture"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -719706,7 +719734,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
+              "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -719845,6 +719873,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-independent-critical-defect-fixture",
+              "base_commit": "2cd49e9298d9eccaff970fa5f984fe1b7714bcab",
+              "paths": [
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
             }
           ]
         }
@@ -1074734,7 +1074770,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-postgres-cutover-preflight",
-          "release-0.6-protected-main-and-staging-capacity-readback"
+          "release-0.6-protected-main-and-staging-capacity-readback",
+          "release-0.6-independent-critical-defect-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1248569,6 +1248606,48 @@
         {
           "file": "staging-backup-capacity.txt",
           "sha256": "4e07d6d0606dfa53cfc987639564408cabb6d62a0e192edca1894f7521c2e41f"
+        }
+      ]
+    },
+    "release-0.6-independent-critical-defect-fixture": {
+      "batch": "release-0.6-independent-critical-defect-fixture",
+      "base_commit": "2cd49e9298d9eccaff970fa5f984fe1b7714bcab",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "kanban/scripts/test_board.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/scripts/test_board.py",
+          "sha256": "af73896c8b2c67993c8f81e9d6948e768967dec904e84335238615f9b3368cb6"
+        }
+      ],
+      "checks": [
+        "Hosted preflight 43483911717 failed the board test step because the fixture looked for a real v0.6.0 task in verify state. The assertion fixture now constructs its own open defect.",
+        "All 22 kanban integrity and Definition of Done tests passed against the repaired source and the reconciled ledger. board.py check validated 1,373 tasks, eight releases and 116 source sections."
+      ],
+      "limitations": [
+        "The previous hosted run cannot publish its exact commit. The repaired commit requires its own protected check."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-independent-critical-defect-fixture",
+      "execution_receipts": [
+        {
+          "file": "prior-failure.log",
+          "sha256": "cd4131aaa4281f9f0ff36b60b30eb56bc5d3909c9408f359addf5a2808164754"
+        },
+        {
+          "file": "board-tests.log",
+          "sha256": "014636ecd533f300dce714557cb9ad3a08f0bf2036c4e068e6433db2b7a956c5"
+        },
+        {
+          "file": "board-check.log",
+          "sha256": "d1809baf8043c2de13a7c17648a0fbcf6316b1fced90c0d56d9d25ee22a622f1"
         }
       ]
     }
