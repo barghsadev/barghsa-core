@@ -101,14 +101,21 @@ def verify_bundle_reports(directory, commit, image_ids):
 
 
 def verify_image_licenses(directory, commit, image_ids):
-    license_bytes = (directory / "release-licenses.json").read_bytes()
+    return verify_license_report(directory / "release-licenses.json", commit, image_ids, browser=True)
+
+
+def verify_license_report(path, commit, image_ids, *, browser):
+    license_bytes = path.read_bytes()
     licenses = json.loads(license_bytes)
     packages = licenses["packages"]
+    expected_scopes = image_ids.keys() | ({"browser"} if browser else set())
     if (licenses["commit"] != commit
             or any(licenses["images"].get(scope) != identity for scope, identity in image_ids.items())
-            or not (image_ids.keys() | {"browser"}) <= {row["scope"] for row in packages}
+            or not expected_scopes <= {row["scope"] for row in packages}
             or any(row["status"] not in {"allowed", "approved"} for row in packages)):
         raise ValueError("Expected passing license evidence for the exact commit and images")
+    if not browser and (licenses["images"] != image_ids or {row["scope"] for row in packages} != expected_scopes):
+        raise ValueError("Retained license report must cover exactly the retained images")
     return hashlib.sha256(license_bytes).hexdigest()
 
 
@@ -351,6 +358,8 @@ def main():
     verify.add_argument("--includes-stateful", action="store_true")
     verify.add_argument("--retained-scans", type=Path)
     verify.add_argument("--retained-sha")
+    verify.add_argument("--retained-license-report", type=Path)
+    verify.add_argument("--retained-license-sha")
     verify.add_argument("--receipt", type=Path)
     retained = actions.add_parser("verify-retained-scans")
     retained.add_argument("directory", type=Path)
@@ -387,13 +396,19 @@ def main():
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
         licensed_ids = {scope: ids[scope] for scope in ("app", "web")}
         if args.includes_stateful:
-            if args.retained_scans or args.retained_sha:
+            if args.retained_scans or args.retained_sha or args.retained_license_report or args.retained_license_sha:
                 raise ValueError("First staging install scans its newly built stateful images")
             licensed_ids.update({"postgres-staging": ids["postgres"], "clamav": ids["clamav"]})
         else:
-            if not args.retained_scans or not args.retained_sha:
-                raise ValueError("Initialized staging requires retained PostgreSQL and ClamAV scans")
+            if not all((args.retained_scans, args.retained_sha, args.retained_license_report, args.retained_license_sha)):
+                raise ValueError("Initialized staging requires retained PostgreSQL and ClamAV scan and license receipts")
             receipt["retained_image_scans"] = verify_retained_scans(args.retained_scans, ids, args.retained_sha)
+            receipt["retained_license_report"] = str(args.retained_license_report.resolve())
+            receipt["retained_license_sha256"] = verify_license_report(
+                args.retained_license_report, args.commit,
+                {"postgres-staging": ids["postgres"], "clamav": ids["clamav"]}, browser=False)
+            if receipt["retained_license_sha256"] != args.retained_license_sha:
+                raise ValueError("Retained image license evidence changed after preflight")
         receipt["license_sha256"] = verify_image_licenses(args.scan_dir, args.commit, licensed_ids)
         if args.receipt:
             save(args.receipt, receipt)

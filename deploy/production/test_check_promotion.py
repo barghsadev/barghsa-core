@@ -303,11 +303,48 @@ class StructuredReceiptTest(unittest.TestCase):
                                          'image_scans': {'directory': '/worker/scans', 'images': scans},
                                          'license_sha256': hashlib.sha256(raw_report).hexdigest()}
                 bundle = {'staging_scans': {'directory': 'scans'}, 'production_registry': registry}
+                retained_path = None
+                if 'postgres' not in scopes:
+                    retained = self.root / 'retained'
+                    retained.mkdir()
+                    retained_index = {}
+                    for index, scope in enumerate(('postgres', 'clamav'), 1):
+                        for suffix in ('vulnerabilities.json', 'sbom.cdx.json'):
+                            (retained / f'{index}-{suffix}').write_bytes(raw)
+                        receipt = json.dumps({
+                            'image_id': ids[scope], 'blocked': False,
+                            'report_sha256': hashlib.sha256(raw).hexdigest(),
+                            'sbom_sha256': hashlib.sha256(raw).hexdigest(),
+                        }).encode()
+                        (retained / f'{index}-image.json').write_bytes(receipt)
+                        retained_index[scope] = {'index': index, 'receipt_sha256': hashlib.sha256(receipt).hexdigest()}
+                    indexed = json.dumps(retained_index, sort_keys=True).encode()
+                    retained_ids = {'postgres-staging': ids['postgres'], 'clamav': ids['clamav']}
+                    retained_path = retained / 'release-licenses.json'
+                    retained_report = json.dumps({'commit': SHA, 'images': retained_ids, 'packages': [
+                        {'scope': scope, 'status': 'approved'} for scope in retained_ids
+                    ]}).encode()
+                    retained_path.write_bytes(retained_report)
+                    job['runtime_images'].update(
+                        retained_image_scans={'directory': '/worker/retained', 'images': retained_index,
+                                              'sha256': hashlib.sha256(indexed).hexdigest()},
+                        retained_license_sha256=hashlib.sha256(retained_report).hexdigest())
+                    bundle['staging_scans']['retained_directory'] = 'retained'
                 fingerprint = self.write_bundle(bundle)
                 result = promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
                 self.assertEqual(result['image_ids'], ids)
                 self.assertEqual(result['scanned_images'], scans)
                 self.assertEqual(result['production_registry'], registry['images'])
+                if retained_path is not None:
+                    self.assertEqual(result['retained_license_sha256'], hashlib.sha256(retained_report).hexdigest())
+                    retained_path.write_bytes(retained_report + b' ')
+                    with self.assertRaisesRegex(ValueError, 'Retained license report differs'):
+                        promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
+                    retained_path.write_bytes(retained_report)
+                    original_index = job['runtime_images'].pop('retained_image_scans')
+                    with self.assertRaisesRegex(ValueError, 'Retained scan receipts differ'):
+                        promotion.verify_image_receipts(self.index, self.bundle, fingerprint, job, SHA)
+                    job['runtime_images']['retained_image_scans'] = original_index
                 for suffix in ('image.json', 'sbom.cdx.json', 'vulnerabilities.json'):
                     with self.subTest(suffix=suffix):
                         artifact = directory / f'1-{suffix}'

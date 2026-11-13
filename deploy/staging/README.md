@@ -221,7 +221,12 @@ receipts, vulnerability reports and CycloneDX SBOMs, in that order. The queue
 pins the scan index when the job is created. The worker matches it to the
 retained Docker image IDs before building or transferring images, and checks
 the same evidence against the running image IDs before announcing. The
-result is stored as `runtime_images.retained_image_scans`. If a failed job
+result is stored as `runtime_images.retained_image_scans`. Make both exact
+images available in the release worker's local Docker before queueing. The
+worker checks their SBOM package and license entries, verifies the installed
+PostgreSQL notices by image ID, and applies the release commit's license policy
+before any image transfer. The protected runtime receipt records the separate
+`retained_license_report` path and its `retained_license_sha256`. If a failed job
 omitted the directory, supply it with `retry --retained-scans`. A recorded
 selection stays fixed for that job. Keep signed license
 dispositions for the retained images with the candidate's release evidence.

@@ -85,6 +85,16 @@ if [[ -n "$stateful" ]]; then
     exit 1
   fi
   python3 deploy/staging/release-queue.py verify-retained-scans "$retained_scans" "$postgres_id" "$clamav_id" "$retained_sha"
+  evidence_root=${receipt:+$(dirname -- "$receipt")}
+  evidence_root=${evidence_root:-"$HOME/.local/state/barghsa-staging-queue/image-scans"}
+  mkdir -p -- "$evidence_root"
+  retained_license_dir=$(mktemp -d "$evidence_root/retained-licenses.XXXXXXXX")
+  retained_license_report="$retained_license_dir/release-licenses.json"
+  echo "Checking licenses for the retained images; evidence: $retained_license_report" >&2
+  python3 scripts/check-release-licenses.py "$retained_scans" "$commit" \
+    --staging-retained "$postgres_id" "$clamav_id" --report "$retained_license_report"
+  retained_license_sha=$(shasum -a 256 < "$retained_license_report")
+  retained_license_sha=${retained_license_sha%% *}
 fi
 
 if [[ -z "$bundle_dir" ]]; then
@@ -182,7 +192,8 @@ verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id"
 if [[ -z "$stateful" ]]; then
   verify+=(--includes-stateful)
 else
-  verify+=(--retained-scans "$retained_scans" --retained-sha "$retained_sha")
+  verify+=(--retained-scans "$retained_scans" --retained-sha "$retained_sha"
+    --retained-license-report "$retained_license_report" --retained-license-sha "$retained_license_sha")
 fi
 if [[ -n "$receipt" ]]; then
   verify+=(--receipt "$receipt")

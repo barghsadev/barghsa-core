@@ -112,8 +112,11 @@ inside both indexes are relative to the same protected approval package.
   and `clamav`, each containing the registry `manifest_digest` and the
   platform `image_id` from inspecting the pulled image. Both use the
   `sha256:` prefix. The check binds the recorded platform IDs to staging.
-  The operator must verify the registry manifests and retain the separate
-  scan and license receipts for any stateful images reused by staging.
+  For initialized staging, add `retained_directory` to `staging_scans`.
+  Copy its two numbered scan receipts and artifacts there, along with the
+  runtime receipt's `retained_license_report` as `release-licenses.json`.
+  The promotion check compares those files to the retained image IDs and
+  evidence hashes. The operator must verify the registry manifests separately.
   Guarded rollout requires the plan's app and web IDs to match this report.
 
 In `core_service_report`, set `status` to `passed`, `scope` to

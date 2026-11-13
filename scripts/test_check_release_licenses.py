@@ -86,6 +86,49 @@ class LicenseCheckTests(unittest.TestCase):
                 self.assertEqual(licenses.read_sbom(root, index, scope, commit, staging=True)[0], image_id)
                 docker.assert_called_with('image', 'inspect', '--format', '{{.Id}}', image)
 
+    def test_retained_audit_binds_scan_scope_and_installed_notice_to_exact_ids(self):
+        ids = {scope: 'sha256:' + digit * 64 for scope, digit in zip(licenses.RETAINED_SCOPES, '12')}
+        identity = 'pkg:golang/example@1.2.3'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for index, (scope, image_id) in enumerate(ids.items(), 1):
+                name = 'postgres' if scope == 'postgres-staging' else scope
+                image = f'barghsa-{name}:vps-previous'
+                bom = {'bomFormat': 'CycloneDX', 'metadata': {'component': {'name': image, 'properties': [
+                    {'name': 'aquasecurity:trivy:ImageID', 'value': image_id}
+                ]}}, 'components': [{'type': 'library', 'bom-ref': identity, 'purl': identity,
+                                     'licenses': [{'license': {'id': 'LGPL-3.0-or-later'}}]}],
+                       'dependencies': []}
+                raw = json.dumps(bom).encode()
+                (root / f'{index}-sbom.cdx.json').write_bytes(raw)
+                (root / f'{index}-image.json').write_text(json.dumps({
+                    'image': image, 'image_id': image_id, 'blocked': False, 'sbom_sha256': licenses.digest(raw),
+                }))
+            commit = 'a' * 40
+            approvals = {('clamav', identity, ('LGPL-3.0-or-later',)): {'reference': 'review-1'}}
+            with patch.object(licenses, 'docker', side_effect=lambda *args: args[-1].encode()) as docker, \
+                 patch.object(licenses, 'verify_postgres_notices', return_value={}) as notices:
+                report = licenses.audit(root, commit, approvals, retained_ids=ids)
+                self.assertEqual(report['images'], ids)
+                self.assertEqual(report['commit'], commit)
+                self.assertEqual({row['scope'] for row in report['packages']}, set(ids))
+                self.assertIn(('postgres-staging', identity, 'review-required'), [
+                    (row['scope'], row['purl'], row['status']) for row in report['packages']
+                ])
+                self.assertIn(('clamav', identity, 'approved'), [
+                    (row['scope'], row['purl'], row['status']) for row in report['packages']
+                ])
+                notices.assert_called_once_with(ids['postgres-staging'], staging=True)
+                self.assertEqual([call.args[-1] for call in docker.call_args_list], list(ids.values()))
+                with self.assertRaisesRegex(ValueError, 'does not match the expected image'):
+                    licenses.audit(root, commit, approvals,
+                                   retained_ids=ids | {'postgres-staging': ids['clamav']})
+                swapped = json.loads((root / '1-image.json').read_text())
+                swapped['image'] = 'barghsa-clamav:vps-previous'
+                (root / '1-image.json').write_text(json.dumps(swapped))
+                with self.assertRaisesRegex(ValueError, 'does not match the expected image'):
+                    licenses.audit(root, commit, approvals, retained_ids=ids)
+
     def test_browser_checks_notice_and_all_font_bytes_in_each_shell(self):
         commit = '1' * 40
         packages = [{'name': 'dompurify', 'version': '3.4.17', 'license': '(MPL-2.0 OR Apache-2.0)'},

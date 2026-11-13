@@ -346,6 +346,28 @@ def verify_image_receipts(index_path, path, fingerprint, job, sha):
     license_sha = queue['verify_image_licenses'](scan_directory, sha, licensed_ids)
     if license_sha != runtime.get('license_sha256'):
         raise ValueError('Staging license report differs from the deployed receipt')
+    retained_scans = None
+    retained_license_sha = None
+    if not includes_stateful:
+        retained = scans.get('retained_directory')
+        if not isinstance(retained, str) or not retained or Path(retained).is_absolute():
+            raise ValueError('Use a relative retained image scan directory')
+        retained_dir = (directory / retained).resolve()
+        for name in ('release-licenses.json', *(f'{i}-{suffix}' for i in (1, 2)
+                      for suffix in ('image.json', 'vulnerabilities.json', 'sbom.cdx.json'))):
+            artifact = receipt_path(directory, str(Path(retained) / name), 'retained staging image evidence')
+            if artifact.parent != retained_dir:
+                raise ValueError('Retained staging artifacts must be in the retained scan directory')
+        retained_scans = queue['verify_retained_scans'](retained_dir, ids)
+        runtime_retained = runtime.get('retained_image_scans')
+        if not isinstance(runtime_retained, dict) or any(
+                runtime_retained.get(field) != retained_scans[field] for field in ('images', 'sha256')):
+            raise ValueError('Retained scan receipts differ from the deployed receipts')
+        retained_license_sha = queue['verify_license_report'](
+            retained_dir / 'release-licenses.json', sha,
+            {'postgres-staging': ids['postgres'], 'clamav': ids['clamav']}, browser=False)
+        if retained_license_sha != runtime.get('retained_license_sha256'):
+            raise ValueError('Retained license report differs from the deployed receipt')
     registry = data['production_registry']
     if registry.get('candidate_sha') != sha or set(registry.get('images', {})) != {'app', 'web', 'clamav'}:
         raise ValueError('Production registry receipt must identify the candidate runtime images')
@@ -354,7 +376,9 @@ def verify_image_receipts(index_path, path, fingerprint, job, sha):
                 or entry.get('image_id') != ids[scope]):
             raise ValueError('Production registry image differs from the verified staging image')
     return {'image_ids': ids, 'scanned_images': scan_index,
-            'license_sha256': license_sha, 'production_registry': registry['images'], 'sha256': digests}
+            'license_sha256': license_sha, 'retained_image_scans': retained_scans,
+            'retained_license_sha256': retained_license_sha,
+            'production_registry': registry['images'], 'sha256': digests}
 
 
 def main():

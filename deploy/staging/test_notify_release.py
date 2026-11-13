@@ -244,7 +244,19 @@ elif name=='python3' and args[1] in ('verify-images','verify-image-bundle','veri
     if args[1]=='verify-images' and os.environ.get('CHANGE_RETAINED_AFTER_TRANSFER'):
         path=pathlib.Path(args[args.index('--retained-scans')+1])/'2-sbom.cdx.json'
         path.write_text('tampered')
+    if args[1]=='verify-images' and os.environ.get('CHANGE_RETAINED_LICENSE_AFTER_TRANSFER'):
+        path=pathlib.Path(args[args.index('--retained-license-report')+1])
+        path.write_bytes(path.read_bytes()+b' ')
     os.execv(sys.executable,[sys.executable,*args])
+elif name=='python3' and args[0]=='scripts/check-release-licenses.py' and args[3]=='--staging-retained':
+    assert args[4:7]==['sha256:'+'d'*64,'sha256:'+'e'*64,'--report']
+    if os.environ.get('FAIL_RETAINED_LICENSE'): sys.exit(1)
+    ids=dict(zip(('postgres-staging','clamav'),args[4:6]))
+    pathlib.Path(args[7]).write_text(json.dumps({
+        'commit': args[2], 'images': ids, 'packages': [
+            {'scope':scope,'status':'allowed'} for scope in ids
+        ],
+    }))
 elif name=='python3' and args[0]=='scripts/check-release-licenses.py':
     assert args[3:6]==['--staging-local','bootstrap' if os.environ['FRESH_STAGING']=='1' else 'initialized','--report']
     if os.environ.get('FAIL_LICENSE'): sys.exit(1)
@@ -323,10 +335,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         scenarios = [(failure, False, False) for failure in (
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
-            "CHANGE_RETAINED_AFTER_TRANSFER",
+            "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
-                                        ("CORRUPT_TRANSFER", False, True)]:
+                                        ("CORRUPT_TRANSFER", False, True), ("FAIL_RETAINED_LICENSE", False, True)]:
             with self.subTest(failure=failure, fresh=fresh, prebuilt=prebuilt):
                 log.unlink(missing_ok=True)
                 receipt = self.root / "runtime-images.json"
@@ -364,6 +376,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     verification = next(line for line in calls if 'release-queue.py verify-images' in line)
                     self.assertLess(calls.index(verification), calls.index(sends[0]))
                     if not fresh:
+                        retained_check = next(line for line in calls if '--staging-retained' in line)
+                        transfer = next(line for line in calls if line.startswith(('docker save ', 'docker load ')))
+                        self.assertLess(calls.index(retained_check), calls.index(transfer))
                         evidence = json.loads(receipt.read_text())
                         self.assertEqual(evidence["schema_version"], 1)
                         self.assertEqual(evidence["commit"], "a" * 40)
@@ -375,6 +390,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         self.assertEqual(evidence["retained_image_scans"]["sha256"], retained_sha)
                         license_report = Path(evidence["image_scans"]["directory"]) / "release-licenses.json"
                         self.assertEqual(evidence["license_sha256"], hashlib.sha256(license_report.read_bytes()).hexdigest())
+                        retained_report = Path(evidence["retained_license_report"])
+                        self.assertEqual(evidence["retained_license_sha256"], hashlib.sha256(retained_report.read_bytes()).hexdigest())
                         self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
                 if failure == "FAIL_ACCEPTANCE":
                     self.assertNotIn(readiness, calls)
@@ -392,9 +409,12 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 elif failure in {"ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE"}:
                     self.assertIn("retained", result.stderr)
                     self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))
+                elif failure == "FAIL_RETAINED_LICENSE":
+                    self.assertTrue(any("--staging-retained" in line for line in calls))
+                    self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))
                 elif prebuilt:
-                    self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ",
-                                                          "python3 scripts/check-release-licenses.py ")) for line in calls))
+                    self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime "))
+                                         or "--staging-local" in line for line in calls))
                     self.assertEqual(sum(line.startswith("docker load ") for line in calls), 0 if failure else 1)
                     if failure:
                         self.assertFalse(any(line.startswith("scp ") for line in calls))
@@ -418,7 +438,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     if failure == "FAIL_SCAN":
                         self.assertFalse(any(line.startswith(('docker save ', 'scp ')) for line in calls))
                         continue
-                    license_check = next(line for line in calls if line.startswith('python3 scripts/check-release-licenses.py '))
+                    license_check = next(line for line in calls if '--staging-local' in line)
                     self.assertLess(calls.index(scan), calls.index(license_check))
                     if failure == "FAIL_LICENSE":
                         self.assertFalse(any(line.startswith(('docker save ', 'scp ')) for line in calls))

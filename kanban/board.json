@@ -8675,7 +8675,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8695,7 +8696,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8965,6 +8966,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -13138,7 +13147,8 @@
           "release-0.6-native-seed-and-bootstrap-acceptance",
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13151,7 +13161,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13202,6 +13212,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -13287,7 +13305,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13299,7 +13318,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13636,6 +13655,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -19950,7 +19977,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-local-staging-license-gate",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -19970,7 +19998,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20159,6 +20187,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -20933,7 +20969,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -20945,7 +20982,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21141,6 +21178,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -21207,7 +21252,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21219,7 +21265,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21415,6 +21461,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -23014,7 +23068,8 @@
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
         "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images.",
-        "Protected preflight 43510245617 at d19812d0a reproduced all 859 exact package and scope rows and the same 387 pending dispositions. Obtain named approval and run the final strict check."
+        "Protected preflight 43510245617 at d19812d0a reproduced all 859 exact package and scope rows and the same 387 pending dispositions. Obtain named approval and run the final strict check.",
+        "Initialized staging now applies the strict policy to the exact retained PostgreSQL and ClamAV images before transfer and binds the result to the deployed receipt. Native execution found the existing 244 retained-image dispositions in the 387-entry packet. Named approval and the final strict candidate gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23076,7 +23131,8 @@
           "release-0.6-license-candidate-39619e439",
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -23451,7 +23507,8 @@
         "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt.",
         "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job.",
         "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open.",
-        "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open."
+        "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open.",
+        "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23506,7 +23563,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-scan-binding",
           "release-0.6-protected-stage-migration-backup",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": null
       }
@@ -23705,7 +23763,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23729,7 +23788,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -23829,6 +23888,14 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -31430,7 +31497,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31485,7 +31553,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31790,6 +31858,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -34545,7 +34621,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34567,7 +34644,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -34575,7 +34652,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35085,6 +35162,15 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -37368,7 +37454,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -37396,7 +37483,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             }
           ],
           "checks": [
@@ -37604,6 +37691,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -162367,7 +162462,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -162739,7 +162835,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -163892,6 +163988,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -638540,7 +638644,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -638912,7 +639017,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -640089,6 +640194,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -670637,7 +670750,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-local-staging-license-gate",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -670649,7 +670763,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -670847,6 +670961,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -676894,7 +677016,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -676906,7 +677029,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -676994,6 +677117,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -679610,7 +679741,8 @@
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
         "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending.",
         "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet.",
-        "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open."
+        "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open.",
+        "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added."
       ],
       "owner": null,
       "depends_on": [],
@@ -679668,7 +679800,8 @@
           "release-0.6-license-candidate-39619e439",
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -679820,7 +679953,8 @@
         "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence.",
         "Protected preflight 43510245617 at d19812d0a verified all five hosted image scan subjects and their SBOM and scan digests. The approved cutover and exact deployed and registry receipts remain open.",
         "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open.",
-        "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts."
+        "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts.",
+        "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -679876,7 +680010,8 @@
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-retained-scan-binding",
           "release-0.6-published-d19812d0a",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -700332,7 +700467,8 @@
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -700354,11 +700490,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
+              "sha256": "9696b9df34ab73458190b02d8d03978f6cb2501d01284bea97f3439b8e8a657b"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -700677,6 +700813,15 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -701160,7 +701305,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -701182,15 +701328,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "343a01cf1415dca0aa429db6719535f24b1785532a04c934b17cb8c05afee363"
+              "sha256": "9696b9df34ab73458190b02d8d03978f6cb2501d01284bea97f3439b8e8a657b"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -701607,6 +701753,16 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -701741,7 +701897,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -701752,7 +701909,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -702065,6 +702222,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -702619,7 +702784,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -702640,7 +702806,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -702915,6 +703081,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -702962,7 +703136,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -702983,7 +703158,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -703258,6 +703433,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -710307,7 +710490,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -710331,7 +710515,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -710580,6 +710764,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -710628,7 +710820,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-immutable-board-readiness",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -710672,7 +710865,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "4a66c447639156e50e99edd28f091fb533c42d2f5381df276100ae30a7d96f5d"
+              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -711019,6 +711212,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -719431,7 +719632,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -719447,11 +719649,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "4a66c447639156e50e99edd28f091fb533c42d2f5381df276100ae30a7d96f5d"
+              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "2870dfb9e61bcc037cdf39bff8f6af58d7c2a45ce289ed8d4b308dbdf9961cff"
+              "sha256": "e0dbb22cb7bdfa4677c729da326af22c3e89e45c3ae4bbaa2293bda47d702732"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -720082,6 +720284,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -721656,7 +721867,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-web-server-tracing",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -721704,7 +721916,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -721953,6 +722165,14 @@
                 "deploy/production/test_rollout_observer.py"
               ],
               "scope": "The observer now verifies candidate and previous API readiness revisions before authenticated smoke or baseline sampling. Thirteen observer, eight scheduled probe and seventeen guarded-rollout tests passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -722241,7 +722461,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -722289,7 +722510,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -722553,6 +722774,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -723261,7 +723490,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -723293,7 +723523,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "4a66c447639156e50e99edd28f091fb533c42d2f5381df276100ae30a7d96f5d"
+              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -723580,6 +723810,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The optional PostgreSQL WAL overlay is activated by protected configuration. Default Compose settings preserve archive_mode off. The normalized overlay leaves other services and the database volume unchanged. Existing release, rollback and notifier checks passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -723773,7 +724011,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -723793,7 +724032,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -723981,6 +724220,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -724089,7 +724336,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724109,7 +724357,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724297,6 +724545,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -724343,7 +724599,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724363,7 +724620,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d612793ec5cd35fba05a827408778db85a658427314448190341bc9a4f545426"
+              "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724551,6 +724808,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         }
@@ -1052234,11 +1052499,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
+              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "2870dfb9e61bcc037cdf39bff8f6af58d7c2a45ce289ed8d4b308dbdf9961cff"
+              "sha256": "e0dbb22cb7bdfa4677c729da326af22c3e89e45c3ae4bbaa2293bda47d702732"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1052356,6 +1052621,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ]
         },
@@ -1052366,7 +1052640,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ]
       }
     },
@@ -1065500,7 +1065775,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1065508,7 +1065783,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "4a66c447639156e50e99edd28f091fb533c42d2f5381df276100ae30a7d96f5d"
+              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1065520,7 +1065795,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
+              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1068659,6 +1068934,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ],
           "presentation_renewals": [
@@ -1069078,7 +1069363,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-storage-sdk-endpoint-policy",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1071247,7 +1071533,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "baf3ed5b182189265c944802f17a2acf1be7acf51fbdc62e59b69596b7fdd5ee"
+              "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1071255,7 +1071541,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "4a66c447639156e50e99edd28f091fb533c42d2f5381df276100ae30a7d96f5d"
+              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1071267,7 +1071553,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
+              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1074308,6 +1074594,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-retained-image-license-policy",
+              "base_commit": "465def30447d690624867b49652f81c23d19babb",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1074744,7 +1075040,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-storage-sdk-endpoint-policy",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1079840,7 +1080137,8 @@
         "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts.",
         "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open.",
         "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback.",
-        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required."
+        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
+        "Closing the retained-image license gate requires the existing 244 named dispositions as well as approval for the remaining scopes. The initialized worker now enforces the policy before transfer and rechecks the report hash before announcement."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080143,7 +1080441,8 @@
           "release-0.6-retained-scan-binding",
           "release-0.6-priority-routing",
           "release-0.6-published-d19812d0a",
-          "release-0.6-registration-request-observation"
+          "release-0.6-registration-request-observation",
+          "release-0.6-retained-image-license-policy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1080401,7 +1080700,8 @@
         "The replacement PostgreSQL image 7dee39bc is loaded on staging and has matching isolated restore, scan and package evidence. Staging is still on the original database. At readback it had 6,259,064,832 free bytes, or 93% use, and archive_mode still off. The approved off-server backup, recovery and live cutover remain open.",
         "The non-disposable release path now uses the verified encrypted backup helper and dedicated replication configuration. A native TLS backup/restore fixture passed. Live readback still shows no protected staging backup env or key and 6,257,975,296 free bytes (93% usage). Retain the approved off-server backup and measured restore before cutting over.",
         "The opt-in staging WAL overlay is wired into the normal release and rollback. An isolated TLS storage rehearsal verified encrypted WAL and native point-in-time replay on the prepared image. Complete separate authorized provisioning and cutover before enabling it on live staging, then obtain the measured recovery and monitoring receipts.",
-        "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover."
+        "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover.",
+        "The verified retained stateful images must be present by ID in the release worker local Docker. The stage worker enforces exact package dispositions and preserves the retained-image reports. The approved storage, database cutover and actual deployment and registry receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080457,7 +1080757,8 @@
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-staging-wal-archive",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-retained-image-license-policy"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1256827,6 +1257128,129 @@
         {
           "file": "browser.log",
           "sha256": "7c0d12247ea2c2ebd911886a83a8ad91253180343ecd111dbcd146a5516a6285"
+        }
+      ]
+    },
+    "release-0.6-retained-image-license-policy": {
+      "batch": "release-0.6-retained-image-license-policy",
+      "base_commit": "465def30447d690624867b49652f81c23d19babb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "scripts/check-release-licenses.py",
+        "scripts/test_check_release_licenses.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "7e802386c159a19ae521eb24b461fe2dae3a0f5a2085946091030b8a1ea9aea7"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "9696b9df34ab73458190b02d8d03978f6cb2501d01284bea97f3439b8e8a657b"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "8ac32f054253dcd04ad924ebfd4c6f438ed7344debdfed16d6fcb7fbc70577d7"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "e0dbb22cb7bdfa4677c729da326af22c3e89e45c3ae4bbaa2293bda47d702732"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        },
+        {
+          "path": "scripts/test_check_release_licenses.py",
+          "sha256": "64505988875ad42b5ac52e57fc6df3729a895de2b68fb616e503616203caada2"
+        }
+      ],
+      "checks": [
+        "All 11 license, 21 queue, 15 notifier and 11 promotion tests passed. Fixtures verify exact retained identity and scope, installed notices, required approval, refusals before transfer, evidence tampering after transfer, and portable production readback.",
+        "Native strict checking of the two exact Linux amd64 retained candidates returned policy status 1 with 282 inventory rows and 244 pending dispositions. Every row matches the retained scopes from protected preflight 43518087320. The PostgreSQL notices were checked by image ID.",
+        "ShellCheck, documentation formatting and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The existing approvals file was used. Real retained-image eligibility remains pending named package decisions and final live cutover. Controlled fixtures establish the enforcement paths. They do not satisfy live staging acceptance or production authorization."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-retained-image-license-policy",
+      "execution_receipts": [
+        {
+          "file": "license-tests.log",
+          "sha256": "3631f5c83fe3c7b4fe4e719c46977d9e33c0a955ccfa46e86e87a33ffdd06598"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "76c2d3398ac76cd627f1e1768fdea51d2d1e810055fcb5504e186e7e306b9eb4"
+        },
+        {
+          "file": "staging-tests.log",
+          "sha256": "ee8555ed00a27676e097867bccd04d2a4e88649bdf6da5c5554b49941388070d"
+        },
+        {
+          "file": "native-license.log",
+          "sha256": "8f5b4738ea37bd3369d840918b001f5af403faa52500c60706624dc476b75109"
+        },
+        {
+          "file": "retained-licenses.json",
+          "sha256": "69971e8f9940ac9843b10f7261df2d1215b9ae2f8ff00c1e6bd7f4212f0095da"
         }
       ]
     }

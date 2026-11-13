@@ -20,6 +20,7 @@ STAGING_SCOPES = {
     'initialized': ('app', 'web'),
     'bootstrap': ('postgres-staging', 'clamav', 'app', 'web'),
 }
+RETAINED_SCOPES = ('postgres-staging', 'clamav')
 FIRST_PARTY = {
     'pkg:npm/%40barghsa/' + package + '@0.0.0'
     for package in ('api', 'db', 'i18n', 'shared', 'telemetry', 'ui', 'web', 'worker')
@@ -77,7 +78,7 @@ def docker(*args):
     return subprocess.check_output(['docker', *args], timeout=60)
 
 
-def read_sbom(directory, index, scope, commit, *, staging=False):
+def read_sbom(directory, index, scope, commit, *, staging=False, retained_id=None):
     receipt = json.loads((directory / f'{index}-image.json').read_bytes())
     data = (directory / f'{index}-sbom.cdx.json').read_bytes()
     bom = json.loads(data)
@@ -85,7 +86,12 @@ def read_sbom(directory, index, scope, commit, *, staging=False):
     image_id = receipt['image_id']
     require(isinstance(image_id, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', image_id),
             f'Invalid image ID for {scope}')
-    if staging:
+    if retained_id is not None:
+        image_name = 'postgres' if scope == 'postgres-staging' else scope
+        image = receipt['image']
+        require(image_id == retained_id and re.fullmatch(rf'barghsa-{image_name}:vps-[a-z0-9._-]+', image),
+                f'Retained {scope} scan does not match the expected image')
+    elif staging:
         image_name = 'postgres' if scope == 'postgres-staging' else scope
         image = f'barghsa-{image_name}:vps-{commit}'
         if scope in ('app', 'web'):
@@ -99,7 +105,7 @@ def read_sbom(directory, index, scope, commit, *, staging=False):
         and receipt['blocked'] is False
         and digest(data) == receipt['sbom_sha256']
         and ids == [image_id]
-        and docker('image', 'inspect', '--format', '{{.Id}}', image).decode().strip() == image_id,
+        and docker('image', 'inspect', '--format', '{{.Id}}', retained_id or image).decode().strip() == image_id,
         f'Invalid SBOM receipt or changed image for {scope}',
     )
     require(isinstance(bom['components'], list) and bom['components'], f'Empty SBOM for {scope}')
@@ -247,12 +253,15 @@ def disposition(scope, identity, licenses, approvals):
     return 'review-required', None
 
 
-def audit(directory, commit, approvals, staging=None):
+def audit(directory, commit, approvals, staging=None, *, retained_ids=None):
     scopes = {}
     items = {}
-    image_scopes = IMAGE_SCOPES if staging is None else STAGING_SCOPES[staging]
+    image_scopes = RETAINED_SCOPES if retained_ids is not None else (
+        IMAGE_SCOPES if staging is None else STAGING_SCOPES[staging]
+    )
     for index, scope in enumerate(image_scopes, 1):
-        image_id, bom = read_sbom(directory, index, scope, commit, staging=staging is not None)
+        image_id, bom = read_sbom(directory, index, scope, commit, staging=staging is not None,
+                                  retained_id=retained_ids[scope] if retained_ids else None)
         scopes[scope] = image_id
         verified_licenses = None
         if scope == 'app':
@@ -264,20 +273,23 @@ def audit(directory, commit, approvals, staging=None):
         if scope == 'postgres-staging':
             for identity, (license_name, _, _) in STAGING_POSTGRES_COMPONENTS.items():
                 items.setdefault((scope, identity, (license_name,)), set()).add(scope)
-    container = docker('create', scopes['web']).decode().strip()
-    try:
-        manifests = archive_files(container, '/app/browser-license-inventory')
-        dist = archive_files(container, '/app/dist')
-    finally:
-        docker('rm', '-v', container)
-    for shell, identity, licenses in browser_components(manifests, dist, commit):
-        items.setdefault(('browser', identity, licenses), set()).add(shell)
+    expected = set(image_scopes)
+    if retained_ids is None:
+        container = docker('create', scopes['web']).decode().strip()
+        try:
+            manifests = archive_files(container, '/app/browser-license-inventory')
+            dist = archive_files(container, '/app/dist')
+        finally:
+            docker('rm', '-v', container)
+        for shell, identity, licenses in browser_components(manifests, dist, commit):
+            items.setdefault(('browser', identity, licenses), set()).add(shell)
+        expected.add('browser')
     records = []
     for (scope, identity, licenses), locations in sorted(items.items()):
         status, reference = disposition(scope, identity, licenses, approvals)
         records.append({'scope': scope, 'purl': identity, 'licenses': licenses,
                         'locations': sorted(locations), 'status': status, 'approval': reference})
-    require(set(image_scopes) | {'browser'} == {record['scope'] for record in records},
+    require(expected == {record['scope'] for record in records},
             'Incomplete release license inventory')
     return {'commit': commit, 'images': scopes, 'packages': records}
 
@@ -290,11 +302,18 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--report-only', action='store_true', help='Report policy blockers during ordinary direct-main development')
     mode.add_argument('--staging-local', choices=STAGING_SCOPES, help='Check all images built for local staging deployment')
+    mode.add_argument('--staging-retained', nargs=2, metavar=('POSTGRES_ID', 'CLAMAV_ID'),
+                      help='Check exact retained staging images already available in local Docker')
     args = parser.parse_args()
     try:
         require(re.fullmatch(r'[0-9a-f]{40}', args.commit), 'Expected a full release commit SHA')
         policy = Path(__file__).resolve().parents[1] / 'deploy/licenses/release-approvals.json'
-        result = audit(args.scan_directory, args.commit, read_approvals(policy), args.staging_local)
+        approvals = read_approvals(policy)
+        if args.staging_retained is None:
+            result = audit(args.scan_directory, args.commit, approvals, args.staging_local)
+        else:
+            retained_ids = dict(zip(RETAINED_SCOPES, args.staging_retained))
+            result = audit(args.scan_directory, args.commit, approvals, retained_ids=retained_ids)
         args.report.write_text(json.dumps(result, indent=2) + '\n')
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, tarfile.TarError) as error:
         print(f'License inventory check failed: {error}', file=sys.stderr)
