@@ -23975,7 +23975,7 @@
       "remaining": [
         "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
         "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files.",
-        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
+        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews."
       ],
       "owner": null,
       "depends_on": [],
@@ -24016,7 +24016,8 @@
           "release-0.6-quarterly-storage-schedule-activation",
           "release-0.6-quarterly-manual-exercise",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-quarterly-scheduled-fixtures"
+          "release-0.6-quarterly-scheduled-fixtures",
+          "release-0.6-hosted-quarterly-exercise-readback"
         ],
         "current_acceptance": null
       }
@@ -24038,7 +24039,7 @@
       "remaining": [
         "Run the approved quarterly review for the production-equivalent environment. The read-only staging report and migrated PostgreSQL checks verify the automated staff, masked credential and database login inventory.",
         "Reconcile exact credential issuance and last use with protected provider and runtime inventories, identify external service account owners, and record the signed access and threat-model review with follow-up owners.",
-        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
+        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews."
       ],
       "owner": null,
       "depends_on": [],
@@ -24079,7 +24080,8 @@
         "batches": [
           "release-0.6-quarterly-access-review",
           "release-0.6-quarterly-manual-exercise",
-          "release-0.6-quarterly-scheduled-fixtures"
+          "release-0.6-quarterly-scheduled-fixtures",
+          "release-0.6-hosted-quarterly-exercise-readback"
         ],
         "current_acceptance": null
       }
@@ -696353,7 +696355,7 @@
       "launch_required": true,
       "remaining": [
         "Read back the installed timer on the approved dedicated backup host, execute its isolated restore against an authenticated off-server backup and independent baseline, and retain measured RPO/RTO and failure-alert receipts.",
-        "The quarterly GitHub workflow now schedules the existing PostgreSQL, configuration, object-storage, access-inventory and incident fixtures together and binds the job outcomes to the event, run attempt and source hashes. Verify the exact hosted preflight and the first actual scheduled run."
+        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews."
       ],
       "owner": null,
       "depends_on": [],
@@ -696368,7 +696370,8 @@
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
           "release-0.6-quarterly-manual-exercise",
-          "release-0.6-quarterly-scheduled-fixtures"
+          "release-0.6-quarterly-scheduled-fixtures",
+          "release-0.6-hosted-quarterly-exercise-readback"
         ],
         "current_acceptance": null
       }
@@ -1253754,6 +1253757,84 @@
         {
           "file": "staging-readback.json",
           "sha256": "fefa64ccbfab78b7f88a817825afa0750180d498220858b4d381a35d959e6536"
+        }
+      ]
+    },
+    "release-0.6-hosted-quarterly-exercise-readback": {
+      "batch": "release-0.6-hosted-quarterly-exercise-readback",
+      "base_commit": "c4cb6e59bfd0305143a547eb8a006595430fbfdc",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-05.05.04",
+        "06-security-testing-observability.md#T-06.11.04.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/storage-recovery-quarterly.yml",
+          "sha256": "df93404ff451b7586dfe3ab1832451f034752c38a478a99ef5b6d589706448d6"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+        },
+        {
+          "path": "packages/db/src/quarterly-access-review.migrated.test.ts",
+          "sha256": "28b266059f152d3f4d787b51e0486a89c1eb9ac7a9c3052106939572f3a61052"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "5378d727e196ca6ab0b0163f39300623a11c67fff9376df825061d46cba335a4"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "d030334b1f7363a3ff85eaedbf77ed8496f127ed322a72e682b03d1040b1fe99"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ],
+      "checks": [
+        "Hosted push run 43477615401 on ea3c2e76 passed object version and orphan recovery, PostgreSQL and configuration recovery, access and incident fixtures, and review packet generation. The source SHA, push event, run and first attempt match the packet.",
+        "Verified all seven output files and all nine review hashes against the hosted commit. The workflow, relevant fixture and dependency bytes match current sources. The rollback runbook changed after the run and its older hash is retained with that receipt."
+      ],
+      "limitations": [
+        "The run used isolated fixtures via push. There is no scheduled quarterly receipt. Off-server recovery, core-service RPO/RTO, actual operations delivery and a signed review remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-scheduled-fixtures/hosted-43477615401",
+      "execution_receipts": [
+        {
+          "file": "verified-readback.json",
+          "sha256": "8a2598505309791aaa0db28e6871d7b356e713b58236459e64e0db8b59970c74"
+        },
+        {
+          "file": "quarterly-access-and-incident/quarterly-access-inventory.log",
+          "sha256": "0287dc597a23bf436695debed46ac9198a89d3f721e9b00bd95d216d49e41bdc"
+        },
+        {
+          "file": "quarterly-access-and-incident/quarterly-incident-recovery.log",
+          "sha256": "24642de65fcb3fe65942fdc364fa1038eeeafbcf9e865505ef4859cefd0a1f34"
+        },
+        {
+          "file": "quarterly-database-recovery/quarterly-database-recovery.log",
+          "sha256": "1945fb4abd7abf6d19c0f2b770d87a48ffcaad29bccd32ea4677210e19a1a74c"
+        },
+        {
+          "file": "quarterly-operator-review/outcomes.json",
+          "sha256": "fcbd05607ce59df71087fe2537e5b35795bc4a05a14b366ce50b6075eddeb7ec"
+        },
+        {
+          "file": "quarterly-operator-review/review-sources.sha256",
+          "sha256": "252bc74bfde54d8fb4c5ee20e4f7e116250217bf77720f6bbc9800be065d57b8"
+        },
+        {
+          "file": "quarterly-storage-recovery/storage-orphan-recovery.log",
+          "sha256": "cfd3681835e3557780683a710724692c976a142529b276fdfa91ae439202ed47"
+        },
+        {
+          "file": "quarterly-storage-recovery/storage-version-recovery.tap",
+          "sha256": "efaac64f02cad0f2d08116c7f7671b32084292982a2ccaa227806b8c0036256a"
         }
       ]
     }
