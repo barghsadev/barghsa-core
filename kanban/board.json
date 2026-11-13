@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T18:38:28+00:00",
+  "updated": "2026-11-13T18:44:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -670543,7 +670543,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "On the exact immutable v0.6.0 application and scanner deployment, rerun the documented sealed document rehearsal with current signatures and retain health, download denial, quarantine and recovered retry receipts. Hosted preflight verified the actual ClamAV lifecycle in an isolated migrated database and object store. On live v0.5.1, ClamD loaded daily 28181. Official DNS and the EU mirror matched main 63, daily 28181 and bytecode 339. All three detached signatures and archive hashes verified. The live daemon accepted a clean input and detected the standard EICAR fixture."
+        "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible."
       ],
       "owner": null,
       "depends_on": [],
@@ -670567,7 +670567,8 @@
           "release-0.6-live-clamav-mirror",
           "release-0.6-staging-scanner-ceiling",
           "release-0.6-sealed-clamav-lifecycle",
-          "release-0.6-clamav-freshness-alert"
+          "release-0.6-clamav-freshness-alert",
+          "release-0.6-staging-scanner-current-signatures"
         ],
         "current_acceptance": null
       }
@@ -709803,7 +709804,7 @@
       "remaining": [
         "On the exact immutable candidate, verify collector ingestion and controlled firing and resolved receipts for application pool saturation and critical registered route errors. Confirm dashboard and runbook readback and approved operations recipient, response deadline and escalation.",
         "Confirm P2 routing and firing and recovery evidence for the existing circuit-breaker and queue-age rules. Classify existing provider alerts by their stable names when required to preserve already persisted alert and dedup identities.",
-        "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks."
+        "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule."
       ],
       "owner": null,
       "depends_on": [],
@@ -709822,7 +709823,8 @@
         ],
         "batches": [
           "release-0.6-api-pressure-alerts",
-          "release-0.6-clamav-freshness-alert"
+          "release-0.6-clamav-freshness-alert",
+          "release-0.6-staging-scanner-current-signatures"
         ],
         "current_acceptance": null
       }
@@ -1075019,7 +1075021,7 @@
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "The reactivated same-origin favicon matched the uploaded PNG in Chromium and WebKit on live staging v0.5.1 at 18:16 UTC on November 13. The API observed zero image reports and one separate style-src-elem report from the 13:23 activation. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
-        "On live v0.5.1, ClamD loaded daily 28181. Official DNS and the EU mirror matched main 63, daily 28181 and bytecode 339. All three detached signatures and archive hashes verified. The live daemon accepted a clean input and detected the standard EICAR fixture. Hosted preflight separately proved the sealed document lifecycle against a real ClamAV daemon. Verify signature freshness, sealed application receipts, scanner outage recovery and alert delivery on the final application and operational topology.",
+        "On live v0.5.1, ClamD loaded daily 28182. The current vendor versions matched all three signed EU mirror archives. The local compiled candidate verified clean and quarantined documents and retry against the live scanner with disposable state. Deploy the approved application and monitoring configuration together and verify the deployed signature metric, scanner recovery and external alert delivery.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts.",
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover."
       ],
@@ -1075069,7 +1075071,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-staging-favicon-observation-readback",
           "release-0.6-staging-favicon-final-readback",
-          "release-0.6-protected-main-and-staging-capacity-readback"
+          "release-0.6-protected-main-and-staging-capacity-readback",
+          "release-0.6-staging-scanner-current-signatures"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1248648,6 +1248651,61 @@
         {
           "file": "board-check.log",
           "sha256": "d1809baf8043c2de13a7c17648a0fbcf6316b1fced90c0d56d9d25ee22a622f1"
+        }
+      ]
+    },
+    "release-0.6-staging-scanner-current-signatures": {
+      "batch": "release-0.6-staging-scanner-current-signatures",
+      "base_commit": "39619e43990b47ba5cd36d26293eda73042fbfb0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "7d816002de7640ee1e3bfe05f32f4d2b4a408d5293610f82a2921aad59386506"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "3fb6daf0d4b88b8e28a6d96297cb1eb6622b00370bc885995671d8a179bd398b"
+        },
+        {
+          "path": "deploy/staging/clamav-mirror-tunnel.sh",
+          "sha256": "e0bc95b1c1d5c6904b8eb55e8dc242fee73bea5c07c3d92a13f852ef078468cc"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "e2d52f1421f31072cb073dcb8e9e96a86653189e5f6abd602062d251c5889cef"
+        }
+      ],
+      "checks": [
+        "Staging v0.5.1 ClamD was healthy at daily 28182. Official ClamAV DNS matched main 63, daily 28182 and bytecode 339. The pinned SSH mirror and staging matched all six archive and signature hashes and all three detached signatures verified.",
+        "The compiled local application and worker used the live staging scanner through a temporary SSH tunnel. The existing focused native test passed against disposable PostgreSQL and object storage. It verified pending download denial, retry after an interrupted scanner connection, download of the exact clean original, quarantine denial and an access record only for the clean document.",
+        "Read-only Prometheus queries returned no live ClamAV signature-age samples and no matching alert rule. The scanner, mirror and tunnel remained healthy."
+      ],
+      "limitations": [
+        "The exact v0.6.0 application and its monitoring configuration still require deployment and separate live alert and operations receipt verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-independent-critical-defect-fixture",
+      "execution_receipts": [
+        {
+          "file": "scanner-mirror-readback.json",
+          "sha256": "ec6e5dfc57d47655f0f40e0988712e82a5904aa5e7416cbccf02427c52e6e86f"
+        },
+        {
+          "file": "scanner-version.txt",
+          "sha256": "0a91280a19b34141b72ece9fe0527fba49862a0f3ddc6896b87f00ccec9dce12"
+        },
+        {
+          "file": "sealed-upload-staging-scanner.log",
+          "sha256": "79d06dfd8138ecbd9bc2ada1b07d47d5a258b708f62131db585e0152e822af1b"
+        },
+        {
+          "file": "scanner-monitoring.json",
+          "sha256": "27b21675cc985220a7e7f5002a9d0a2904ba2aecccc0fec8aa47bb5fb6bbe21e"
         }
       ]
     }
