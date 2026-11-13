@@ -94,7 +94,7 @@ echo apps-started >&2
             }
             script = (
                 'set -euo pipefail\n'
-                'runtime=$1\nactive=$2\ncompose=$3\n'
+                'runtime=$1\nactive=$2\ncompose=$3\ncompose_files=(-f "$compose")\n'
                 '''postgres_id=fixture
 verify_running_image() {
   if [[ $1 == postgres ]]; then
@@ -266,6 +266,39 @@ echo compose-admitted
                 self.assertIn({'type': 'volume', 'source': 'pgdata', 'target': '/var/lib/postgresql/data', 'volume': {}},
                               config['services']['postgres']['volumes'])
 
+    def test_wal_overlay_only_changes_postgres_and_mounts_the_existing_private_key(self):
+        overlay = STAGING_COMPOSE.with_name("compose.wal-archive.yml")
+        env = {**os.environ, **dict.fromkeys((
+            'BARGHSA_APP_IMAGE', 'BARGHSA_WEB_IMAGE', 'BARGHSA_POSTGRES_IMAGE', 'BARGHSA_CLAMAV_IMAGE',
+            'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY',
+            'S3_BUCKET',
+        ), 'fixture')}
+        command = ['docker', 'compose', '--env-file', '/dev/null', '-f', str(STAGING_COMPOSE)]
+        options = ['config', '--no-env-resolution', '--format', 'json']
+        baseline = json.loads(subprocess.check_output([*command, *options], env=env))
+        with tempfile.TemporaryDirectory() as directory:
+            backup_env = Path(directory) / 'wal-archive.env'
+            backup_env.write_text('BACKUP_CLUSTER_ID=fixture\n')
+            local_overlay = Path(directory) / overlay.name
+            local_overlay.write_text(overlay.read_text().replace(
+                '/etc/barghsa/staging/wal-archive.env', str(backup_env),
+            ))
+            enabled = json.loads(subprocess.check_output([*command, '-f', str(local_overlay), *options], env=env))
+        postgres = enabled['services'].pop('postgres')
+        default_postgres = baseline['services'].pop('postgres')
+        self.assertEqual(enabled, baseline)
+        self.assertEqual(postgres['command'], [*default_postgres['command'], '-c', 'archive_mode=on'])
+        self.assertEqual(postgres['environment']['BACKUP_ALLOW_HTTP'], 'false')
+        self.assertEqual(postgres['environment']['BACKUP_GPG_PASSPHRASE_FILE'], '/run/secrets/backup-key')
+        self.assertEqual(postgres['environment']['BACKUP_CLUSTER_ID'], 'fixture')
+        self.assertEqual(postgres['volumes'][:-1], default_postgres['volumes'])
+        key_mount = postgres['volumes'][-1]
+        self.assertIs(key_mount.pop('bind').get('create_host_path', False), False)
+        self.assertEqual(key_mount, {
+            'type': 'bind', 'source': '/etc/barghsa/staging/backup-key',
+            'target': '/run/secrets/backup-key', 'read_only': True,
+        })
+
     def test_migrations_wait_for_a_successful_writer_stop(self):
         text = RELEASE.read_text()
         start = text.index('# Quiesce the previous API and worker')
@@ -378,6 +411,7 @@ BARGHSA_WEB_IMAGE=barghsa-web:vps-fixture
 BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-fixture
 BARGHSA_POSTGRES_VOLUME={RESTORED_VOLUME}
 BARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-fixture
+BARGHSA_STAGING_WAL_ARCHIVE=false
 BARGHSA_APP_IMAGE_ID=sha256:{'a' * 64}
 BARGHSA_WEB_IMAGE_ID=sha256:{'b' * 64}
 if [[ "$1" == bootstrap || "$1" == wrong-bootstrap-image ]]; then

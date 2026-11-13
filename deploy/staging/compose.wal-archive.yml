@@ -1,0 +1,15 @@
+services:
+  postgres:
+    command: [postgres, -c, config_file=/etc/postgresql/barghsa.conf, -c, archive_mode=on]
+    env_file:
+      - /etc/barghsa/staging/wal-archive.env
+    environment:
+      BACKUP_ALLOW_HTTP: 'false'
+      BACKUP_GPG_PASSPHRASE_FILE: /run/secrets/backup-key
+    volumes:
+      - type: bind
+        source: /etc/barghsa/staging/backup-key
+        target: /run/secrets/backup-key
+        read_only: true
+        bind:
+          create_host_path: false

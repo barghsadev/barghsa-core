@@ -7,6 +7,7 @@ runtime=/etc/barghsa/staging/runtime.env
 active=/etc/barghsa/staging/active-images.env
 candidate="${1:?Usage: release.sh /etc/barghsa/staging/candidate-images.env}"
 compose=/opt/barghsa/staging/compose.yml
+compose_files=(-f "$compose")
 exec 9>/run/lock/barghsa-staging-release.lock
 flock -n 9 || { echo 'Another release is running' >&2; exit 1; }
 [[ -r "$runtime" && -r "$candidate" ]] || { echo 'Runtime or image manifest missing' >&2; exit 1; }
@@ -27,6 +28,13 @@ if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
     echo 'Non-disposable staging requires protected off-server backup configuration and key' >&2
     exit 1
   }
+fi
+if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
+  [[ "${BARGHSA_DISPOSABLE:-false}" != true && -s /etc/barghsa/staging/wal-archive.env ]] || {
+    echo 'Staging WAL archiving requires non-disposable storage and protected archiver configuration' >&2
+    exit 1
+  }
+  compose_files+=(-f /opt/barghsa/staging/compose.wal-archive.yml)
 fi
 
 for key in POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD DATABASE_URL PGDIRECT_URL REDIS_URL S3_ENDPOINT S3_PRIVATE_ENDPOINT S3_PUBLIC_ENDPOINT S3_REGION S3_BUCKET S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY APP_PUBLIC_URL API_PUBLIC_URL SESSION_SECRET CSRF_SECRET PROVIDER_CONFIG_ENCRYPTION_KEY AUTH_DELIVERY_ENCRYPTION_KEY AI_MODEL_ENCRYPTION_KEY AI_INFERENCE_SHARED_SECRET STORAGE_CONFIG_ENCRYPTION_KEY PAYMENT_GATEWAY_MERCHANT_ID PAYMENT_GATEWAY_WEBHOOK_SECRET; do
@@ -107,7 +115,7 @@ elif [[ "$BARGHSA_POSTGRES_VOLUME" != barghsa-staging_pgdata ]]; then
   exit 1
 fi
 
-dc=(docker compose --env-file "$runtime" --env-file "$candidate" -f "$compose")
+dc=(docker compose --env-file "$runtime" --env-file "$candidate" "${compose_files[@]}")
 "${dc[@]}" config --quiet
 
 verify_postgres_mount() {
@@ -139,7 +147,7 @@ rollback() {
   local status=$?
   trap - ERR
   if [[ -r "$active" ]]; then
-    local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
+    local previous=(docker compose --env-file "$runtime" --env-file "$active" "${compose_files[@]}")
     local previous_app_id previous_web_id loaded_app_id loaded_web_id service expected_id container
     if ! (
       if ! verify_running_image postgres "$postgres_id"; then
@@ -218,6 +226,14 @@ trap rollback ERR
 "${dc[@]}" up -d --no-recreate --wait --wait-timeout 900 postgres redis objectstore clamav
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
+if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
+  archive_settings=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
+    -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c 'SHOW archive_mode' -c 'SHOW archive_command')
+  [[ "$archive_settings" == $'on\n/opt/backup/archive-wal.sh %f %p' ]] || {
+    echo 'Staging PostgreSQL is not running with the encrypted WAL archiver' >&2
+    false
+  }
+fi
 
 # Host NGINX enters the API through the Docker bridge gateway.
 export BARGHSA_PROXY_IPS

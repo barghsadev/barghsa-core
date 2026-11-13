@@ -329,6 +329,24 @@ receipt enters rollback. Apply the [PostgreSQL restore runbook](../../docs/opera
 to test recovery and provision scheduled backups and WAL/PITR. Configuration
 and uploaded objects require their own backup and restore receipts.
 
+Provision continuous encrypted WAL separately from the release. Put only
+the off-server `BACKUP_S3_*` storage settings and the matching
+`BACKUP_CLUSTER_ID` in root-owned `/etc/barghsa/staging/wal-archive.env`.
+The WAL namespace for the installed cluster and its successor must have
+recoverable keys. Use the same cluster namespace and key in the full backup
+configuration, with separate credentials where supported. The app and
+database container do not need the full-backup replication URL.
+
+During the approved database cutover, add `compose.wal-archive.yml` to
+both the cutover and subsequent manual Compose commands. Start PostgreSQL
+with the prepared image and restored volume while writes are paused. Read
+back `archive_mode` and `archive_command`, confirm the encrypted object for
+a forced WAL switch and run a point-in-time restore. Set
+`BARGHSA_STAGING_WAL_ARCHIVE=true` in the protected runtime only after
+verification. The normal release reuses the running database and refuses to
+run migrations if that flag is set and the encrypted archiver is inactive.
+Monitor WAL backlog and disk capacity while verifying the storage path.
+
 Check resource use with `docker stats`, `df -h`, and `docker system df`.
 ClamAV may take several minutes to download signatures on first boot. Keep
 one instance of each stateful service; do not scale PostgreSQL or SeaweedFS
