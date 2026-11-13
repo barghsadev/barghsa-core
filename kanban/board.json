@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T20:24:18+00:00",
+  "updated": "2026-11-13T20:31:19+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9886,7 +9886,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -9959,6 +9959,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -16636,7 +16644,8 @@
       "remaining": [
         "Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy.",
         "Story-level disk alerts, protected backup monitoring host and exporter, real backup failure and stale detection, and verified P1 delivery remain operational prerequisites. The local backup status and alert rules passed focused checks.",
-        "Live staging verified archive_mode=off, no matching host backup units, no protected host backup env and no backup keys in its runtime env. The approved separate backup host and protected storage destination remain required."
+        "Live staging verified archive_mode=off, no matching host backup units, no protected host backup env and no backup keys in its runtime env. The approved separate backup host and protected storage destination remain required.",
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -16716,7 +16725,8 @@
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-postgres-restore-readback",
-          "release-0.6-postgres-cutover-preflight"
+          "release-0.6-postgres-cutover-preflight",
+          "release-0.6-postgres-disk-capacity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -16814,7 +16824,8 @@
       "remaining": [
         "Production host memory sizing and a measured load/performance baseline are not verified. Development settings are not evidence of production sizing.",
         "Apply the source-verified PostgreSQL rule group with the exact staging Prometheus and operations receiver. Capture live scoped firing and resolved receipts and exercise the approved operations destination.",
-        "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised."
+        "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -16898,7 +16909,8 @@
         "batches": [
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-otlp-connection-deadline",
-          "release-0.6-postgres-alert-wiring"
+          "release-0.6-postgres-alert-wiring",
+          "release-0.6-postgres-disk-capacity"
         ],
         "current_acceptance": null,
         "verified_staging_postgres_monitoring": {
@@ -112090,7 +112102,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -114414,6 +114426,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -118179,7 +118199,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -118636,6 +118656,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -137685,7 +137713,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -138341,6 +138369,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -598499,7 +598535,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -599226,6 +599262,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -601482,7 +601526,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -602259,6 +602303,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -686136,7 +686188,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
@@ -686349,6 +686401,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -693856,7 +693916,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -694019,6 +694079,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -694117,7 +694185,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -694343,6 +694411,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -694635,7 +694711,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -694965,6 +695041,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -696429,11 +696513,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -696660,6 +696744,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -706784,7 +706877,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             }
           ],
           "checks": [
@@ -706880,6 +706973,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -706934,7 +707035,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -707003,6 +707104,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -707077,7 +707186,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -707368,6 +707477,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -707479,7 +707596,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -707833,6 +707950,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -707919,11 +708044,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -708309,6 +708434,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -708383,7 +708517,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -708674,6 +708808,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -709610,7 +709752,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
-              "sha256": "10f685efc161b6822657a00d523f4307c33c9c64043baba2c54a19f94852c058"
+              "sha256": "d9c289c27beb0dc44e1e601a0743d05e6759290188fa145f0c9667c8ab8fc400"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -709618,7 +709760,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+              "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -709755,6 +709897,15 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "deploy/monitoring/grafana-postgresql-dashboard.json",
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -712462,7 +712613,8 @@
         "On the exact immutable candidate, verify collector ingestion and controlled firing and resolved receipts for application pool saturation and critical registered route errors. Confirm dashboard and runbook readback and approved operations recipient, response deadline and escalation.",
         "Confirm P2 routing and firing and recovery evidence for the existing circuit-breaker and queue-age rules. Classify existing provider alerts by their stable names when required to preserve already persisted alert and dedup identities.",
         "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule. The rule now also covers a healthy expected worker that omits the scanner series. Apply the candidate rules with the candidate worker and operations receiver, then verify the exact live series and receipts.",
-        "Verify live P2 firing and resolved PostgreSQL cache, connection, transaction, lock and slow-query receipts from the deployed candidate."
+        "Verify live P2 firing and resolved PostgreSQL cache, connection, transaction, lock and slow-query receipts from the deployed candidate.",
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -712488,7 +712640,8 @@
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-postgres-alert-wiring"
+          "release-0.6-postgres-alert-wiring",
+          "release-0.6-postgres-disk-capacity"
         ],
         "current_acceptance": null
       }
@@ -712689,11 +712842,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -712947,6 +713100,15 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -713004,7 +713166,8 @@
       "remaining": [
         "Select a patched immutable Grafana image that passes the image gate. The official Linux/amd64 13.1.10, 13.2.6 and 13.3.1 images had 3, 19 and 20 high findings, respectively. 13.1.10 flags Tempo in the core binary and x/net in Zipkin. The required Prometheus backend in 13.2.6 and 13.3.1 ships x/net v0.61.0. Staging remains healthy on its existing monitoring stack.",
         "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert.",
-        "Open the PostgreSQL dashboard and linked API pressure or database failover runbook from exact-candidate receipts with approved operator access."
+        "Open the PostgreSQL dashboard and linked API pressure or database failover runbook from exact-candidate receipts with approved operator access.",
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -713080,7 +713243,8 @@
           "release-0.6-storage-sms-review",
           "release-0.6-clamav-freshness-alert",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-postgres-alert-wiring"
+          "release-0.6-postgres-alert-wiring",
+          "release-0.6-postgres-disk-capacity"
         ],
         "current_acceptance": null
       }
@@ -713505,11 +713669,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -713879,6 +714043,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -713963,11 +714136,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -714353,6 +714526,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -714435,11 +714617,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -714813,6 +714995,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -714894,11 +715085,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -715200,6 +715391,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -715277,11 +715477,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+              "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+              "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -715605,6 +715805,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-postgres-disk-capacity",
+              "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
             }
           ]
         }
@@ -1253112,6 +1253321,97 @@
         {
           "file": "restored-browser-focused.log",
           "sha256": "47e8443c13a9cf948c61a10a9de5ad0442db7dd636b3a89efe11996874a249d7"
+        }
+      ]
+    },
+    "release-0.6-postgres-disk-capacity": {
+      "batch": "release-0.6-postgres-disk-capacity",
+      "base_commit": "456a4236715227e574d0f9ec1b34d0650155d0ca",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.04",
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "06-security-testing-observability.md#T-06.15.01.08"
+      ],
+      "changed_paths": [
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "apps/worker/src/operations/alerts.ts",
+        "apps/worker/src/operations/journey-alerts.test.ts",
+        "deploy/monitoring/grafana-postgresql-dashboard.json",
+        "deploy/monitoring/postgres-alert-rules.json",
+        "deploy/monitoring/postgres-alerts.test.yml",
+        "deploy/monitoring/staging-postgres-disk-expectation.yml",
+        "deploy/monitoring/staging-postgres-disk-scrape.yml",
+        "deploy/monitoring/staging-postgres-disk.yml",
+        "docs/operations/postgresql-monitoring.md",
+        "docs/runbooks/postgresql-backup.md",
+        "packages/shared/src/notifications/operations-alert-links.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "4f1430520fcef4269c3109b28351feeee8e1ff549a97401af4d18f5b1699a898"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "346125a5c5ad8ca7eb59d3ee4be81d6021a13cc50090f7db5b463f01be8dddad"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "3ef1aa0dfc15399aec9eed9441276100f935d7768bcb2820023f9025c8da4cb3"
+        },
+        {
+          "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "sha256": "d9c289c27beb0dc44e1e601a0743d05e6759290188fa145f0c9667c8ab8fc400"
+        },
+        {
+          "path": "deploy/monitoring/postgres-alert-rules.json",
+          "sha256": "482af16ad7ea8c8db11c6b95b28f92cf4c7175a3457c073597e8af4df06546f9"
+        },
+        {
+          "path": "deploy/monitoring/postgres-alerts.test.yml",
+          "sha256": "ad973d2f06b13ce780b39233a31b4aa7d061f04fb1bc9f9daf885b8f38dee9d5"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-disk-expectation.yml",
+          "sha256": "bc0d7ace15eac78b99521b0317116f61c229acab8e47fc480d315f0f58c5b1af"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-disk-scrape.yml",
+          "sha256": "74bed776ff14330d2716c1fb401335a920804163f5f8d9d9fb2af76940b65bd2"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-disk.yml",
+          "sha256": "a6a8613562cf739d45c590ae4406b39a4f7df1c021d1808ce144c596772e072b"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "44f421e0443094910d10d307833e2b78f2f513d5351ec5592fbdb9eb06c289f6"
+        },
+        {
+          "path": "docs/runbooks/postgresql-backup.md",
+          "sha256": "0a5c18a32f94fb1c2babe5007308205f038166ef9068fd53cb7185f64f308b00"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "c11344e38acfb5cf8a1abb4190251906ba117093d663a9eaeb5aa26b995aca46"
+        }
+      ],
+      "checks": [
+        "The exact pinned Prometheus rule test verifies high use after two minutes below 20% available, recovery at the boundary, missing and invalid metrics, scrape failure, discovery loss, and recovery. An unrelated scrape job cannot affect the alert.",
+        "The staged monitoring Compose overlay resolves all eight mounted rule files and the private scrape configuration. The pinned Prometheus image completed a mutual TLS scrape of a fixture exporter, recorded exactly 19% available on the selected mount, and dropped unrelated filesystem and exporter samples. A separate PromQL fixture verified the dashboard WAL rate across duplicate API observations.",
+        "Both P2 alert identities passed the native worker receiver checks and dashboard and runbook link checks. Seventy-five worker cases and twelve shared link cases passed. The shared build and all thirty-eight package export checks, worker typecheck, changed-file ESLint, Prettier and git whitespace checks passed.",
+        "Read-only staging SSH reported the Docker data filesystem at 94% with 4,816,060,416 available bytes. This host reading is separate from the local Prometheus rehearsal."
+      ],
+      "limitations": [
+        "The disk overlay requires an approved host Node Exporter, a verified database mount, protected mutual TLS credentials and a private route. The staging overlay was tested with synthetic certificates and an isolated fixture exporter.",
+        "Live P2 firing and recovery receipts, Grafana operator readback and measured capacity recovery remain open. This batch did not install the overlay or change live staging storage."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-disk-capacity",
+      "execution_receipts": [
+        {
+          "file": "checks.json",
+          "sha256": "4045544b72698cdedd9c32f7599e748de2a9dbb076190d8dd4522381c856fa2b"
         }
       ]
     }

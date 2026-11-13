@@ -1,4 +1,4 @@
-rule_files: [postgres-alert-rules.json]
+rule_files: [postgres-alert-rules.json, staging-postgres-disk-expectation.yml]
 evaluation_interval: 1m
 tests:
   - name: PostgreSQL signals fire once per database and resolve after recovery
@@ -215,4 +215,62 @@ tests:
               runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/database-failover.md'
       - eval_time: 8m
         alertname: PostgresReplicationLagHigh
+        exp_alerts: []
+
+  - name: PostgreSQL disk alerts distinguish capacity from unavailable reporting
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-postgres-disk",instance="primary",environment="staging",database="core",postgres_mount="/"}'
+        values: '1 1 1 1 1 1 1 0 1 stale _ _ _ 1 1'
+      - series: 'node_filesystem_size_bytes{job="barghsa-postgres-disk",instance="primary",environment="staging",database="core",postgres_mount="/",mountpoint="/",device="fixture"}'
+        values: '100 100 100 100 100 0 100 stale 100 stale _ _ _ 100 100'
+      - series: 'node_filesystem_avail_bytes{job="barghsa-postgres-disk",instance="primary",environment="staging",database="core",postgres_mount="/",mountpoint="/",device="fixture"}'
+        values: '20 19 19 19 20 0 200 stale 30 stale _ _ _ 20 20'
+      - series: 'node_filesystem_size_bytes{job="wrong",instance="other",environment="staging",database="different"}'
+        values: '100+0x14'
+      - series: 'node_filesystem_avail_bytes{job="wrong",instance="other",environment="staging",database="different"}'
+        values: '1+0x14'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: PostgresDiskUsageHigh
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: PostgresDiskUsageHigh
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: warning, priority: P2 }
+            exp_annotations:
+              summary: 'The PostgreSQL data filesystem has less than 20% usable space'
+              description: 'The lowest available share is 19%. Check filesystem and WAL usage before retrying backups or deployments.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md'
+      - eval_time: 4m
+        alertname: PostgresDiskUsageHigh
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: PostgresDiskUsageHigh
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: PostgresDiskMonitoringUnavailable
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: PostgresDiskMonitoringUnavailable
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: warning, priority: P2 }
+            exp_annotations:
+              summary: 'The PostgreSQL data filesystem has no valid capacity report'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md'
+      - eval_time: 8m
+        alertname: PostgresDiskMonitoringUnavailable
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: PostgresDiskMonitoringUnavailable
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: warning, priority: P2 }
+            exp_annotations:
+              summary: 'The PostgreSQL data filesystem has no valid capacity report'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md'
+      - eval_time: 13m
+        alertname: PostgresDiskMonitoringUnavailable
         exp_alerts: []

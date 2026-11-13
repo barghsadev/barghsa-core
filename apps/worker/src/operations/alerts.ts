@@ -59,6 +59,9 @@ const labels: Record<string, string> = {
   PostgresLongRunningQueries: 'پرس‌وجوهای طولانی پایگاه داده / Long-running database queries',
   PostgresDeadlocksDetected: 'بن‌بست در پایگاه داده / Database deadlocks detected',
   PostgresReplicationLagHigh: 'تأخیر همگام‌سازی پایگاه داده / Database replication lag',
+  PostgresDiskUsageHigh: 'فضای آزاد دیسک پایگاه داده کم است / Low database disk space',
+  PostgresDiskMonitoringUnavailable:
+    'گزارش ظرفیت دیسک پایگاه داده در دسترس نیست / Database disk monitoring unavailable',
   MonthlyCostBudgetVariance: 'انحراف هزینه ماهانه از بودجه / Monthly cost budget variance',
 };
 const journeyNames: Record<string, string> = {
@@ -149,6 +152,8 @@ const alertPriorities = new Map<string, AlertPriority>([
   ['PostgresLongRunningQueries', 'P2'],
   ['PostgresDeadlocksDetected', 'P1'],
   ['PostgresReplicationLagHigh', 'P1'],
+  ['PostgresDiskUsageHigh', 'P2'],
+  ['PostgresDiskMonitoringUnavailable', 'P2'],
   ['MonthlyCostBudgetVariance', 'P3'],
 ]);
 type Alert = {

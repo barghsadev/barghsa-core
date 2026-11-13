@@ -53,6 +53,18 @@ Staging Prometheus loads the [PostgreSQL alert rules](../../deploy/monitoring/po
 
 The dashboard estimates query throughput from the five-minute slope of `pg_query_calls_total`, a gauge of calls retained by `pg_stat_statements`. Resets and entry eviction can reduce the gauge, so the panel omits negative slopes. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`. [Prometheus gauge slope](https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv).
 
+### PostgreSQL filesystem capacity
+
+Use the approved host's Node Exporter filesystem collector over mutual TLS. Select the actual host mount that backs PostgreSQL data. For staging Docker volumes, find that mount with `df -P /var/lib/docker` after verifying the data volume's location. Configure the exporter to require and verify client certificates, then enable `staging-postgres-disk.yml` with the existing staging monitoring overlays. Set `BARGHSA_POSTGRES_DISK_CONFIG_DIR` to the protected read-only input directory containing `ca.pem`, `client.pem`, `client-key.pem` and `targets.yml`. Grant the Prometheus user only the access needed for those inputs. Each entry identifies one filesystem on an approved exporter.
+
+```yaml
+- targets: ['postgres-exporter.example.test:9100']
+  labels:
+    postgres_mount: '/srv/postgres'
+```
+
+The scrape keeps available and total bytes for the selected mount. The P2 alert fires after two minutes below 20% available to PostgreSQL, including space reserved from non-root users. A second P2 alert covers missing targets, failed scrapes and invalid samples. Check both firing and recovery and keep the live operations receipts. The WAL panel shows bytes generated per second and retains gaps when collection is unavailable. [Node Exporter filesystem metrics](https://github.com/prometheus/docs/blob/main/docs/guides/node-exporter.md) · [PostgreSQL backup runbook](../runbooks/postgresql-backup.md)
+
 ## Verification scope
 
 Local tests cover checkpoints and query timings on PostgreSQL 16 and 17 with pg_stat_statements, plus PostgreSQL 17 without the extension. Existing API evidence covers scrape outage/recovery, OTLP payloads received by a local HTTP collector, rejected-export recovery, and omission of stale observations. Replica aggregation is tested with controlled PostgreSQL rows, not live streaming replicas. Production collector connectivity, alert delivery, host sizing and load baselines need separate execution evidence.

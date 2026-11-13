@@ -1,0 +1,11 @@
+services:
+  prometheus:
+    volumes:
+      - ./staging-postgres-disk-scrape.yml:/etc/prometheus/optional-scrapes/postgres-disk.yml:ro
+      - ./staging-postgres-disk-expectation.yml:/etc/prometheus/optional/postgres-disk-expectation.yml:ro
+      - type: bind
+        source: ${BARGHSA_POSTGRES_DISK_CONFIG_DIR:?Set the protected PostgreSQL disk scrape configuration directory}
+        target: /run/postgres-disk
+        read_only: true
+        bind:
+          create_host_path: false

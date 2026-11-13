@@ -104,6 +104,8 @@ it.each([
   ['PostgresIdleInTransaction', 'P2', 'barghsa-postgresql', 'api-pressure'],
   ['PostgresLockContention', 'P2', 'barghsa-postgresql', 'api-pressure'],
   ['PostgresLongRunningQueries', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresDiskUsageHigh', 'P2', 'barghsa-postgresql', 'postgresql-backup'],
+  ['PostgresDiskMonitoringUnavailable', 'P2', 'barghsa-postgresql', 'postgresql-backup'],
   ['AuthenticationFailuresElevated', 'P1', 'barghsa-authentication-security', 'api-pressure'],
 ])(
   'validates the scoped %s alert and its %s recovery links',

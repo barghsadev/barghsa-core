@@ -137,6 +137,33 @@
             "dashboard_uid": "barghsa-postgresql",
             "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/database-failover.md"
           }
+        },
+        {
+          "record": "barghsa:postgres_disk:available_ratio",
+          "expr": "((node_filesystem_avail_bytes{job=\"barghsa-postgres-disk\",environment!=\"\",database!=\"\"} >= 0) / (node_filesystem_size_bytes{job=\"barghsa-postgres-disk\"} > 0)) <= 1 and on (job, instance, environment, database, postgres_mount) (up{job=\"barghsa-postgres-disk\"} == 1)"
+        },
+        {
+          "alert": "PostgresDiskUsageHigh",
+          "expr": "min by (environment, database) (barghsa:postgres_disk:available_ratio) < 0.2",
+          "for": "2m",
+          "labels": { "severity": "warning", "priority": "P2" },
+          "annotations": {
+            "summary": "The PostgreSQL data filesystem has less than 20% usable space",
+            "description": "The lowest available share is {{ $value | humanizePercentage }}. Check filesystem and WAL usage before retrying backups or deployments.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md"
+          }
+        },
+        {
+          "alert": "PostgresDiskMonitoringUnavailable",
+          "expr": "(max by (environment, database) (up{job=\"barghsa-postgres-disk\",environment!=\"\",database!=\"\"} unless on (job, instance, environment, database, postgres_mount) barghsa:postgres_disk:available_ratio)) or (barghsa:postgres_disk:expected{environment!=\"\",database!=\"\"} == 1 unless on (environment, database) up{job=\"barghsa-postgres-disk\"})",
+          "for": "2m",
+          "labels": { "severity": "warning", "priority": "P2" },
+          "annotations": {
+            "summary": "The PostgreSQL data filesystem has no valid capacity report",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md"
+          }
         }
       ]
     }

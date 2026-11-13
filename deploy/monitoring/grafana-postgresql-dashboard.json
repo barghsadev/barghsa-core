@@ -447,6 +447,97 @@
           "range": false
         }
       ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Available share for the data filesystem. The capacity alert fires below 20%. Missing samples leave a gap.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "percentunit",
+          "max": 1
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 37
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "barghsa:postgres_disk:available_ratio",
+          "legendFormat": "{{environment}} / {{database}} / {{instance}} / {{postgres_mount}}",
+          "refId": "A"
+        }
+      ],
+      "title": "PostgreSQL filesystem availability",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "WAL bytes generated per second. Database scopes use the highest observed rate across API replicas.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 37
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "max by (environment, database) (rate(pg_wal_bytes_total{job=\"barghsa-api\",environment!=\"\",database!=\"\"}[5m]))",
+          "legendFormat": "{{environment}} / {{database}}",
+          "refId": "A"
+        }
+      ],
+      "title": "PostgreSQL WAL generation",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",

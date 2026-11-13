@@ -1,0 +1,27 @@
+scrape_configs:
+  - job_name: barghsa-postgres-disk
+    scheme: https
+    follow_redirects: false
+    tls_config:
+      ca_file: /run/postgres-disk/ca.pem
+      cert_file: /run/postgres-disk/client.pem
+      key_file: /run/postgres-disk/client-key.pem
+    params:
+      collect[]: [filesystem]
+    file_sd_configs:
+      - files: [/run/postgres-disk/targets.yml]
+    relabel_configs:
+      - source_labels: [postgres_mount]
+        regex: '/.*'
+        action: keep
+      - target_label: environment
+        replacement: staging
+      - target_label: database
+        replacement: core
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'node_filesystem_(avail|size)_bytes'
+        action: keep
+      - source_labels: [mountpoint]
+        target_label: postgres_mount
+        action: keepequal

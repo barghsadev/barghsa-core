@@ -37,6 +37,8 @@ const alertResources = {
   PostgresLongRunningQueries: ['barghsa-postgresql', 'api-pressure'],
   PostgresDeadlocksDetected: ['barghsa-postgresql', 'api-pressure'],
   PostgresReplicationLagHigh: ['barghsa-postgresql', 'database-failover'],
+  PostgresDiskUsageHigh: ['barghsa-postgresql', 'postgresql-backup'],
+  PostgresDiskMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],
   MonthlyCostBudgetVariance: ['barghsa-monthly-costs', 'monthly-cost-monitoring'],
 } as const;
 

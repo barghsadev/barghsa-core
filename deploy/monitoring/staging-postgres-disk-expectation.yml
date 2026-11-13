@@ -1,0 +1,8 @@
+groups:
+  - name: barghsa-staging-postgres-disk-expectation
+    rules:
+      - record: barghsa:postgres_disk:expected
+        expr: vector(1)
+        labels:
+          environment: staging
+          database: core

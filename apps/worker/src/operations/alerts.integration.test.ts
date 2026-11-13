@@ -455,6 +455,8 @@ it.each([
   { alertname: 'PostgresConnectionSaturationHigh', severity: 'critical', priority: 'P1' },
   { alertname: 'PostgresReplicationLagHigh', severity: 'critical', priority: 'P1' },
   { alertname: 'PostgresLongRunningQueries', severity: 'warning', priority: 'P2' },
+  { alertname: 'PostgresDiskUsageHigh', severity: 'warning', priority: 'P2' },
+  { alertname: 'PostgresDiskMonitoringUnavailable', severity: 'warning', priority: 'P2' },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);
