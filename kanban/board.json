@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T12:31:15+00:00",
+  "updated": "2026-11-13T12:36:14+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -19652,11 +19652,12 @@
         "story": "01-platform-infrastructure.md#spec-cdd7dd41709e"
       },
       "requirement": "- **T-05.02.02:** Configure rolling/blue-green deployment automation for HA\n  - **Notes:** Use Ansible/Terraform + deployment scripts. Pattern: provision new instance(s), run migration, health-check new instances, add to LB, drain old instances, terminate. On health failure: automatically remove new instances and keep old in rotation (rollback). Include smoke test step after migration before routing traffic.\n  - **Dependencies:** T-05.02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Repeat the native deployment and automatic rollback on the approved pilot or production-equivalent topology with the exact candidate and previous immutable images. Record migration, current readiness, smoke, route readback, in-flight drain and verified previous-slot restoration.",
+        "Provision and verify independent application hosts and the approved load balancer for the commercial high-availability topology. The existing pilot slots share one host and the commercial rollout guard uses an operator-owned ingress adapter."
       ],
       "owner": null,
       "depends_on": [],
@@ -19686,7 +19687,9 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-blue-green-verification"
+        ],
         "current_acceptance": null
       }
     },
@@ -21049,7 +21052,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -21105,7 +21108,8 @@
           "release-0.6-gate-readback",
           "release-0.6-postgres-package-alignment",
           "release-0.6-postgres-restore-readback",
-          "release-0.6-refreshed-license-review"
+          "release-0.6-refreshed-license-review",
+          "release-0.6-license-inventory-reuse"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -668555,20 +668559,24 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.05 | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change | S |",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Assign named domain, Finance, Security and Legal reviewers and approve how protected changes obtain their sign-off under the active direct-main workflow.",
+        "The repository owner must configure any required GitHub review enforcement or approve a source-bound equivalent compatible with direct pushes. The active ruleset enforces exact-SHA monorepo integrity and contains no reviewer rule. The current CLI account has push access and no administration access."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-protected-reviewer-readback"
+        ],
         "current_acceptance": null
-      }
+      },
+      "blocker": "Reviewer identities and source-bound enforcement for direct main pushes require a repository owner decision. The current CLI principal cannot administer repository rules."
     },
     {
       "key": "06-security-testing-observability.md#T-06.12.02.06",
@@ -1194735,6 +1194743,165 @@
         {
           "file": "restore-knowledge-build.log",
           "sha256": "d95e9070e1ef008f68e0520a62306ca33e152eee07504a9502d86b8bf164365d"
+        }
+      ]
+    },
+    "release-0.6-blue-green-verification": {
+      "batch": "release-0.6-blue-green-verification",
+      "base_commit": "f45eb68593823d0ae49a26f2e60a40a744251a30",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/deploy-pilot.sh",
+          "sha256": "0b755d6bb8c9c9f29d3dbc1285e0b64d72dfa38a0fffbb45ad60709643d2aa3d"
+        },
+        {
+          "path": "deploy/pilot/deploy-pilot.py",
+          "sha256": "6fd17ed743c2940accb88f569b8b065ad8c8169a0c14f63ef6f9162ec03f15f2"
+        },
+        {
+          "path": "deploy/pilot/test_deploy_pilot.py",
+          "sha256": "4fbd373551876d76901ba2202b876e2e700a11ab19c95f65bb58b5cec4997498"
+        },
+        {
+          "path": "deploy/pilot/compose.yml",
+          "sha256": "7fec2ec62e1a9e7f7adc9e65a7e9eb0e279115b7ca88e7407659ab4a9bfa8df0"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "cd8135b1c2d6e6445fa0998757a859abe7bea4502292148d23687b73f9f7f4b8"
+        },
+        {
+          "path": "deploy/production/compose-with-credentials.py",
+          "sha256": "8a6487bd4e8bca73f0c093bc85b6af955a9d4d671157a1b58add78e10d05ab67"
+        },
+        {
+          "path": "packages/db/src/pilot-schema-transition.ts",
+          "sha256": "b6c449110ec30acfbcdefbc9c312f86c383b01c9d4c3b79dee71e7421f377b7a"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+        },
+        {
+          "path": "packages/db/src/database-foundations.integration.test.ts",
+          "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
+        },
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "d95372a08a1f01f591fe02fe6894246d1cbbe973194a6ec601fd00b8f1a5f62f"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        }
+      ],
+      "checks": [
+        "Inspected the deployed-code entry point and previous disposable Compose, PostgreSQL and native NGINX rehearsal. The pilot launcher starts an idle slot, checks image and schema identities, migrates before exposing traffic, health-checks the new pool, switches NGINX, drains the previous slot and restores the previous route on a verified failure before retirement.",
+        "The prior rehearsal source manifest matches all relevant files except the added ClamAV TZ environment entry. Rendered current default and both pilot Compose configurations and verified UTC scanner configuration, separate credential roles, loopback ports, health checks and the read-only schema mount. The nine existing deployment tests passed."
+      ],
+      "limitations": [
+        "The native rehearsal was disposable. Current exact images, the approved host or HA pool, and live cutover receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-blue-green-verification",
+      "execution_receipts": [
+        {
+          "file": "pilot.log",
+          "sha256": "1966dc943d00003d891db001aa815f58a1f06cd7b669bb82e2e7ab5ec5dc2cc4"
+        },
+        {
+          "file": "compose-config.log",
+          "sha256": "7723db7b3e0e9f01e515322e74ba2e460da2da6206608d6090970d1219994782"
+        },
+        {
+          "file": "compose-since-rehearsal.diff",
+          "sha256": "115ca11fefc54edbf3707bcad93aedf536b3848fc1aef6d9a0968c111e3f8899"
+        }
+      ]
+    },
+    "release-0.6-protected-reviewer-readback": {
+      "batch": "release-0.6-protected-reviewer-readback",
+      "base_commit": "f45eb68593823d0ae49a26f2e60a40a744251a30",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.05"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+        }
+      ],
+      "checks": [
+        "Verified GitHub ruleset 26844024 on main. Its active rules require Verify monorepo integrity from app 15368, prohibit non-fast-forward pushes and protect against deletion. No reviewer rule or CODEOWNERS configuration is present.",
+        "The repository is user-owned and the current CLI principal has push permission without admin permission. The project workflow explicitly uses reviewed direct main pushes."
+      ],
+      "limitations": [
+        "Reviewer assignment and the owner-approved enforcement mechanism remain open. No GitHub settings were changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-blue-green-verification",
+      "execution_receipts": [
+        {
+          "file": "main-rules.json",
+          "sha256": "2875ffd798a0d4851a3124e6a0c95bf4d04472ff9e3ecb99da6d9c1156daf501"
+        },
+        {
+          "file": "repository-authority.json",
+          "sha256": "009ef1ed142ff5861638c69833b81687c583ae606237a357bbf3f5104805b343"
+        }
+      ]
+    },
+    "release-0.6-license-inventory-reuse": {
+      "batch": "release-0.6-license-inventory-reuse",
+      "base_commit": "f45eb68593823d0ae49a26f2e60a40a744251a30",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "b31323da6b9f014e1e66d348d5492cab19ee95d556de44268efd0efba8c305dc"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "c4f1a07d5efade4b32f35b249b639202f56e1adf5ef0d046fae03e608a5b45c3"
+        }
+      ],
+      "checks": [
+        "Compared the report-only hosted image inventory for 643867b4 with the source inventory for the existing review workbook. All 848 rows match by scope, package URL, exact observed license set, install location and disposition."
+      ],
+      "limitations": [
+        "The existing 387 dispositions remain pending. Report-only inventory comparison is not strict license acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-knowledge-query-error",
+      "execution_receipts": [
+        {
+          "file": "license-comparison.json",
+          "sha256": "15ed04bdd4366c59c71238caf735d038c71ebfb4e51aaf1be4b0693fb8b0390e"
+        },
+        {
+          "file": "runtime-image-reports/release-licenses.json",
+          "sha256": "663e1d1127f7b0c51b8d2a6ceb6391a007ed07102b35fc07431f504d8577eff2"
         }
       ]
     }

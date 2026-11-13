@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-13T12:31:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-13T12:36:14+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -11,11 +11,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1253 | Accepted with unchanged source bindings. |
-| verify | 3 | Existing work may be complete; inspect evidence before building. |
-| partial | 105 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 1 | Existing work may be complete; inspect evidence before building. |
+| partial | 106 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
-| blocked | 5 | Named owner or external prerequisite. |
+| blocked | 6 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
 The earlier audit accepted 219 tasks, found 54 partial claims and deferred 49. Changed source bindings require renewal. All original 1,355 tasks are retained. No evidence means unknown, not unbuilt.
@@ -1040,7 +1040,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.01.02` | done | Earlier deferred | Create `docker-compose.prod.yml` for pilot single-VM deployment (P1 defect) |
 | `01-platform-infrastructure.md#T-05.01.03` | done | Earlier deferred | Document explicitly that single-server deployment has lower availability |
 | `01-platform-infrastructure.md#T-05.02.01` | done | Earlier deferred | Design and document commercial HA topology |
-| `01-platform-infrastructure.md#T-05.02.02` | verify | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
+| `01-platform-infrastructure.md#T-05.02.02` | partial | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
 | `01-platform-infrastructure.md#T-05.02.03` | partial | Earlier deferred | Implement circuit breaker for external providers |
 | `01-platform-infrastructure.md#T-05.02.04` | partial | Earlier deferred | Configure maintenance mode per capability, not whole-application |
 | `01-platform-infrastructure.md#T-05.03.01` | done | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
@@ -1342,7 +1342,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.02` | done | Recorded batch work | Configure step dependencies: lint → typecheck → unit → integration → migration → OpenAPI → build → coverage → security scans → review |
 | `06-security-testing-observability.md#T-06.12.02.03` | done | Recorded batch work | Implement migration validation: apply on clean DB + upgrade from previous schema |
 | `06-security-testing-observability.md#T-06.12.02.04` | done | Recorded batch work | Implement OpenAPI drift detection: generated schema vs committed spec |
-| `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
+| `06-security-testing-observability.md#T-06.12.02.05` | blocked | Recorded batch work | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | partial | Recorded batch work | Add status check reporting: pass/fail per check, summary comment on PR |
 | `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
