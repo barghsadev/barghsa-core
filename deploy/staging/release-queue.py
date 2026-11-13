@@ -75,15 +75,19 @@ def verify_bundle_reports(directory, commit, image_ids):
     ):
         raise ValueError("Invalid application image bundle identities")
     scan_index = verify_image_scans(directory, image_ids, False)["images"]
+    return scan_index, verify_image_licenses(directory, commit, image_ids)
+
+
+def verify_image_licenses(directory, commit, image_ids):
     license_bytes = (directory / "release-licenses.json").read_bytes()
     licenses = json.loads(license_bytes)
     packages = licenses["packages"]
     if (licenses["commit"] != commit
             or any(licenses["images"].get(scope) != identity for scope, identity in image_ids.items())
-            or not {"app", "web", "browser"} <= {row["scope"] for row in packages}
+            or not (image_ids.keys() | {"browser"}) <= {row["scope"] for row in packages}
             or any(row["status"] not in {"allowed", "approved"} for row in packages)):
-        raise ValueError("The image bundle requires passing license evidence for the exact commit and images")
-    return scan_index, hashlib.sha256(license_bytes).hexdigest()
+        raise ValueError("Expected passing license evidence for the exact commit and images")
+    return hashlib.sha256(license_bytes).hexdigest()
 
 
 def verify_image_bundle(directory, commit, manifest_sha):
@@ -332,7 +336,12 @@ def main():
         return 0
     if args.action == "verify-images":
         receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit, args.app_id, args.web_id)
-        receipt["image_scans"] = verify_image_scans(args.scan_dir, receipt["image_ids"], args.includes_stateful)
+        ids = receipt["image_ids"]
+        receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
+        licensed_ids = {scope: ids[scope] for scope in ("app", "web")}
+        if args.includes_stateful:
+            licensed_ids.update({"postgres-staging": ids["postgres"], "clamav": ids["clamav"]})
+        receipt["license_sha256"] = verify_image_licenses(args.scan_dir, args.commit, licensed_ids)
         if args.receipt:
             save(args.receipt, receipt)
         return 0

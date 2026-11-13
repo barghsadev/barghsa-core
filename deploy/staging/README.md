@@ -193,9 +193,10 @@ and all Docker volumes. The script transfers images over SSH, uploads
 Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
 S3 write and public signed read. Before transferring newly built images, the
-worker uses the existing high and critical vulnerability gate and generates a
-CycloneDX SBOM for each exact image. It keeps each attempt in a separate private
-scan directory. A failed scan stops the release before transfer.
+worker uses the high and critical vulnerability gate, generates a CycloneDX
+SBOM for each exact image, and runs the strict license policy against those
+SBOMs and the built browser assets. It keeps each attempt in a separate private
+scan directory. A failed scan or license check stops the release before transfer.
 App and web transfer tags include the full
 source revision and image ID, so a rebuild cannot replace a rollback tag. The
 release checks the loaded app and web image IDs against the candidate manifest before
@@ -207,8 +208,10 @@ and at the end of the rollout. The worker saves the commit and four verified
 Docker image IDs in its protected `runtime-images.json` before sending the
 Telegram note. A completed job includes the same receipt under `runtime_images`
 in `job.json`. Its `image_scans` field indexes the scan receipts and their
-checksums for transferred images. The worker checks the deployed IDs and the
-report and SBOM checksums before announcing. Match retained PostgreSQL and
+checksums for transferred images. The worker checks the deployed IDs, report
+and SBOM checksums, and license dispositions before announcing. The
+`license_sha256` field binds the passing report to the deployment receipt.
+Match retained PostgreSQL and
 ClamAV IDs to their separately verified scan and SBOM receipts. Record
 registry manifest digests separately when publishing to a registry.
 Subsequent releases preserve

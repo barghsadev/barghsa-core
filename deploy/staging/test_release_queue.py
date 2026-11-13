@@ -200,6 +200,25 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
             self.assertEqual(queue.work(self.state), 0)
         self.assertEqual((self.capture / "image-bundle").read_text().splitlines(), [str(directory.resolve()), sha])
 
+    def test_bootstrap_license_receipt_requires_all_transferred_images_and_browser(self):
+        path = self.root / "release-licenses.json"
+        ids = dict(zip(("app", "web", "postgres-staging", "clamav"), ("sha256:" + c * 64 for c in "bcde")))
+        packages = [{"scope": scope, "status": "allowed"} for scope in (*ids, "browser")]
+        report = {"commit": self.commit, "images": ids, "packages": packages}
+        path.write_text(json.dumps(report))
+        self.assertEqual(queue.verify_image_licenses(self.root, self.commit, ids),
+                         hashlib.sha256(path.read_bytes()).hexdigest())
+        for invalid in (
+            {"commit": "0" * 40},
+            {"images": ids | {"postgres-staging": ids["app"]}},
+            {"packages": [row for row in packages if row["scope"] != "postgres-staging"]},
+            {"packages": packages[:-1]},
+            {"packages": packages[:-1] + [{"scope": "browser", "status": "review-required"}]},
+        ):
+            path.write_text(json.dumps(report | invalid))
+            with self.assertRaisesRegex(ValueError, "passing license evidence"):
+                queue.verify_image_licenses(self.root, self.commit, ids)
+
     def test_pushed_unaccepted_release_cannot_use_working_tree_acceptance(self):
         commit = self.publish("0.1.4", "in_progress")
         self.write_ledger("0.1.4", "accepted")

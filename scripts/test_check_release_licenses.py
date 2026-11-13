@@ -53,12 +53,38 @@ class LicenseCheckTests(unittest.TestCase):
                                                          'blocked': False, 'sbom_sha256': licenses.digest(raw)}))
             with patch.object(licenses, 'docker', return_value=image_id.encode()):
                 self.assertEqual(licenses.read_sbom(root, 1, 'app', commit)[0], image_id)
+                with self.assertRaisesRegex(ValueError, 'Invalid SBOM receipt'):
+                    licenses.read_sbom(root, 1, 'app', commit, staging=True)
             with patch.object(licenses, 'docker', return_value=b'other-image'):
                 with self.assertRaisesRegex(ValueError, 'changed image'):
                     licenses.read_sbom(root, 1, 'app', commit)
             (root / '1-sbom.cdx.json').write_bytes(raw + b' ')
             with self.assertRaisesRegex(ValueError, 'Invalid SBOM receipt'):
                 licenses.read_sbom(root, 1, 'app', commit)
+
+    def test_local_staging_receipts_use_exact_tags_and_staging_postgres_scope(self):
+        commit = 'a' * 40
+        image_id = 'sha256:' + 'b' * 64
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+            licenses, 'docker', return_value=image_id.encode()
+        ) as docker:
+            root = Path(directory)
+            for index, (scope, image) in enumerate((
+                ('postgres-staging', f'barghsa-postgres:vps-{commit}'),
+                ('clamav', f'barghsa-clamav:vps-{commit}'),
+                ('app', f'barghsa-app:vps-{commit}-' + 'b' * 64),
+                ('web', f'barghsa-web:vps-{commit}-' + 'b' * 64),
+            ), 1):
+                bom = {'bomFormat': 'CycloneDX', 'metadata': {'component': {'name': image, 'properties': [
+                    {'name': 'aquasecurity:trivy:ImageID', 'value': image_id}
+                ]}}, 'components': [{'purl': 'pkg:npm/example@1.2.3'}]}
+                raw = json.dumps(bom).encode()
+                (root / f'{index}-sbom.cdx.json').write_bytes(raw)
+                (root / f'{index}-image.json').write_text(json.dumps({
+                    'image': image, 'image_id': image_id, 'blocked': False, 'sbom_sha256': licenses.digest(raw),
+                }))
+                self.assertEqual(licenses.read_sbom(root, index, scope, commit, staging=True)[0], image_id)
+                docker.assert_called_with('image', 'inspect', '--format', '{{.Id}}', image)
 
     def test_browser_checks_notice_and_all_font_bytes_in_each_shell(self):
         commit = '1' * 40
@@ -127,6 +153,11 @@ class LicenseCheckTests(unittest.TestCase):
                  patch.object(licenses.sys, 'argv', args + ['--report-only']):
                 self.assertEqual(licenses.main(), 0)
                 self.assertEqual(json.loads(report.read_text()), result)
+            with patch.object(licenses, 'audit', return_value=result) as audit, \
+                 patch.object(licenses, 'read_approvals', return_value={}), \
+                 patch.object(licenses.sys, 'argv', args + ['--staging-local', 'initialized']):
+                self.assertEqual(licenses.main(), 1)
+                audit.assert_called_once_with(Path(directory), '1' * 40, {}, 'initialized')
 
 
     def test_staging_postgres_requires_its_source_component_notices(self):

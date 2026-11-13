@@ -236,6 +236,16 @@ if name=='git' and args==['rev-parse','HEAD']: print('a'*40)
 elif name=='git' and args==['rev-parse','--short=12','HEAD']: print('a'*12)
 elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']: sys.exit(int(os.environ.get('FAIL_ACCEPTANCE','0')))
 elif name=='python3' and args[1] in ('verify-images','verify-image-bundle'): os.execv(sys.executable,[sys.executable,*args])
+elif name=='python3' and args[0]=='scripts/check-release-licenses.py':
+    assert args[3:6]==['--staging-local','bootstrap' if os.environ['FRESH_STAGING']=='1' else 'initialized','--report']
+    if os.environ.get('FAIL_LICENSE'): sys.exit(1)
+    ids={scope:'sha256:'+value*64 for scope,value in [('app','b'),('web','c')]}
+    if args[4]=='bootstrap': ids.update({'postgres-staging':'sha256:'+'d'*64,'clamav':'sha256:'+'e'*64})
+    pathlib.Path(args[6]).write_text(json.dumps({
+        'commit': args[2], 'images': ids, 'packages': [
+            {'scope':scope,'status':'allowed'} for scope in [*ids,'browser']
+        ],
+    }))
 elif name=='python3' and '--check' in args: sys.exit(int(os.environ.get('FAIL_PREFLIGHT','0')))
 elif name=='docker' and args[:2]==['image','inspect']: print(identity(args[-1]))
 elif name=='sha256sum':
@@ -257,7 +267,7 @@ elif name=='ssh' and args[-1].startswith('bash -c '):
     if os.environ.get('CORRUPT_TRANSFER'): archive+=b'tampered'
     sys.exit(subprocess.run(['bash','-c',args[-1]],input=archive).returncode)
 elif name=='ssh' and args[-1]=='test -r /etc/barghsa/staging/active-images.env': sys.exit(int(os.environ['FRESH_STAGING']))
-elif name=='ssh' and 'grep -E' in args[-1]: print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
+elif name=='ssh' and 'grep -E' in args[-1] and os.environ['FRESH_STAGING']=='0': print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
     if not os.environ.get('MISSING_IMAGES'):
         app='f' if os.environ.get('WRONG_IMAGES') else 'b'
@@ -285,9 +295,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         ], check=True)
         bundle_sha = hashlib.sha256((bundle / "bundle.json").read_bytes()).hexdigest()
         scenarios = [(failure, False, False) for failure in (
-            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
+            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
         )]
-        for failure, fresh, prebuilt in [*scenarios, (None, True, False), (None, False, True),
+        for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True)]:
             with self.subTest(failure=failure, fresh=fresh, prebuilt=prebuilt):
                 log.unlink(missing_ok=True)
@@ -327,6 +337,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                             ("app", "web", "postgres", "clamav"), ("sha256:" + c * 64 for c in "bcde"),
                         )))
                         self.assertEqual(set(evidence["image_scans"]["images"]), {"app", "web"})
+                        license_report = Path(evidence["image_scans"]["directory"]) / "release-licenses.json"
+                        self.assertEqual(evidence["license_sha256"], hashlib.sha256(license_report.read_bytes()).hexdigest())
                         self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
                 if failure == "FAIL_ACCEPTANCE":
                     self.assertNotIn(preflight, calls)
@@ -335,7 +347,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 if failure in {"FAIL_ACCEPTANCE", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
                 elif prebuilt:
-                    self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ")) for line in calls))
+                    self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ",
+                                                          "python3 scripts/check-release-licenses.py ")) for line in calls))
                     self.assertEqual(sum(line.startswith("docker load ") for line in calls), 0 if failure else 1)
                     if failure:
                         self.assertFalse(any(line.startswith("scp ") for line in calls))
@@ -357,8 +370,13 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     if failure == "FAIL_SCAN":
                         self.assertFalse(any(line.startswith(('docker save ', 'scp ')) for line in calls))
                         continue
+                    license_check = next(line for line in calls if line.startswith('python3 scripts/check-release-licenses.py '))
+                    self.assertLess(calls.index(scan), calls.index(license_check))
+                    if failure == "FAIL_LICENSE":
+                        self.assertFalse(any(line.startswith(('docker save ', 'scp ')) for line in calls))
+                        continue
                     transfer = next(line for line in calls if line.startswith('docker save '))
-                    self.assertLess(calls.index(scan), calls.index(transfer))
+                    self.assertLess(calls.index(license_check), calls.index(transfer))
                     if fresh:
                         self.assertLess(calls.index(helper), calls.index(postgres))
                         self.assertLess(calls.index(postgres), calls.index(transfer))

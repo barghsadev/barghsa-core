@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the license policy against the exact CI runtime images and browser output."""
+"""Check the license policy against exact runtime images and browser output."""
 from __future__ import annotations
 
 import argparse
@@ -16,6 +16,10 @@ from urllib.parse import quote
 
 ALLOWED = frozenset({'MIT', 'Apache-2.0', 'ISC', 'BSD-2-Clause', 'BSD-3-Clause'})
 IMAGE_SCOPES = ('app', 'web', 'clamav', 'postgres', 'postgres-staging')
+STAGING_SCOPES = {
+    'initialized': ('app', 'web'),
+    'bootstrap': ('postgres-staging', 'clamav', 'app', 'web'),
+}
 FIRST_PARTY = {
     'pkg:npm/%40barghsa/' + package + '@0.0.0'
     for package in ('api', 'db', 'i18n', 'shared', 'ui', 'web', 'worker')
@@ -73,20 +77,27 @@ def docker(*args):
     return subprocess.check_output(['docker', *args], timeout=60)
 
 
-def read_sbom(directory, index, scope, commit):
+def read_sbom(directory, index, scope, commit, *, staging=False):
     receipt = json.loads((directory / f'{index}-image.json').read_bytes())
     data = (directory / f'{index}-sbom.cdx.json').read_bytes()
     bom = json.loads(data)
     subject = bom['metadata']['component']
-    image = f'barghsa-ci-{scope}:{commit}'
     image_id = receipt['image_id']
+    require(isinstance(image_id, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', image_id),
+            f'Invalid image ID for {scope}')
+    if staging:
+        image_name = 'postgres' if scope == 'postgres-staging' else scope
+        image = f'barghsa-{image_name}:vps-{commit}'
+        if scope in ('app', 'web'):
+            image += '-' + image_id.removeprefix('sha256:')
+    else:
+        image = f'barghsa-ci-{scope}:{commit}'
     ids = [p['value'] for p in subject['properties'] if p['name'] == 'aquasecurity:trivy:ImageID']
     require(
         receipt['image'] == subject['name'] == image
         and bom['bomFormat'] == 'CycloneDX'
         and receipt['blocked'] is False
         and digest(data) == receipt['sbom_sha256']
-        and re.fullmatch(r'sha256:[0-9a-f]{64}', image_id)
         and ids == [image_id]
         and docker('image', 'inspect', '--format', '{{.Id}}', image).decode().strip() == image_id,
         f'Invalid SBOM receipt or changed image for {scope}',
@@ -236,11 +247,12 @@ def disposition(scope, identity, licenses, approvals):
     return 'review-required', None
 
 
-def audit(directory, commit, approvals):
+def audit(directory, commit, approvals, staging=None):
     scopes = {}
     items = {}
-    for index, scope in enumerate(IMAGE_SCOPES, 1):
-        image_id, bom = read_sbom(directory, index, scope, commit)
+    image_scopes = IMAGE_SCOPES if staging is None else STAGING_SCOPES[staging]
+    for index, scope in enumerate(image_scopes, 1):
+        image_id, bom = read_sbom(directory, index, scope, commit, staging=staging is not None)
         scopes[scope] = image_id
         verified_licenses = None
         if scope == 'app':
@@ -265,6 +277,8 @@ def audit(directory, commit, approvals):
         status, reference = disposition(scope, identity, licenses, approvals)
         records.append({'scope': scope, 'purl': identity, 'licenses': licenses,
                         'locations': sorted(locations), 'status': status, 'approval': reference})
+    require(set(image_scopes) | {'browser'} == {record['scope'] for record in records},
+            'Incomplete release license inventory')
     return {'commit': commit, 'images': scopes, 'packages': records}
 
 
@@ -273,12 +287,14 @@ def main():
     parser.add_argument('scan_directory', type=Path)
     parser.add_argument('commit')
     parser.add_argument('--report', type=Path, required=True)
-    parser.add_argument('--report-only', action='store_true', help='Report policy blockers during ordinary direct-main development')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--report-only', action='store_true', help='Report policy blockers during ordinary direct-main development')
+    mode.add_argument('--staging-local', choices=STAGING_SCOPES, help='Check all images built for local staging deployment')
     args = parser.parse_args()
     try:
         require(re.fullmatch(r'[0-9a-f]{40}', args.commit), 'Expected a full release commit SHA')
         policy = Path(__file__).resolve().parents[1] / 'deploy/licenses/release-approvals.json'
-        result = audit(args.scan_directory, args.commit, read_approvals(policy))
+        result = audit(args.scan_directory, args.commit, read_approvals(policy), args.staging_local)
         args.report.write_text(json.dumps(result, indent=2) + '\n')
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, tarfile.TarError) as error:
         print(f'License inventory check failed: {error}', file=sys.stderr)

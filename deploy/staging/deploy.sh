@@ -112,6 +112,12 @@ else
   scan_dir=$(mktemp -d "$scan_root/image-scan.XXXXXXXX")
   echo "Scanning release images; evidence: $scan_dir" >&2
   bash scripts/check-runtime-images.sh "$scan_dir" "${images[@]}"
+  license_mode=initialized
+  if [[ -n "$postgres_id" ]]; then
+    license_mode=bootstrap
+  fi
+  python3 scripts/check-release-licenses.py "$scan_dir" "$commit" \
+    --staging-local "$license_mode" --report "$scan_dir/release-licenses.json"
 
   echo 'Transferring release images over SSH' >&2
   docker save "${images[@]}" \
