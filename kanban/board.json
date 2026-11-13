@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T20:16:00+00:00",
+  "updated": "2026-11-13T20:24:18+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7794,7 +7794,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -8146,6 +8146,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -8658,7 +8666,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -8932,6 +8940,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -23606,7 +23622,8 @@
         "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup. Firefox shard 5 reported one provider-boundary fixture flake after a rejected HTTPS navigation. The explicit fixture now uses a fresh page within the same proxied context. All 36 repeated cases passed without retries across Chromium, WebKit and pinned Firefox 1575. Browser artifacts and the strict rollup now bind the candidate commit, run and attempt. A partial rerun stays incomplete when earlier shards are absent. Verify all 40 shards on one hosted attempt of the final immutable candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required.",
-        "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required."
+        "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required.",
+        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -23710,7 +23727,8 @@
           "release-0.6-firefox-provider-fixture",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-nightly-shared-build"
         ],
         "current_acceptance": null
       }
@@ -685462,7 +685480,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
@@ -685863,6 +685881,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -690796,7 +690822,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -690901,6 +690927,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -691211,7 +691245,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -691457,6 +691491,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -691967,7 +692009,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the expanded fast Axe gate and critical journey states on the exact accepted staging candidate. The local production browser evidence covers both languages and includes intake, final review and confirmation states. The solar detail back link passed the existing 44 px minimum and the affected recovery and Axe checks in Persian and English on mobile Chromium and WebKit.",
-        "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries."
+        "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries.",
+        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -691994,7 +692037,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-critical-intake-accessibility",
           "release-0.6-critical-review-accessibility",
-          "release-0.6-solar-back-touch-target"
+          "release-0.6-solar-back-touch-target",
+          "release-0.6-nightly-shared-build"
         ],
         "current_acceptance": null
       }
@@ -698957,7 +699001,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -699272,6 +699316,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -699758,7 +699810,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -700183,6 +700235,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -700733,7 +700793,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -700878,6 +700938,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -701196,7 +701264,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -701471,6 +701539,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -701531,7 +701607,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "d5840824f5e0eac3fd93d5ce8429b11984ebb47d8d408fbe2be0d78a77ecd247"
+              "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -701806,6 +701882,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-nightly-shared-build",
+              "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
             }
           ]
         }
@@ -1252982,6 +1253066,52 @@
         {
           "file": "live-stage-readiness.json",
           "sha256": "e72a84c4055aaef5442b4e990eca5e797c217a169083b3bf36b886e1def26b02"
+        }
+      ]
+    },
+    "release-0.6-nightly-shared-build": {
+      "batch": "release-0.6-nightly-shared-build",
+      "base_commit": "2b52a7206cb2e7cd23f6887b9a5d7b8aeb6f18a4",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.11.01.01"
+      ],
+      "changed_paths": [
+        ".github/workflows/browser-nightly.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "ad7ec552e1f6777e83f49755e20479432c73063a236f0e7a00b25858e13ffc68"
+        }
+      ],
+      "checks": [
+        "Hosted diagnostic run 43437113471 recorded 3,145 cumulative seconds for the repeated app and component-story builds across 40 browser shards.",
+        "The exact archive shell steps restored the app, auth, API, worker, workspace dependencies and Ladle build outputs into a separate checkout. The archive was 24,176,288 bytes. A wrong archive digest and a wrong source commit each failed before extraction.",
+        "Four targeted Chromium cases passed from the restored outputs in 11.5 seconds with CI flake handling and no retries. They covered public sign-in, session-cookie scope and shared keyboard controls in English and Persian.",
+        "Both browser selection cases, all three browser-result validation cases and thirteen nightly-report tests passed. Actionlint, Prettier and git whitespace checks passed."
+      ],
+      "limitations": [
+        "The first focused Chromium run overlapped an abandoned broad local run and lost one trace file. After stopping the overlapping process, the targeted run passed with isolated test output and no retry.",
+        "The hosted artifact handoff and actual scheduled browser matrix still need readback. The same 40 project and shard receipts remain required, along with approved report delivery and mailbox receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-shared-build",
+      "execution_receipts": [
+        {
+          "file": "baseline-timings.json",
+          "sha256": "cf8cbcb64cf64f13ebb322ac15789b9204ca2ef89277f8a898b465cbf5e1095d"
+        },
+        {
+          "file": "artifact-proof.json",
+          "sha256": "4a53a3c63cd6f0ccfc256fa711e0fb8dfec2ec5291e6a3260a9a2141859f08ab"
+        },
+        {
+          "file": "restored-browser-verified.log",
+          "sha256": "c13dbe6d143832c47e694855f5bcba2734048b8a67a11b8af177d89992038b8b"
+        },
+        {
+          "file": "restored-browser-focused.log",
+          "sha256": "47e8443c13a9cf948c61a10a9de5ad0442db7dd636b3a89efe11996874a249d7"
         }
       ]
     }
