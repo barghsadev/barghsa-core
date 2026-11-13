@@ -4360,7 +4360,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4388,7 +4389,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             }
           ],
           "checks": [
@@ -4609,6 +4610,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -4979,7 +4988,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4995,7 +5005,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -5199,6 +5209,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -5418,7 +5436,8 @@
           "release-0.6-service-workflow-recovery",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5442,7 +5461,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             }
           ],
           "checks": [
@@ -5811,6 +5830,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -6209,7 +6236,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -6217,7 +6245,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -6437,6 +6465,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -6677,7 +6713,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6717,7 +6754,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6920,6 +6957,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -6992,7 +7037,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7032,7 +7078,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7235,6 +7281,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -7683,7 +7737,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -7695,7 +7750,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -8027,6 +8082,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -8149,7 +8212,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -8189,7 +8253,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8392,6 +8456,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -8513,7 +8585,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8525,7 +8598,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -8779,6 +8852,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -12411,7 +12492,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -12431,7 +12513,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             }
           ],
           "checks": [
@@ -12590,6 +12672,14 @@
                 "docs/development/database-migrations.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -18962,7 +19052,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "batch": "release-0.6-signed-document-retention-acceptance",
@@ -18975,7 +19066,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -19249,6 +19340,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -21452,7 +21551,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21460,7 +21560,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/development/ci.md",
@@ -21706,6 +21806,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -21773,7 +21881,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21781,7 +21890,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -22038,6 +22147,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -22116,7 +22233,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -22124,7 +22242,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "package.json",
@@ -22545,6 +22663,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -22787,7 +22913,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -22795,7 +22922,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -22957,6 +23084,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -28238,7 +28373,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -28252,7 +28388,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -28928,6 +29064,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -32328,7 +32472,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -32341,7 +32486,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/development/ci.md",
@@ -32623,6 +32768,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -32686,7 +32839,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -32702,7 +32856,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".prettierignore",
@@ -32935,6 +33089,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -33004,7 +33166,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -33022,7 +33185,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".husky/commit-msg",
@@ -33332,6 +33495,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -34810,7 +34981,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34855,7 +35027,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -35874,6 +36046,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -35951,7 +36131,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35966,7 +36147,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".prettierignore",
@@ -36498,6 +36679,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -599933,7 +600122,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "status": "done",
@@ -599941,7 +600131,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -600544,6 +600734,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -600701,7 +600899,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "status": "done",
@@ -600709,7 +600908,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -601685,6 +601884,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -601833,7 +602040,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "status": "done",
@@ -601841,7 +602049,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -602421,6 +602629,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -602535,7 +602751,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "status": "done",
@@ -602543,7 +602760,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -603123,6 +603340,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -603237,7 +603462,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "status": "done",
@@ -603245,7 +603471,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -603825,6 +604051,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -653699,7 +653933,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -653707,7 +653942,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "Dockerfile.web",
@@ -653975,6 +654210,14 @@
                 "apps/web/test/server.spec.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -654285,7 +654528,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -654329,7 +654573,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -654545,6 +654789,14 @@
                 "apps/web/test/server.spec.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -654598,7 +654850,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -654606,7 +654859,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "Dockerfile.web",
@@ -654874,6 +655127,14 @@
                 "apps/web/test/server.spec.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -655371,7 +655632,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -655399,7 +655661,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             }
           ],
           "checks": [
@@ -655595,6 +655857,14 @@
                 "apps/web/server.js"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -665735,7 +666005,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -665748,7 +666019,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -665835,6 +666106,14 @@
                 "packages/eslint-config/reviewed-postgres-sql.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -665878,7 +666157,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -665886,7 +666166,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -666047,6 +666327,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -673170,7 +673458,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -673179,7 +673468,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -673700,6 +673989,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -675141,7 +675438,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -675153,7 +675451,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".gitignore",
@@ -675471,6 +675769,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -675522,7 +675828,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -675534,7 +675841,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".gitignore",
@@ -675763,6 +676070,14 @@
                 "scripts/test_check_secrets.py"
               ],
               "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         },
@@ -675878,7 +676193,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -675886,7 +676202,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -676097,6 +676413,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         },
@@ -676195,7 +676519,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -676203,7 +676528,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -676364,6 +676689,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -676415,7 +676748,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -676423,7 +676757,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "Dockerfile.base",
@@ -676650,6 +676984,14 @@
                 "Dockerfile.web"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -676701,7 +677043,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -676713,7 +677056,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".gitignore",
@@ -676942,6 +677285,14 @@
                 "scripts/test_check_secrets.py"
               ],
               "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         },
@@ -677038,7 +677389,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -677050,7 +677402,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -677217,6 +677569,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -678176,7 +678536,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -678200,7 +678561,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -678386,6 +678747,14 @@
                 "Dockerfile.web"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -680475,7 +680844,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -680535,7 +680905,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -680769,6 +681139,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -680805,7 +681183,8 @@
           "release-0.6-bill-electricity-caller",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -680817,7 +681196,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -681000,6 +681379,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -681035,7 +681422,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -681047,7 +681435,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -681218,6 +681606,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -681256,7 +681652,8 @@
           "release-0.6-postgres-package-alignment",
           "release-0.6-related-test-selector-acceptance",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -681264,7 +681661,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
@@ -681316,6 +681713,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -684868,7 +685273,8 @@
           "release-0.6-authentication-failure-alert",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -684938,7 +685344,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/development/ci.md",
@@ -685146,6 +685552,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -690025,7 +690439,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -690037,7 +690452,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -690263,6 +690678,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -690846,7 +691269,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -690860,7 +691284,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -691176,6 +691600,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -691220,7 +691652,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -691236,7 +691669,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -691529,6 +691962,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -692093,7 +692534,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -692101,7 +692543,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -692262,6 +692704,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -692306,7 +692756,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -692314,7 +692765,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -692499,6 +692950,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -693682,7 +694141,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-purchase-route-splitting",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -693697,7 +694157,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -694005,6 +694465,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -695340,7 +695808,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -695353,7 +695822,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -695548,6 +696017,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -695584,7 +696061,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -695596,7 +696074,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -695791,6 +696269,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -695827,7 +696313,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -695841,7 +696328,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696036,6 +696523,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -696072,7 +696567,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -696083,7 +696579,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696278,6 +696774,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -696298,7 +696802,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the exact strict release license, coverage, browser and required domain review gates."
+        "Read back the exact strict release license, coverage, browser and required domain review gates.",
+        "The consolidated CI gate now requires the existing six Prometheus rule suites on the pinned Prometheus image. The exact workflow step passed locally. Hosted readback and the final strict release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -696316,7 +696821,8 @@
           "release-0.6-protected-main-test-reuse",
           "release-0.6-protected-main-complete",
           "release-0.6-main-integrity-5aa2db96",
-          "release-0.6-deterministic-secret-scan-fixture"
+          "release-0.6-deterministic-secret-scan-fixture",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": null
       }
@@ -696348,7 +696854,8 @@
         "batches": [
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -696356,7 +696863,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "docs/development/ci.md",
@@ -696471,6 +696978,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -696507,7 +697022,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -696519,7 +697035,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -696762,6 +697278,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -696807,7 +697331,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -696818,7 +697343,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/openapi.json",
@@ -697265,6 +697790,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -697500,7 +698033,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-independent-critical-defect-fixture",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -697518,7 +698052,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -697803,6 +698337,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -697842,7 +698384,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -697851,7 +698394,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -698202,6 +698745,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -698256,7 +698807,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -698274,7 +698826,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/README.md",
@@ -698671,6 +699223,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -699659,7 +700219,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -699676,7 +700237,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -699931,6 +700492,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -699977,7 +700546,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -699994,7 +700564,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -700249,6 +700819,14 @@
                 "scripts/browser_workflow_identity.py"
               ],
               "scope": "The nightly Playwright report validates project and shard and the rollup requires the matching workflow identity. The existing full CI reporter, failed and flaky results, project matrix, delivery and promotion requirements were exercised or reviewed as applicable. The reporter, rollup, email and promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -711508,13 +712086,15 @@
       "launch_required": true,
       "remaining": [
         "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
-        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
+        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts.",
+        "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          ".github/workflows/ci.yml",
           "apps/api/src/metrics/http-request-metrics.integration.test.ts",
           "apps/api/src/metrics/http-request-metrics.ts",
           "apps/api/src/metrics/journey-availability.test.ts",
@@ -711534,7 +712114,8 @@
         ],
         "batches": [
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": null
       }
@@ -716012,7 +716593,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -716020,7 +716602,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "Dockerfile.base",
@@ -716612,6 +717194,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -719166,13 +719756,15 @@
       "remaining": [
         "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery. Include removal and restoration of the discovered target in the controlled reporting-outage rehearsal.",
         "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver.",
-        "Local Prometheus rules now page for fresh timestamps with missing check results or incomplete successes, and recover when complete results return. Explicit failures retain the six-minute check alert. Verify on the deployed runner and pager route."
+        "Local Prometheus rules now page for fresh timestamps with missing check results or incomplete successes, and recover when complete results return. Explicit failures retain the six-minute check alert. Verify on the deployed runner and pager route.",
+        "The protected CI check now includes synthetic failure, incomplete reporting and recovery rule tests. Local workflow-step execution passed. The live target and pager rehearsal remain required."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          ".github/workflows/ci.yml",
           "apps/worker/src/operations/alerts.integration.test.ts",
           "apps/worker/src/operations/alerts.ts",
           "apps/worker/src/operations/journey-alerts.test.ts",
@@ -719193,7 +719785,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-synthetic-staging-scrape",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": null
       }
@@ -719742,7 +720335,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-local-staging-license-gate",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -719750,7 +720344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "Dockerfile.base",
@@ -720019,6 +720613,14 @@
                 "Dockerfile.web"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -720210,7 +720812,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-independent-critical-defect-fixture"
+          "release-0.6-independent-critical-defect-fixture",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -720226,7 +720829,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -720393,6 +720996,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -720499,7 +721110,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-independent-critical-defect-fixture"
+          "release-0.6-independent-critical-defect-fixture",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -720515,7 +721127,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -720682,6 +721294,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -720726,7 +721346,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-immutable-board-readiness",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-independent-critical-defect-fixture"
+          "release-0.6-independent-critical-defect-fixture",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -720742,7 +721363,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -720909,6 +721530,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The integrity test creates a synthetic out-of-scope defect in memory. It still checks that both P0 and P1 defects block acceptance. No board validation rules or release records changed."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -782780,7 +783409,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -782788,7 +783418,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -783937,6 +784567,14 @@
                 "apps/web/e2e/electricity-settings-forms.spec.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -784079,7 +784717,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -784087,7 +784726,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -785236,6 +785875,14 @@
                 "apps/web/e2e/electricity-settings-forms.spec.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -786173,7 +786820,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -786181,7 +786829,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -787330,6 +787978,14 @@
                 "apps/web/e2e/electricity-settings-forms.spec.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -787394,7 +788050,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -787413,7 +788070,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -787600,6 +788257,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         }
@@ -1059399,7 +1060064,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1064606,6 +1065271,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "presentation_renewals": [
@@ -1065019,7 +1065692,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-ci-monitoring-rules"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1065072,7 +1065746,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1070141,6 +1070815,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1070571,7 +1071253,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-ci-monitoring-rules"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1072589,7 +1073272,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
             },
             {
               "path": ".size-limit.json",
@@ -1075253,6 +1075936,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-ci-monitoring-rules",
+              "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
             }
           ]
         },
@@ -1075416,7 +1076107,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-ci-monitoring-rules"
         ]
       }
     },
@@ -1250397,6 +1251089,170 @@
         {
           "file": "live-edge.json",
           "sha256": "79ed1075205274f8e5c263d9c930c8ebbf9d75b36736674fe224b15cce209a44"
+        }
+      ]
+    },
+    "release-0.6-ci-monitoring-rules": {
+      "batch": "release-0.6-ci-monitoring-rules",
+      "base_commit": "8c1e6dbe4500f9d6eccbf3b5b7ff94a9e169de2a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.test.yml",
+          "sha256": "df11003a0ac974fd7348b3b254e0a7b5bb3df0802b5ae0d5301b1cd7f27c2b7a"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "9289579d0f066af97bc4f4f1cb539f1c14019e088ab58a1dbd4f4b5c5c52f40e"
+        },
+        {
+          "path": "deploy/monitoring/monthly-cost-alerts.test.yml",
+          "sha256": "5dfbd8831fa72f8c17e605af8741e6fa3d34c7353ae428b5c17b084b3c99428b"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "e9b3ae02d148d1214511c609ecac03111b82b5bc758b48f968282fb22aefc35c"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.test.yml",
+          "sha256": "beda150ca9cafaaecc68abde6566e6d19b3571fe6fe80c8a465a4047c8add6e2"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "6d14b56375508043a600fce3873473007da7721658d79f64f8c3e0aedb9e0199"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.yml",
+          "sha256": "ef0479037ab9cb568034d18e4650557f212a974c162545b4122cc7b1563ff677"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "5c40106ee5dbe1a7a8ea401e8858632c59c40aee0af9c4a10a081f8364efd8c2"
+        },
+        {
+          "path": "deploy/monitoring/monthly-cost-alerts.yml",
+          "sha256": "8fb52773b4aaf3f3dc2b10d340b57de462af051b60ac02fc112e752157e6b962"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "69d77dc84138dc479df6132134c4c60d309917438e4f848a1e4fee2342c3ce7f"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.yml",
+          "sha256": "6ec23fc1460377e42eec02a6386c1bf950515c1709c398d8455988c131552eb7"
+        },
+        {
+          "path": "deploy/monitoring/staging-worker-alerts.yml",
+          "sha256": "50d06eb6476d689b14f7602af00515318ded446bcfb417f880f982ecd88ab529"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic-expectation.yml",
+          "sha256": "de5c8454bb722dc9f445c1a3f718cc615b2df1c077bba6b2b734f6ff32635fde"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "56c7bf85b713bc58246c5ebfac52840ce76f03f57bab4fb268023433f150f604"
+        }
+      ],
+      "checks": [
+        "The exact CI shell step passed all six existing Prometheus rule suites in the verified immutable Linux amd64 Prometheus container. It used a read-only mount and no container network. The six selected files matched the repository alert fixture inventory.",
+        "Actionlint, Prettier and git diff --check passed. The quality result is already a required input to Verify monorepo integrity."
+      ],
+      "limitations": [
+        "Local execution of the added hosted check only. Live rule deployment, alert delivery and the final candidate gates are separate acceptance criteria."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ci-monitoring-rules",
+      "execution_receipts": [
+        {
+          "file": "workflow-step.log",
+          "sha256": "47100694bea15c875d921fc8df4f7b5292de05f66eb8270672133693fbfd24a7"
         }
       ]
     }

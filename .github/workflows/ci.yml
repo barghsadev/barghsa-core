@@ -200,6 +200,14 @@ jobs:
         run: python3 scripts/test-pilot-proxy.py
       - name: Validate staging proxy security headers and edge quotas
         run: python3 scripts/test-pilot-proxy.py --profile staging
+      - name: Verify monitoring alert rules
+        run: |
+          docker run --rm --platform linux/amd64 --network none --entrypoint /bin/promtool \
+            --mount "type=bind,src=$GITHUB_WORKSPACE/deploy/monitoring,dst=/rules,readonly" --workdir /rules \
+            prom/prometheus@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e \
+            test rules api-pressure-alerts.test.yml journey-slo-alerts.test.yml \
+            monthly-cost-alerts.test.yml notification-alerts.test.yml postgres-backup-alerts.test.yml \
+            synthetic-probe-alerts.test.yml
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
