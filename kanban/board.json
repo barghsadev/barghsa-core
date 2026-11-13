@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T20:03:05+00:00",
+  "updated": "2026-11-13T20:16:00+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -23262,7 +23262,7 @@
         "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
         "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released.",
         "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal.",
-        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
       ],
       "owner": null,
       "depends_on": [],
@@ -23312,7 +23312,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-staging-rollback-image-identity"
+          "release-0.6-staging-rollback-image-identity",
+          "release-0.6-local-staging-runner-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -698854,7 +698855,7 @@
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
         "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
         "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
-        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
       ],
       "owner": null,
       "depends_on": [],
@@ -698899,7 +698900,8 @@
           "release-0.6-queue-schema-rehearsal",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-staging-rollback-image-identity"
+          "release-0.6-staging-rollback-image-identity",
+          "release-0.6-local-staging-runner-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -700239,7 +700241,7 @@
       "remaining": [
         "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology. The observer now requires the authentication alert and checks both API pools carry the rule selector. Verify the scoped authentication hold during the authorized topology rehearsal.",
         "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images.",
-        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
       ],
       "owner": null,
       "depends_on": [],
@@ -700265,7 +700267,8 @@
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-pilot-post-retirement-rollback",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-staging-rollback-image-identity"
+          "release-0.6-staging-rollback-image-identity",
+          "release-0.6-local-staging-runner-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -1077684,7 +1077687,8 @@
         "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open.",
         "A stale BuildKit archive stage could rebuild the older glibc packages. The refreshed build matches all 241 hosted PostgreSQL package rows and the strict package gate remains open. The isolated native restore of both databases passed, with matching data and collation and the current service preserved. Staging WAL archiving is off, the checked host has no backup job, and its Docker filesystem was 93% full. Obtain the approved backup destination, verify recoverable backups and capacity, and preserve the old image and volume before any live cutover.",
         "On November 13 the live staging Docker filesystem had 4,820,525,056 free bytes at 94% utilization, with zero unused volume-group bytes. No Barghsa backup timer or backup config was found in the checked staging host locations. Verify the approved off-server backup, restore and required staging capacity before a database image cutover.",
-        "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports."
+        "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports.",
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
       ],
       "owner": null,
       "depends_on": [],
@@ -1077979,7 +1077983,8 @@
           "release-0.6-protected-main-and-staging-capacity-readback",
           "release-0.6-independent-critical-defect-fixture",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-license-candidate-39619e439"
+          "release-0.6-license-candidate-39619e439",
+          "release-0.6-local-staging-runner-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1252891,6 +1252896,92 @@
         {
           "file": "checks.json",
           "sha256": "eb5bcc1114f69770523146e1f883f30c2cd047b1adbeca20d52e52f20182fe27"
+        }
+      ]
+    },
+    "release-0.6-local-staging-runner-rehearsal": {
+      "batch": "release-0.6-local-staging-runner-rehearsal",
+      "base_commit": "f571986ee3659fff5e7e94a763cf2a7314e6395b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/check-s3.py",
+          "sha256": "dce144d8975c0bfd7b5fdf1e53c982705cc3429698f5ceebe907101a4c8c9cb4"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "1234d2cb59978e5f79dfcd4ad7222202174d08bf677d00c8c082de2d8ad3bc5b"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "d756ebc6b42173eca69eb69bf27803b953a8d4635e09acef75311456c35527b7"
+        }
+      ],
+      "checks": [
+        "Built Linux amd64 app and web images from immutable f571986ee and verified their full OCI revision and Docker image IDs.",
+        "The local runner applied migrations 0289–0296 over the v0.5.1 schema with 209 journal rows, then rejected an injected stale web revision. It kept the previous manifest and stopped all four application services when the v0.5.1 schema probe rejected the new schema.",
+        "The roll-forward applied no further migrations. Liveness, database readiness, exact web revision, four healthy services, anonymous S3 denial, private put and signed HTTPS read passed. The private probe removes its test object.",
+        "A separate stale-web failure with a schema-compatible image pair restored the four original app and web image IDs, kept the active manifest and returned healthy API, PostgreSQL, Redis, storage and web responses.",
+        "Removed the isolated Compose resources and read back healthy public staging v0.5.1. No release job or Telegram publication was triggered by the rehearsal."
+      ],
+      "limitations": [
+        "Local AMD64 emulation, synthetic data and isolated TLS ingress. The fixture substitutes per-service readiness commands because the Docker Desktop emulation shim prepends PID 1 arguments. All four checks still reached their normal readiness endpoints.",
+        "The fixture PostgreSQL and ClamAV images and synthetic TLS ingress are separate from live staging. The final accepted immutable release still needs its strict scans and license dispositions, approved backup, actual server rehearsal and deployment and Telegram receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-local-staging-runner-rehearsal",
+      "execution_receipts": [
+        {
+          "file": "fixture-identity.json",
+          "sha256": "c7ab4e4ab28c4bb589481db4e0ecdc1885b9e3811c8b0dcb93fce84c3489e4f2"
+        },
+        {
+          "file": "fixture-rehearsal.log",
+          "sha256": "7593c71b8536f8a363939e3f875d66e0085e9f1f09b5f1640c07951e8eb934b4"
+        },
+        {
+          "file": "fixture-compatible-receipt.json",
+          "sha256": "9d485f39bdbfb8010eba5912c8c76893cbc28c95b2aa040c497a0e2a3c7c544a"
+        },
+        {
+          "file": "fixture-compatible-rollback.log",
+          "sha256": "98025aa7c6bc2ccfc5d98a8a98ba2ed933abff6d174505c3320df062a91fa034"
+        },
+        {
+          "file": "fixture-cleanup.log",
+          "sha256": "de9d5dd8cc840163b4122c656a6b0614154bb4fc91c48f157c049452313e2b3b"
+        },
+        {
+          "file": "live-stage-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "live-stage-readiness.json",
+          "sha256": "e72a84c4055aaef5442b4e990eca5e797c217a169083b3bf36b886e1def26b02"
         }
       ]
     }
