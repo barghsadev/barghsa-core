@@ -7838,7 +7838,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -8154,6 +8154,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ]
         }
@@ -23758,7 +23766,8 @@
         "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required.",
         "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
         "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending.",
-        "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required."
+        "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required.",
+        "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23866,7 +23875,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-nightly-shared-build",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-retention-settings-browser"
+          "release-0.6-retention-settings-browser",
+          "release-0.6-solar-queue-browser"
         ],
         "current_acceptance": null
       }
@@ -282638,7 +282648,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -284723,6 +284733,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -285130,7 +285148,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -287215,6 +287233,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -856350,7 +856376,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -859135,6 +859161,14 @@
                 "apps/web/e2e/admin-settings.spec.ts"
               ],
               "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ]
         }
@@ -1018018,7 +1018052,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1018717,6 +1018751,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1019092,7 +1019134,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1019791,6 +1019833,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1020168,7 +1020218,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1020867,6 +1020917,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1021242,7 +1021300,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1021941,6 +1021999,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1022316,7 +1022382,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1023015,6 +1023081,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1023394,7 +1023468,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1024093,6 +1024167,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1024472,7 +1024554,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1025171,6 +1025253,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1025546,7 +1025636,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1026245,6 +1026335,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1026620,7 +1026718,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1027319,6 +1027417,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1027695,7 +1027801,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1028394,6 +1028500,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1028775,7 +1028889,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -1029474,6 +1029588,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ],
           "presentation_renewals": [
@@ -1075749,7 +1075871,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+              "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -1078369,6 +1078491,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-solar-queue-browser",
+              "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+              "paths": [
+                "apps/web/e2e/solar-construction-progress.spec.ts"
+              ],
+              "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
             }
           ]
         },
@@ -1255024,6 +1255154,80 @@
         {
           "file": "verified-retained-scans/2-sbom.cdx.json",
           "sha256": "2aae50adfdf462dbf50d6516522268e35cdcba7488db380b9db7eb29952828a2"
+        }
+      ]
+    },
+    "release-0.6-solar-queue-browser": {
+      "batch": "release-0.6-solar-queue-browser",
+      "base_commit": "4426de14eb3b95c6546f0d640d2c12677b813258",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.26.01.01",
+        "07-ui-ux-design.md#T-07.26.01.02",
+        "07-ui-ux-design.md#T-07.26.01.03",
+        "07-ui-ux-design.md#T-07.26.01.04",
+        "07-ui-ux-design.md#T-07.27.01.01",
+        "07-ui-ux-design.md#T-07.27.01.02",
+        "07-ui-ux-design.md#T-07.27.01.03",
+        "07-ui-ux-design.md#T-07.27.01.04",
+        "07-ui-ux-design.md#T-07.27.01.05",
+        "07-ui-ux-design.md#T-07.27.01.06",
+        "07-ui-ux-design.md#T-07.27.01.07",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/solar-construction-progress.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "7d173cac59638b5de56c27b523058bdc494b19f2596b1d9aaf35bcce4b9f150d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "9e622ec3a115ea14f756b55e4a992c0a8be2971cabff260657c53f6ed3374d38"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Hosted WebKit shard 7 of 8 in run 43504566627 had 368 expected and one flaky result. The Persian solar staff queue fixture observed the updated route before the request callback had recorded the matching cleared cursor.",
+        "The exact GET observer is registered before filling the search. URL search, cursor and selected request assertions continue to run. Thirty targeted cases passed, five each for two languages and three projects, with zero retries or unexpected, flaky and skipped results. Scoped lint, formatting and whitespace passed."
+      ],
+      "limitations": [
+        "This fixes the demonstrated synchronization race in that fixture. The older hosted result remains failed. Final all-shard and scheduled delivery receipts are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-solar-queue-browser",
+      "execution_receipts": [
+        {
+          "file": "hosted-webkit-7.log",
+          "sha256": "8b86b197def986ae6c9cfbddcb40dd814a4c298eeb50ba2c4cf5c685d6438950"
+        },
+        {
+          "file": "source-binding.json",
+          "sha256": "f5d6bceb05debb529ff85067fb350f1016dd274994c58f8fb12854e5580cc2ad"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "2ed1b021ee6e74f110f97b839b2ad67f62010d3a2159e05a614ef6cc271c5bae"
+        },
+        {
+          "file": "results.json",
+          "sha256": "f7749a2500a5eeb397ccaf2fc16764c1e163d5feaef82bb3478b4de2e435a119"
+        },
+        {
+          "file": "static-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

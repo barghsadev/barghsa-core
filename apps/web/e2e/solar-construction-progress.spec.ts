@@ -302,15 +302,23 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('button', { name: /702/ })).toBeVisible();
     await page.reload();
     await expect(page.getByRole('button', { name: /702/ })).toBeVisible();
-    await page.getByLabel(copy('constructionSearch'), { exact: true }).fill(' 702 ');
+    await Promise.all([
+      page.waitForRequest((request) => {
+        const { pathname, searchParams } = new URL(request.url());
+        return (
+          request.method() === 'GET' &&
+          pathname === base &&
+          searchParams.get('q') === '702' &&
+          !searchParams.has('before')
+        );
+      }),
+      page.getByLabel(copy('constructionSearch'), { exact: true }).fill(' 702 '),
+    ]);
     await expect
       .poll(() => JSON.parse(new URL(page.url()).searchParams.get('q') ?? 'null'))
       .toBe('702');
     await expect.poll(() => new URL(page.url()).searchParams.has('cursor')).toBe(false);
     expect(new URL(page.url()).searchParams.get('requestId')).toBe(constructionRequest);
-    expect(
-      reads.some((url) => url.searchParams.get('q') === '702' && !url.searchParams.has('before'))
-    ).toBe(true);
   });
   test(`${locale}: changed selection suppresses late preview, and a denied queue suppresses late private detail`, async ({
     page,
