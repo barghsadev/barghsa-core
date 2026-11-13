@@ -713598,7 +713598,8 @@
         "Select a patched immutable Grafana image that passes the image gate. The official Linux/amd64 13.1.10, 13.2.6 and 13.3.1 images had 3, 19 and 20 high findings, respectively. 13.1.10 flags Tempo in the core binary and x/net in Zipkin. The required Prometheus backend in 13.2.6 and 13.3.1 ships x/net v0.61.0. Staging remains healthy on its existing monitoring stack.",
         "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert.",
         "Open the PostgreSQL dashboard and linked API pressure or database failover runbook from exact-candidate receipts with approved operator access.",
-        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
+        "The official Linux amd64 13.0.13 and 12.4.15 alternatives also fail the exact-image gate with three and two high findings respectively. All five current official release lines have a failing scanned image. Obtain a patched immutable image and verify the deployed operator links."
       ],
       "owner": null,
       "depends_on": [],
@@ -713675,7 +713676,8 @@
           "release-0.6-clamav-freshness-alert",
           "release-0.6-authentication-failure-alert",
           "release-0.6-postgres-alert-wiring",
-          "release-0.6-postgres-disk-capacity"
+          "release-0.6-postgres-disk-capacity",
+          "release-0.6-grafana-supported-alternative-images"
         ],
         "current_acceptance": null
       }
@@ -1078601,7 +1078603,8 @@
         "Run the final hosted browser matrix with all 40 receipts matching the candidate commit, workflow run, attempt, project and shard. Local checks rejected stale and mismatched receipt fields and preserved the flaky results in two original hosted Playwright reports.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending.",
-        "dfe73b34a reached protected main after all seven preflight jobs passed. Verified the five image reports and unchanged license review scope. The loaded PostgreSQL replacement and retained scanner each match their hosted package and license scope. Final strict tests, exact staging acceptance and actual live receipts remain open."
+        "dfe73b34a reached protected main after all seven preflight jobs passed. Verified the five image reports and unchanged license review scope. The loaded PostgreSQL replacement and retained scanner each match their hosted package and license scope. Final strict tests, exact staging acceptance and actual live receipts remain open.",
+        "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1078899,7 +1078902,8 @@
           "release-0.6-license-candidate-39619e439",
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-staging-preflight-readback",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-grafana-supported-alternative-images"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1254506,7 +1254510,8 @@
         "Hosted Chromium shard 1 in run 43504566627 recorded four failures across both languages and themes at 390 px. It observed 26 options against the former 25-option assertion. The desktop variants passed.",
         "Operational Retention is the one new registered and permission-filtered route. The existing test now requires all 26 options and that route once. Existing settings navigation, confirmations, Axe and overflow assertions passed across all 16 production-browser cases in Chromium and mobile Safari, with no retries.",
         "The verified prebuilt UI has matching application, design system and localization sources. Web typecheck, scoped lint, format and diff checks passed.",
-        "The completed pinned Firefox, WebKit and Mobile Chrome replay passed all 24 remaining settings cases with zero unexpected, flaky or skipped outcomes. This brings the product-source-bound focused set to 40 successful cases across all five projects. The hosted Firefox and WebKit shard logs identify the same earlier 25-option assertion."
+        "The completed pinned Firefox, WebKit and Mobile Chrome replay passed all 24 remaining settings cases with zero unexpected, flaky or skipped outcomes. This brings the product-source-bound focused set to 40 successful cases across all five projects. The hosted Firefox and WebKit shard logs identify the same earlier 25-option assertion.",
+        "Hosted Mobile Chrome shard 1 also failed only the four 390 px settings cases on the earlier 25-option assertion. The corrected Mobile Chrome cases are included in the passing 24-case replay."
       ],
       "limitations": [
         "The first local invocation put the file after the variadic project selector. It executed no tests and is retained separately. The corrected invocation passed all 16 selected cases. The old hosted result remains failed and final scheduled acceptance is pending."
@@ -1254544,6 +1254549,10 @@
         {
           "file": "hosted-webkit-1.log",
           "sha256": "9413b0865a9dc357f451444bca8a7427efe51b6122d74b1bfe62e89f6d9f30ce"
+        },
+        {
+          "file": "hosted-mobile-chrome-1.log",
+          "sha256": "a885d287d222cb2c650f7866fb808a92ff7ea27aa662a8d6642802b27cac9ea7"
         }
       ]
     },
@@ -1254649,6 +1254658,83 @@
         {
           "file": "release-licenses.json",
           "sha256": "d4987ccd9460b823d60b7be976a588946f776930af45a9d1680aa996bbfbf7f7"
+        }
+      ]
+    },
+    "release-0.6-grafana-supported-alternative-images": {
+      "batch": "release-0.6-grafana-supported-alternative-images",
+      "base_commit": "92c81eefcc96760a5da9886bd76d8fd8e6c4e5c0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        }
+      ],
+      "checks": [
+        "The official release feed still lists the same five supported image candidates under review. The remaining 13.0.13 and 12.4.15 tags were resolved to Linux amd64 manifests, and the fetched manifest bytes and scan config IDs were verified.",
+        "Checksum-verified Trivy 0.76.2 scanned both images against the November 13 advisory snapshot and generated CycloneDX SBOMs. 13.0.13 has three high findings in its embedded Tempo and Prometheus dependencies. 12.4.15 has two high findings in embedded Tempo. Neither has a critical finding. Both fail the high/critical gate."
+      ],
+      "limitations": [
+        "The three other current Grafana release lines previously failed their separate exact-image scans. These read-only scans do not establish a deployable image or a live dashboard, annotation or paging receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-grafana-supported-alternatives",
+      "execution_receipts": [
+        {
+          "file": "scanner.json",
+          "sha256": "e49fab34ea1d443017f8149ed80b8d872c5b67baba25389926d51d7a06b1cee0"
+        },
+        {
+          "file": "cache/db/metadata.json",
+          "sha256": "77981803ea03039a04b55c6859d31724700a03b00e05169fc2cc0c8390193d67"
+        },
+        {
+          "file": "oci-13.0.13.json",
+          "sha256": "f55416a67736d73b7af0536edd365b72a06f07b4b2ef8cfc1326ceba1dd7c863"
+        },
+        {
+          "file": "13.0.13/grafana-provenance.json",
+          "sha256": "d40144d1aaad28c64dee8c73e0263accd075430619de3b506ed75c513b47b3dd"
+        },
+        {
+          "file": "13.0.13/grafana-sbom.cdx.json",
+          "sha256": "b013e5600be8afd18ad7882c654158e49918d0658edb1b546ac59357cfa119ce"
+        },
+        {
+          "file": "13.0.13/grafana-vulnerabilities.json",
+          "sha256": "ed9351f0b0a824152dea02fc7284e3308ef0413fdade27a83ab25a6abfafd049"
+        },
+        {
+          "file": "13.0.13/scan.log",
+          "sha256": "9cc589aebfaa807e805e8fc6062eb522c20bd1dc45fd109a6178c1fb0caee7b2"
+        },
+        {
+          "file": "oci-12.4.15.json",
+          "sha256": "7f39949e989c732d314ea35e08b63fadc7d034e6a1771d67acf22f0be3d399eb"
+        },
+        {
+          "file": "12.4.15/grafana-provenance.json",
+          "sha256": "de74205cb8b5169ef50b8b4994525a16cd0c3d556335f58504bb9f5b38675ba8"
+        },
+        {
+          "file": "12.4.15/grafana-sbom.cdx.json",
+          "sha256": "2ddfaf201a745c36e3d3f04d6b4d3676f7f9c342649e041419d9d3fa163dcf50"
+        },
+        {
+          "file": "12.4.15/grafana-vulnerabilities.json",
+          "sha256": "fec18bd2ca207fd94621daad187e86c6e1dbe4a26863b30bfb494bb0c2bd02e4"
+        },
+        {
+          "file": "12.4.15/scan.log",
+          "sha256": "a411b0ea0941586e75522fbc84e5ce2a7bd551a98eaabb01a7bf93d83ca921dc"
         }
       ]
     }
