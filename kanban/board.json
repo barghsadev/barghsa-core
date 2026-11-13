@@ -14573,7 +14573,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-rollback-runbook-acceptance"
+          "release-0.6-rollback-runbook-acceptance",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -14597,7 +14598,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -14616,7 +14617,8 @@
             "The two retired Docker Hub image references failed from a clean manifest lookup. The new shared Silo OCI index resolved by immutable digest 7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7 for both linux/amd64 and linux/arm64. Exact amd64 digest pulled and reported upstream release 2026-10-26 at c3ad836aed0d8a7d23c2e44a5eaa3009d08525e3.",
             "The exact root Compose file resolved with the tracked environment template and preserved published ports, volume names, service names, health ordering and stale-upload settings. In a private disposable Compose project with no published ports, the real server and initializer passed a clean-volume boot, repeated initialization, invalid-credential rejection, console HTTP 200, exact authenticated reads and anonymous reads and listings returning 403 for both buckets. The same volume reopened with Silo after the previous pgsty MinIO fork and retained both private buckets and exact bytes.",
             "The same isolated Compose project reported PostgreSQL 16 / PostGIS 3.6.4 and Redis 7.4.11 with PONG. Native startup used the cached PostgreSQL proof image and the cached Redis 7 Alpine digest because the staging network denied the fresh Redis blob. The exact unchanged PostgreSQL Dockerfile was built and scanned separately by GitHub Actions run 43054839800, job 130641396193. The initial stdin-fed probe did not complete its assertions and is excluded from acceptance.",
-            "The rebuilt shared package passed all 34 packaging checks. The actual S3 adapter and policy code against the exact Silo digest verified repeat versioning and four lifecycle rules with legal-hold opt-in, signed two-part resume and exact completed bytes, private reads, and hold-safe per-version classification. The first abort probe used a directory Prefix and failed. A targeted old/new comparison reproduced that inherited directory-prefix behavior on both images, proved the worker’s empty-prefix listing sees both pending uploads, and verified only the target disappears after repeated abort while the sibling remains readable and completes."
+            "The rebuilt shared package passed all 34 packaging checks. The actual S3 adapter and policy code against the exact Silo digest verified repeat versioning and four lifecycle rules with legal-hold opt-in, signed two-part resume and exact completed bytes, private reads, and hold-safe per-version classification. The first abort probe used a directory Prefix and failed. A targeted old/new comparison reproduced that inherited directory-prefix behavior on both images, proved the worker’s empty-prefix listing sees both pending uploads, and verified only the target disappears after repeated abort while the sibling remains readable and completes.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [
             "Local development acceptance. The native Compose proof exercised linux/amd64. OCI linux/arm64 availability was verified through the published index.",
@@ -14719,6 +14721,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -18120,7 +18130,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -18136,7 +18147,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -18144,7 +18155,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -18165,7 +18176,8 @@
           ],
           "checks": [
             "Reviewed the existing AWS SDK S3 adapter and factory against the required upload, streaming get, delete, listing and presigned PUT/GET interface. The same factory resolves internal and browser endpoints from active configuration.",
-            "Reused current matching 28 adapter, 12 file-operation, 15 runtime-config and 15 immutable-storage cases from run 42681795739. Their source files, test files and dependency lock match."
+            "Reused current matching 28 adapter, 12 file-operation, 15 runtime-config and 15 immutable-storage cases from run 42681795739. Their source files, test files and dependency lock match.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -18277,6 +18289,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -18406,7 +18427,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -18462,7 +18484,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -18470,7 +18492,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -18492,7 +18514,8 @@
           "checks": [
             "The API validates declared file constraints, business association, ownership and current authority before issuing direct browser PUT or multipart URLs. It verifies stored bytes, MIME, size and checksum before sealing or entering PendingScan with the configured scanner. The API does not proxy large transfer bodies.",
             "Reused 43 document HTTP, 24 storage-record HTTP, three storage-access HTTP and two multipart HTTP cases from run 42689595374, plus nine browser upload-component assertions. Matching tests cover real MinIO signing, mismatch rejection, download byte identity and durable configured-scanner jobs. The run's separate stale refresh assertion was corrected independently.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -18696,6 +18719,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -18889,7 +18921,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -18941,7 +18974,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -18949,7 +18982,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -18970,7 +19003,8 @@
           ],
           "checks": [
             "Reused the prior source-bound admin storage acceptance under 05-notifications-documents-ai.md#T-05.09.03 and 24 matching storage-config API cases from run 42689595374. The current UI has endpoint, region, bucket, credential identifier, password-masked write-only secret, path style, private/public URLs, Test Connection, result feedback and versioned save.",
-            "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates."
+            "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -19089,6 +19123,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -19179,7 +19222,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "batch": "release-0.6-signed-document-retention-acceptance",
@@ -19187,7 +19231,8 @@
             "GitHub run 43315948494 passed 152 cases across eleven relevant suites, including native PostgreSQL migration, contract signature, document HTTP with real object storage, generic signed-record soft removal, storage cleanup and guarded version destruction. One configured real ClamD case was skipped and belongs to the separate scanner requirement. The overall run failed a separate web test. All listed source bindings match the tested commit.",
             "The signed-copy flow binds the approved original and signed bytes to the exact version, records their append-only locks and protects both after a replacement race or a new amendment. Mounted and migrated fixtures verify approval authority, the sealed-byte boundary, current scope, exact replay, unchanged history and denial of removal and replacement of locked evidence.",
             "The generic storage remove route keeps signed bytes and records soft removal. Ordinary worker cleanup excludes signed records and serializes claims with promotion. The durable destruction worker and migrated database independently refuse contractual and financial bytes after removal and reject outdated approvals before any provider delete. Eligible nonfinancial destruction follows its separate approval workflow.",
-            "The current staging bucket was read through the application's versioned active config at v0.5.1. S3 versioning is enabled and expiry requires one of four narrow prefixes plus an explicit disposal tag. The five newest noncurrent versions are preserved by each expiry rule. The current staged schema reported all five expected enabled signature and retention triggers and the permanent-retention routine."
+            "The current staging bucket was read through the application's versioned active config at v0.5.1. S3 versioning is enabled and expiry requires one of four narrow prefixes plus an explicit disposal tag. The five newest noncurrent versions are preserved by each expiry rule. The current staged schema reported all five expected enabled signature and retention triggers and the permanent-retention routine.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_evidence": [
             {
@@ -19420,7 +19465,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -19482,6 +19527,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -32084,13 +32137,15 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
           "reviewed_sha": "539dbcc9ed4f642e7ebb4485d20c1f84c18fbe90",
           "checks": [
-            "The existing platform encryption and masking service uses authenticated encryption and purpose-specific keys. Reused the 58 shared and 94 API cases bound to unchanged sources, including v1/v2 overlap, missing/wrong key, tampering, masking and placeholder preservation. This platform implementation acceptance leaves native rollout, production inventory and telemetry verification on their separate security tasks."
+            "The existing platform encryption and masking service uses authenticated encryption and purpose-specific keys. Reused the 58 shared and 94 API cases bound to unchanged sources, including v1/v2 overlap, missing/wrong key, tampering, masking and placeholder preservation. This platform implementation acceptance leaves native rollout, production inventory and telemetry verification on their separate security tasks.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_evidence": [
             {
@@ -32123,7 +32178,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -32195,6 +32250,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -604650,7 +604713,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -604670,7 +604734,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -604690,7 +604754,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -604743,7 +604807,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -604960,6 +605025,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -605022,7 +605096,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -605042,7 +605117,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -605062,7 +605137,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -605115,7 +605190,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -605332,6 +605408,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -605404,7 +605489,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -605444,7 +605530,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -605460,7 +605546,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -605553,7 +605639,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/storage-foundations-current-acceptance",
@@ -605879,6 +605966,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -605965,7 +606061,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -606005,7 +606102,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -606021,7 +606118,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -606095,7 +606192,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/storage-foundations-current-acceptance",
@@ -606411,6 +606509,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -618879,7 +618986,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -618959,7 +619067,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -619052,7 +619160,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -619481,6 +619590,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -619594,7 +619711,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -619674,7 +619792,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -619767,7 +619885,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -620196,6 +620315,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -620311,7 +620438,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -620391,7 +620519,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -620508,7 +620636,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -620934,6 +621063,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -621082,7 +621219,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -621162,7 +621300,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -621332,7 +621470,8 @@
             "Kept ownership and operating-context checks, exact part layout, receipt recovery, scan/seal gates and signed-record protection. An owner can discard an interrupted completion after its reservation expires. Recovery is bounded; older protected cleanup failures cannot starve an eligible retry.",
             "Isolated native PostgreSQL/MinIO: 3 DB cases, 11 HTTP multipart/admission cases, 9 ordinary storage-cleanup cases, 12 final multipart worker cases and 9 selected document cases passed. The selected document run skipped 36 out-of-scope cases. The earlier interrupted full document invocation is not a passing result.",
             "Shared multipart 8 cases, web document transport/progress 22 cases and shared packaging 34 cases passed. Worker typecheck, scoped ESLint, database snapshot/migration drift and the rebuilt API contract check passed.",
-            "Migration 0287 appends one journal entry, changes two retry indexes and widens the cleanup status check. The historical upgrade passed without changing prior data or any of the 207 historical SQL files. Formatting the journal adds only a final newline relative to the native run."
+            "Migration 0287 appends one journal entry, changes two retry indexes and widens the cleanup status check. The historical upgrade passed without changing prior data or any of the 207 historical SQL files. Formatting the journal adds only a final newline relative to the native run.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -621843,6 +621982,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -621968,7 +622115,8 @@
           "release-0.6-multipart-policy-validation",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -622048,7 +622196,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -622141,7 +622289,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -622570,6 +622719,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -668205,17 +668362,23 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Inventory the remaining provider transports and process-wide egress controls. Private AI worker and payment gateway transports now reject redirects and bound response reads alongside the existing bill adapters."
+        "Inventory the remaining provider transports and process-wide egress controls. Private AI worker and payment gateway transports now reject redirects and bound response reads alongside the existing bill adapters.",
+        "Runtime storage now uses only explicitly configured Barghsa origins or the regional AWS endpoint. AWS SDK environment or shared profile endpoint overrides are disabled for this client. Process-wide egress policy and deployed destination evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "docs/operations/storage-configuration.md",
+          "packages/shared/src/storage/runtime-config.test.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts"
+        ],
         "batches": [
           "release-0.6-provider-egress-regressions",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": null
       }
@@ -668235,7 +668398,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Staff and durable storage custom origins are now limited to protected origins by scheme, host and port, including the SDK-derived virtual bucket hostname. The deployment-owned default AWS and approved internal routes remain available. Review remaining non-storage deployment egress and OTLP configuration on the accepted runtime."
+        "Staff and durable storage custom origins are now limited to protected origins by scheme, host and port, including the SDK-derived virtual bucket hostname. The deployment-owned default AWS and approved internal routes remain available. Review remaining non-storage deployment egress and OTLP configuration on the accepted runtime.",
+        "The regional AWS fallback remains in effect with either ambient AWS endpoint override set. Explicit approved storage origins retain their current probe and signing behavior. Verify the accepted deployment and the other transport policies."
       ],
       "owner": null,
       "depends_on": [],
@@ -668253,7 +668417,8 @@
         ],
         "batches": [
           "release-0.6-provider-egress-regressions",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-storage-egress-boundary",
@@ -672188,7 +672353,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -672268,7 +672434,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -672283,7 +672449,8 @@
             "The existing versioned document, image and video upload policies bind extension and MIME allowlists and byte limits to the current effective category. Protected admin writes retain step-up, audit, history and fail-closed policy reads.",
             "Reused 18 compiled admin policy cases, 14 resolver cases and the file-policy cases. The cases cover validation, actual URL issuance, authority loss and rollback.",
             "All 35 API and 24 web cases passed, including 100 MiB reservation and record validation, direct and multipart paths, browser picker submission, rejection above the global cap and refusal above a smaller document policy before provider access. All 24 unchanged production browser upload cases passed across Firefox and Mobile Chrome in both locales. Build, all 102 gzip budgets, types, lint, formatting and diff checks passed.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -672496,6 +672663,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -672537,7 +672712,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-async-job-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -672561,7 +672737,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -672571,7 +672747,8 @@
           "checks": [
             "The unchanged production reservation path on the baseline issued a nested key for a path-shaped general filename. The fixed compiled path uses a single UUID segment, preserves ordinary lowercase extension normalization and stores the original name as metadata.",
             "The targeted compiled PostgreSQL run passed the new slash, backslash and percent-encoded slash cases plus the ordinary Persian name, effective size policy and fail-closed policy read. Both the signed URL and persisted reservation key use the same controlled shape.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -672718,6 +672895,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -673165,7 +673350,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -673297,7 +673483,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -673321,7 +673507,8 @@
             "Staff wallet and invoice receipt reads retain their finance grant. The separate per-user bounded preview requests use an immutable storage record and serve only the cached PNG derivative with private no-store headers. The browser embeds no active original.",
             "Eight compiled HTTP and real PostgreSQL/MinIO cases passed for bytes, attachment headers, denial, access history, quarantine, scanner pending and raster receipt preview. The MinIO harness used a PNG receipt because it lacked Poppler; the local unit tests separately rendered a PDF through the same bounded receipt stream helper.",
             "Three compiled HTTP caller cases passed for private CRM evidence and customer/staff avatar URLs. Shared storage tests (44), package exports (33), API unit tests (66), web unit tests (97), browser journeys (16) and all 102 production route budgets passed. Type checks, lint, formatting and the generated OpenAPI contract passed.",
-            "The initial isolated document run lacked a compiled scanner worker. A later run exposed a missing wallet parent in the new staff test fixture. The final HTTP proof builds the worker and seeds the required parent and asserts the complete global private, no-cache, no-store, must-revalidate response without changing business assertions."
+            "The initial isolated document run lacked a compiled scanner worker. A later run exposed a missing wallet parent in the new staff test fixture. The final HTTP proof builds the worker and seeds the required parent and asserts the complete global private, no-cache, no-store, must-revalidate response without changing business assertions.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -673834,6 +674021,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -673880,7 +674075,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -673960,7 +674156,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -673974,7 +674170,8 @@
           "checks": [
             "Source objects are private by default. Customer and staff document operations recheck current authority and scan state before generating the owner-approved 300-second signed links. Signed URL issuance is recorded in the append-only access log. Preview and download responses retain private no-store handling.",
             "Reused the 43 compiled document cases and related template, preview and storage suites, including foreign-profile denial, explicit staff grants and quarantine denial. Final deployment and the separate original attachment disposition remain independently tracked.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -674187,6 +674384,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -674253,7 +674458,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -674338,7 +674544,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
@@ -674352,7 +674558,8 @@
           "checks": [
             "GitHub run 42838242571 and its Run tests job 129914620408 passed at exact 27e484c138315c4c67f417afe402d55366f58a09. The report lists 45 document, 26 storage-record, 19 upload-policy, 34 upload-controller, five admission, two multipart and seven ClamAV cases.",
             "Reviewed the exercised source for valid sealed bytes, denied extensions and MIME mismatches, oversized claims and forged stored sizes, configured clean and infected scanner outcomes, quarantine download denial, and durable private quarantine notifications. The upload quota, scanner workers, test fixtures and migrations are unchanged from that hosted run.",
-            "The shared byte-reader relocation preserves its storage behavior byte for byte. The intervening protected S3 origin guard has its own exact 31 compiled PostgreSQL HTTP cases plus the authenticated isolated MinIO read/write and signing proof. This accepts the regression test criterion. Live deployment and scanner operations remain separate gates."
+            "The shared byte-reader relocation preserves its storage behavior byte for byte. The intervening protected S3 origin guard has its own exact 31 compiled PostgreSQL HTTP cases plus the authenticated isolated MinIO read/write and signing proof. This accepts the regression test criterion. Live deployment and scanner operations remain separate gates.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -674799,6 +675006,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -676000,14 +676215,16 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
           "reviewed_sha": "ab1db108d3e6fea5d74991d2f74754796bc5681f",
           "checks": [
             "Hosted Run tests job 129827862791 at ab1db108 completed all nine package tasks. Native PostgreSQL AI worker (14), auth delivery (32), provider mutation (113), AI HTTP (40) and storage configuration (24) suites passed. This supplies the previously missing native compatibility proof. Existing v1/v2 overlap and wrong-key local cases remain bound to the unchanged implementation.",
-            "No live rotation or production database inventory was performed. The read-only v0.5 inventory and environment rollout remain separate from implementation evidence."
+            "No live rotation or production database inventory was performed. The read-only v0.5 inventory and environment rollout remain separate from implementation evidence.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_evidence": [
             {
@@ -676060,7 +676277,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -676183,6 +676400,14 @@
                 "apps/worker/src/ai-models/test-runner.test.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -699546,7 +699771,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -699595,11 +699821,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/read-capped-bytes.ts",
@@ -699632,7 +699858,8 @@
           ],
           "checks": [
             "Hosted Run tests job 130003644787 executed and passed all five named provider fixture files. SMTP TLS wire fixtures passed seven, SMS.ir request and receipt fixtures six, payment adapter fixtures 41, storage SDK/runtime fixtures 20, and scoped storage HTTP fixtures three. Job 129998094069 independently passed the same 77 named cases.",
-            "The overall hosted test job failed on the separate staff-log assertion. The provider tests, adapters, fixture configuration, dependency lock and CI selection are byte-identical to the tested source. Acceptance covers the CI provider fixture criterion. Live provider and delivery receipts remain separate."
+            "The overall hosted test job failed on the separate staff-log assertion. The provider tests, adapters, fixture configuration, dependency lock and CI selection are byte-identical to the tested source. Acceptance covers the CI provider fixture criterion. Live provider and delivery receipts remain separate.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "source_renewals": [
             {
@@ -699922,6 +700149,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -780013,7 +780249,8 @@
           "release-0.6-service-workflow-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -781377,7 +781614,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/ui/package.json",
@@ -781491,7 +781728,8 @@
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the native browser bindings using 25 exact, no-retry CSP and combobox checks across five browser projects, 174 UI tests, strict typechecking and 8 distribution checks. Existing native validation, keyboard, serialization and telemetry provenance assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -781902,6 +782140,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -781992,7 +782238,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -782228,7 +782475,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/ui/package.json",
@@ -782307,7 +782554,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -782697,6 +782945,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -784227,7 +784483,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -784463,7 +784720,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/ui/package.json",
@@ -784542,7 +784799,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -784932,6 +785190,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -787654,7 +787920,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -787890,7 +788157,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/ui/package.json",
@@ -787969,7 +788236,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -788359,6 +788627,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ]
         }
@@ -1064645,7 +1064921,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -1064653,7 +1064929,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -1064900,7 +1065176,8 @@
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
-            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [],
           "operational_limits": [
@@ -1067031,6 +1067308,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "presentation_renewals": [
@@ -1067448,7 +1067734,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1070329,7 +1070616,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+              "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -1070337,7 +1070624,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -1070605,7 +1070892,8 @@
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
-            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -1072621,6 +1072909,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-storage-sdk-endpoint-policy",
+              "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1073055,7 +1073352,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-storage-sdk-endpoint-policy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1253835,6 +1254133,104 @@
         {
           "file": "quarterly-storage-recovery/storage-version-recovery.tap",
           "sha256": "efaac64f02cad0f2d08116c7f7671b32084292982a2ccaa227806b8c0036256a"
+        }
+      ]
+    },
+    "release-0.6-storage-sdk-endpoint-policy": {
+      "batch": "release-0.6-storage-sdk-endpoint-policy",
+      "base_commit": "a8f2476bb0814ea855bd1e4c7197c69f978798c1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.04.04.01",
+        "06-security-testing-observability.md#T-06.04.04.02",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "docs/operations/storage-configuration.md",
+        "packages/shared/src/storage/runtime-config.test.ts",
+        "packages/shared/src/storage/s3-storage-provider.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "21da30c0a2e7c239d8ce00ad496a9e1ebf415528f7a2f8484ef4ef6f8f3d1b56"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "4392e189806f426882e29bb3302e771eba9aa43432e9ac9eaeccac46ed12ea80"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+        }
+      ],
+      "checks": [
+        "The installed S3 SDK supports endpoint overrides through its own environment and shared profile configuration. The runtime client uses the SDK option that disables those implicit endpoint sources. Explicit protected endpoints and the standard AWS credential chain still apply.",
+        "Both AWS endpoint override cases presigned for the standard regional AWS origin with the original path. The explicit protected provider, virtual-host checks and storage unit suite passed 55 cases. Compiled API against migrated PostgreSQL passed all 26 storage configuration cases. Reused the exact build for 23 worker cleanup and destruction cases.",
+        "Shared typecheck, scoped lint, formatting and diff checks passed. A read-only staging v0.5.1 container check found no ambient override keys and an explicit private S3 endpoint in API, worker and AI inference."
+      ],
+      "limitations": [
+        "The runtime storage change is local until protected publication and accepted staging deployment. It does not establish process-wide egress controls or final live provider acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-sdk-endpoint-policy",
+      "execution_receipts": [
+        {
+          "file": "checks.json",
+          "sha256": "eef52c3e0f750bd7e120c6f8953d2d3fd687db2c511b2619e1681f9e8a7e8291"
+        },
+        {
+          "file": "shared-storage.log",
+          "sha256": "9908632de62c7de3de39c3a11f9d8dfbbd980ad6e4559031c6c0c455d623dad5"
+        },
+        {
+          "file": "api-storage.log",
+          "sha256": "2037dcbaf8c706907ada08308dcd97671fbb534961a26c7df66619284e30e519"
+        },
+        {
+          "file": "worker-storage.log",
+          "sha256": "47f447b8f36f501ca8899a3fbf8684fff0a0944cd2d0f9c3e294cdc0fa6ed0e6"
+        },
+        {
+          "file": "shared-types.log",
+          "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "stage-config-readback.json",
+          "sha256": "c3e64eb93c617743edae660f847d5d2bbc63c57a958059bd3a42040d600fff77"
         }
       ]
     }

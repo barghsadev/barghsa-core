@@ -110,6 +110,7 @@ export class S3StorageProvider implements IFileStorageProvider {
       region: config.region,
       forcePathStyle: config.forcePathStyle ?? false,
       maxAttempts: config.maxRetries ?? 3,
+      ignoreConfiguredEndpointUrls: true,
       followRegionRedirects: false,
       requestHandler: { requestTimeout, throwOnRequestTimeout: true },
     };

@@ -60,23 +60,28 @@ it('refuses an unapproved stored origin instead of signing for it or falling bac
   );
 });
 
-it('preserves the standard AWS endpoint when no custom origin is configured', async () => {
-  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
-  const provider = runtimeStorageProvider(async () => ({
-    ...fields,
-    endpoint: '',
-    privateEndpointUrl: '',
-    publicEndpointUrl: '',
-    encryptedSecret: encryptStorageSecret('secret'),
-  }));
-  try {
-    const signed = new URL(await provider.presignedGetUrl('file'));
-    expect(signed.origin).toBe('https://s3.us-east-1.amazonaws.com');
-    expect(signed.pathname).toBe('/test-bucket/file');
-  } finally {
-    provider.destroy!();
+it.each(['AWS_ENDPOINT_URL', 'AWS_ENDPOINT_URL_S3'])(
+  'uses the regional AWS endpoint with an ambient %s override',
+  async (key) => {
+    vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+    vi.stubEnv(key, 'https://sdk-override.example.test');
+    vi.stubEnv('AWS_IGNORE_CONFIGURED_ENDPOINT_URLS', 'false');
+    const provider = runtimeStorageProvider(async () => ({
+      ...fields,
+      endpoint: '',
+      privateEndpointUrl: '',
+      publicEndpointUrl: '',
+      encryptedSecret: encryptStorageSecret('secret'),
+    }));
+    try {
+      const signed = new URL(await provider.presignedGetUrl('file'));
+      expect(signed.origin).toBe('https://s3.us-east-1.amazonaws.com');
+      expect(signed.pathname).toBe('/test-bucket/file');
+    } finally {
+      provider.destroy!();
+    }
   }
-});
+);
 
 it('requires approval for the SDK-derived bucket hostname before signing or connecting', async () => {
   vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
