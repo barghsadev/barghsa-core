@@ -18748,7 +18748,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "PR57/task03 remains partial: apply/read back production versioning/policy, reconcile previous unsafe or overlapping rules, verify MinIO server multipart settings and provider propagation. Future preview/superseded-document producers must prove disposal eligibility. No elapsed-day expiry or deployment claim.",
+        "Authenticated staging v0.5.1 readback confirmed enabled versioning and all five expected policy rules on the running object-store image. All four expiration rules require legal-hold=false and retain the five newest noncurrent versions. The seven-day bucket abort fallback remains enabled alongside the default 24-hour application worker. Verify the selected production storage policy, propagated rules, actual expiry and safe ownership of preview and superseded-file classification.",
         "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API."
       ],
       "owner": null,
@@ -18840,7 +18840,9 @@
           "packages/shared/src/storage/setup-bucket.ts",
           "packages/shared/src/storage/storage-provider.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-storage-sdk-endpoint-policy"
+        ],
         "current_acceptance": null
       }
     },
@@ -1254143,6 +1254145,7 @@
         "01-platform-infrastructure.md#T-03.02.01",
         "01-platform-infrastructure.md#T-04.03.01",
         "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.03",
         "01-platform-infrastructure.md#T-04.03.04",
         "01-platform-infrastructure.md#T-04.03.05",
         "01-platform-infrastructure.md#T-07.02.04",
@@ -1254193,10 +1254196,12 @@
       "checks": [
         "The installed S3 SDK supports endpoint overrides through its own environment and shared profile configuration. The runtime client uses the SDK option that disables those implicit endpoint sources. Explicit protected endpoints and the standard AWS credential chain still apply.",
         "Both AWS endpoint override cases presigned for the standard regional AWS origin with the original path. The explicit protected provider, virtual-host checks and storage unit suite passed 55 cases. Compiled API against migrated PostgreSQL passed all 26 storage configuration cases. Reused the exact build for 23 worker cleanup and destruction cases.",
-        "Shared typecheck, scoped lint, formatting and diff checks passed. A read-only staging v0.5.1 container check found no ambient override keys and an explicit private S3 endpoint in API, worker and AI inference."
+        "Shared typecheck, scoped lint, formatting and diff checks passed. A read-only staging v0.5.1 container check found no ambient override keys and an explicit private S3 endpoint in API, worker and AI inference.",
+        "The live staging S3 provider returned enabled bucket versioning and the exact five tagged expiration and multipart rules. The isolated readback uses no object writes and records the running provider image ID and v0.5.1 release identity."
       ],
       "limitations": [
-        "The runtime storage change is local until protected publication and accepted staging deployment. It does not establish process-wide egress controls or final live provider acceptance."
+        "The runtime storage change is local until protected publication and accepted staging deployment. It does not establish process-wide egress controls or final live provider acceptance.",
+        "Staging bucket policy readback is not elapsed-day expiration, production provider propagation, or proof of independent legal-hold enforcement."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-sdk-endpoint-policy",
       "execution_receipts": [
@@ -1254231,6 +1254236,10 @@
         {
           "file": "stage-config-readback.json",
           "sha256": "c3e64eb93c617743edae660f847d5d2bbc63c57a958059bd3a42040d600fff77"
+        },
+        {
+          "file": "stage-lifecycle-readback.json",
+          "sha256": "127de9aa126059037d1c6ca2edbb141b9c076be87326b34badc69e6cd7488198"
         }
       ]
     }
