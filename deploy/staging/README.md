@@ -200,11 +200,13 @@ scan directory. A failed scan or license check stops the release before transfer
 App and web transfer tags include the full
 source revision and image ID, so a rebuild cannot replace a rollback tag. The
 release checks the loaded app and web image IDs against the candidate manifest before
-startup and reads back the running API, worker, AI inference and web image IDs
-before saving the active manifest and announcing the release. It also checks
-the OCI revision labels on the app and web images against the release commit,
-and verifies the running PostgreSQL and ClamAV image IDs before migrations
-and at the end of the rollout. The worker saves the commit and four verified
+startup. For an initialized installation, the worker resolves the retained
+PostgreSQL and ClamAV tags to exact image IDs before building or transferring
+images and pins those IDs in the candidate manifest. The release checks the
+OCI revision labels on the app and web images, verifies the running
+PostgreSQL and ClamAV IDs before migration, and reads back all four IDs
+before saving the active manifest. The worker compares the four running IDs
+with the candidate manifest and saves the commit and verified
 Docker image IDs in its protected `runtime-images.json` before sending the
 Telegram note. A completed job includes the same receipt under `runtime_images`
 in `job.json`. Its `image_scans` field indexes the scan receipts and their

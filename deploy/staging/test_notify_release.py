@@ -272,10 +272,18 @@ elif name=='ssh' and args[-1].startswith('bash -c '):
     sys.exit(subprocess.run(['bash','-c',args[-1]],input=archive).returncode)
 elif name=='ssh' and args[-1]=='test -r /etc/barghsa/staging/active-images.env': sys.exit(int(os.environ['FRESH_STAGING']))
 elif name=='ssh' and 'grep -E' in args[-1] and os.environ['FRESH_STAGING']=='0': print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
+elif name=='ssh' and args[-1].startswith('docker image inspect '):
+    print('sha256:'+'d'*64)
+    print('unknown' if os.environ.get('INVALID_RETAINED_ID') else 'sha256:'+'e'*64)
+elif name=='scp' and pathlib.Path(args[-2]).name=='candidate.env':
+    manifest=dict(line.split('=',1) for line in pathlib.Path(args[-2]).read_text().splitlines())
+    assert manifest['BARGHSA_POSTGRES_IMAGE_ID']=='sha256:'+'d'*64
+    assert manifest['BARGHSA_CLAMAV_IMAGE_ID']=='sha256:'+'e'*64
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
     if not os.environ.get('MISSING_IMAGES'):
         app='f' if os.environ.get('WRONG_IMAGES') else 'b'
-        print('BARGHSA_STAGING_RUNTIME_IMAGES_V1','a'*40,*('sha256:'+c*64 for c in (app,'c','d','e')))
+        clamav='f' if os.environ.get('WRONG_RETAINED_ID') else 'e'
+        print('BARGHSA_STAGING_RUNTIME_IMAGES_V1','a'*40,*('sha256:'+c*64 for c in (app,'c','d',clamav)))
     sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
 """
         for name in ["git", "python3", "ssh", "scp", "docker", "scan-runtime", "sha256sum"]:
@@ -300,6 +308,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         bundle_sha = hashlib.sha256((bundle / "bundle.json").read_bytes()).hexdigest()
         scenarios = [(failure, False, False) for failure in (
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
+            "INVALID_RETAINED_ID", "WRONG_RETAINED_ID",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True)]:
@@ -355,6 +364,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     self.assertLess(calls.index(readiness), calls.index(preflight))
                 if failure in {"FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
+                elif failure == "INVALID_RETAINED_ID":
+                    self.assertIn("Invalid PostgreSQL or ClamAV image ID", result.stderr)
+                    self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))
                 elif prebuilt:
                     self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ",
                                                           "python3 scripts/check-release-licenses.py ")) for line in calls))

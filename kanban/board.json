@@ -19858,7 +19858,8 @@
           "integrated-qa-preview-deployment",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -19878,7 +19879,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -19890,7 +19891,8 @@
             }
           ],
           "checks": [
-            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "source_renewals": [
             {
@@ -20026,6 +20028,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ]
         }
@@ -23294,7 +23304,8 @@
         "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
         "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released.",
         "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal.",
-        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
+        "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -23345,7 +23356,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
-          "release-0.6-local-staging-runner-rehearsal"
+          "release-0.6-local-staging-runner-rehearsal",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": null
       }
@@ -23540,7 +23552,8 @@
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
           "release-0.6-public-staging-revision-smoke",
-          "release-0.6-staging-rollback-image-identity"
+          "release-0.6-staging-rollback-image-identity",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23564,11 +23577,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "512cd51d648b82a862b34ffdacb8441e54a0d7f21bd807a27f9b6dfc6f9ff398"
+              "sha256": "d207282942b63ba4e7f03831771144b56a62c4b9de14592a2a71b6527bea3fe8"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23586,7 +23599,8 @@
           "checks": [
             "The runbook defines severity, responsible roles, steps and verification for application, configuration, data and feature recovery.",
             "The criterion follows the existing expand/migrate/contract convention. Previous images require a current schema check. An incompatible schema keeps writers stopped and requires a verified roll-forward or authorized, reconciled recovery.",
-            "Nine staging rollback tests and 17 guarded rollout tests passed. The existing isolated staging rehearsal independently demonstrated rejection of an incompatible app/schema pair and readiness of the preserved pair."
+            "Nine staging rollback tests and 17 guarded rollout tests passed. The existing isolated staging rehearsal independently demonstrated rejection of an incompatible app/schema pair and readiness of the preserved pair.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "source_renewals": [
             {
@@ -23615,6 +23629,15 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ]
         }
@@ -23639,7 +23662,8 @@
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required.",
         "Each nightly shard now verifies the browser and shard against the Playwright result. The rollup requires all 40 receipts to carry the exact commit, run, attempt, project and shard. Local tests and both original failed hosted report samples verified the stricter check. A clean scheduled run and delivery remain required.",
-        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate."
+        "The 40 nightly shards now use a single SHA-bound build artifact. Local verification checked the restored app, auth and Ladle paths and rejected mismatched digests and commits. Verify artifact handoff and the complete scheduled rollup on the final candidate.",
+        "Manual hosted diagnostic 43504566627 runs the shared browser build on exact protected-preflight SHA dfe73b34a. Its dependency, source, migration and navigation job passed. The complete browser rollup and scheduled external delivery remain pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -23744,7 +23768,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-nightly-shared-build"
+          "release-0.6-nightly-shared-build",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": null
       }
@@ -31192,7 +31217,8 @@
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-web-server-tracing",
-          "release-0.6-rollback-runbook-acceptance"
+          "release-0.6-rollback-runbook-acceptance",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31201,7 +31227,8 @@
             "The Nest application writes the configured environment label before CORS, parsers and route handlers. The isolated native Linux HTTP test passed three cases covering normal, unauthorized, missing and malformed requests, health and metrics, spoofed request input and the invalid-label production fallback.",
             "The static server uses the same allowlist and renders the badge in lower-environment HTML. Vite dev returned the development header and badge through the real login entry. The stylesheet uses the existing per-response nonce. Chromium tested built login in Persian and English under enforced CSP, with the badge visible on staging and absent in production. No client bundle import was added.",
             "Thirty-eight web server and shutdown tests, both application builds and typechecks, lint, formatting, API contract, both CSP modes and all 102 bundle budgets passed. All three Compose configurations resolved the expected labels. Seven staging runtime tests passed, and the alternate Liara staging web archive contains the exact standalone runtime files.",
-            "The live staging rollout and its receipts remain separate release gates."
+            "The live staging rollout and its receipts remain separate release gates.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "source_evidence": [
             {
@@ -31246,7 +31273,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31511,6 +31538,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ]
         }
@@ -34254,7 +34289,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34262,7 +34298,8 @@
           "checks": [
             "The guide covers prerequisites, environment references, isolated pilot and staging deployment, commercial topology, upgrades, rollback, service configuration and monitoring.",
             "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately.",
-            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "source_evidence": [
             {
@@ -34283,7 +34320,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34752,6 +34789,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ]
         }
@@ -161839,7 +161884,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -162211,7 +162257,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -162463,7 +162509,8 @@
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -163320,6 +163367,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -637690,7 +637745,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -638062,7 +638118,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -638330,7 +638386,8 @@
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -639195,6 +639252,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -655847,7 +655912,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The reactivated same-origin favicon matched the uploaded PNG in Chromium and WebKit on live staging v0.5.1 at 18:16 UTC on November 13. The API observed zero image reports and one separate style-src-elem report from the 13:23 activation. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement."
+        "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement."
       ],
       "owner": null,
       "depends_on": [],
@@ -655866,7 +655931,8 @@
           "release-0.6-staging-favicon-later-activation",
           "release-0.6-staging-favicon-reactivation",
           "release-0.6-staging-favicon-observation-readback",
-          "release-0.6-staging-favicon-final-readback"
+          "release-0.6-staging-favicon-final-readback",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": null
       }
@@ -669512,7 +669578,8 @@
           "integrated-qa-preview-deployment",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -669524,7 +669591,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -669545,7 +669612,8 @@
           ],
           "checks": [
             "Reused the source-bound edge implementation evidence from 01-platform-infrastructure.md#T-04.04.03.",
-            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+            "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
           ],
           "source_renewals": [
             {
@@ -669681,6 +669749,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
             }
           ]
         }
@@ -678586,38 +678662,39 @@
         "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts.",
         "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required.",
         "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts.",
-        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts."
+        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
+        "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "deploy/staging/README.md",
-          "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md",
           ".github/workflows/ci.yml",
-          "deploy/staging/Dockerfile.postgres",
-          "deploy/staging/build-postgres-image.sh",
-          "deploy/staging/deploy.sh",
-          "deploy/staging/test_notify_release.py",
-          "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md",
-          "deploy/staging/release-queue.py",
-          "deploy/staging/test_release_queue.py",
           "Dockerfile.base",
           "apps/worker/src/jobs/job-recorder.test.ts",
           "apps/worker/src/runtime-log-safety.test.ts",
-          "docs/operations/structured-logging.md",
-          "packages/db/src/index.ts",
-          "packages/shared/src/operator-logging.ts",
           "deploy/production/README.md",
           "deploy/production/check-promotion.py",
           "deploy/production/guarded-rollout.py",
           "deploy/production/test_check_promotion.py",
-          "deploy/production/test_guarded_rollout.py"
+          "deploy/production/test_guarded_rollout.py",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/README.md",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/operations/structured-logging.md",
+          "docs/security/release-license-review.md",
+          "packages/db/src/index.ts",
+          "packages/shared/src/operator-logging.ts",
+          "scripts/check-release-licenses.py",
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
@@ -678637,7 +678714,8 @@
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
           "release-0.6-postgres-cutover-preflight",
-          "release-0.6-license-candidate-39619e439"
+          "release-0.6-license-candidate-39619e439",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -698998,7 +699076,8 @@
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
         "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
         "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
-        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup."
+        "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
+        "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -699044,7 +699123,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
-          "release-0.6-local-staging-runner-rehearsal"
+          "release-0.6-local-staging-runner-rehearsal",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": null
       }
@@ -709340,7 +709420,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -709384,7 +709465,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -709399,7 +709480,8 @@
             "Added the private API Health Grafana dashboard with six panels: completed-response request rate, 5xx fraction, p50/p95/p99 latency, ten slowest routes, 4xx/5xx breakdown, and observed API replicas by immutable build SHA.",
             "Promtool 3.15.0 passed all eight exact dashboard queries and both rollout observations on the pinned monitoring image. Assertions cover separate environments and databases, merged histograms, idle intervals, zero observed errors, status breakdown and overlapping revisions. The JSON data source and non-overlapping layout were checked.",
             "The compiled Linux API passed all five native metrics HTTP cases with all 207 migrations. It published only a valid SHA on the private scrape, omitted the series for missing or invalid values, and retained the exact completed-response, route-collapse, privacy, readiness-exclusion and metrics outage-recovery assertions.",
-            "API TypeScript, changed-file ESLint, Prettier, whitespace and exact local-to-Linux source checks passed. The dashboard reads sampled revisions and completed responses. Deployment timestamp annotation, end-to-end availability and live Grafana import and readback have separate evidence."
+            "API TypeScript, changed-file ESLint, Prettier, whitespace and exact local-to-Linux source checks passed. The dashboard reads sampled revisions and completed responses. Deployment timestamp annotation, end-to-end availability and live Grafana import and readback have separate evidence.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "source_renewals": [
             {
@@ -709706,6 +709788,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ]
         }
@@ -718050,7 +718140,8 @@
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -718066,11 +718157,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "73557d0d463c46991b9acee71c32031fd89dc36fa67fd7f7a286ef3a76f01d26"
+              "sha256": "d099c10f50996522de98d2c8de2c9e56329dc6ddb30c41c07dbc6e261015aa62"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -718157,7 +718248,8 @@
             "A compiled API on disposable PostgreSQL with 207 production migrations sent one authenticated TLS envelope to the isolated Sentry protocol receiver. Its accepted payload has the exact built release SHA and support reference and excludes the private referer. All four HTTP cases and 24 unit cases passed, including authorization, privacy, bounded receipts and the missing or invalid revision fallback.",
             "Staging and hosted CI use the same full revision build argument for API and web images. The existing deployment stub verifies both invocations and retained acceptance, Telegram preflight, rollback and notification boundaries. All 15 release tool cases passed. TypeScript, ESLint, Prettier, actionlint, shellcheck and the whitespace check passed.",
             "The executable route source outside the release field, the runtime image outside its build metadata, and the CI and staging scripts outside their build argument are byte-identical. This verifies the integration test criterion. The stored prior staging event and future live release correlation are separate evidence.",
-            "Outbound events are constructed from the fixed process and error identifiers, validated build SHA, deployment environment, a server-generated event ID or browser support reference, and the matched API route template. They do not serialize raw errors, stack traces, request data, cookies, finance details or job payloads. The compiled HTTPS test verified browser, protected API and real worker process payloads and no report for a rejected 401."
+            "Outbound events are constructed from the fixed process and error identifiers, validated build SHA, deployment environment, a server-generated event ID or browser support reference, and the matched API route template. They do not serialize raw errors, stack traces, request data, cookies, finance details or job payloads. The compiled HTTPS test verified browser, protected API and real worker process payloads and no report for a rejected 401.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "source_renewals": [
             {
@@ -718666,6 +718758,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ]
         }
@@ -721824,7 +721925,8 @@
           "release-0.6-local-staging-license-gate",
           "release-0.6-immutable-board-readiness",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -721856,7 +721958,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -721874,7 +721976,8 @@
           "checks": [
             "The app and web runtime stages carry org.opencontainers.image.revision from BARGHSA_RELEASE_SHA. Existing CI and staging image build commands supply the complete checked-out SHA. The pilot supplies the same build argument for its four application services.",
             "Native staging-host Docker fixtures added the exact app and web Dockerfile instructions to cached images without a full build. The Docker JSON driver exposed the corresponding distinct revisions with both stdout and stderr via docker logs --details. A different runtime release environment value, synthetic private environment value, and unrelated label did not appear in the log details or replace the image revision.",
-            "Docker Compose normalized all four manifests with fixture inputs. API, worker, inference, web, migration and operations services received the revision-only logging option wherever present. Staging database and infrastructure services kept their log settings. The packaging Compose checks, Prettier and diff checks passed."
+            "Docker Compose normalized all four manifests with fixture inputs. API, worker, inference, web, migration and operations services received the revision-only logging option wherever present. Staging database and infrastructure services kept their log settings. The packaging Compose checks, Prettier and diff checks passed.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "limitations": [
             "The native log proof used disposable metadata-only app and web images on the staging host. Check full candidate image identity and Docker log details after the accepted release is deployed.",
@@ -722118,6 +722221,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ]
         }
@@ -1050558,7 +1050669,8 @@
           "checks": [
             "python3 -m unittest discover -s deploy/staging -p test_*.py: 27 tests pass, including album bytes/API-array binding, two/ten-image grouping, immutable selection, unknown outcomes, legacy receipt preservation and queue album cap.",
             "Diff review: no new live send; exact deployment/channel guards, main-note confirmation, immutable runner, detached execution and unknown-send policy retain their ownership.",
-            "Telegram sendMediaGroup primary API confirms one album accepts 2–10 items. One photo uses sendPhoto; multiple captures use one album and one durable release-level receipt."
+            "Telegram sendMediaGroup primary API confirms one album accepts 2–10 items. One photo uses sendPhoto; multiple captures use one album and one durable release-level receipt.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "source_evidence": [
             {
@@ -1050567,15 +1050679,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "73557d0d463c46991b9acee71c32031fd89dc36fa67fd7f7a286ef3a76f01d26"
+              "sha256": "d099c10f50996522de98d2c8de2c9e56329dc6ddb30c41c07dbc6e261015aa62"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "e6800c5197780818c71ceb1f1b71045003a4e6661c156d322c8d52fd07b6cbb7"
+              "sha256": "b3152790756e4d8510cb09ebbb4721ac6c0325b4a0388d2963bcab5386e11156"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1050661,6 +1050773,16 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "The existing staging release fixture now requires fresh signed package metadata for initial PostgreSQL builds. Its image build, scan, license check, transfer and delivery ordering assertions still pass."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ]
         },
@@ -1050669,7 +1050791,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-local-staging-license-gate",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-postgres-cutover-preflight"
+          "release-0.6-postgres-cutover-preflight",
+          "release-0.6-retained-staging-image-identities"
         ]
       }
     },
@@ -1063803,7 +1063926,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1063811,7 +1063934,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1063823,7 +1063946,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1064773,7 +1064896,8 @@
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "limitations": [],
           "operational_limits": [
@@ -1066894,6 +1067018,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ],
           "presentation_renewals": [
@@ -1067310,7 +1067444,8 @@
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-retained-staging-image-identities"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1069479,7 +1069614,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1069487,7 +1069622,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1069499,7 +1069634,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1070466,7 +1070601,8 @@
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -1072472,6 +1072608,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
+            },
+            {
+              "batch": "release-0.6-retained-staging-image-identities",
+              "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1072905,7 +1073051,8 @@
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-retained-staging-image-identities"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1078534,7 +1078681,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO. The approval check now verifies core-service elapsed time and the four service journey receipts alongside the database exercise.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "The reactivated same-origin favicon matched the uploaded PNG in Chromium and WebKit on live staging v0.5.1 at 18:16 UTC on November 13. The API observed zero image reports and one separate style-src-elem report from the 13:23 activation. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
+        "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "On live v0.5.1, ClamD loaded daily 28182. The current vendor versions matched all three signed EU mirror archives. The local compiled candidate verified clean and quarantined documents and retry against the live scanner with disposable state. Deploy the approved application and monitoring configuration together and verify the deployed signature metric, scanner recovery and external alert delivery.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts.",
@@ -1078590,7 +1078737,8 @@
           "release-0.6-protected-main-and-staging-capacity-readback",
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-staging-preflight-readback"
+          "release-0.6-staging-preflight-readback",
+          "release-0.6-retained-staging-image-identities"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1253506,6 +1253654,106 @@
         {
           "file": "staging-health-after.json",
           "sha256": "6ce0cf76fa2d9438e5cc8a2f3fedc33b9e3d14f3c8fef186dfe5d05177228b66"
+        }
+      ]
+    },
+    "release-0.6-retained-staging-image-identities": {
+      "batch": "release-0.6-retained-staging-image-identities",
+      "base_commit": "deac3a82b489a7ec37f6b85fcedd0c632dfe020e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "d099c10f50996522de98d2c8de2c9e56329dc6ddb30c41c07dbc6e261015aa62"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "b3152790756e4d8510cb09ebbb4721ac6c0325b4a0388d2963bcab5386e11156"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "d207282942b63ba4e7f03831771144b56a62c4b9de14592a2a71b6527bea3fe8"
+        }
+      ],
+      "checks": [
+        "The initialized worker resolves exact retained image IDs from the validated active tags. New and existing installation manifests both include all four IDs. The runtime worker receipt verifies the staged PostgreSQL and ClamAV IDs alongside app and web before sending the release note.",
+        "All 60 staging tests and 11 promotion verifier caller tests passed. The staged path covers malformed retained IDs before Docker or transfer, a valid but mismatched retained ID before notification, the bootstrap path, the prebuilt bundle and rollback. Bash parse, ShellCheck and guide formatting passed.",
+        "Read-only live staging v0.5.1 verification matched both retained tags to the running container IDs. The public original PNG was byte-identical and carried private no-store. No new CSP reports were observed since the earlier browser verification.",
+        "Manual exact-SHA browser diagnostic 43504566627 verified the shared build and dependency/migration/navigation job. Browser shards remain in progress."
+      ],
+      "limitations": [
+        "The isolated fixture run validates candidate and runtime identity. Initialized installations still require separately verified retained stateful scans and SBOMs. The running PostgreSQL image has a previously recorded failing scan and must be replaced through the approved backup and cutover.",
+        "The diagnostic browser run does not supply scheduled delivery or final accepted candidate evidence. No new staging version or Telegram message was published."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-retained-staging-image-identities",
+      "execution_receipts": [
+        {
+          "file": "checks.json",
+          "sha256": "c3028bb4199f01330e582d18e812a199d493cad64ed70895aa36e548abf8880d"
+        },
+        {
+          "file": "staging-tests-final.log",
+          "sha256": "d7b75302b947250a253bb307b368cd728a3d60dbb0b16a61662adea1cde2f0de"
+        },
+        {
+          "file": "promotion-check-tests.log",
+          "sha256": "d5095b239359d2594b057c065ce365ce140413f6dccdc046d5fe5391d8a2d866"
+        },
+        {
+          "file": "shell-parse.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "shellcheck.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format-guide.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "staging-readback.json",
+          "sha256": "fefa64ccbfab78b7f88a817825afa0750180d498220858b4d381a35d959e6536"
         }
       ]
     }

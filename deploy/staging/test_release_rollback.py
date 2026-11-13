@@ -177,9 +177,17 @@ verify_running_image() {
 ssh_args=(-o BatchMode=yes)
 remote=fixture
 ssh() {{
-  [[ $1 == -o && $2 == BatchMode=yes && $3 == fixture && $4 == *POSTGRES_VOLUME* ]] || return 3
-  if [[ $READ_STATUS != 0 ]]; then return "$READ_STATUS"; fi
-  printf '%s' "$STATEFUL"
+  [[ $1 == -o && $2 == BatchMode=yes && $3 == fixture ]] || return 3
+  case $4 in
+    *POSTGRES_VOLUME*)
+      if [[ $READ_STATUS != 0 ]]; then return "$READ_STATUS"; fi
+      printf '%s' "$STATEFUL"
+      ;;
+    'docker image inspect '*)
+      printf 'sha256:%064d\\nsha256:%064d\\n' 1 2
+      ;;
+    *) return 3 ;;
+  esac
 }}
 {selection}
   echo bootstrap

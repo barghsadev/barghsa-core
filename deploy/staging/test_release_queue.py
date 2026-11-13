@@ -28,10 +28,12 @@ class RuntimeImageReceiptTests(unittest.TestCase):
             (receipt.replace(commit, "f" * 40), "does not match the queued commit"),
             (receipt.replace(postgres, "postgres:latest"), "invalid image ID"),
             (receipt.replace(web, app), "differs from the transferred image"),
+            (receipt.replace(postgres, app), "differs from the candidate manifest"),
+            (receipt.replace(clamav, web), "differs from the candidate manifest"),
         ):
             with self.subTest(error=error):
                 with self.assertRaisesRegex(ValueError, error):
-                    queue.verify_images(log, commit, app, web)
+                    queue.verify_images(log, commit, app, web, postgres, clamav)
 
     def test_binds_scan_receipts_and_artifact_checksums_to_running_images(self):
         image_ids = {scope: "sha256:" + character * 64 for scope, character in

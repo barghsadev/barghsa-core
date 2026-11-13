@@ -29,8 +29,6 @@ ssh_args=(-p "$port" -o BatchMode=yes)
 scp_args=(-P "$port" -o BatchMode=yes)
 
 images=()
-postgres_id=
-clamav_id=
 postgres_volume=barghsa-staging_pgdata
 stateful=$(ssh "${ssh_args[@]}" "$remote" \
   "if test -e /etc/barghsa/staging/active-images.env; then grep -E '^BARGHSA_(POSTGRES_IMAGE|POSTGRES_VOLUME|CLAMAV_IMAGE)=' /etc/barghsa/staging/active-images.env; fi")
@@ -49,6 +47,14 @@ if [[ -n "$stateful" ]]; then
     echo 'Invalid active PostgreSQL volume name on VPS' >&2
     exit 1
   }
+  # shellcheck disable=SC2029 # Both tags are restricted to the validated local image names above.
+  stateful_ids=$(ssh "${ssh_args[@]}" "$remote" \
+    "docker image inspect --format '{{.Id}}' '$postgres_image' '$clamav_image'")
+  read -r postgres_id clamav_id extra <<< "${stateful_ids//$'\n'/ }"
+  [[ -z "$extra" ]] || {
+    echo 'Expected exactly two retained stateful image IDs' >&2
+    exit 1
+  }
   echo 'Keeping the existing PostgreSQL and ClamAV images and volumes' >&2
 else
   if [[ -n "$bundle_dir" ]]; then
@@ -62,11 +68,11 @@ else
   images+=("$postgres_image" "$clamav_image")
   postgres_id=$(docker image inspect --format '{{.Id}}' "$postgres_image")
   clamav_id=$(docker image inspect --format '{{.Id}}' "$clamav_image")
-  [[ "$postgres_id" =~ ^sha256:[0-9a-f]{64}$ && "$clamav_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
-    echo 'Invalid initial PostgreSQL or ClamAV image ID' >&2
-    exit 1
-  }
 fi
+[[ "$postgres_id" =~ ^sha256:[0-9a-f]{64}$ && "$clamav_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+  echo 'Invalid PostgreSQL or ClamAV image ID' >&2
+  exit 1
+}
 
 if [[ -z "$bundle_dir" ]]; then
   docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
@@ -114,7 +120,7 @@ else
   echo "Scanning release images; evidence: $scan_dir" >&2
   bash scripts/check-runtime-images.sh "$scan_dir" "${images[@]}"
   license_mode=initialized
-  if [[ -n "$postgres_id" ]]; then
+  if [[ -z "$stateful" ]]; then
     license_mode=bootstrap
   fi
   python3 scripts/check-release-licenses.py "$scan_dir" "$commit" \
@@ -147,20 +153,20 @@ BARGHSA_APP_IMAGE_ID=$app_id
 BARGHSA_WEB_IMAGE=$web_image
 BARGHSA_WEB_IMAGE_ID=$web_id
 BARGHSA_POSTGRES_IMAGE=$postgres_image
+BARGHSA_POSTGRES_IMAGE_ID=$postgres_id
 BARGHSA_POSTGRES_VOLUME=$postgres_volume
 BARGHSA_CLAMAV_IMAGE=$clamav_image
+BARGHSA_CLAMAV_IMAGE_ID=$clamav_id
 EOF
-if [[ -n "$postgres_id" ]]; then
-  printf 'BARGHSA_POSTGRES_IMAGE_ID=%s\nBARGHSA_CLAMAV_IMAGE_ID=%s\n' "$postgres_id" "$clamav_id" >> "$manifest"
-fi
 candidate="/etc/barghsa/staging/candidate-$tag-${app_id#sha256:}-${web_id#sha256:}.env"
 scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 # shellcheck disable=SC2029 # The fixed candidate path is intentionally expanded locally.
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
 # shellcheck disable=SC2029 # Pass the same locally constructed path to the VPS.
 ssh "${ssh_args[@]}" "$remote" "/usr/local/sbin/barghsa-staging-release $candidate" | tee "$release_tmp/release.log"
-verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id" --release-log "$release_tmp/release.log" --scan-dir "$scan_dir")
-if [[ -n "$postgres_id" ]]; then
+verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id"
+  --postgres-id "$postgres_id" --clamav-id "$clamav_id" --release-log "$release_tmp/release.log" --scan-dir "$scan_dir")
+if [[ -z "$stateful" ]]; then
   verify+=(--includes-stateful)
 fi
 if [[ -n "$receipt" ]]; then

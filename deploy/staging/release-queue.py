@@ -28,7 +28,7 @@ def save(path, value):
     temporary.replace(path)
 
 
-def verify_images(log, commit, app_id, web_id):
+def verify_images(log, commit, app_id, web_id, postgres_id, clamav_id):
     marker = "BARGHSA_STAGING_RUNTIME_IMAGES_V1 "
     records = [line.removeprefix(marker).split() for line in log.splitlines() if line.startswith(marker)]
     if len(records) != 1 or len(records[0]) != 5:
@@ -40,6 +40,8 @@ def verify_images(log, commit, app_id, web_id):
         raise ValueError("Staging runtime image receipt contains an invalid image ID")
     if image_ids[:2] != [app_id, web_id]:
         raise ValueError("Staging runtime app or web image ID differs from the transferred image")
+    if image_ids[2:] != [postgres_id, clamav_id]:
+        raise ValueError("Staging runtime PostgreSQL or ClamAV image ID differs from the candidate manifest")
     return {"schema_version": 1, "commit": revision,
             "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
 
@@ -312,6 +314,8 @@ def main():
     verify.add_argument("--commit", required=True)
     verify.add_argument("--app-id", required=True)
     verify.add_argument("--web-id", required=True)
+    verify.add_argument("--postgres-id", required=True)
+    verify.add_argument("--clamav-id", required=True)
     verify.add_argument("--release-log", required=True, type=Path)
     verify.add_argument("--scan-dir", required=True, type=Path)
     verify.add_argument("--includes-stateful", action="store_true")
@@ -336,7 +340,8 @@ def main():
         print(version)
         return 0
     if args.action == "verify-images":
-        receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit, args.app_id, args.web_id)
+        receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit,
+                                args.app_id, args.web_id, args.postgres_id, args.clamav_id)
         ids = receipt["image_ids"]
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
         licensed_ids = {scope: ids[scope] for scope in ("app", "web")}
