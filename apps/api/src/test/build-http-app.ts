@@ -8,6 +8,10 @@ export function setup(): void {
   // shared outputs while other suites import them. Standalone runs still build.
   if (process.env['BARGHSA_TEST_PREBUILT'] === '1') return;
   const require = createRequire(__filename);
+  execFileSync('pnpm', ['--filter', '@barghsa/telemetry', 'build'], {
+    cwd: resolve(__dirname, '../../../..'),
+    stdio: 'pipe',
+  });
   execFileSync(
     'pnpm',
     [

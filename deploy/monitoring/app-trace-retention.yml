@@ -13,6 +13,9 @@ services:
   ai-inference:
     environment: *tempo-trace-environment
     networks: [trace-ingest]
+  web:
+    environment: *tempo-trace-environment
+    networks: [trace-ingest]
 
 networks:
   trace-ingest:

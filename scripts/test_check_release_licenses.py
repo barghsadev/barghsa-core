@@ -118,6 +118,16 @@ class LicenseCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Missing SBOM package URL'):
             list(licenses.image_components(bom | {'dependencies': []}))
 
+    def test_first_party_telemetry_keeps_its_third_party_runtime_in_the_inventory(self):
+        internal = 'pkg:npm/%40barghsa/telemetry@0.0.0'
+        sdk = 'pkg:npm/%40opentelemetry/sdk-trace@2.11.0'
+        bom = {'components': [
+            {'bom-ref': 'internal', 'type': 'library', 'purl': internal},
+            {'bom-ref': 'sdk', 'type': 'library', 'purl': sdk},
+        ], 'dependencies': [{'ref': 'internal', 'dependsOn': ['sdk']}]}
+        self.assertEqual(list(licenses.image_components(bom)), [(sdk, ())])
+        self.assertEqual(licenses.disposition('web', sdk, (), {}), ('review-required', None))
+
     def test_postgres_go_license_fallback_requires_exact_notices_and_versions(self):
         files = {'gosu.LICENSE': b'license', 'go-stdlib.PATENTS': b'patents'}
         expected = {name: licenses.digest(data) for name, data in files.items()}

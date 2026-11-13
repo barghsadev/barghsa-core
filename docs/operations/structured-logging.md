@@ -206,6 +206,13 @@ configured internal inference service. The service extracts it after
 authenticating the request. Provider calls omit this header. Prompts, replies,
 model IDs and credentials stay out of both spans. Verify this relationship
 on the deployed collector alongside the separate web and queue checks.
+
+The static server exports `barghsa-web` spans with a fixed HTTP method and
+status. The server accepts one valid W3C parent and starts a new trace for
+malformed or duplicate values. Asset names, navigation paths, query values and
+credentials stay out of these spans. Static delivery failures include the
+trace and span IDs in the existing JSON log stream. Browser API requests are
+routed separately at the edge and have their own server spans.
 [W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)
 
 The Jaeger rehearsal used the v2.23.0 source with Go 1.27.4 and the
@@ -226,7 +233,7 @@ Use `deploy/monitoring/trace-retention.yml` with verified immutable Alloy
 and Tempo images. Supply `BARGHSA_ALLOY_IMAGE`, `BARGHSA_TEMPO_IMAGE`,
 `BARGHSA_TRACE_INGEST_NETWORK`, `BARGHSA_TEMPO_QUERY_NETWORK` and
 `BARGHSA_TEMPO_STORAGE_ENV_FILE` in the operator's Compose environment.
-Create separate internal networks for approved API, worker and inference senders and
+Create separate internal networks for approved API, worker, inference and web senders and
 for authenticated Grafana query access. The service publishes no host ports.
 Tempo reaches its S3 endpoint through a separate network.
 
@@ -239,7 +246,7 @@ storage and retention. Keep the `tempo-data` volume for the WAL and
 scheduler state across service recreation. Validate the configuration with
 `docker compose config --quiet`.
 
-Use `deploy/monitoring/app-trace-retention.yml` for API, worker and inference writers
+Use `deploy/monitoring/app-trace-retention.yml` for API, worker, inference and web writers
 assigned to this collector. It connects those services to the sender network
 and sends their sanitized spans to Alloy for sampling. The collector selects
 10% of ordinary traces for the 7-day tenant. It preserves error spans and

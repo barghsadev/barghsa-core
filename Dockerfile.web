@@ -9,15 +9,17 @@ ARG BARGHSA_RELEASE_SHA
 ENV BARGHSA_RELEASE_SHA=$BARGHSA_RELEASE_SHA
 ENV BARGHSA_LICENSE_INVENTORY_DIR=/app/browser-license-inventory
 RUN pnpm -r --filter @barghsa/web... build
+RUN pnpm --filter @barghsa/telemetry deploy --prod /out/telemetry
 
 FROM node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 AS production
 WORKDIR /app
-# The static server only needs Node at runtime.
+# Keep the server's telemetry dependencies separate from the browser workspace.
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
   && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 COPY --from=build /app/apps/web/package.json ./package.json
 COPY --from=build /app/apps/web/dist ./dist
 COPY --from=build /app/browser-license-inventory ./browser-license-inventory
+COPY --from=build /out/telemetry ./node_modules/@barghsa/telemetry
 COPY apps/web/server.js apps/web/healthcheck.js apps/web/entry-routes.js apps/web/environment-indicator.js ./
 ARG BARGHSA_RELEASE_SHA
 LABEL org.opencontainers.image.revision=$BARGHSA_RELEASE_SHA

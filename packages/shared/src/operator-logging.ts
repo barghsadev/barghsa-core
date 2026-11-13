@@ -1,6 +1,9 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
 import { pino, type DestinationStream } from 'pino';
+import { deploymentEnvironment } from '@barghsa/telemetry/environment';
+
+export { deploymentEnvironment };
 
 export const operatorLogCorrelation = new AsyncLocalStorage<string>();
 export const operatorLogTrace = new AsyncLocalStorage<{
@@ -26,14 +29,6 @@ export function currentTraceparent(): string | null {
 
 export function isCorrelationId(value: unknown): value is string {
   return typeof value === 'string' && value.length === 36 && UUID.test(value);
-}
-
-export function deploymentEnvironment() {
-  const configured = process.env.BARGHSA_DEPLOYMENT_ENV ?? process.env.NODE_ENV;
-  if (configured === 'staging' || configured === 'development' || configured === 'test') {
-    return configured;
-  }
-  return configured === undefined ? 'development' : 'production';
 }
 
 type Level = 'debug' | 'info' | 'warn' | 'error' | 'fatal';

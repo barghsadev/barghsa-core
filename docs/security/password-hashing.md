@@ -13,7 +13,7 @@ Leave the variables unset to use the defaults. Out-of-range values prevent the p
 Build the shared package before running the benchmark. It uses synthetic input and reports hash and verification latency, four concurrent verifications and peak process memory.
 
 ```sh
-pnpm --filter @barghsa/shared build
+pnpm exec turbo build --filter=@barghsa/shared
 node apps/api/scripts/benchmark-password-hash.mjs
 PASSWORD_ARGON2_MEMORY_KIB=65536 node apps/api/scripts/benchmark-password-hash.mjs
 ```

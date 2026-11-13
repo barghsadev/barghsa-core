@@ -23,7 +23,7 @@ otelcol.processor.filter "producers" {
 
 	traces {
 		span = [
-			`resource.attributes["service.name"] != "barghsa-api" and resource.attributes["service.name"] != "barghsa-worker"`,
+			`resource.attributes["service.name"] != "barghsa-api" and resource.attributes["service.name"] != "barghsa-worker" and resource.attributes["service.name"] != "barghsa-ai-inference" and resource.attributes["service.name"] != "barghsa-web"`,
 			`resource.attributes["deployment.environment.name"] != "staging" and resource.attributes["deployment.environment.name"] != "production"`,
 		]
 	}

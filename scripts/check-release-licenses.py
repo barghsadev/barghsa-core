@@ -22,7 +22,7 @@ STAGING_SCOPES = {
 }
 FIRST_PARTY = {
     'pkg:npm/%40barghsa/' + package + '@0.0.0'
-    for package in ('api', 'db', 'i18n', 'shared', 'ui', 'web', 'worker')
+    for package in ('api', 'db', 'i18n', 'shared', 'telemetry', 'ui', 'web', 'worker')
 }
 FONT_FILES = {
     '84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957': 'vazirmatn@5.3.0',

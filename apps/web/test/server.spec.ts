@@ -4,7 +4,8 @@ import type { Server } from 'node:http';
 import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { request } from 'node:http';
+import { createServer, request } from 'node:http';
+import { createTraceProvider } from '@barghsa/telemetry';
 import { compressStaticAssets } from '../compress-static-assets.mjs';
 
 const compressibleScript = 'console.log("static");\n'.repeat(256);
@@ -94,6 +95,79 @@ describe('static server', () => {
     const res = await fetch(server, '/');
     expect(res.status).toBe(200);
     expect(res.body).toContain('Home');
+  });
+
+  it('exports privacy-safe server spans and starts a fresh trace for duplicate context', async () => {
+    const exports: Array<{
+      resourceSpans: Array<{
+        resource: { attributes: unknown[] };
+        scopeSpans: Array<{ spans: Array<Record<string, unknown>> }>;
+      }>;
+    }> = [];
+    const collector = createServer(async (incoming, response) => {
+      const chunks: Buffer[] = [];
+      for await (const chunk of incoming) chunks.push(Buffer.from(chunk));
+      exports.push(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+      response.writeHead(200, { 'content-type': 'application/json' }).end('{}');
+    });
+    await new Promise<void>((resolve) => collector.listen(0, '127.0.0.1', resolve));
+    const address = collector.address();
+    if (!address || typeof address === 'string') throw new Error('Collector port missing');
+    vi.stubEnv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT', `http://127.0.0.1:${address.port}/v1/traces`);
+    vi.stubEnv('OTEL_EXPORTER_OTLP_TRACES_HEADERS', '');
+    vi.stubEnv('OTEL_EXPORTER_OTLP_HEADERS', '');
+    vi.stubEnv('OTEL_TRACE_SUCCESS_SAMPLE_RATE', '1');
+    vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', 'staging');
+    const provider = createTraceProvider('barghsa-web')!;
+    const traced = createStaticServer({ distDir, traceProvider: provider });
+    try {
+      await new Promise<void>((resolve) => traced.listen(0, '127.0.0.1', resolve));
+      const traceId = 'a3'.repeat(16),
+        parent = 'a4'.repeat(8);
+      const traceparent = `00-${traceId}-${parent}-01`;
+      const login = await fetch(traced, '/activate/private-link?secret=private-query', 'GET', {
+        traceparent,
+        cookie: 'fixture-private-cookie',
+        baggage: 'private-baggage=discard',
+        tracestate: 'private-state=discard',
+      });
+      expect(login.status).toBe(200);
+      expect(login.body).toContain('Authentication');
+      expect(login.headers['cache-control']).toContain('no-store');
+      expect(login.headers.traceparent).toBeUndefined();
+      const missing = await fetch(traced, '/assets/missing.js', 'HEAD', {
+        traceparent: `${traceparent}, ${traceparent}`,
+      });
+      expect(missing.status).toBe(404);
+      await provider.forceFlush();
+      const resources = exports.flatMap(({ resourceSpans }) => resourceSpans);
+      expect(resources[0]?.resource.attributes).toEqual(
+        expect.arrayContaining([
+          { key: 'service.name', value: { stringValue: 'barghsa-web' } },
+          { key: 'deployment.environment.name', value: { stringValue: 'staging' } },
+        ])
+      );
+      const spans = resources.flatMap(({ scopeSpans }) => scopeSpans.flatMap(({ spans }) => spans));
+      expect(spans).toHaveLength(2);
+      expect(spans.find(({ name }) => name === 'HTTP GET')).toMatchObject({
+        traceId,
+        parentSpanId: parent,
+        kind: 2,
+        attributes: expect.arrayContaining([
+          { key: 'http.response.status_code', value: { intValue: 200 } },
+        ]),
+      });
+      const restarted = spans.find(({ name }) => name === 'HTTP HEAD');
+      expect(restarted?.traceId).toMatch(/^[a-f0-9]{32}$/);
+      expect(restarted?.traceId).not.toBe(traceId);
+      expect(restarted).not.toHaveProperty('parentSpanId');
+      expect(JSON.stringify(spans)).not.toMatch(/private-|missing\.js/);
+    } finally {
+      vi.unstubAllEnvs();
+      await new Promise<void>((resolve) => traced.close(() => resolve()));
+      await provider.shutdown();
+      await new Promise<void>((resolve) => collector.close(() => resolve()));
+    }
   });
 
   it.each([

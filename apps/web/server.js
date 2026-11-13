@@ -6,7 +6,7 @@
  * - Immutable Cache-Control for content-hashed assets (match vite.config.ts)
  * - SPA fallback: all non-file requests serve index.html (client-side routing)
  * - Graceful shutdown on SIGTERM/SIGINT: drain active connections
- * - No external dependencies — uses only Node.js built-in modules
+ * - Optional OpenTelemetry export to a configured collector
  *
  * Port is read from the `PORT` environment variable (default 3000).
  * Shutdown grace period is configurable via `SHUTDOWN_GRACE_PERIOD_MS` (default 30_000).
@@ -19,6 +19,7 @@ import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isAuthEntryPath } from './entry-routes.js';
 import { addEnvironmentIndicator } from './environment-indicator.js';
+import { createTraceProvider, observeStaticRequest } from '@barghsa/telemetry';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 const DEFAULT_DIST_DIR = resolve(__dirname, 'dist');
@@ -156,11 +157,13 @@ function preferredEncodings(header) {
  *
  * @param {object} [options]
  * @param {string} [options.distDir] Directory to serve (defaults to ../dist)
+ * @param {ReturnType<typeof createTraceProvider>} [options.traceProvider] Server-owned telemetry
  * @returns {import('node:http').Server & { shutdown: (signal?: string) => void }}
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
   const environment = webEnvironment();
+  const tracer = options.traceProvider?.getTracer('barghsa.web.http');
   const historyPreloads = readFile(join(distDir, '.vite', 'history-preloads.json'), 'utf8')
     .then((content) => JSON.parse(content))
     .catch(() => ({}));
@@ -191,6 +194,25 @@ export function createStaticServer(options = {}) {
     };
     res.once('finish', finish);
     res.once('close', finish);
+    if (tracer) {
+      const correlationId = randomUUID();
+      res.setHeader('X-Correlation-ID', correlationId);
+      observeStaticRequest(tracer, req, res, (traceId, spanId) => {
+        process.stderr.write(
+          JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'warn',
+            service: 'web',
+            environment,
+            correlationId,
+            event: 'web.request.failed',
+            traceId,
+            spanId,
+            ...(res.headersSent ? { status: res.statusCode } : {}),
+          }) + '\n'
+        );
+      });
+    }
     const url = req.url ?? '/';
     res.setHeader('X-Environment', environment);
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -355,7 +377,7 @@ export function createStaticServer(options = {}) {
     forceExitTimer.unref();
 
     // Stop accepting new connections
-    server.close((err) => {
+    server.close(async (err) => {
       // Ignore ERR_SERVER_NOT_RUNNING — it's a no-op
       if (err && /** @type {NodeJS.ErrnoException} */ (err).code !== 'ERR_SERVER_NOT_RUNNING') {
         logLifecycle('error', 'Error closing HTTP server');
@@ -368,6 +390,11 @@ export function createStaticServer(options = {}) {
         socket.destroy();
       }
 
+      try {
+        await options.traceProvider?.shutdown();
+      } catch {
+        logLifecycle('warn', 'OpenTelemetry traces shutdown did not complete');
+      }
       clearTimeout(forceExitTimer);
       logLifecycle('info', 'Graceful shutdown complete');
       process.exit(0);
@@ -387,7 +414,7 @@ export function createStaticServer(options = {}) {
 // ── Auto-start when run directly (Docker CMD) ─────────────
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
-  const server = createStaticServer();
+  const server = createStaticServer({ traceProvider: createTraceProvider('barghsa-web') });
 
   // Register signal handlers for graceful shutdown
   for (const signal of ['SIGTERM', 'SIGINT']) {
