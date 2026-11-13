@@ -169,6 +169,28 @@ jobs:
           fi
       - name: Verify task inventory and acceptance safety
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
+      - name: Verify staging release, rollback, and production approval controls
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          fixture_bin=$(mktemp -d)
+          trap 'rm -rf -- "$fixture_bin"' EXIT
+          # The local worker wraps Git and subprocess calls in RTK. The
+          # fixture uses the same commands directly on the hosted runner.
+          cat > "$fixture_bin/rtk" <<'SH'
+          #!/bin/sh
+          set -eu
+          test "$1" = proxy
+          shift
+          exec "$@"
+          SH
+          chmod 700 "$fixture_bin/rtk"
+          export PATH="$fixture_bin:$PATH"
+          python3 -m unittest discover -s deploy/staging -p 'test_release_*.py' -v
+          python3 -m unittest discover -s deploy/staging -p 'test_notify_release.py' -v
+          python3 -m unittest discover -s deploy/production -p 'test_check_promotion.py' -v
+          python3 -m unittest discover -s deploy/production -p 'test_guarded_rollout.py' -v
       - run: pnpm install --frozen-lockfile
       - name: Verify development watcher compatibility
         run: node --test scripts/nodemon-watch.test.mjs

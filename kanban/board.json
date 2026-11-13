@@ -4361,7 +4361,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4389,7 +4390,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             }
           ],
           "checks": [
@@ -4626,6 +4627,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -4997,7 +5006,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -5013,7 +5023,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -5233,6 +5243,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -5453,7 +5471,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5477,7 +5496,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             }
           ],
           "checks": [
@@ -5862,6 +5881,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -6261,7 +6288,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -6269,7 +6297,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -6505,6 +6533,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -6746,7 +6782,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6786,7 +6823,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7005,6 +7042,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -7078,7 +7123,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7118,7 +7164,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7337,6 +7383,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -7787,7 +7841,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-registration-request-observation"
+          "release-0.6-registration-request-observation",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -7799,7 +7854,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -8171,6 +8226,14 @@
                 "apps/web/e2e/registration-feature.spec.ts"
               ],
               "scope": "The browser waits for each intercepted OTP request while its response remains pending. Exact counts, request payload, cooldown and mutual exclusion assertions remain covered. Thirty focused cases passed without retries."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -8294,7 +8357,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -8334,7 +8398,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8553,6 +8617,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -8678,7 +8750,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8690,7 +8763,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -8992,6 +9065,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -12644,7 +12725,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -12664,7 +12746,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             }
           ],
           "checks": [
@@ -12855,6 +12937,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -19343,7 +19433,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "batch": "release-0.6-signed-document-retention-acceptance",
@@ -19357,7 +19448,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -19655,6 +19746,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -21988,7 +22087,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -21996,11 +22096,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "AGENTS.md",
@@ -22274,6 +22374,15 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -22342,7 +22451,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -22350,7 +22460,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -22623,6 +22733,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -22702,7 +22820,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -22710,7 +22829,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "package.json",
@@ -23147,6 +23266,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -23397,7 +23524,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -23405,7 +23533,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -23583,6 +23711,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -23614,7 +23750,8 @@
         "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open.",
         "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts.",
         "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release.",
-        "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout."
+        "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout.",
+        "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout."
       ],
       "owner": null,
       "depends_on": [],
@@ -23673,7 +23810,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": null
       }
@@ -23694,7 +23832,8 @@
       "launch_required": true,
       "remaining": [
         "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. The guarded production CLI now binds the exact plan and checked report to the protected owner authorization record and checks backup age. Still verify actual image and off-server backup readbacks and rehearse approved canary provisioning and ingress. The report now binds app and web image IDs to the staging scans and rollout plan.",
-        "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks."
+        "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks.",
+        "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -23736,7 +23875,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": null
       }
@@ -29040,7 +29180,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -29054,7 +29195,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -29746,6 +29887,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -33236,7 +33385,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -33249,11 +33399,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "eslint.config.mjs",
@@ -33547,6 +33697,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -33611,7 +33770,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -33627,7 +33787,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".prettierignore",
@@ -33876,6 +34036,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -33946,7 +34114,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -33964,7 +34133,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".husky/commit-msg",
@@ -33988,7 +34157,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "eslint.config.mjs",
@@ -34290,6 +34459,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -35884,7 +36062,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35929,7 +36108,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -36964,6 +37143,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -37042,7 +37229,8 @@
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37057,7 +37245,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".prettierignore",
@@ -37073,7 +37261,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "package.json",
@@ -37605,6 +37793,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -37983,7 +38180,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-stage-acceptance-and-publication-order"
+          "release-0.6-stage-acceptance-and-publication-order",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38008,7 +38206,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -38111,6 +38309,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -601503,7 +601709,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -601511,7 +601718,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -602130,6 +602337,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -602288,7 +602503,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -602296,7 +602512,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -603305,6 +603521,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -603454,7 +603678,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -603462,7 +603687,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -604058,6 +604283,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -604173,7 +604406,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -604181,7 +604415,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -604777,6 +605011,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -604892,7 +605134,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -604900,7 +605143,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -605496,6 +605739,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -656395,7 +656646,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -656403,7 +656655,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "Dockerfile.web",
@@ -656687,6 +656939,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -656998,7 +657258,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -657042,7 +657303,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -657274,6 +657535,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -657328,7 +657597,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -657336,7 +657606,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "Dockerfile.web",
@@ -657620,6 +657890,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -658121,7 +658399,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -658149,7 +658428,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             }
           ],
           "checks": [
@@ -658361,6 +658640,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -658443,7 +658730,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-single-edge-security-headers",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "protected-ci-security-header-assertions",
@@ -658451,7 +658739,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/server.js",
@@ -658514,6 +658802,16 @@
             "Protected GitHub check 132177571405 passed on exact dfe73b34a in workflow run 43503647318. Its required application-integrity job ran the built web header, pilot TLS proxy and staging proxy checks successfully.",
             "Disposable pilot and staging probes failed on duplicate X-Content-Type-Options with the earlier proxy templates. The corrected exact-value probes passed on HTTPS success, size rejection and rate rejection. The CI gate propagates failures of these assertions.",
             "The current checkout matches all listed tested inputs at dfe73b34a. The live staging and production-equivalent TLS/HSTS evidence stays outstanding in T-04.04.02, T-06.02.03.02 and T-06.02.03.04."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            }
           ]
         }
       }
@@ -668580,7 +668878,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -668593,7 +668892,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -668696,6 +668995,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -668740,7 +669047,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -668748,7 +669056,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -668925,6 +669233,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -676180,7 +676496,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -676189,7 +676506,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -676735,6 +677052,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -678205,7 +678530,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -678217,7 +678543,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".gitignore",
@@ -678551,6 +678877,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -678603,7 +678937,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -678615,7 +678950,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".gitignore",
@@ -678860,6 +679195,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         },
@@ -678976,7 +679319,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -678984,7 +679328,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -679211,6 +679555,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         },
@@ -679310,7 +679662,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -679318,7 +679671,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -679495,6 +679848,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -679547,7 +679908,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -679555,7 +679917,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "Dockerfile.base",
@@ -679798,6 +680160,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -679850,7 +680220,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -679862,7 +680233,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".gitignore",
@@ -680107,6 +680478,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         },
@@ -680204,7 +680583,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -680216,7 +680596,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -680399,6 +680779,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -681380,7 +681768,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -681404,7 +681793,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -681606,6 +681995,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -683704,7 +684101,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -683712,7 +684110,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "vitest.config.ts",
@@ -683764,7 +684162,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -684014,6 +684412,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -684051,7 +684458,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -684063,7 +684471,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -684262,6 +684670,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -684298,7 +684714,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -684310,7 +684727,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -684497,6 +684914,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -684536,7 +684961,8 @@
           "release-0.6-related-test-selector-acceptance",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -684544,7 +684970,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
@@ -684556,7 +684982,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -684612,6 +685038,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -688173,7 +688608,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -688243,11 +688679,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -688476,6 +688912,15 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -688517,7 +688962,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -688525,7 +688971,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -688650,6 +689096,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -688691,7 +689145,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -688699,7 +689154,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -688824,6 +689279,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -688876,7 +689339,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -688908,7 +689372,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -689138,6 +689602,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -691532,7 +692004,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -691564,7 +692037,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -691795,6 +692268,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -691830,7 +692311,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -691878,7 +692360,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -691975,6 +692457,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -693364,7 +693854,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -693376,7 +693867,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -693384,7 +693875,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -693626,6 +694117,15 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -693675,7 +694175,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-firefox-provider-fixture",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -693755,7 +694256,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -693875,6 +694376,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -694212,7 +694721,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -694226,7 +694736,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -694558,6 +695068,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -694603,7 +695121,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -694619,7 +695138,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -694928,6 +695447,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -695493,7 +696020,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -695501,7 +696029,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -695678,6 +696206,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -695723,7 +696259,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -695731,7 +696268,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -695932,6 +696469,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -697164,7 +697709,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-purchase-route-splitting",
           "release-0.6-web-server-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -697179,7 +697725,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -697503,6 +698049,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -698858,7 +699412,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -698871,7 +699426,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -699082,6 +699637,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -699119,7 +699682,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -699131,7 +699695,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -699342,6 +699906,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -699379,7 +699951,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -699393,7 +699966,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -699604,6 +700177,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -699641,7 +700222,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -699652,7 +700234,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -699863,6 +700445,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -699936,7 +700526,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -699944,11 +700535,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -700075,6 +700666,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -700112,7 +700712,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -700124,7 +700725,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -700383,6 +700984,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -700429,7 +701038,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -700440,7 +701050,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/openapi.json",
@@ -700903,6 +701513,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -701159,7 +701777,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -701177,7 +701796,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -701531,6 +702150,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -701572,7 +702199,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -701581,7 +702209,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -701958,6 +702586,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -702017,7 +702653,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -702035,7 +702672,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/README.md",
@@ -702493,6 +703130,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -703526,7 +704171,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -703543,7 +704189,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -703846,6 +704492,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -703896,7 +704550,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -703913,7 +704568,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -704216,6 +704871,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -720428,7 +721091,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -720436,7 +721100,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "Dockerfile.base",
@@ -721104,6 +721768,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -724320,7 +724992,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -724328,7 +725001,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "Dockerfile.base",
@@ -724647,6 +725320,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -724843,7 +725524,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724859,7 +725541,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -725075,6 +725757,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -725186,7 +725876,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -725202,7 +725893,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -725418,6 +726109,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -725467,7 +726166,8 @@
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -725483,7 +726183,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -725699,6 +726399,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -787620,7 +788328,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retention-settings-browser"
+          "release-0.6-retention-settings-browser",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -787628,7 +788337,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -788802,6 +789511,14 @@
                 "apps/web/e2e/admin-settings.spec.ts"
               ],
               "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -788946,7 +789663,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retention-settings-browser"
+          "release-0.6-retention-settings-browser",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -788954,7 +789672,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -790128,6 +790846,14 @@
                 "apps/web/e2e/admin-settings.spec.ts"
               ],
               "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -791077,7 +791803,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-retention-settings-browser"
+          "release-0.6-retention-settings-browser",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -791085,7 +791812,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -792259,6 +792986,14 @@
                 "apps/web/e2e/admin-settings.spec.ts"
               ],
               "scope": "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -792324,7 +793059,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -792343,7 +793079,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -792546,6 +793282,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         }
@@ -1031902,7 +1032646,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1032266,7 +1033011,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1032670,6 +1033415,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1032868,7 +1033621,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1033232,7 +1033986,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1033636,6 +1034390,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1033834,7 +1034596,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1034198,7 +1034961,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1034602,6 +1035365,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1034801,7 +1035572,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1035165,7 +1035937,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1035569,6 +1036341,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1035767,7 +1036547,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1036131,7 +1036912,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1036535,6 +1037316,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1036733,7 +1037522,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1037097,7 +1037887,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1037501,6 +1038291,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1037699,7 +1038497,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1038063,7 +1038862,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1038467,6 +1039266,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1038666,7 +1039473,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1039030,7 +1039838,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1039434,6 +1040242,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1039632,7 +1040448,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1039996,7 +1040813,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1040400,6 +1041217,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1040598,7 +1041423,8 @@
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
-          "release-0.6-nightly-exact-shard-evidence"
+          "release-0.6-nightly-exact-shard-evidence",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1040962,7 +1041788,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d603f94c0c674c9b434e85ca587ae43b4c509a8801aa6910c18aea60785e5913"
+              "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1041366,6 +1042192,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The operator guide records the stricter nightly browser artifact verification. Other CI and browser practices retain their existing source and evidence."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1064523,7 +1065357,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1069877,6 +1070711,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1070300,7 +1071142,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-protected-rollout-tests"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1070353,7 +1071196,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1075569,6 +1076412,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1076009,7 +1076860,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-protected-rollout-tests"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1078027,7 +1078879,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
             },
             {
               "path": ".size-limit.json",
@@ -1080715,6 +1081567,14 @@
                 "apps/web/e2e/solar-construction-progress.spec.ts"
               ],
               "scope": "The solar queue test observes the exact GET search request and cleared request cursor before typing. Production outputs, response and permission fixtures, selection and URL assertions retain their original sources. Thirty focused cases passed without retries in three browser projects."
+            },
+            {
+              "batch": "release-0.6-protected-rollout-tests",
+              "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
             }
           ]
         },
@@ -1080879,7 +1081739,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-protected-rollout-tests"
         ]
       }
     },
@@ -1081107,7 +1081968,8 @@
         "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback.",
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
         "Closing the retained-image license gate requires the existing 244 named dispositions as well as approval for the remaining scopes. The initialized worker now enforces the policy before transfer and rechecks the report hash before announcement.",
-        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open."
+        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
+        "Run the new protected release-controls step on the exact v0.6.0 candidate. Local execution of the literal step passed all 79 staging and production fixture tests."
       ],
       "owner": null,
       "depends_on": [],
@@ -1081412,7 +1082274,8 @@
           "release-0.6-published-d19812d0a",
           "release-0.6-registration-request-observation",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-protected-rollout-tests"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1258654,6 +1259517,140 @@
         {
           "file": "live-version.json",
           "sha256": "5beb67503bf6c1abd116b99ed05080b69bb2d47b9db91539c5c269d4dd8d9c0d"
+        }
+      ]
+    },
+    "release-0.6-protected-rollout-tests": {
+      "batch": "release-0.6-protected-rollout-tests",
+      "base_commit": "96404818c95c5a385eefb94e08d4514fc7e1b9c7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "042aa25ddef3057c478951c9e6e9b43d525ed8e5c80162d1f03df1f0f8209299"
+        }
+      ],
+      "checks": [
+        "The exact extracted CI step passed all 79 tests across staging queue and rollback, notification, production approval and guarded rollout. Actionlint, Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "Test execution was local with isolated release fixtures. The pending hosted exact check, accepted staging rollout, Telegram and production-equivalent operational receipts still require readback."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-protected-rollout-tests",
+      "execution_receipts": [
+        {
+          "file": "workflow-step.sh",
+          "sha256": "0ddfc854a1128da4659b6ed1c84f1e85d0d7f3526f5855096d0bcb8b1ac90cef"
+        },
+        {
+          "file": "workflow-step.log",
+          "sha256": "a14786556b4b635b1c4e79c8102e5e4f275a6cc1804b43d9518a6354b2852686"
         }
       ]
     }

@@ -8,6 +8,11 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 The test and application-quality jobs build the workspace before using compiled API and browser fixtures. They run alongside the static, secret and runtime image scans. Combined coverage waits for the two jobs that produce its artifacts. The required check waits for all six results, including the full coverage enforcement result when full CI is selected.
 
+Application quality also runs the staging queue, rollback and Telegram fixtures,
+and the production approval and guarded rollout tests. These exercise the release
+commands with isolated repositories, Compose configuration and simulated providers.
+The detached staging worker records the live deployment and notification separately.
+
 The fast test step uses the successful workspace build from the same job.
 For a diff limited to Vitest files under the API, web, or worker source trees,
 ordinary documentation, and board updates, it runs `vitest related --run`
