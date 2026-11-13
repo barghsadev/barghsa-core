@@ -1,4 +1,4 @@
-import { providerInputError } from './provider-input-fields';
+import { assertProviderLifecycleBody, providerInputError } from './provider-input-fields';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -233,9 +233,11 @@ export class SmsProviderConfigController {
   @ApiOperation({ summary: 'Activate a tested draft SMS provider configuration' })
   async activate(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<SmsProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.activate(id, req.session.userId, req.session);
   }
 
@@ -246,9 +248,11 @@ export class SmsProviderConfigController {
   @ApiOperation({ summary: 'Disable an SMS provider configuration' })
   disable(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<SmsProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.disable(id, req.session.userId, req.session);
   }
 
@@ -259,9 +263,11 @@ export class SmsProviderConfigController {
   @ApiOperation({ summary: 'Restore a historical SMS provider version as a draft' })
   rollback(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<SmsProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.rollback(id, req.session.userId, req.session);
   }
 }

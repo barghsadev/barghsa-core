@@ -1,4 +1,4 @@
-import { providerInputError } from './provider-input-fields';
+import { assertProviderLifecycleBody, providerInputError } from './provider-input-fields';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -206,9 +206,11 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Activate a tested draft provider configuration' })
   async activate(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.activate(id, req.session.userId, req.session);
   }
 
@@ -219,9 +221,11 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Disable a provider configuration' })
   disable(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.disable(id, req.session.userId, req.session);
   }
 
@@ -232,9 +236,11 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Restore a historical email provider version as a draft' })
   rollback(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() body?: unknown
   ): Promise<EmailProviderConfigResult> {
     this.assertProviderEditPermission(req);
+    assertProviderLifecycleBody(body);
     return this.service.rollback(id, req.session.userId, req.session);
   }
 }

@@ -130,19 +130,20 @@ for (const channel of ['email', 'sms']) {
         );
       return id;
     }
-    function write(id: string) {
-      if (action !== 'create' && action !== 'update')
+    function write(id: string, bodyOverride?: unknown) {
+      if (action !== 'create' && action !== 'update') {
+        const body =
+          action === 'test-connection'
+            ? {
+                recipient: channel === 'email' ? 'provider-writer@example.test' : '+989121234567',
+              }
+            : bodyOverride;
         return fetch(`${http.base}/api/admin/${channel}-providers/${id}/${action}`, {
           method: 'POST',
           headers,
-          body: JSON.stringify(
-            action === 'test-connection'
-              ? {
-                  recipient: channel === 'email' ? 'provider-writer@example.test' : '+989121234567',
-                }
-              : {}
-          ),
+          ...(body === undefined ? {} : { body: JSON.stringify(body) }),
         });
+      }
       const config =
         channel === 'email'
           ? { host: 'smtp.example.test', password: 'fixture-password' }
@@ -174,9 +175,26 @@ for (const channel of ['email', 'sms']) {
       expect((await write(id)).status).toBe(403);
       expect(await snapshot(table)).toEqual(before);
     });
+    if (action === 'activate' || action === 'disable' || action === 'rollback')
+      it(`${channel} ${action}: rejects nonempty bodies before changing provider state`, async () => {
+        const id = await seed();
+        const before = await snapshot(table);
+        const body = { status: 'fixture-unknown-value' };
+        const invalid = await write(id, body);
+        expect(invalid.status).toBe(400);
+        expect(JSON.stringify(await invalid.json())).not.toContain(body.status);
+        expect(await snapshot(table)).toEqual(before);
+        expect((await write(id, [])).status).toBe(400);
+        expect(await snapshot(table)).toEqual(before);
+        await http.pool.query(
+          "UPDATE staff_roles SET permissions='[]' WHERE role_id='provider-writer'"
+        );
+        expect((await write(id, body)).status).toBe(403);
+        expect(await snapshot(table)).toEqual(before);
+      });
     it(`${channel} ${action}: commits one audit without exposing credentials`, async () => {
       const id = await seed();
-      const response = await write(id);
+      const response = await write(id, action === 'disable' ? {} : undefined);
       expect(response.status).toBe(action === 'create' ? 201 : 200);
       const raw = await response.text();
       expect(raw).not.toMatch(/fixture-password|fixture-api-key/);

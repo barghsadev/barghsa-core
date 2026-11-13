@@ -1,6 +1,16 @@
+import { HttpException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { z } from 'zod';
 import { InputFieldException } from '../common/input-field.exception';
 import { SmtpConfigSchema } from './smtp-config.schema';
 import { ResendConfigSchema } from './resend-config.schema';
+
+const emptyLifecycleBody = z.strictObject({}).optional();
+
+export function assertProviderLifecycleBody(body: unknown): void {
+  if (!emptyLifecycleBody.safeParse(body).success)
+    throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+}
 
 const emailFields: Record<string, string> = {
   host: 'host',
