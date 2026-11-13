@@ -2,11 +2,13 @@ import { sql } from 'drizzle-orm';
 import { pgTable, uuid, text, integer, timestamp, jsonb, index, check } from 'drizzle-orm/pg-core';
 import { aiModels } from './ai-models.js';
 import { users } from './users.js';
+import { queueTraceParentCheck } from './queue-trace-parent.js';
 export const aiModelTestJobs = pgTable(
   'ai_model_test_jobs',
   {
     id: uuid('id').primaryKey(),
     correlationId: text('correlation_id'),
+    traceParent: text('trace_parent'),
     modelId: uuid('model_id').references(() => aiModels.id, { onDelete: 'set null' }),
     modelRevision: text('model_revision').notNull(),
     actorUserId: text('actor_user_id')
@@ -26,6 +28,7 @@ export const aiModelTestJobs = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
+    queueTraceParentCheck('ai_model_test_jobs', t.traceParent),
     index('ai_model_test_due_idx').on(t.status, t.createdAt),
     index('ai_model_test_model_idx').on(t.modelId),
     index('ai_model_test_actor_idx').on(t.actorUserId),

@@ -1,9 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { relativeLinkRoute } from '@barghsa/shared/notifications';
-import { operatorLogTrace } from '@barghsa/shared/operator-logging';
-import { extractTraceparent } from '@barghsa/shared/telemetry';
-import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
+import { SpanStatusCode, type Span, type Tracer } from '@opentelemetry/api';
+import { withQueueTrace } from './queue-trace.js';
 
 export const PROFILE_EXPORT_JOB_TYPE = 'profile-export';
 const MAX_CONCURRENT_PROFILE_EXPORTS = 2;
@@ -107,14 +106,9 @@ export async function runOneAsyncJob(
   }
   if (!job) return false;
 
-  const span = tracer?.startSpan(
-    'async.job.process',
-    { kind: SpanKind.CONSUMER },
-    extractTraceparent(job.trace_parent)
+  await withQueueTrace(tracer, 'async.job.process', job.trace_parent, (span) =>
+    processAsyncJob(pool, registry, job, token, span)
   );
-  const process = () => processAsyncJob(pool, registry, job, token, span);
-  if (span) await operatorLogTrace.run(span.spanContext(), process).finally(() => span.end());
-  else await process();
   return true;
 }
 
@@ -123,7 +117,7 @@ async function processAsyncJob(
   registry: JobHandlerRegistry,
   job: LeasedJob,
   token: string,
-  span: ReturnType<Tracer['startSpan']> | undefined
+  span: Span | undefined
 ): Promise<void> {
   let leaseLost = false;
   const renew = async () => {

@@ -323,7 +323,7 @@ async function main(): Promise<void> {
 
   pollers.every(async () => {
     try {
-      await runAiModelTest(getDbPool());
+      await runAiModelTest(getDbPool(), undefined, undefined, asyncJobTracer);
       await recordJobSuccess('ai_model_test');
     } catch {
       await recordJobFailure({
@@ -432,10 +432,13 @@ async function main(): Promise<void> {
     pollers.every(async () => {
       try {
         if (!cleanupProvider) throw new Error('Document storage is unavailable');
-        const result = await runDocumentScans(getDbPool(), cleanupProvider, {
-          host: scannerHost,
-          port: scannerPort,
-        });
+        const result = await runDocumentScans(
+          getDbPool(),
+          cleanupProvider,
+          { host: scannerHost, port: scannerPort },
+          undefined,
+          asyncJobTracer
+        );
         if (result.retrying)
           await recordJobFailure({
             jobType: DOCUMENT_SCAN_JOB_TYPE,
@@ -458,7 +461,12 @@ async function main(): Promise<void> {
     pollers.every(async () => {
       if (draining) return;
       try {
-        const outcome = await runKnowledgeBaseProcessing(getDbPool(), cleanupProvider);
+        const outcome = await runKnowledgeBaseProcessing(
+          getDbPool(),
+          cleanupProvider,
+          undefined,
+          asyncJobTracer
+        );
         if (outcome === 'ready') await recordJobSuccess(KB_PROCESSING_JOB_TYPE);
         else if (outcome === 'error')
           await recordJobFailure({
@@ -477,10 +485,10 @@ async function main(): Promise<void> {
   }
 
   pollers.every(async () => {
-    const outcome = await runAuthDelivery(getDbPool());
+    const outcome = await runAuthDelivery(getDbPool(), undefined, asyncJobTracer);
     let notice: 'idle' | 'published';
     try {
-      notice = await publishAuthDeliveryNotice(getDbPool());
+      notice = await publishAuthDeliveryNotice(getDbPool(), asyncJobTracer);
     } catch {
       await recordJobFailure({
         jobType: 'auth_delivery',

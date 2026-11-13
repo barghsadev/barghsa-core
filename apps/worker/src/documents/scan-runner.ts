@@ -1,5 +1,7 @@
 import type { Pool, PoolClient } from 'pg';
+import { SpanStatusCode, type Tracer } from '@opentelemetry/api';
 import { GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES } from '@barghsa/shared/admin';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import {
   scanUploadWithClamAv,
   type ScannerEndpoint,
@@ -7,10 +9,12 @@ import {
   type StorageProvider,
 } from '@barghsa/shared/storage';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
+import { withQueueTrace } from '../jobs/queue-trace.js';
 import { observeScanOutcome } from './storage-scan-metrics.js';
 
 type ScanRow = {
   document_id: string;
+  trace_parent: string | null;
   attempts: number;
   storage_key: string;
   checksum: string;
@@ -87,6 +91,7 @@ async function alertAdmins(client: PoolClient, row: ScanRow, eventKey: string) {
       channels: ['in_app'],
       idempotencyKey: `${eventKey}:${row.document_id}:${admin.user_id}`,
       priority: 'urgent',
+      traceParent: currentTraceparent() ?? row.trace_parent,
     });
     const stored = await client.query(
       `SELECT o.id FROM notification_outbox o JOIN notification_job j ON j.outbox_id=o.id AND j.channel='in_app'
@@ -181,7 +186,8 @@ export async function runDocumentScans(
   pool: Pool,
   storage: StorageProvider,
   endpoint: ScannerEndpoint,
-  scan: typeof scanUploadWithClamAv = scanUploadWithClamAv
+  scan: typeof scanUploadWithClamAv = scanUploadWithClamAv,
+  tracer?: Tracer
 ) {
   const candidates = await pool.query<{ document_id: string }>(
     `SELECT j.document_id FROM document_scan_jobs j JOIN documents d ON d.id=j.document_id
@@ -196,7 +202,7 @@ export async function runDocumentScans(
       await client.query('BEGIN');
       row = (
         await client.query<ScanRow>(
-          `SELECT j.document_id,j.attempts,d.storage_key,d.checksum,d.size_bytes,
+          `SELECT j.document_id,j.attempts,j.trace_parent,d.storage_key,d.checksum,d.size_bytes,
             d.supersedes_document_id,d.uploaded_by,d.original_name
            FROM document_scan_jobs j JOIN documents d ON d.id=j.document_id
            WHERE j.document_id=$1 AND j.completed_at IS NULL AND j.next_attempt_at<=NOW()
@@ -205,21 +211,26 @@ export async function runDocumentScans(
           [candidate.document_id]
         )
       ).rows[0];
-      if (!row) {
-        await client.query('ROLLBACK');
-        continue;
-      }
-      const verdict = await scanSealedObject(storage, row, endpoint, scan);
-      await resolve(client, row, verdict);
-      await client.query('COMMIT');
-      observeScanOutcome('document', verdict);
-      result[verdict === 'clean' ? 'clean' : 'infected']++;
-    } catch {
+      const job = row;
+      if (job)
+        await withQueueTrace(tracer, 'document.scan.process', job.trace_parent, async (span) => {
+          try {
+            const verdict = await scanSealedObject(storage, job, endpoint, scan);
+            await resolve(client, job, verdict);
+            await client.query('COMMIT');
+            observeScanOutcome('document', verdict);
+            result[verdict === 'clean' ? 'clean' : 'infected']++;
+          } catch {
+            span?.setStatus({ code: SpanStatusCode.ERROR });
+            await client.query('ROLLBACK');
+            await retry(pool, job, 'scan_processing_failed');
+            result.retrying++;
+          }
+        });
+      else await client.query('ROLLBACK');
+    } catch (error) {
+      if (row) throw error;
       await client.query('ROLLBACK');
-      if (row) {
-        await retry(pool, row, 'scan_processing_failed');
-        result.retrying++;
-      }
     } finally {
       client.release();
     }

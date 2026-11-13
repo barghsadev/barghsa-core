@@ -1,3 +1,4 @@
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -440,8 +441,8 @@ export class KnowledgeBasesService {
         [id]
       );
       const result = await client.query<KbBaseRow>(
-        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1 RETURNING *",
-        [id]
+        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false,trace_parent=$2 WHERE id=$1 RETURNING *",
+        [id, currentTraceparent()]
       );
       await this.recordAudit(
         verifiedAt,
@@ -470,8 +471,8 @@ export class KnowledgeBasesService {
       const result = await client.query<KbBaseRow>(
         `INSERT INTO knowledge_bases
            (id, title, description, audience, source_type, source_config, chunking_strategy,
-            vector_embedding_model, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, $9, $10, $10)
+            vector_embedding_model, created_by, created_at, updated_at, trace_parent)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, $9, $10, $10, $11)
          RETURNING *`,
         [
           id,
@@ -484,6 +485,7 @@ export class KnowledgeBasesService {
           input.vectorEmbeddingModel ?? null,
           input.actorUserId,
           now,
+          currentTraceparent(),
         ]
       );
       const row = result.rows[0];
@@ -596,6 +598,7 @@ export class KnowledgeBasesService {
       }
       if (sourceChanged) {
         push('content_state', 'empty');
+        push('trace_parent', currentTraceparent());
         push('content_error', null);
         push('is_enabled', false);
         await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [id]);
@@ -792,8 +795,8 @@ export class KnowledgeBasesService {
       );
       if (result.rows[0]) {
         await client.query(
-          "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1",
-          [input.kbId]
+          "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false,trace_parent=$2 WHERE id=$1",
+          [input.kbId, currentTraceparent()]
         );
         await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [input.kbId]);
         await client.query(
@@ -865,8 +868,8 @@ export class KnowledgeBasesService {
         kbId,
       ]);
       await client.query(
-        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1",
-        [kbId]
+        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false,trace_parent=$2 WHERE id=$1",
+        [kbId, currentTraceparent()]
       );
       await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [kbId]);
       await client.query(

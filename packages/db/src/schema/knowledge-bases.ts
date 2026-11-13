@@ -15,6 +15,7 @@ import {
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
 import { storageRecords } from './storage-record.js';
+import { queueTraceParentCheck } from './queue-trace-parent.js';
 
 /**
  * Knowledge base record (S-09.11, T-09.11.02).
@@ -62,6 +63,8 @@ export const knowledgeBases = pgTable(
       .notNull()
       .default('empty'),
     contentError: text('content_error'),
+    /** Trace of the command that queued the current revision for processing. */
+    traceParent: text('trace_parent'),
     chunkingStrategy: jsonb('chunking_strategy')
       .$type<{ size: number; overlap: number }>()
       .notNull()
@@ -81,6 +84,7 @@ export const knowledgeBases = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    queueTraceParentCheck('knowledge_bases', table.traceParent),
     /** List by recency for the admin UI (migration 0043). */
     index('idx_kb_created_at').on(table.createdAt),
     check('chk_kb_audience', sql`${table.audience} IN ('admin', 'staff', 'customer', 'public')`),

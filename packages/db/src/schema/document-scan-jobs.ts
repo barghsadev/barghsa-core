@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { check, index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { documents } from './documents.js';
+import { queueTraceParentCheck } from './queue-trace-parent.js';
 
 export const documentScanJobs = pgTable(
   'document_scan_jobs',
@@ -8,6 +9,7 @@ export const documentScanJobs = pgTable(
     documentId: uuid('document_id')
       .primaryKey()
       .references(() => documents.id, { onDelete: 'restrict' }),
+    traceParent: text('trace_parent'),
     attempts: integer('attempts').notNull().default(0),
     nextAttemptAt: timestamp('next_attempt_at', { withTimezone: true }).notNull().defaultNow(),
     lastError: text('last_error'),
@@ -17,6 +19,7 @@ export const documentScanJobs = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    queueTraceParentCheck('document_scan_jobs', table.traceParent),
     index('document_scan_jobs_due_idx').on(table.completedAt, table.nextAttemptAt),
     check('document_scan_jobs_attempts', sql`${table.attempts} >= 0`),
     check(

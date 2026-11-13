@@ -10,12 +10,15 @@ import {
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { privateLogId } from '@barghsa/shared/log-privacy';
+import { SpanStatusCode, type Span, type Tracer } from '@opentelemetry/api';
 import { logDelivery } from '../delivery-log.js';
 import { workerLog } from '../operator-log.js';
+import { withQueueTrace } from '../jobs/queue-trace.js';
 
 interface Claim {
   id: string;
   correlation_id: string | null;
+  trace_parent: string | null;
   model_id: string | null;
   model_revision: string;
   actor_user_id: string;
@@ -24,7 +27,8 @@ interface Claim {
 export async function runAiModelTest(
   pool: Pool,
   tester: Pick<AiModelTester, 'test'> = new AiModelTester(),
-  secrets = new AiModelSecrets()
+  secrets = new AiModelSecrets(),
+  tracer?: Tracer
 ): Promise<'idle' | 'completed' | 'failed' | 'stale'> {
   await pool.query(`UPDATE ai_model_test_jobs SET status='failed', error_code='AI_MODEL_TEST_EXPIRED', lease_token=NULL, lease_until=NULL, updated_at=NOW()
     WHERE status IN ('pending','leased') AND (deadline_at<=NOW() OR (status='leased' AND lease_until<=NOW() AND attempts>=2))`);
@@ -40,11 +44,24 @@ export async function runAiModelTest(
     ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1
   ) UPDATE ai_model_test_jobs j SET status='leased', attempts=attempts+1,
     lease_token=$1, lease_until=NOW()+INTERVAL '70 seconds', updated_at=NOW()
-    FROM candidate c WHERE j.id=c.id RETURNING j.id,j.model_id,j.model_revision,j.actor_user_id,j.correlation_id`,
+    FROM candidate c WHERE j.id=c.id RETURNING j.id,j.model_id,j.model_revision,j.actor_user_id,j.correlation_id,j.trace_parent`,
     [token]
   );
   const job = claimed.rows[0];
   if (!job) return 'idle';
+  return withQueueTrace(tracer, 'ai.model_test.process', job.trace_parent, (span) =>
+    processAiModelTest(pool, tester, secrets, job, token, span)
+  );
+}
+
+async function processAiModelTest(
+  pool: Pool,
+  tester: Pick<AiModelTester, 'test'>,
+  secrets: AiModelSecrets,
+  job: Claim,
+  token: string,
+  span: Span | undefined
+) {
   const finish = async (result: AiModelTestResult | null, error: string | null) => {
     const saved = await pool.query(
       `UPDATE ai_model_test_jobs SET status=$3, result=$4::jsonb,error_code=$5,
@@ -59,6 +76,8 @@ export async function runAiModelTest(
     );
     const status = saved.rowCount === 1 ? (result ? 'completed' : 'failed') : 'stale';
     logDelivery('ai.model_test', job.id, job.correlation_id, status);
+    if (status === 'failed' || result?.ok === false)
+      span?.setStatus({ code: SpanStatusCode.ERROR });
     return status;
   };
   const users = await pool.query<{

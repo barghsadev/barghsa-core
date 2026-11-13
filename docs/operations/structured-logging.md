@@ -182,6 +182,20 @@ Match the job consumer span to the originating request when verifying the
 deployed collector. The worker records failure status without handler errors,
 job IDs or payload values in the span.
 
+Migration `0296` carries the request parent through sealed document scans,
+knowledge-base processing, model connection tests and restricted authentication
+delivery. Ingestion reuses the trace of the operation that scheduled the current
+revision. A new ingestion request captures a new parent. Retrying a claimed scan,
+model test or delivery keeps its original parent.
+
+Find the consumer spans by trace ID using `document.scan.process`,
+`knowledge_base.process`, `ai.model_test.process`, `auth.delivery.process`
+and `auth.delivery.notice`. The two authentication spans share the original
+parent because sending and inbox publication have separate retry boundaries.
+Scanner alerts and safe OTP notices pass their consumer parent to the
+notification outbox. Trace data excludes verification codes, provider payloads
+and credentials.
+
 On the configured collector, match an API request and notification worker
 span by trace ID, and check their parent relationship and corresponding
 logs. The API span uses the registered route template. The worker starts a

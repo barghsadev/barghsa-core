@@ -1,3 +1,4 @@
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { lockVerificationPolicy } from './verification-policy-config.js';
 import { assertStaffTeamFields } from './staff-team-fields.js';
@@ -509,8 +510,8 @@ export class AdminService {
         [delivery.tokenHash, delivery.expiresAt, userId]
       );
       await client.query(
-        `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id)
-        VALUES ($1,'staff_activation',$2,$3,$4,$5,$6)`,
+        `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id,trace_parent)
+        VALUES ($1,'staff_activation',$2,$3,$4,$5,$6,$7)`,
         [
           delivery.id,
           userId,
@@ -518,6 +519,7 @@ export class AdminService {
           delivery.payload,
           delivery.expiresAt,
           correlationIdStorage.getStore() ?? null,
+          currentTraceparent(),
         ]
       );
       await client.query(
@@ -669,8 +671,8 @@ export class AdminService {
 
       if (activationDelivery) {
         await client.query(
-          `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id)
-          VALUES ($1,'staff_activation',$2,$3,$4,$5,$6)`,
+          `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id,trace_parent)
+          VALUES ($1,'staff_activation',$2,$3,$4,$5,$6,$7)`,
           [
             activationDelivery.id,
             userId,
@@ -678,6 +680,7 @@ export class AdminService {
             activationDelivery.payload,
             activationTokenExpiresAt,
             correlationIdStorage.getStore() ?? null,
+            currentTraceparent(),
           ]
         );
       }

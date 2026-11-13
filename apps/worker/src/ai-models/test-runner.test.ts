@@ -2,6 +2,8 @@ import { beforeAll, beforeEach, afterAll, it, expect, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db.js';
 import { AiModelSecrets } from '@barghsa/shared/ai-models';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
+import { SpanKind, trace, type Tracer } from '@opentelemetry/api';
 import { runAiModelTest } from './test-runner.js';
 let fixture: Awaited<ReturnType<typeof createMigratedTestDb>>;
 const secrets = new AiModelSecrets('test-only-ai-queue-key');
@@ -17,7 +19,7 @@ beforeEach(async () => {
     "INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES ('ai-worker-admin','ai-worker@example.test','test-only',true,true) ON CONFLICT(user_id) DO UPDATE SET is_admin=true,disabled_at=NULL,activation_token=NULL"
   );
 });
-async function enqueue() {
+async function enqueue(traceParent: string | null = null) {
   const model = (
     await fixture.pool.query(
       "INSERT INTO ai_models(title,provider_type,base_url,model_name,api_token,created_by) VALUES ('Test','openai_compatible','https://model.example.test/v1','test-model',$1,'ai-worker-admin') RETURNING id,xmin::text AS revision",
@@ -26,8 +28,8 @@ async function enqueue() {
   ).rows[0];
   const id = randomUUID();
   await fixture.pool.query(
-    "INSERT INTO ai_model_test_jobs(id,model_id,model_revision,actor_user_id,deadline_at) VALUES ($1,$2,$3,'ai-worker-admin',NOW()+INTERVAL '2 minutes')",
-    [id, model.id, model.revision]
+    "INSERT INTO ai_model_test_jobs(id,model_id,model_revision,actor_user_id,deadline_at,trace_parent) VALUES ($1,$2,$3,'ai-worker-admin',NOW()+INTERVAL '2 minutes',$4)",
+    [id, model.id, model.revision, traceParent]
   );
   return { id, model: model.id as string };
 }
@@ -66,16 +68,34 @@ it('records a queued command denial after a grant is revoked and skips provider 
   ]);
 });
 it('claims once across competing workers and stores only a safe result', async () => {
-  const { id } = await enqueue(),
-    client = tester();
+  const traceId = '8d'.repeat(16),
+    origin = '8e'.repeat(8),
+    worker = '8f'.repeat(8);
+  const { id } = await enqueue(`00-${traceId}-${origin}-01`);
+  const end = vi.fn();
+  const startSpan = vi.fn((name, options, context) => {
+    expect(name).toBe('ai.model_test.process');
+    expect(options.kind).toBe(SpanKind.CONSUMER);
+    expect(trace.getSpanContext(context)).toMatchObject({ traceId, spanId: origin });
+    return { spanContext: () => ({ traceId, spanId: worker, traceFlags: 1 }), end };
+  });
+  const tracer = { startSpan } as unknown as Tracer;
+  const client = {
+    test: vi.fn(async () => {
+      expect(currentTraceparent()).toBe(`00-${traceId}-${worker}-01`);
+      return { ok: true, latencyMs: 1, responsePreview: 'pong' };
+    }),
+  };
   expect(
     (
       await Promise.all([
-        runAiModelTest(fixture.pool, client, secrets),
-        runAiModelTest(fixture.pool, client, secrets),
+        runAiModelTest(fixture.pool, client, secrets, tracer),
+        runAiModelTest(fixture.pool, client, secrets, tracer),
       ])
     ).sort()
   ).toEqual(['completed', 'idle']);
+  expect(startSpan).toHaveBeenCalledOnce();
+  expect(end).toHaveBeenCalledOnce();
   expect(client.test).toHaveBeenCalledOnce();
   expect(client.test).toHaveBeenCalledWith(
     expect.objectContaining({ apiToken: 'local-queue-token' }),

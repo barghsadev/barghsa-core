@@ -1,6 +1,7 @@
 import { logDelivery } from '../delivery-log.js';
 import { randomUUID, createHash } from 'node:crypto';
 import type { Pool } from 'pg';
+import { SpanStatusCode, type Span, type Tracer } from '@opentelemetry/api';
 import { decryptAuthDelivery, encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import {
   loadEmailBranding,
@@ -9,9 +10,11 @@ import {
 } from '@barghsa/shared/notification-delivery';
 import { createAuthSender, staffActivationUrl, type AuthMessage } from './providers.js';
 import { recordAuthOtpSent } from '../notifications/worker-metrics.js';
+import { withQueueTrace } from '../jobs/queue-trace.js';
 
 interface DeliveryRow {
   correlation_id: string | null;
+  trace_parent: string | null;
   id: string;
   kind: 'otp' | 'staff_activation';
   challenge_id: string;
@@ -23,7 +26,8 @@ interface DeliveryRow {
 /** One durable claim per call. Provider I/O never holds a database transaction. */
 export async function runAuthDelivery(
   pool: Pool,
-  send = createAuthSender(pool)
+  send = createAuthSender(pool),
+  tracer?: Tracer
 ): Promise<'idle' | 'sent' | 'cancelled' | 'retry' | 'dead'> {
   const token = randomUUID();
   const claimed = await pool.query<DeliveryRow>(
@@ -40,6 +44,18 @@ export async function runAuthDelivery(
   );
   const row = claimed.rows[0];
   if (!row) return 'idle';
+  return withQueueTrace(tracer, 'auth.delivery.process', row.trace_parent, (span) =>
+    processAuthDelivery(pool, send, row, token, span)
+  );
+}
+
+async function processAuthDelivery(
+  pool: Pool,
+  send: ReturnType<typeof createAuthSender>,
+  row: DeliveryRow,
+  token: string,
+  span: Span | undefined
+) {
   const finish = async (status: string, ref: string | null = null) => {
     const result = await pool.query(
       `UPDATE auth_delivery_outbox SET status=$3, encrypted_payload=NULL,
@@ -69,6 +85,7 @@ export async function runAuthDelivery(
     return 'cancelled';
   }
   if (row.attempts > 5) {
+    span?.setStatus({ code: SpanStatusCode.ERROR });
     await finish('dead');
     return 'dead';
   }
@@ -121,6 +138,7 @@ export async function runAuthDelivery(
     });
     await finish('sent', ref);
   } catch {
+    span?.setStatus({ code: SpanStatusCode.ERROR });
     const dead = row.attempts >= 5;
     const saved = await pool.query(
       `UPDATE auth_delivery_outbox SET status=$3,

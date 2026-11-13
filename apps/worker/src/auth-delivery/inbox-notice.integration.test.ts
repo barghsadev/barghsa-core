@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
+import { SpanKind, trace, type Tracer } from '@opentelemetry/api';
 import { runAuthDelivery } from './runner.js';
 import { publishAuthDeliveryNotice } from './inbox-notice.js';
 import { runOutboxPoll } from '../notifications/outbox-runner.js';
@@ -56,7 +58,7 @@ beforeEach(async () => {
   await pool.query('DELETE FROM notification_outbox');
   await pool.query('DELETE FROM in_app_notifications');
 });
-async function queue(user = 'notice-user', purpose = 'login') {
+async function queue(user = 'notice-user', purpose = 'login', traceParent?: string) {
   const id = randomUUID(),
     challenge = randomUUID();
   const hash = createHash('sha256').update(code).digest('hex');
@@ -73,11 +75,19 @@ async function queue(user = 'notice-user', purpose = 'login') {
       purpose === 'registration' ? 'fixture-terms' : null,
     ]
   );
-  await pool.query(
-    `INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
-    VALUES($1,$2,$3,$4,NOW()+INTERVAL '10 minutes')`,
-    [id, challenge, hash, encryptAuthDelivery(id, { code, destination })]
-  );
+  if (traceParent) {
+    await pool.query(
+      `INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,trace_parent)
+      VALUES($1,$2,$3,$4,NOW()+INTERVAL '10 minutes',$5)`,
+      [id, challenge, hash, encryptAuthDelivery(id, { code, destination }), traceParent]
+    );
+  } else {
+    await pool.query(
+      `INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
+      VALUES($1,$2,$3,$4,NOW()+INTERVAL '10 minutes')`,
+      [id, challenge, hash, encryptAuthDelivery(id, { code, destination })]
+    );
+  }
   return id;
 }
 async function successful() {
@@ -117,8 +127,30 @@ it('upgrades without replaying old successful sends and preserves secret templat
   expect(await publishAuthDeliveryNotice(pool)).toBe('idle');
 });
 it('publishes once after confirmed delivery and the real worker delivers a private bilingual notice', async () => {
-  const { id, send } = await successful();
-  expect(await publishAuthDeliveryNotice(pool)).toBe('published');
+  const traceId = '82'.repeat(16),
+    origin = '83'.repeat(8);
+  const deliverySpan = '84'.repeat(8),
+    noticeSpan = '85'.repeat(8);
+  const id = await queue('notice-user', 'login', `00-${traceId}-${origin}-01`);
+  const end = vi.fn();
+  const startSpan = vi.fn((name, _options, context) => {
+    expect(trace.getSpanContext(context)).toMatchObject({ traceId, spanId: origin });
+    const spanId = name === 'auth.delivery.process' ? deliverySpan : noticeSpan;
+    return { spanContext: () => ({ traceId, spanId, traceFlags: 1 }), end };
+  });
+  const tracer = { startSpan } as unknown as Tracer;
+  const send = vi.fn(async () => {
+    expect(currentTraceparent()).toBe(`00-${traceId}-${deliverySpan}-01`);
+    return 'accepted-otp-receipt';
+  });
+  expect(await runAuthDelivery(pool, send, tracer)).toBe('sent');
+  expect(await publishAuthDeliveryNotice(pool, tracer)).toBe('published');
+  expect(startSpan.mock.calls.map(([name, options]) => [name, options.kind])).toEqual([
+    ['auth.delivery.process', SpanKind.CONSUMER],
+    ['auth.delivery.notice', SpanKind.CONSUMER],
+  ]);
+  expect(end).toHaveBeenCalledTimes(2);
+  expect(currentTraceparent()).toBeNull();
   expect(await publishAuthDeliveryNotice(pool)).toBe('idle');
   const event = (
     await pool.query(
@@ -127,6 +159,7 @@ it('publishes once after confirmed delivery and the real worker delivers a priva
     )
   ).rows[0];
   expect(event).toMatchObject({ profile_id: null, user_id: 'notice-user', channels: ['in_app'] });
+  expect(event.trace_parent).toBe(`00-${traceId}-${noticeSpan}-01`);
   expect(Object.keys(event.payload).sort()).toEqual(['channel', 'purpose', 'sentAt']);
   expect(event.payload).toMatchObject({
     channel: 'ایمیل / Email',

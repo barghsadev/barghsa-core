@@ -1,3 +1,4 @@
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { ConflictException, Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
 import type { PoolClient } from 'pg';
@@ -333,7 +334,10 @@ export class SolarContractSourceService {
     await recordEvent(client, available, 'PendingScan', { userId: actorId }, ip);
     await notifyDocumentUpload(client, available);
     if (scan)
-      await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [created.id]);
+      await client.query('INSERT INTO document_scan_jobs(document_id,trace_parent) VALUES($1,$2)', [
+        created.id,
+        currentTraceparent(),
+      ]);
     else {
       const submitted = (
         await db

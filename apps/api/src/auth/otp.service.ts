@@ -1,3 +1,4 @@
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
@@ -143,8 +144,8 @@ export class OtpService {
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id, step_up_session_id)
          VALUES ($1, $2, $3, $4, $5, $6, clock_timestamp() + $7::integer * interval '1 second',
            $8, $9, $12, $13, $15) RETURNING challenge_id,expires_at
-       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-         SELECT $10,challenge_id,$3,$11,expires_at,$14 FROM challenge`,
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id,trace_parent)
+         SELECT $10,challenge_id,$3,$11,expires_at,$14,$16 FROM challenge`,
       [
         challengeId,
         destination,
@@ -161,6 +162,7 @@ export class OtpService {
         binding?.previousChallengeId ?? null,
         correlationIdStorage.getStore() ?? null,
         binding?.sessionId ?? null,
+        currentTraceparent(),
       ]
     );
 
@@ -249,8 +251,8 @@ export class OtpService {
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose, auth_version)
          SELECT $1,$2,$3,user_id,$5,clock_timestamp() + $6::integer * interval '1 second',$7,auth_version
          FROM account RETURNING challenge_id,expires_at
-       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-         SELECT $8,challenge_id,$3,$9,expires_at,$11 FROM challenge`,
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id,trace_parent)
+         SELECT $8,challenge_id,$3,$9,expires_at,$11,$12 FROM challenge`,
       [
         challengeId,
         destination,
@@ -263,6 +265,7 @@ export class OtpService {
         encrypted,
         authVersion ?? null,
         correlationIdStorage.getStore() ?? null,
+        currentTraceparent(),
       ]
     );
 
@@ -345,8 +348,8 @@ export class OtpService {
          resend_count = resend_count + 1, updated_at = NOW()
        WHERE challenge_id = $3 AND otp_hash = $4 AND consumed_at IS NULL
          AND expires_at > clock_timestamp() AND attempts_remaining > 0 RETURNING challenge_id,expires_at)
-       INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-       SELECT $5,challenge_id,$1,$6,expires_at,$7 FROM challenge`,
+       INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id,trace_parent)
+       SELECT $5,challenge_id,$1,$6,expires_at,$7,$8 FROM challenge`,
       [
         otpHash,
         config.ttlSeconds,
@@ -355,6 +358,7 @@ export class OtpService {
         deliveryId,
         encrypted,
         correlationIdStorage.getStore() ?? null,
+        currentTraceparent(),
       ]
     );
     if (updated.rowCount === 0) {

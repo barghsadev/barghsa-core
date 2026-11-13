@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from './users.js';
 import { otpChallenges } from './otp-challenge.js';
+import { queueTraceParentCheck } from './queue-trace-parent.js';
 
 export const authDeliveryOutbox = pgTable(
   'auth_delivery_outbox',
@@ -18,6 +19,7 @@ export const authDeliveryOutbox = pgTable(
     id: uuid('id').primaryKey(),
     /** Retained after the encrypted message is erased; NULL for older writers. */
     correlationId: text('correlation_id'),
+    traceParent: text('trace_parent'),
     challengeId: text('challenge_id').references(() => otpChallenges.challengeId),
     kind: text('kind').notNull().default('otp'),
     userId: text('user_id').references(() => users.userId),
@@ -38,6 +40,7 @@ export const authDeliveryOutbox = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    queueTraceParentCheck('auth_delivery_outbox', table.traceParent),
     check(
       'auth_delivery_binding_check',
       sql`(${table.kind}='otp' AND ${table.challengeId} IS NOT NULL AND ${table.userId} IS NULL) OR (${table.kind}='staff_activation' AND ${table.challengeId} IS NULL AND ${table.userId} IS NOT NULL)`

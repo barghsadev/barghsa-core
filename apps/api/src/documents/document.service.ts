@@ -1,3 +1,4 @@
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import {
   BadRequestException,
   ConflictException,
@@ -891,7 +892,10 @@ export class DocumentService {
             await recordEvent(client, changed, 'PendingScan', actor, ip);
             await notifyDocumentUpload(client, changed);
             if (scannerConfigured) {
-              await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [id]);
+              await client.query(
+                'INSERT INTO document_scan_jobs(document_id,trace_parent) VALUES($1,$2)',
+                [id, currentTraceparent()]
+              );
             } else if (changed.supersedesDocumentId) {
               const replaced = (
                 await createDbClient(client)

@@ -1,7 +1,9 @@
 import type { Pool, PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { OpenAiEmbeddingClient, type EmbeddingClient } from '@barghsa/shared/ai-models';
+import { SpanStatusCode, type Tracer } from '@opentelemetry/api';
 import { chunkText, documentText, webText } from './extraction.js';
+import { withQueueTrace } from '../jobs/queue-trace.js';
 
 export const KB_PROCESSING_INTERVAL_MS = 10_000;
 export const KB_PROCESSING_JOB_TYPE = 'knowledge_base_processing';
@@ -13,6 +15,7 @@ interface Claim {
   source_config: { urls?: string[]; apiUrl?: string };
   chunking_strategy: { size: number; overlap: number };
   vector_embedding_model: string | null;
+  trace_parent: string | null;
 }
 interface DocumentRow {
   id: string;
@@ -39,7 +42,7 @@ async function claimKb(pool: Pool): Promise<Claim | null> {
      UPDATE knowledge_bases kb SET content_state='processing',content_error=NULL,updated_at=NOW()
      FROM candidate c WHERE kb.id=c.id
      RETURNING kb.id,kb.xmin::text AS revision,kb.source_type,kb.source_config,
-               kb.chunking_strategy,kb.vector_embedding_model`
+               kb.chunking_strategy,kb.vector_embedding_model,kb.trace_parent`
   );
   return result.rows[0] ?? null;
 }
@@ -144,10 +147,24 @@ function safeError(error: unknown): string {
 export async function runKnowledgeBaseProcessing(
   pool: Pool,
   storage: StorageProvider,
-  embedder: EmbeddingClient = new OpenAiEmbeddingClient()
+  embedder: EmbeddingClient = new OpenAiEmbeddingClient(),
+  tracer?: Tracer
 ): Promise<'idle' | 'ready' | 'error' | 'stale'> {
   const kb = await claimKb(pool);
   if (!kb) return 'idle';
+  return withQueueTrace(tracer, 'knowledge_base.process', kb.trace_parent, async (span) => {
+    const outcome = await processKnowledgeBase(pool, storage, embedder, kb);
+    if (outcome === 'error') span?.setStatus({ code: SpanStatusCode.ERROR });
+    return outcome;
+  });
+}
+
+async function processKnowledgeBase(
+  pool: Pool,
+  storage: StorageProvider,
+  embedder: EmbeddingClient,
+  kb: Claim
+) {
   let passages: Passage[];
   let embeddings: number[][];
   try {

@@ -17,7 +17,7 @@ import { createServer as createHttpServer, request as forwardHttp } from 'node:h
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import {
   S3StorageProvider,
   STORAGE_UPLOAD_SCAN_JOB_TYPE,
@@ -27,6 +27,7 @@ import {
 import PDFDocument from 'pdfkit';
 import sharp from 'sharp';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
+import { SpanKind, trace, type Context, type SpanOptions, type Tracer } from '@opentelemetry/api';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from '../contract/contract.service.js';
 import type { DocumentService } from './document.service.js';
@@ -585,10 +586,31 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     './dist/documents/scan-runner.js'
   ) as typeof import('../../../worker/dist/documents/scan-runner.js');
   const original = http;
+  const collector = createHttpServer((request, response) => {
+    request.resume();
+    request.once('end', () => response.end('{}'));
+  });
+  await new Promise<void>((done) => collector.listen(0, '127.0.0.1', done));
+  const address = collector.address();
+  if (!address || typeof address === 'string') throw new Error('Missing collector address');
   process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
-  const configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
-  http = configured;
+  let configured: typeof http | undefined;
   try {
+    configured = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      storageEndpoint,
+      '',
+      10,
+      '',
+      false,
+      {
+        endpoint: '',
+        intervalMs: 1000,
+        timeoutMs: 1000,
+        traces: { endpoint: `http://127.0.0.1:${address.port}/v1/traces`, sampleRate: 1 },
+      }
+    );
+    http = configured;
     const admin = await login();
     await http.pool.query('UPDATE users SET is_staff=true,is_admin=true WHERE user_id=$1', [admin]);
     const f = await owner();
@@ -644,12 +666,36 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     expect(
       ((await (await send(`documents/${successor.id}`, f.user)).json()) as DocumentDetail).state
     ).toBe('Available');
-    const infected = await confirm(await create(f.user), f.user);
+    const traceId = '8b'.repeat(16);
+    const infectedUpload = await create(f.user);
+    headers[f.user]!.traceparent = `00-${traceId}-${'8c'.repeat(8)}-01`;
+    const infected = await confirm(infectedUpload, f.user);
+    delete headers[f.user]!.traceparent;
+    const parent = (
+      await http.pool.query<{ trace_parent: string }>(
+        'SELECT trace_parent FROM document_scan_jobs WHERE document_id=$1',
+        [infected.id]
+      )
+    ).rows[0]!.trace_parent;
+    expect(parent).toMatch(new RegExp(`^00-${traceId}-[a-f0-9]{16}-01$`));
+    const workerSpanId = '8d'.repeat(8);
+    const end = vi.fn();
+    const startSpan = vi.fn((name: string, options: SpanOptions, context: Context) => {
+      expect(name).toBe('document.scan.process');
+      expect(options.kind).toBe(SpanKind.CONSUMER);
+      expect(trace.getSpanContext(context)).toMatchObject({
+        traceId,
+        spanId: parent.split('-')[2],
+      });
+      return { spanContext: () => ({ traceId, spanId: workerSpanId, traceFlags: 1 }), end };
+    });
+    const tracer = { startSpan } as unknown as Tracer;
     expect(
-      await runDocumentScans(http.pool, storage, endpoint, fixtureDocumentScan('infected'))
+      await runDocumentScans(http.pool, storage, endpoint, fixtureDocumentScan('infected'), tracer)
     ).toMatchObject({
       infected: 1,
     });
+    expect(end).toHaveBeenCalledOnce();
     const quarantined = (await (
       await send(`documents/${infected.id}`, f.user)
     ).json()) as DocumentDetail;
@@ -658,11 +704,13 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     expect(
       (
         await http.pool.query(
-          "SELECT event_key FROM notification_outbox WHERE user_id=$1 AND event_key='document.quarantined'",
+          "SELECT event_key,trace_parent FROM notification_outbox WHERE user_id=$1 AND event_key='document.quarantined'",
           [admin]
         )
       ).rows
-    ).toHaveLength(1);
+    ).toEqual([
+      { event_key: 'document.quarantined', trace_parent: `00-${traceId}-${workerSpanId}-01` },
+    ]);
     const retrying = await confirm(await create(f.user), f.user);
     expect(
       await runDocumentScans(http.pool, storage, endpoint, async () => {
@@ -726,8 +774,12 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     }
   } finally {
     http = original;
-    await configured.close();
     delete process.env['DOCUMENT_CLAMAV_HOST'];
+    try {
+      await configured?.close();
+    } finally {
+      await new Promise<void>((done) => collector.close(() => done()));
+    }
   }
 }, 60_000);
 

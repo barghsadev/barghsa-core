@@ -24,6 +24,8 @@ import { maxAttemptsForType, priorityForType } from './retry-schedule.js';
 export interface EnqueueOutboxInput {
   /** Originating request/job trace; omit for uncorrelated work. */
   correlationId?: string | null;
+  /** Explicit parent for jobs whose transaction was opened before their span. */
+  traceParent?: string | null;
   /** Owner of the notification (recipient profile). */
   profileId: string | null;
   /** Recipient user id (in-app delivery target). Falls back to profileId. */
@@ -144,8 +146,9 @@ export async function enqueueOutbox(
   const insertResult = await client.query<{ id: string }>(
     `INSERT INTO notification_outbox
        (profile_id, user_id, event_key, payload, channels, status,
-        idempotency_key, max_attempts, scheduled_for, correlation_id)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        idempotency_key, max_attempts, scheduled_for, correlation_id, trace_parent)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+             COALESCE($11, nullif(current_setting('barghsa.traceparent', true), '')))
      ON CONFLICT (idempotency_key) DO NOTHING
      RETURNING id`,
     [
@@ -159,6 +162,7 @@ export async function enqueueOutbox(
       maxAttempts,
       input.scheduledFor ?? null,
       input.correlationId ?? null,
+      input.traceParent ?? null,
     ]
   );
 

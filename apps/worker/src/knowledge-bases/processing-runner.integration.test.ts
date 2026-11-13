@@ -3,6 +3,8 @@ import { Pool } from 'pg';
 import { beforeAll, afterAll, beforeEach, expect, it, vi } from 'vitest';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import type { EmbeddingClient } from '@barghsa/shared/ai-models';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
+import { SpanKind, trace, type Tracer } from '@opentelemetry/api';
 import { runMigrations } from '../../../../packages/db/src/migrate';
 import { runKnowledgeBaseProcessing } from './processing-runner.js';
 
@@ -55,7 +57,7 @@ beforeEach(async () => {
   await pool.query("DELETE FROM storage_records WHERE storage_key LIKE 'kb-test/%'");
 });
 
-async function seed() {
+async function seed(traceParent: string | null = null) {
   const key = `kb-test/${randomUUID()}.txt`;
   await pool.query(
     "INSERT INTO storage_records(storage_key,status,file_name,metadata) VALUES($1,'active','guide.txt','{}'::jsonb)",
@@ -63,9 +65,9 @@ async function seed() {
   );
   const kb = (
     await pool.query<{ id: string }>(
-      `INSERT INTO knowledge_bases(title,created_by,vector_embedding_model,chunking_strategy)
-     VALUES('Meter guide',$1,'embed-1536','{"size":100,"overlap":10}'::jsonb) RETURNING id`,
-      [user]
+      `INSERT INTO knowledge_bases(title,created_by,vector_embedding_model,chunking_strategy,trace_parent)
+     VALUES('Meter guide',$1,'embed-1536','{"size":100,"overlap":10}'::jsonb,$2) RETURNING id`,
+      [user, traceParent]
     )
   ).rows[0]!.id;
   await pool.query(
@@ -76,11 +78,30 @@ async function seed() {
 }
 
 it('extracts, chunks, embeds and publishes a ready KB with retrievable vectors', async () => {
-  const { kb, key } = await seed();
-  const embed = vi.fn(async (texts: string[]) => texts.map(vector));
-  expect(await runKnowledgeBaseProcessing(pool, storage, { embed } as EmbeddingClient)).toBe(
-    'ready'
-  );
+  const traceId = '86'.repeat(16),
+    origin = '87'.repeat(8),
+    worker = '88'.repeat(8);
+  const { kb, key } = await seed(`00-${traceId}-${origin}-01`);
+  const end = vi.fn();
+  const startSpan = vi.fn((name, options, context) => {
+    expect(name).toBe('knowledge_base.process');
+    expect(options.kind).toBe(SpanKind.CONSUMER);
+    expect(trace.getSpanContext(context)).toMatchObject({ traceId, spanId: origin });
+    return { spanContext: () => ({ traceId, spanId: worker, traceFlags: 1 }), end };
+  });
+  const embed = vi.fn(async (texts: string[]) => {
+    expect(currentTraceparent()).toBe(`00-${traceId}-${worker}-01`);
+    return texts.map(vector);
+  });
+  expect(
+    await runKnowledgeBaseProcessing(
+      pool,
+      storage,
+      { embed } as EmbeddingClient,
+      { startSpan } as unknown as Tracer
+    )
+  ).toBe('ready');
+  expect(end).toHaveBeenCalledOnce();
   expect(getObject).toHaveBeenCalledWith(key);
   expect(embed).toHaveBeenCalled();
   const state = (
