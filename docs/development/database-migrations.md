@@ -2,6 +2,12 @@
 
 `packages/db/drizzle/production` is the deployable migration history. The older SQL files outside that directory remain historical evidence. Generate from `packages/db/drizzle.config.ts`; keep the schema snapshot and ordered journal together with each new migration. Excluding test schemas prevents fixture tables entering production. Do not rewrite a migration already applied to a database.
 
+## Local development
+
+Run `pnpm setup:dev` to apply the committed schema and seed to the local Compose database. To change the schema, run `pnpm --filter @barghsa/db db:generate`, review the generated SQL and apply it with `pnpm --filter @barghsa/db db:migrate` using a local database connection. Commit the SQL, snapshot and journal together. The journal includes SQL-only financial constraints, audit triggers and extension setup. Both a fresh database and an existing migrated database need that history.
+
+The pinned Drizzle schema push failed on two disposable databases. On an empty database it emitted a foreign key before the referenced unique key. On the migrated database it attempted to recreate `uq_notification_job_outbox_channel`. The development workflow uses the same ordered runner as deployment and the package no longer exposes a schema-push script.
+
 ## Expand, migrate, contract
 
 1. **Expand:** add compatible nullable columns, tables, indexes or constraints that allow the current and next application versions to coexist. Add new validation as `NOT VALID` when legacy data needs reconciliation. Review locking and resource costs. Run the migration runner before starting the new application version.

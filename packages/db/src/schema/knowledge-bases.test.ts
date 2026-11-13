@@ -113,7 +113,7 @@ describe('knowledge base schema (T-09.11.02)', () => {
 
   it('drizzle schema declares UUID FK columns matching migration 0043', () => {
     // kb_documents.kb_id, kb_group_members.group_id/kb_id must be UUID-typed
-    // in the schema so db:push produces the same columns as the migration.
+    // in the Drizzle schema to match the migration.
     const columns = [
       kbDocuments['kbId'],
       kbGroupMembers['groupId'],

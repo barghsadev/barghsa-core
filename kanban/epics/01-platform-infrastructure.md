@@ -1144,34 +1144,34 @@ The PR gate MUST check all of the following, failing the PR if any fails:
 
 #### S-07.01: Local development environment and scripts
 
-**Description:** As a developer, I want a documented, one-command local development setup with Docker services, database push, seed, and hot-reload dev servers so that I can start contributing within minutes.
+**Description:** As a developer, I want a documented, one-command local development setup with Docker services, committed database migrations, seed, and hot-reload dev servers so that I can start contributing within minutes.
 
 **Acceptance Criteria:**
 - `cp .env.example .env` followed by `docker compose up -d` starts PostgreSQL, Redis, MinIO
 - `pnpm install` installs all dependencies
-- `pnpm db:push` pushes Drizzle schema to local PostgreSQL (no migration step needed for dev)
+- `pnpm --filter @barghsa/db db:migrate` synchronizes local PostgreSQL using the committed schema history, including SQL-only constraints and triggers
 - `pnpm db:seed` seeds default data
 - `pnpm dev` starts web (port 3000), API (port 4000 with Swagger), and worker (background) with hot reload
 - OTP codes printed to API console in dev (`OTP_CONSOLE=true`)
-- First-time developer setup script: `pnpm setup:dev` that copies .env.example if .env not present, starts Docker services, runs install, push, seed
-- Dev OTP bypass for testing: in development, a special endpoint or fixed OTP code "000000" is available when `OTP_CONSOLE=true`
+- First-time developer setup script: `pnpm setup:dev` that copies .env.example if .env not present, starts Docker services, installs dependencies, applies migrations, and seeds
+- Local OTP testing uses the normal send and resend controls and the generated challenge code from the development console when `OTP_CONSOLE=true`
 - Environment indicators: API returns `X-Environment: development` header; UI shows subtle "Development" badge
 - Local development may create a seeded admin using credentials from env vars; production never uses a hardcoded default password
 
 **Tasks:**
 
 - **T-07.01.01:** Create `pnpm setup:dev` convenience script
-  - **Notes:** Shell script or pnpm script: check if `.env` exists, if not, copy `.env.example`. Run `docker compose up -d`. Wait for PostgreSQL health. Run `pnpm install`. Run `pnpm db:push`. Run `pnpm db:seed`. Print success message with URLs. Document in README.
+  - **Notes:** Check if `.env` exists and copy `.env.example` if needed. Start local Compose services and wait for health. Install locked dependencies, apply committed migrations and seed. Print success and URLs. Document in README.
   - **Dependencies:** T-03.02.02, T-03.02.03, S-02.01, S-02.04
   - **Complexity:** S
 
-- **T-07.01.02:** Configure dev-mode OTP bypass and console printing
-  - **Notes:** When `OTP_CONSOLE=true` and `NODE_ENV=development`, (a) any OTP verification accepts `000000` as a valid code (dev bypass), (b) real OTPs are printed to `console.log` with clear formatting: `[OTP] Your verification code is: 123456`. A test button triggers OTP sending without real SMS/email. Staff can use bypass for onboarding new test accounts. Bypass is never enabled in staging or production.
+- **T-07.01.02:** Configure development OTP console delivery
+  - **Notes:** Print generated OTPs to the local API console only when `OTP_CONSOLE=true` and `NODE_ENV=development`. Use normal challenge-bound verification and resend. Keep test destinations isolated and leave external delivery credentials unset for console-only testing. Staging and production suppress OTP output.
   - **Dependencies:** T-03.02.03
   - **Complexity:** S
 
-- **T-07.01.03:** Create `pnpm db:push` script for dev schema synchronization
-  - **Notes:** Uses `drizzle-kit push:pg` to sync Drizzle schema to PostgreSQL without creating migration files. This is for development only. Document that push is not a substitute for proper migrations in production. The script warns: "This is a development operation. Use db:migrate for production deployments."
+- **T-07.01.03:** Synchronize the local schema with committed migrations
+  - **Notes:** Use the shared migration runner with a local development connection. Preserve the ordered journal, SQL-only safeguards and repeatable migration behavior. Document how to generate, review and apply schema changes locally and remove the unsupported schema-push command.
   - **Dependencies:** S-02.01
   - **Complexity:** S
 

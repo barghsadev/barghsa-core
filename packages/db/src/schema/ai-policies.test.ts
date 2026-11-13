@@ -72,7 +72,7 @@ describe('AI policy schema (T-09.11.03)', () => {
 
   it('drizzle schema declares UUID FK columns matching migration 0044', () => {
     // ai_policy_group_members.group_id/policy_id must be UUID-typed in the
-    // schema so db:push produces the same columns as the migration.
+    // Drizzle schema to match the migration.
     const columns = [aiPolicyGroupMembers['groupId'], aiPolicyGroupMembers['policyId']] as Array<{
       getSQLType: () => string;
     }>;
