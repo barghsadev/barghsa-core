@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:47:40+00:00",
+  "updated": "2026-11-13T10:54:57+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header and AI catalogue corrections address the shard-one deterministic failures. WebKit shard five exceeded its job budget while retrying a combined limit-settings test. All 36 isolated settings cases passed locally. Knowledge and registration had 39 local passes without retries. Signed-in auth entry still needs triage, and a clean scheduled rollup and delivery remain required. The auth stall reproduces even with a same-origin HTTP response fixture. Review preserved browser traces for response consumption and document commit. No experimental patch was accepted.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header, AI catalogue and limit-settings corrections have targeted passing checks. Registration now waits for settled strength feedback before the consent click. Both registration suites passed 45 browser cases. The knowledge form and intermittent signed-in auth entry still need closure. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21795,7 +21795,8 @@
           "release-0.6-nightly-header-target",
           "release-0.6-nightly-ai-catalogue-scroll",
           "release-0.6-nightly-limit-settings-isolation",
-          "release-0.6-nightly-auth-entry-triage"
+          "release-0.6-nightly-auth-entry-triage",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": null
       }
@@ -34083,7 +34084,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -34163,7 +34165,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -34691,6 +34693,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -34852,7 +34862,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -34932,7 +34943,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -35460,6 +35471,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -35754,7 +35773,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -35834,7 +35854,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -36362,6 +36382,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -36514,7 +36542,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -36594,7 +36623,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -37122,6 +37151,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -37288,7 +37325,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -37368,7 +37406,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -37896,6 +37934,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -38063,7 +38109,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -38143,7 +38190,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -38671,6 +38718,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -38837,7 +38892,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -38917,7 +38973,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -39445,6 +39501,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -39615,7 +39679,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -39695,7 +39760,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -40223,6 +40288,14 @@
                 "apps/api/src/auth/otp-config-http.integration.test.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ],
           "presentation_renewals": [
@@ -622179,7 +622252,8 @@
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-proof-callers-and-browser-readback",
-          "release-0.6-registration-pointer-after-strength"
+          "release-0.6-registration-pointer-after-strength",
+          "release-0.6-registration-consent-timing"
         ],
         "current_acceptance": {
           "kind": "verified-public-registration-privacy",
@@ -622219,7 +622293,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+              "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -622299,6 +622373,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-registration-consent-timing",
+              "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the recovery test synchronizes with the already-rendered password strength meter before consenting. The existing pointer interaction and challenge, retry, password and OTP assertions remain. The affected recovery and strength suites passed 45 cases in mobile Chromium, mobile Safari and desktop WebKit."
             }
           ]
         }
@@ -1194256,6 +1194338,67 @@
         {
           "file": "restored-build.log",
           "sha256": "8d0d0c04527b2d486b7dbfa6a3db7c9e8fb415f392907e42609e167caf0aebd0"
+        }
+      ]
+    },
+    "release-0.6-registration-consent-timing": {
+      "batch": "release-0.6-registration-consent-timing",
+      "base_commit": "2cb2e7cd4c0ad04f91cdd20a43ed082c17412458",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "02-auth-users-admin.md#T-01.01.01",
+        "02-auth-users-admin.md#T-01.01.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-01.01.05",
+        "02-auth-users-admin.md#T-01.01.06",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-01.02.02",
+        "02-auth-users-admin.md#T-01.02.03",
+        "06-security-testing-observability.md#T-06.01.02.06"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/registration-recovery.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "e8e9cc026eb2a6d4012800fb77743fe2e1eca317f5a9ef8eeb62c76e3da96559"
+        },
+        {
+          "path": "apps/web/e2e/registration-strength.spec.ts",
+          "sha256": "9ccc062f1ff6f34554fd338090bdad1d9e8c7e3678bff11d559e3bb1151ba04a"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "69f3ad64ddf1279ec4a897edd877779078eecf9bba4d499164eb85be5013adc6"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "6e12a80e227d41ab4fd633a24f7026c7b68b654a7841c7cea0ccd7c37a3ded2b"
+        }
+      ],
+      "checks": [
+        "Hosted mobile Chromium run 43398455059 showed consent remaining unchecked after the pointer action. The trace places the lazy strength download immediately before the action. A controlled mobile Chromium probe in English and Persian confirmed the consent control moved down by 20px when the asynchronous hint appeared. It did not reproduce the failed click by itself.",
+        "The invalid-challenge and restart fixtures now wait for the existing strength meter to settle before the pointer action. No production code changed. Existing assertions remain and the restart path explicitly checks consent.",
+        "All 45 targeted recovery and password strength cases passed without retries in mobile Chromium, mobile Safari and desktop WebKit. Prettier and diff validation passed.",
+        "A separate auth probe ran 24 signed-in entry trials across Chromium, WebKit and pinned Firefox using both browser interception and same-origin HTTP. All 24 passed. This probe does not resolve the previously reproduced intermittent auth stall."
+      ],
+      "limitations": [
+        "The earlier hosted flake remains in the historical report. A clean hosted scheduled rollup, authenticated entry and knowledge form follow-up, and real report delivery remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-registration-consent-timing",
+      "execution_receipts": [
+        {
+          "file": "browser.log",
+          "sha256": "d6e89ddc8414651c00b8537f33aa873fe23e34bfb4b7f020a2a4fc3ae564bc73"
+        },
+        {
+          "file": "controlled-consent.json",
+          "sha256": "c11ae57d92377c0c4113ee22a7103275f866cab05c7cf02ff88930a0a70d5c78"
+        },
+        {
+          "file": "probe-receipts.json",
+          "sha256": "ccd94cb0d8a1b6edac9e7492b32459264c8a688aab98f9fa37f5613b1d62e9bb"
         }
       ]
     }

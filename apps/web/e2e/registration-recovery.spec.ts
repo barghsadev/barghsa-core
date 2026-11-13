@@ -1,26 +1,32 @@
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
 import { t } from '@barghsa/i18n/auth';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Page } from './coverage-fixture';
 
 const challengeId = '00000000-0000-4000-8000-000000000001';
 const nextChallengeId = '00000000-0000-4000-8000-000000000002';
-async function freshRegistration(page: import('@playwright/test').Page, locale: 'en' | 'fa') {
+async function enterRegistrationPassword(page: Page, password: string) {
+  await page.locator('#password').fill(password);
+  const strength = page.locator('#password-strength').getByRole('progressbar');
+  // The lazy strength hint can move the consent control while a pointer click is in flight.
+  await expect(strength).toHaveAttribute('aria-busy', 'false');
+  return strength;
+}
+
+async function freshRegistration(page: Page, locale: 'en' | 'fa') {
   await page
     .getByRole('button', { name: registrationFormText('restart', locale), exact: true })
     .click();
   await expect(page).toHaveURL(/\/register$/);
   await page.locator('#username').fill('test@example.test');
   await page.locator('#username').press('Tab');
-  await page.locator('#password').fill(' Fresh synthetic value 12A ');
-  const strength = page.locator('#password-strength').getByRole('progressbar');
-  await expect(strength).toHaveAttribute('aria-busy', 'false');
+  const strength = await enterRegistrationPassword(page, ' Fresh synthetic value 12A ');
   await expect(strength).toHaveAttribute('aria-valuenow', '100');
   await page.getByRole('checkbox').check();
   await page.locator('button[type="submit"]').click();
   await expect(page).toHaveURL(new RegExp(`/register/verify\\?challengeId=${nextChallengeId}`));
 }
-async function prepareFreshRegistration(page: import('@playwright/test').Page) {
+async function prepareFreshRegistration(page: Page) {
   await page.route('**/api/tos/current?*', (route) =>
     route.fulfill({
       json: {
@@ -191,7 +197,7 @@ for (const challenge of [42, { invalid: true }, '   ']) {
     await page.goto('/register');
     await page.locator('#username').fill('retry@example.test');
     await page.locator('#username').press('Tab');
-    await page.locator('#password').fill('Browser-registration-password-123!');
+    await enterRegistrationPassword(page, 'Browser-registration-password-123!');
     const consent = page.getByRole('checkbox');
     await consent.check();
     await expect(consent).toBeChecked();
@@ -217,8 +223,9 @@ for (const challenge of [42, { invalid: true }, '   ']) {
       .getByRole('button', { name: registrationFormText('restart', 'fa'), exact: true })
       .click();
     await page.locator('#username').press('Tab');
-    await page.locator('#password').fill('Browser-registration-password-123!');
-    await page.getByRole('checkbox').check();
+    await enterRegistrationPassword(page, 'Browser-registration-password-123!');
+    await consent.check();
+    await expect(consent).toBeChecked();
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(new RegExp(`/register/verify\\?challengeId=${challengeId}`));
     expect(attempts).toBe(2);
