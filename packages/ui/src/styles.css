@@ -824,16 +824,16 @@
     @apply hidden items-center gap-1 border-e pe-2 lg:flex;
   }
   .shell-topbar-brand {
-    @apply col-start-1 row-start-1 flex min-h-11 w-fit items-center text-foreground no-underline;
+    @apply col-start-1 row-start-1 flex min-h-11 w-fit min-w-11 items-center text-foreground no-underline;
   }
   .shell-breadcrumbs {
     @apply col-span-2 col-start-1 row-start-2 min-w-0 pb-2 text-sm lg:col-span-1 lg:row-start-1 lg:pb-0;
   }
   .shell-breadcrumb-parent {
-    @apply max-w-48 truncate rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+    @apply block min-h-11 min-w-11 max-w-48 truncate rounded-sm py-3 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
   .shell-breadcrumb-trigger {
-    @apply min-h-8 cursor-pointer list-none rounded-md px-2 py-1 font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+    @apply flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-md px-2 py-1 font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
   .shell-breadcrumb-menu {
     @apply absolute start-0 top-full z-40 mt-1 min-w-48 space-y-3 rounded-lg border bg-card p-4 shadow-lg;
