@@ -10,7 +10,7 @@ Interaction-phase rules measure code fetched after an explicit action. They excl
 
 Contract review and signature schemas load on the first field validation or submit, with a separate 20 KB interaction limit. The contract detail limit remains 250 KB. Every static dependency of the schema counts toward its own limit; a static import from the detail also counts toward the detail limit.
 
-Toast feedback loads its renderer when the first success or error is requested. The pending message is shown after the renderer mounts, and the renderer has its own interaction budget. Customer purchase routes stay eager; their initial budgets include their route code.
+Toast feedback loads its renderer when the first success or error is requested. The pending message is shown after the renderer mounts, and the renderer has its own interaction budget. Electricity ordering stays in the initial customer bundle. Saving and wallet use separate route chunks with the workspace loading skeleton. An eager build of all three reached 429.12 KB for the dashboard and 401.32 KB for electricity, exceeding their 300 KB and 250 KB budgets. The production browser checks hold the route scripts and verify stable header geometry and reduced-motion loading in Persian and English.
 
 Size Limit and its file plugin are pinned to 12.1.0, which supports the project's Node 20 baseline as well as the current Node 22/24 tooling. The 13.x release requires a newer Node baseline and was not retained.
 

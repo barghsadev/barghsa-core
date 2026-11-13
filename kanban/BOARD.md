@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-13T15:05:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-13T15:12:04+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1256 | Accepted with unchanged source bindings. |
+| done | 1257 | Accepted with unchanged source bindings. |
 | verify | 1 | Existing work may be complete; inspect evidence before building. |
-| partial | 103 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 102 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 6 | Named owner or external prerequisite. |
@@ -974,7 +974,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.02.04` | done | Earlier acceptance_verified | Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck` |
 | `01-platform-infrastructure.md#T-01.03.01` | done | Earlier acceptance_verified | Configure Vite SPA build pipeline in `apps/web` |
 | `01-platform-infrastructure.md#T-01.03.02` | done | Earlier acceptance_verified | Configure NestJS build pipeline in `apps/api` |
-| `01-platform-infrastructure.md#T-01.03.03` | partial | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |
+| `01-platform-infrastructure.md#T-01.03.03` | done | Earlier acceptance_verified | Implement route-level code splitting and lazy loading for heavy modules |
 | `01-platform-infrastructure.md#T-01.03.04` | done | Earlier acceptance_verified | Implement bundle budget checking in CI |
 | `01-platform-infrastructure.md#T-01.03.05` | done | Earlier acceptance_verified | Configure hashed filenames and CDN-ready public asset output |
 | `01-platform-infrastructure.md#T-01.04.01` | done | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |

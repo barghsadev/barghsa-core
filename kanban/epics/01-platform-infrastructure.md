@@ -137,7 +137,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules
-  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.
+  - **Notes:** Lazy-load admin dashboards, AI chat, document editors, charts, and video viewers. Keep electricity ordering in the initial customer bundle. Load saving and wallet routes in separate chunks to meet the dashboard and electricity budgets. Verify the purchase journeys keep their navigation and layout stable while chunks load.
   - **Dependencies:** T-01.03.01
   - **Complexity:** M
   - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.

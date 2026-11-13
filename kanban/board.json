@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T15:05:38+00:00",
+  "updated": "2026-11-13T15:12:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -993,10 +993,20 @@
       ],
       "decision": "Use committed local migrations and the existing challenge-bound development OTP controls. Remove the unsupported schema-push script. No database or OTP safeguards are changed.",
       "notes_path": "docs/development/database-migrations.md"
+    },
+    "v06_purchase_route_splitting": {
+      "status": "implemented",
+      "date": "2026-11-13",
+      "authority": "Owner direction to use recommended decisions for v0.6.0 and document the important ones.",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.03"
+      ],
+      "decision": "Keep electricity ordering in the initial bundle. Retain split saving and wallet routes with stable reduced-motion loading and the existing route budgets.",
+      "notes_path": "docs/route-bundle-budgets.md"
     }
   },
   "specification_sources": {
-    "kanban/epics/01-platform-infrastructure.md": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b",
+    "kanban/epics/01-platform-infrastructure.md": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20",
     "kanban/epics/02-auth-users-admin.md": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774",
     "kanban/epics/03-core-business.md": "3d1306e5a9443b63e23c9a2b50e646549a88b0ba8d3e7385452f43b49e42c8f8",
     "kanban/epics/04-invoices-wallet-contracts.md": "bc76f87142cad06f9d0feb3ab8d42728403a3bfa9f3f931a8636393cf1f85fb0",
@@ -5712,13 +5722,11 @@
         "line": 139,
         "story": "01-platform-infrastructure.md#spec-f849581ae6bf"
       },
-      "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
-      "status": "partial",
+      "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load admin dashboards, AI chat, document editors, charts, and video viewers. Keep electricity ordering in the initial customer bundle. Load saving and wallet routes in separate chunks to meet the dashboard and electricity budgets. Verify the purchase journeys keep their navigation and layout stable while chunks load.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Resolve the literal eager wallet and savings requirement. The unchanged production-browser suite passes the current stable, reduced-motion split loading. A measured eager build exceeds the existing dashboard and electricity limits by 129.12 KB and 151.32 KB. Retain the limits while reconciling the requirement or isolating separate eager purchase entry bundles."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -5887,13 +5895,95 @@
           "apps/web/vite.config.ts",
           "pnpm-lock.yaml",
           "scripts/check-route-budgets.mjs",
-          "scripts/check-route-budgets.test.mjs"
+          "scripts/check-route-budgets.test.mjs",
+          "kanban/epics/01-platform-infrastructure.md",
+          "docs/route-bundle-budgets.md"
         ],
         "batches": [
           "2026-09-29-auth-route-budget",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-purchase-route-splitting"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-purchase-route-splitting",
+          "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+          "decision": "v06_purchase_route_splitting",
+          "source_evidence": [
+            {
+              "path": "kanban/epics/01-platform-infrastructure.md",
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
+            },
+            {
+              "path": "docs/route-bundle-budgets.md",
+              "sha256": "9a75537c54e3462bfd514887dfe59b759d70ab3648ca92188f84e4c85b71a1af"
+            },
+            {
+              "path": ".size-limit.json",
+              "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "dbebd80473de4a4ab5bb961bf7e8557564efe4c3f4188605065aa0ac64b55938"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+            },
+            {
+              "path": "apps/web/src/router.tsx",
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+            },
+            {
+              "path": "apps/web/entry-routes.js",
+              "sha256": "3b46ac5dcdc4bcd8912090dc626de6432533ffdbb10af0abbdf71687595853a8"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/index.tsx",
+              "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/order.tsx",
+              "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.index.tsx",
+              "sha256": "8a765f837ae3e3bda0b87a2fa0ed27ab5b81b904904bf7d29d1cb1337685d5f6"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.order.tsx",
+              "sha256": "f3a5c509684bfa13c7d421c27c16bfeea1bcbaaf2220a12e6b0ad27e83d33406"
+            },
+            {
+              "path": "apps/web/src/routes/_app/wallet.tsx",
+              "sha256": "06a62593967c8d00199b8fd9c2bdc7deba6f19d24aeefa33e6b1c2a4871c892e"
+            },
+            {
+              "path": "apps/web/src/components/RouteSkeleton.tsx",
+              "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+            },
+            {
+              "path": "apps/web/e2e/purchase-loading.spec.ts",
+              "sha256": "43bb6e02564069cca7daa2eb8e09252ba89fe5e2732956fd83c5ecfe144c2cb3"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
+            },
+            {
+              "path": "scripts/check-route-budgets.mjs",
+              "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+            },
+            {
+              "path": "scripts/check-route-budgets.test.mjs",
+              "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            }
+          ],
+          "checks": [
+            "Compiled manifest and withheld-script journeys verify eager electricity ordering, lazy saving and wallet routes, and split admin, AI, document, chart and video surfaces. Purchase navigation retains the workspace header and renders reduced-motion skeletons in both locales.",
+            "All 102 production gzip budgets passed. Dashboard measured 291.88 KB against 300 KB, electricity 247.26 KB against 250 KB, and wallet 299.97 KB against 300 KB. The earlier eager alternative measured 429.12 KB dashboard and 401.32 KB electricity and was discarded.",
+            "Eighteen targeted cases passed without retries on Chromium, WebKit and pinned Firefox 1575, covering entry navigation, route loading and saving submission and tracking. One initial case on the unpinned Firefox runtime failed the Support-to-login navigation; all 20 pinned repetitions of the entry-navigation test passed."
+          ]
+        }
       }
     },
     {
@@ -9817,7 +9907,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-local-compose-storage",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "deployed_base_column_and_clock_verification",
@@ -9825,7 +9916,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "docs/adr/001-base-column-exceptions.md",
@@ -10404,6 +10495,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -13669,7 +13768,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -13705,7 +13805,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             }
           ],
           "checks": [
@@ -13791,6 +13891,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -14149,7 +14257,8 @@
           "release-0.6-dev-restart-and-preflight-refs",
           "release-0.6-local-compose-storage",
           "release-0.6-process-error-reporting",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -14222,7 +14331,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2",
@@ -14323,6 +14432,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -28646,7 +28763,8 @@
           "2026-09-24-private-analytics",
           "release-0.6-analytics-consent-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -28701,7 +28819,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw",
@@ -28738,6 +28856,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -28794,7 +28920,8 @@
         ],
         "batches": [
           "release-0.6-development-bootstrap",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -28803,7 +28930,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -28852,6 +28979,16 @@
           ],
           "checks": [
             "The two real hosted setup steps passed for a fresh checkout and a repeat preserving its local configuration. The existing final-entrypoint fixture passed 17 cases. The current committed journal and seed also passed twice on a new disposable PostgreSQL 17 database."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
+            }
           ]
         }
       }
@@ -28904,7 +29041,8 @@
         ],
         "batches": [
           "release-0.6-development-bootstrap",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -28913,7 +29051,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -28938,6 +29076,16 @@
           ],
           "checks": [
             "Thirty-three current OTP cases passed. The normal challenge generation, verification and resend remain in use. Development console output requires both opt-in and development mode. Staging, production and test runs suppress it."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
+            }
           ]
         }
       }
@@ -28990,7 +29138,8 @@
         ],
         "batches": [
           "release-0.6-development-bootstrap",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -28999,7 +29148,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -29048,6 +29197,16 @@
           ],
           "checks": [
             "The documented migration and seed commands passed on fresh and already migrated disposable PostgreSQL 17. The 215-entry journal matches the 0294 head, four default products and five audit-log triggers. Snapshot generation and 31 migration-runner and seed cases passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
+            }
           ]
         }
       }
@@ -29121,7 +29280,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-native-journey-availability",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -29195,7 +29355,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/environment-indicator.mrh0hhoy",
@@ -29406,6 +29566,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -30064,7 +30232,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -30148,7 +30317,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -30392,6 +30561,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -669551,7 +669728,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-purchase-route-splitting"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -669626,7 +669804,7 @@
             },
             {
               "path": "docs/route-bundle-budgets.md",
-              "sha256": "c5972456a14687d5e06adb1760d70b4657a841aaef94234cb4f5c0923cccfab1"
+              "sha256": "9a75537c54e3462bfd514887dfe59b759d70ab3648ca92188f84e4c85b71a1af"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -669856,6 +670034,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "docs/route-bundle-budgets.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         }
@@ -1038676,7 +1038862,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "e43bf67cbbc9df575575bb1f4245d9fd23f5eb06670a906b01a2b77fdd919e5b"
+              "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
@@ -1038788,6 +1038974,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The package manifest removes only the unsupported db:push script. The epic changes only the three local development criteria and their shared story. The migration guide adds the verified local procedure. All unrelated package fields, requirements, migrations and assertions retain their bytes."
+            },
+            {
+              "batch": "release-0.6-purchase-route-splitting",
+              "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the purchase route code-splitting wording changes in the epic and budget guide. Existing implementation, assertions and numeric budgets retain their scope."
             }
           ]
         },
@@ -1038802,7 +1038996,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-local-compose-storage",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-migration-backed-dev-setup"
+          "release-0.6-migration-backed-dev-setup",
+          "release-0.6-purchase-route-splitting"
         ]
       }
     },
@@ -1206691,6 +1206886,129 @@
         {
           "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-diagnostic-43437113471/final-summary/nightly-browser-summary.json",
           "sha256": "145ae7a04ac1ae80b7f0c86d6ea7e27cdc85bd9fb7b693e21e014cdaf3597141"
+        }
+      ]
+    },
+    "release-0.6-purchase-route-splitting": {
+      "batch": "release-0.6-purchase-route-splitting",
+      "base_commit": "c19878048b2b0bfd17a1bf4975c094ef0d6f1ec5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-03.02.03",
+        "01-platform-infrastructure.md#T-06.04.01",
+        "01-platform-infrastructure.md#T-07.01.01",
+        "01-platform-infrastructure.md#T-07.01.02",
+        "01-platform-infrastructure.md#T-07.01.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "release-readiness#R-05.01"
+      ],
+      "changed_paths": [
+        "kanban/epics/01-platform-infrastructure.md",
+        "docs/route-bundle-budgets.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/epics/01-platform-infrastructure.md",
+          "sha256": "b5deff69bcf4ca3597f6ece5010b3996fb84489e570feaab8fe1c73f5dcd4e20"
+        },
+        {
+          "path": "docs/route-bundle-budgets.md",
+          "sha256": "9a75537c54e3462bfd514887dfe59b759d70ab3648ca92188f84e4c85b71a1af"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "dbebd80473de4a4ab5bb961bf7e8557564efe4c3f4188605065aa0ac64b55938"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+        },
+        {
+          "path": "apps/web/entry-routes.js",
+          "sha256": "3b46ac5dcdc4bcd8912090dc626de6432533ffdbb10af0abbdf71687595853a8"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "ae8099529149d34ef1efa0ca9582b5fb086c919f979371dd5ba0d37c6e732160"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.index.tsx",
+          "sha256": "8a765f837ae3e3bda0b87a2fa0ed27ab5b81b904904bf7d29d1cb1337685d5f6"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.order.tsx",
+          "sha256": "f3a5c509684bfa13c7d421c27c16bfeea1bcbaaf2220a12e6b0ad27e83d33406"
+        },
+        {
+          "path": "apps/web/src/routes/_app/wallet.tsx",
+          "sha256": "06a62593967c8d00199b8fd9c2bdc7deba6f19d24aeefa33e6b1c2a4871c892e"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "apps/web/e2e/purchase-loading.spec.ts",
+          "sha256": "43bb6e02564069cca7daa2eb8e09252ba89fe5e2732956fd83c5ecfe144c2cb3"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/check-route-budgets.test.mjs",
+          "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+        }
+      ],
+      "checks": [
+        "Compiled manifest and withheld-script journeys verify eager electricity ordering, lazy saving and wallet routes, and split admin, AI, document, chart and video surfaces. Purchase navigation retains the workspace header and renders reduced-motion skeletons in both locales.",
+        "All 102 production gzip budgets passed. Dashboard measured 291.88 KB against 300 KB, electricity 247.26 KB against 250 KB, and wallet 299.97 KB against 300 KB. The earlier eager alternative measured 429.12 KB dashboard and 401.32 KB electricity and was discarded.",
+        "Eighteen targeted cases passed without retries on Chromium, WebKit and pinned Firefox 1575, covering entry navigation, route loading and saving submission and tracking. One initial case on the unpinned Firefox runtime failed the Support-to-login navigation; all 20 pinned repetitions of the entry-navigation test passed."
+      ],
+      "limitations": [
+        "A local success on pinned Firefox does not replace the exact candidate scheduled browser gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-purchase-route-splitting",
+      "execution_receipts": [
+        {
+          "file": "affected-journeys.log",
+          "sha256": "b1b867f782a51992d3decb14d2f7ce309642ea044ad2aa7b930b39c58905fc39"
+        },
+        {
+          "file": "bundle.log",
+          "sha256": "6114f4d8b209bbe1c1cf2bd99c494a30e68c93d1a7408920b5d3c5eb51905c21"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "980f6c524e6e6ccef461ba2d74b3a03d420766565d13af60c2eb3c1477cb8816"
+        },
+        {
+          "file": "firefox-pinned.log",
+          "sha256": "b50c270b36974461c7f6b3cb1880bd3a986766be8ba78ffb8a1547377458d7b4"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }
