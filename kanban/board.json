@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T17:45:58+00:00",
+  "updated": "2026-11-13T17:49:46+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -691061,7 +691061,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the six-job Actions summary on an exact-source hosted push preflight. Verify full coverage enforcement and the enforced license mode in the summary on the frozen release candidate."
+        "Hosted push preflight 43456360315 ran the current CI workflow bytes at b11f41263. Its protected job and six dependencies passed, and the logs recorded affected-test and report-only license mode. Verify full coverage enforcement and enforced license mode on the frozen release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -691073,7 +691073,8 @@
         ],
         "batches": [
           "release-0.6-required-check-summary",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-required-check-hosted-readback"
         ],
         "current_acceptance": null
       }
@@ -1237019,6 +1237020,58 @@
         {
           "file": "validation.log",
           "sha256": "f4d2a81dacccbd7ebe8d82cff2190c6451263e3e205ece3fde0795c63554ed77"
+        }
+      ]
+    },
+    "release-0.6-required-check-hosted-readback": {
+      "batch": "release-0.6-required-check-hosted-readback",
+      "base_commit": "e485ed5c32aadf99c452d8ab583f8afbd9d5d978",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        }
+      ],
+      "checks": [
+        "Read back the GitHub Actions run, all seven job results and the required check on the exact hosted push preflight. All six dependency jobs and the aggregate passed. The check matches active ruleset 26844024 and app 15368.",
+        "The hosted job logs show the six evaluated results and exact script writing the Actions summary. The workflow bytes match the current checkout. Executing that script with the recorded values reproduced all six rows, the SHA and the actual affected/report-only modes."
+      ],
+      "limitations": [
+        "GitHub's check API returns null summary text. The retained Markdown is reconstructed from the unchanged workflow script and hosted job logs. Full coverage, enforced licenses and other final candidate gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-required-check-hosted-readback",
+      "execution_receipts": [
+        {
+          "file": "run.json",
+          "sha256": "74a51839efab93f87fa4701279a0b4b8eda5e3c3ecd692cebba4aa7167aec959"
+        },
+        {
+          "file": "jobs.json",
+          "sha256": "5827461648a89480744f8b1883e89d101b3a497b4a9470d64689a3d257bd70ce"
+        },
+        {
+          "file": "check.json",
+          "sha256": "b027f37f5d102dbfff827567905b9abed6c835e0d7645bfb68880fa9721904d9"
+        },
+        {
+          "file": "rules.json",
+          "sha256": "f7ee051384e99e5f7886d9100e0634a0f79d49ee4a71286b4429b68b93da75a8"
+        },
+        {
+          "file": "integrity.log",
+          "sha256": "2574313c28d272955742caf560ba7c9b94eee5757de71aa89a540f09a9844fcb"
+        },
+        {
+          "file": "ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "file": "reconstructed-summary.md",
+          "sha256": "b23c49981805a700c996c46c7550f7311345eba65caa39d5c44d30e68460b88e"
         }
       ]
     }
