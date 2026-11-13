@@ -1,6 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { relativeLinkRoute } from '@barghsa/shared/notifications';
+import { operatorLogTrace } from '@barghsa/shared/operator-logging';
+import { extractTraceparent } from '@barghsa/shared/telemetry';
+import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
 
 export const PROFILE_EXPORT_JOB_TYPE = 'profile-export';
 const MAX_CONCURRENT_PROFILE_EXPORTS = 2;
@@ -9,6 +12,7 @@ interface LeasedJob {
   id: string;
   type: string;
   payload: unknown;
+  trace_parent: string | null;
   lease_token: string;
 }
 
@@ -44,7 +48,8 @@ export class JobHandlerRegistry {
 /** Claim at most one job atomically across replicas, with a renewable crash-recovery lease. */
 export async function runOneAsyncJob(
   pool: Pick<Pool, 'connect' | 'query'>,
-  registry: JobHandlerRegistry
+  registry: JobHandlerRegistry,
+  tracer?: Tracer
 ): Promise<boolean> {
   const types = registry.types();
   if (types.length === 0) return false;
@@ -87,7 +92,7 @@ export async function runOneAsyncJob(
          lease_until=now()+interval '60 seconds',attempts=j.attempts+1,
          progress_pct=0,started_at=COALESCE(j.started_at,now())
        FROM candidate WHERE j.id=candidate.id
-       RETURNING j.id,j.type,j.payload,j.lease_token`,
+       RETURNING j.id,j.type,j.payload,j.lease_token,j.trace_parent`,
       [token, availableTypes, PROFILE_EXPORT_JOB_TYPE, MAX_CONCURRENT_PROFILE_EXPORTS]
     );
     await client.query('COMMIT');
@@ -102,6 +107,24 @@ export async function runOneAsyncJob(
   }
   if (!job) return false;
 
+  const span = tracer?.startSpan(
+    'async.job.process',
+    { kind: SpanKind.CONSUMER },
+    extractTraceparent(job.trace_parent)
+  );
+  const process = () => processAsyncJob(pool, registry, job, token, span);
+  if (span) await operatorLogTrace.run(span.spanContext(), process).finally(() => span.end());
+  else await process();
+  return true;
+}
+
+async function processAsyncJob(
+  pool: Pick<Pool, 'query'>,
+  registry: JobHandlerRegistry,
+  job: LeasedJob,
+  token: string,
+  span: ReturnType<Tracer['startSpan']> | undefined
+): Promise<void> {
   let leaseLost = false;
   const renew = async () => {
     const result = await pool.query(
@@ -149,6 +172,7 @@ export async function runOneAsyncJob(
       [job.id, token, resultUrl]
     );
   } catch {
+    span?.setStatus({ code: SpanStatusCode.ERROR });
     // Never store handler exceptions, which may contain credentials or customer data.
     await pool.query(
       `UPDATE async_jobs SET status='failed',error_message='JOB_FAILED',
@@ -160,5 +184,4 @@ export async function runOneAsyncJob(
   } finally {
     clearInterval(heartbeat);
   }
-  return true;
 }

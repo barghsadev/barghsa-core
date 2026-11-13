@@ -2,6 +2,7 @@ import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
@@ -42,9 +43,9 @@ export class JobService {
       throw new Error('Invalid job payload');
     const id = uuidv7();
     await getDbPool().query(
-      `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
-       VALUES ($1,$2,$3::jsonb,$4,$5)`,
-      [id, type, serialized, createdBy, operatingContext]
+      `INSERT INTO async_jobs(id,type,payload,created_by,operating_context,trace_parent)
+       VALUES ($1,$2,$3::jsonb,$4,$5,$6)`,
+      [id, type, serialized, createdBy, operatingContext, currentTraceparent()]
     );
     return id;
   }

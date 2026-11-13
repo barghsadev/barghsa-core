@@ -145,6 +145,7 @@ async function main(): Promise<void> {
   logger.info('Worker starting');
   const traceProvider = createTraceProvider('barghsa-worker');
   const outboxTracer = traceProvider?.getTracer('barghsa.worker.notifications');
+  const asyncJobTracer = traceProvider?.getTracer('barghsa.worker.jobs');
 
   // Initialise the database connection pool.
   createDbPool();
@@ -214,7 +215,10 @@ async function main(): Promise<void> {
   });
   const asyncJobHandlers = new JobHandlerRegistry();
   asyncJobHandlers.register(PROFILE_EXPORT_JOB_TYPE, generateProfileExport);
-  pollers.every(() => runOneAsyncJob(getDbPool(), asyncJobHandlers).then(() => undefined), 1000);
+  pollers.every(
+    () => runOneAsyncJob(getDbPool(), asyncJobHandlers, asyncJobTracer).then(() => undefined),
+    1000
+  );
   pollers.every(() => cleanupExpiredProfileExports().then(() => undefined), 60 * 60 * 1000);
   pollers.every(
     async () => {
@@ -421,7 +425,10 @@ async function main(): Promise<void> {
         context
       )
     );
-    pollers.every(() => runOneAsyncJob(getDbPool(), uploadScans).then(() => undefined), 1000);
+    pollers.every(
+      () => runOneAsyncJob(getDbPool(), uploadScans, asyncJobTracer).then(() => undefined),
+      1000
+    );
     pollers.every(async () => {
       try {
         if (!cleanupProvider) throw new Error('Document storage is unavailable');

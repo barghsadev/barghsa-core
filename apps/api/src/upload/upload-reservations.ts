@@ -2,6 +2,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { createDirectDbPool, getDbPool } from '@barghsa/db';
 import { storageUploadProfileScope } from '@barghsa/db/schema/storage-record';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE, type CreateRecordOptions } from '@barghsa/shared/storage';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { v5 as uuidv5 } from 'uuid';
 import type { PoolClient } from 'pg';
 import { observeVerifiedUpload } from '../metrics/storage-upload-metrics.js';
@@ -163,8 +164,8 @@ export async function queueUploadScan(input: {
             AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
             AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp())) FOR UPDATE
      ), created AS (
-       INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
-       SELECT $3::uuid,$4,jsonb_build_object('key',$1::text),$2,$5 FROM source
+       INSERT INTO async_jobs(id,type,payload,created_by,operating_context,trace_parent)
+       SELECT $3::uuid,$4,jsonb_build_object('key',$1::text),$2,$5,$9 FROM source
        ON CONFLICT (id) DO NOTHING RETURNING id
      )
      UPDATE storage_records s SET metadata=(s.metadata-'scanSkippedReason'-'scanResolvedAt'-'scanSha256')
@@ -181,6 +182,7 @@ export async function queueUploadScan(input: {
       JSON.stringify(input.inspection),
       JSON.stringify(input.context),
       input.context.profileId ?? null,
+      currentTraceparent(),
     ]
   );
   if (result.rowCount === 1) {

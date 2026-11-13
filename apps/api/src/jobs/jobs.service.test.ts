@@ -1,5 +1,6 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { JobService } from './jobs.service.js';
+import { operatorLogTrace } from '@barghsa/shared/operator-logging';
 
 const { query } = vi.hoisted(() => ({ query: vi.fn() }));
 vi.mock('@barghsa/db', () => ({ getDbPool: () => ({ query }) }));
@@ -16,6 +17,22 @@ it('immediately enqueues a UUIDv7 job with its captured owner, context and bound
     '{"profileId":"owned"}',
     'owner',
     'staff',
+    null,
+  ]);
+});
+
+it('stores the active span context separately from the public job payload', async () => {
+  const traceId = '11'.repeat(16);
+  const spanId = '22'.repeat(8);
+  await operatorLogTrace.run({ traceId, spanId, traceFlags: 1 }, () =>
+    new JobService().submit('test-export', {}, 'owner')
+  );
+  expect(query.mock.calls[0]![1].slice(1)).toEqual([
+    'test-export',
+    '{}',
+    'owner',
+    'customer',
+    `00-${traceId}-${spanId}-01`,
   ]);
 });
 

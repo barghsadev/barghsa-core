@@ -1506,6 +1506,13 @@
       "when": 1794491502319,
       "tag": "0294_saving_invoice_automation_scope",
       "breakpoints": true
+    },
+    {
+      "idx": 295,
+      "version": "7",
+      "when": 1794583728762,
+      "tag": "0295_async_job_trace_parent",
+      "breakpoints": true
     }
   ]
 }

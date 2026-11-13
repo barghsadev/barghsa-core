@@ -24,6 +24,7 @@ import {
 } from '@barghsa/shared/admin';
 import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js';
 import { t } from '@barghsa/i18n';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
@@ -993,12 +994,13 @@ export class TicketsService {
       const jobId = request.privacy_export_job_id ?? uuidv7();
       if (!request.privacy_export_job_id) {
         await client.query(
-          `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
-           VALUES($1,'profile-export',$2::jsonb,$3,'customer')`,
+          `INSERT INTO async_jobs(id,type,payload,created_by,operating_context,trace_parent)
+           VALUES($1,'profile-export',$2::jsonb,$3,'customer',$4)`,
           [
             jobId,
             JSON.stringify({ ticketId: request.id, profileId, userId: actor.userId }),
             actor.userId,
+            currentTraceparent(),
           ]
         );
         await client.query(`UPDATE tickets SET privacy_export_job_id=$2 WHERE id=$1`, [

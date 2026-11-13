@@ -123,7 +123,7 @@ record count matches the trailer and the gzip SHA-256 matches the archived
 receipt. Verify the selected destination tier, restricted access, off-host
 restore and timer receipt before accepting persistent staging activation.
 
-## API and notification worker traces
+## API and worker traces
 
 Set `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` to the protected OTLP HTTP traces
 endpoint. Use HTTPS for a collector outside the private network and supply
@@ -173,10 +173,19 @@ password change, both the insert and worker spans link to the domain span.
 Delivery logs carry the worker span ID and original trace ID. Message
 payloads and provider requests carry neither identifier.
 
+The asynchronous job queue stores the active request span separately from the
+job payload for profile exports and upload scans. Each worker claim exports an
+`async.job.process` consumer span. A retry keeps the original parent and gets
+its own span. Jobs queued before migration `0295` still run and start a new
+trace. The job status API exposes neither the stored parent nor the payload.
+Match the job consumer span to the originating request when verifying the
+deployed collector. The worker records failure status without handler errors,
+job IDs or payload values in the span.
+
 On the configured collector, match an API request and notification worker
 span by trace ID, and check their parent relationship and corresponding
 logs. The API span uses the registered route template. The worker starts a
-new trace when a row has no parent. Web instrumentation and other worker
+new trace when a row has no parent. Web instrumentation and specialized worker
 queues require separate verification.
 [W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)
 

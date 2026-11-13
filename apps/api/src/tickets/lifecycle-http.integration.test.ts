@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { createServer } from 'node:http';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -7,9 +8,23 @@ let profileId: string;
 let otherProfileId: string;
 const ownerHeaders: Record<string, string> = {};
 const otherHeaders: Record<string, string> = {};
+const traceCollector = createServer((request, response) => {
+  request.resume();
+  request.once('end', () =>
+    response.writeHead(200, { 'content-type': 'application/json' }).end('{}')
+  );
+});
 
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  await new Promise<void>((done) => traceCollector.listen(0, '127.0.0.1', done));
+  const address = traceCollector.address();
+  if (!address || typeof address === 'string') throw new Error('Missing trace collector address');
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 10, '', false, {
+    endpoint: '',
+    intervalMs: 1000,
+    timeoutMs: 1000,
+    traces: { endpoint: `http://127.0.0.1:${address.port}/v1/traces`, sampleRate: 1 },
+  });
   for (const [userId, headers] of [
     ['lifecycle-owner', ownerHeaders],
     ['lifecycle-other', otherHeaders],
@@ -45,7 +60,11 @@ beforeAll(async () => {
 }, 40000);
 
 afterAll(async () => {
-  await http?.close();
+  try {
+    await http?.close();
+  } finally {
+    await new Promise<void>((done) => traceCollector.close(() => done()));
+  }
 }, 15000);
 
 const preview = () =>
@@ -109,7 +128,11 @@ it('shows active-profile closure blockers and routes each type to one audited su
     type: 'export',
     created: false,
   });
-  const queued = await startExport(exportRequest.ticketId as string);
+  const traceId = '71'.repeat(16);
+  const queued = await startExport(exportRequest.ticketId as string, {
+    ...ownerHeaders,
+    traceparent: `00-${traceId}-${'72'.repeat(8)}-01`,
+  });
   expect(queued.status, http.logs()).toBe(202);
   const queuedBody = await responseBody(queued);
   expect(queuedBody.jobId).toMatch(
@@ -121,6 +144,13 @@ it('shows active-profile closure blockers and routes each type to one audited su
     jobId: queuedBody.jobId,
     created: false,
   });
+  const { rows: jobs } = await http.pool.query(
+    'SELECT trace_parent,payload FROM async_jobs WHERE id=$1',
+    [queuedBody.jobId]
+  );
+  expect(jobs[0].trace_parent).toMatch(new RegExp(`^00-${traceId}-[a-f0-9]{16}-01$`));
+  expect(jobs[0].payload).not.toHaveProperty('traceparent');
+  expect(queuedBody).not.toHaveProperty('trace_parent');
   expect(
     (
       await http.pool.query(

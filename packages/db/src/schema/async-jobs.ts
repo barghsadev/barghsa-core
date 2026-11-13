@@ -13,6 +13,7 @@ export const asyncJobs = pgTable(
       .default('queued'),
     progressPct: integer('progress_pct').notNull().default(0),
     payload: jsonb('payload').notNull(),
+    traceParent: text('trace_parent'),
     resultUrl: text('result_url'),
     errorMessage: text('error_message'),
     createdBy: text('created_by')
@@ -33,6 +34,12 @@ export const asyncJobs = pgTable(
     index('async_jobs_owner_created_idx').on(t.createdBy, t.createdAt),
     check('async_jobs_status', sql`${t.status} IN ('queued','processing','completed','failed')`),
     check('async_jobs_type', sql`${t.type} ~ '^[a-z][a-z0-9-]{0,63}$'`),
+    check(
+      'async_jobs_trace_parent_valid',
+      sql`${t.traceParent} ~ '^00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]$'
+        AND substring(${t.traceParent}, 4, 32) <> repeat('0', 32)
+        AND substring(${t.traceParent}, 37, 16) <> repeat('0', 16)`
+    ),
     check('async_jobs_operating_context', sql`${t.operatingContext} IN ('customer','staff')`),
     check('async_jobs_progress', sql`${t.progressPct} BETWEEN 0 AND 100`),
     check('async_jobs_attempts', sql`${t.attempts} BETWEEN 0 AND 3`),
