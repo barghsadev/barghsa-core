@@ -241,6 +241,7 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertIn("accepted milestone", rejected.stderr)
         accepted = subprocess.run([*args, self.commit], capture_output=True, text=True)
         self.assertEqual(accepted.returncode, 0, accepted.stderr)
+        self.assertEqual(accepted.stdout.strip(), "0.1.3")
         self.assertFalse(self.state.exists())
 
     def test_more_than_one_album_is_rejected_before_a_job_is_created(self):

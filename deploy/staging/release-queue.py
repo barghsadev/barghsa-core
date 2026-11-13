@@ -332,7 +332,8 @@ def main():
     args = parser.parse_args()
     state = args.state_dir.expanduser().resolve()
     if args.action == "check-release":
-        check_release(args.repo, args.commit)
+        _, version = check_release(args.repo, args.commit)
+        print(version)
         return 0
     if args.action == "verify-images":
         receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit, args.app_id, args.web_id)

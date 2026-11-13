@@ -12,7 +12,8 @@ if [[ -n $(git status --porcelain) ]]; then
   exit 1
 fi
 commit="$(git rev-parse HEAD)"
-python3 deploy/staging/release-queue.py check-release --commit "$commit"
+version=$(python3 deploy/staging/release-queue.py check-release --commit "$commit")
+python3 kanban/scripts/board.py ready --release "$version"
 # Validate notes and Telegram channel before spending time building images.
 python3 deploy/staging/notify-release.py --check --commit "$commit"
 if [[ -n "$bundle_dir" ]]; then

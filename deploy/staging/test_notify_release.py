@@ -234,7 +234,11 @@ def identity(tag):
     return 'sha256:'+next(letter for prefix,letter in prefixes.items() if tag.startswith(prefix))*64
 if name=='git' and args==['rev-parse','HEAD']: print('a'*40)
 elif name=='git' and args==['rev-parse','--short=12','HEAD']: print('a'*12)
-elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']: sys.exit(int(os.environ.get('FAIL_ACCEPTANCE','0')))
+elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']:
+    if os.environ.get('FAIL_ACCEPTANCE'): sys.exit(1)
+    print('0.6.0')
+elif name=='python3' and args==['kanban/scripts/board.py','ready','--release','0.6.0']:
+    sys.exit(int(os.environ.get('FAIL_READINESS','0')))
 elif name=='python3' and args[1] in ('verify-images','verify-image-bundle'): os.execv(sys.executable,[sys.executable,*args])
 elif name=='python3' and args[0]=='scripts/check-release-licenses.py':
     assert args[3:6]==['--staging-local','bootstrap' if os.environ['FRESH_STAGING']=='1' else 'initialized','--report']
@@ -295,7 +299,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         ], check=True)
         bundle_sha = hashlib.sha256((bundle / "bundle.json").read_bytes()).hexdigest()
         scenarios = [(failure, False, False) for failure in (
-            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
+            "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True)]:
@@ -321,6 +325,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 calls = log.read_text().splitlines()
                 sends = [line for line in calls if line.startswith('python3 deploy/staging/notify-release.py') and '--check' not in line]
                 acceptance = 'python3 deploy/staging/release-queue.py check-release --commit ' + 'a'*40
+                readiness = 'python3 kanban/scripts/board.py ready --release 0.6.0'
                 preflight = 'python3 deploy/staging/notify-release.py --check --commit ' + 'a'*40
                 self.assertIn(acceptance, calls)
                 self.assertEqual(len(sends), 0 if failure else 1, result.stderr)
@@ -341,10 +346,14 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         self.assertEqual(evidence["license_sha256"], hashlib.sha256(license_report.read_bytes()).hexdigest())
                         self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
                 if failure == "FAIL_ACCEPTANCE":
+                    self.assertNotIn(readiness, calls)
+                else:
+                    self.assertLess(calls.index(acceptance), calls.index(readiness))
+                if failure in {"FAIL_ACCEPTANCE", "FAIL_READINESS"}:
                     self.assertNotIn(preflight, calls)
                 else:
-                    self.assertLess(calls.index(acceptance), calls.index(preflight))
-                if failure in {"FAIL_ACCEPTANCE", "FAIL_PREFLIGHT"}:
+                    self.assertLess(calls.index(readiness), calls.index(preflight))
+                if failure in {"FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
                 elif prebuilt:
                     self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ",

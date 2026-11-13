@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:48:34+00:00",
+  "updated": "2026-11-13T14:53:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21724,7 +21724,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication."
+        "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
+        "The staging entry point now verifies launch-task and exception readiness on the immutable checkout before deployment. Verify an actual accepted v0.6.0 job and its live evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -21767,7 +21768,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-runtime-image-binding",
           "release-0.6-staging-image-scans",
-          "release-0.6-portable-staging-images"
+          "release-0.6-portable-staging-images",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": null
       }
@@ -672745,7 +672747,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "Run the release worker for the accepted v0.6.0 candidate. Use exact prepared CI images if the local builder remains unavailable. Verify the running image IDs and scan/SBOM evidence for both application images and the retained stateful images, then verify migration, live readiness/liveness, private S3 and Telegram receipts."
+        "Run the release worker for the accepted v0.6.0 candidate. Use exact prepared CI images if the local builder remains unavailable. Verify the running image IDs and scan/SBOM evidence for both application images and the retained stateful images, then verify migration, live readiness/liveness, private S3 and Telegram receipts.",
+        "The staging entry point now verifies launch-task and exception readiness on the immutable checkout before deployment. Verify an actual accepted v0.6.0 job and its live evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -672782,7 +672785,8 @@
           "release-0.6-runtime-image-binding",
           "release-0.6-staging-image-scans",
           "release-0.6-portable-staging-images",
-          "release-0.6-staging-paired-restore-rehearsal"
+          "release-0.6-staging-paired-restore-rehearsal",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": null
       }
@@ -672818,7 +672822,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -672852,11 +672857,11 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
             },
             {
               "path": "scripts/check-browser-results.py",
@@ -673075,6 +673080,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -673514,7 +673528,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -673548,7 +673563,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -673888,6 +673903,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "kanban/scripts/board.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -681763,7 +681786,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -681807,7 +681831,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a0ebfa1149983945db88bd70b9ccce18a6fa59be3253d25e28b3613e69169732"
+              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -682105,6 +682129,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -689531,7 +689563,8 @@
           "release-0.6-sentry-version-tag-coverage",
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -689547,11 +689580,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a0ebfa1149983945db88bd70b9ccce18a6fa59be3253d25e28b3613e69169732"
+              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "63f6ac34c5af4cbe99ffb3dce517f8b7cd61ca02fe798af9ce0d3c7cd0669c97"
+              "sha256": "857661170655f894ae4755a1a07a6ccf3890349820249dd0c01fa17fa8b7241a"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -690046,6 +690079,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -692961,7 +693003,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -692993,7 +693036,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a0ebfa1149983945db88bd70b9ccce18a6fa59be3253d25e28b3613e69169732"
+              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -693222,6 +693265,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -693410,7 +693461,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -693438,7 +693490,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -693446,7 +693498,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -693568,6 +693620,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -693671,7 +693732,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -693699,7 +693761,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -693707,7 +693769,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -693829,6 +693891,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -693870,7 +693941,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -693898,7 +693970,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+              "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
             },
             {
               "path": "kanban/scripts/definition_of_done.py",
@@ -693906,7 +693978,7 @@
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+              "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
             },
             {
               "path": "kanban/scripts/test_definition_of_done.py",
@@ -694028,6 +694100,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         }
@@ -1010843,15 +1010924,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "1af2030badb91d32ffacb7d2a9fbc75d42c6658500351d0596bf868b038fcc30"
+              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "63f6ac34c5af4cbe99ffb3dce517f8b7cd61ca02fe798af9ce0d3c7cd0669c97"
+              "sha256": "857661170655f894ae4755a1a07a6ccf3890349820249dd0c01fa17fa8b7241a"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "7fb3b7d03ac64555ece879b334761b1014514324a72fd789631d83ecd354c9f0"
+              "sha256": "e6800c5197780818c71ceb1f1b71045003a4e6661c156d322c8d52fd07b6cbb7"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1010919,13 +1011000,24 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ]
         },
         "batches": [
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-immutable-board-readiness"
         ]
       }
     },
@@ -1023891,7 +1023983,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a0ebfa1149983945db88bd70b9ccce18a6fa59be3253d25e28b3613e69169732"
+              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1023903,7 +1023995,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "1af2030badb91d32ffacb7d2a9fbc75d42c6658500351d0596bf868b038fcc30"
+              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1026779,6 +1026871,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -1027178,7 +1027279,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-local-staging-license-gate",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-immutable-board-readiness"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1029355,7 +1029457,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a0ebfa1149983945db88bd70b9ccce18a6fa59be3253d25e28b3613e69169732"
+              "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1029367,7 +1029469,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "1af2030badb91d32ffacb7d2a9fbc75d42c6658500351d0596bf868b038fcc30"
+              "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1032145,6 +1032247,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-immutable-board-readiness",
+              "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1032561,7 +1032672,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-local-staging-license-gate",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-immutable-board-readiness"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1037761,7 +1037873,8 @@
           "release-0.6-protected-main-complete",
           "release-0.6-main-integrity-5aa2db96",
           "release-0.6-deterministic-secret-scan-fixture",
-          "release-0.6-staging-postgres-volume-guard"
+          "release-0.6-staging-postgres-volume-guard",
+          "release-0.6-immutable-board-readiness"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1205007,6 +1205120,95 @@
         {
           "file": "live-csp-counts.json",
           "sha256": "11498f1ceb630db7e375be41c8a5e29605cb061e52757342a49509343da6fc8c"
+        }
+      ]
+    },
+    "release-0.6-immutable-board-readiness": {
+      "batch": "release-0.6-immutable-board-readiness",
+      "base_commit": "219a0b1a32a1e874728c1cc5a77c876b1ccf0225",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "kanban/scripts/board.py",
+        "kanban/scripts/test_board.py",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/scripts/board.py",
+          "sha256": "43955fb602d040c196c366dc7fed5edee3d4cb4a1f7f418845c05113373315b6"
+        },
+        {
+          "path": "kanban/scripts/test_board.py",
+          "sha256": "425b66c56573d08e1c856519ad5a2cf80b2573c9c83041fc3f0fdd03b8d4b395"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "14e2fa82f624464e36609841e4763c60b7923a9cecbd9708092304fa909ebe0e"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "857661170655f894ae4755a1a07a6ccf3890349820249dd0c01fa17fa8b7241a"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "e6800c5197780818c71ceb1f1b71045003a4e6661c156d322c8d52fd07b6cbb7"
+        }
+      ],
+      "checks": [
+        "The accepted board state rejects current or earlier unresolved launch-required tasks and expired in-scope exceptions. The existing critical and major defect check remains active, including defects outside launch scope.",
+        "The normal staging entry point obtains the version from the pushed immutable ledger, runs readiness and stops before notification preflight, image work or SSH if readiness fails.",
+        "Seventeen board, five Definition of Done, twenty queue and fifteen notifier tests passed. Shell syntax and diff whitespace passed. The current ledger passes board validation and v0.5.1 readiness. The actual v0.6.0 readiness query correctly reports 114 unresolved launch-required tasks."
+      ],
+      "limitations": [
+        "The release readiness and business gate decisions are still open. No deployment was attempted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-immutable-board-readiness",
+      "execution_receipts": [
+        {
+          "file": "board.log",
+          "sha256": "42b2e1ea840c7f61a05fb13b99df763051056c28a8207ea8228eb34e0fc8b393"
+        },
+        {
+          "file": "definition-of-done.log",
+          "sha256": "3507612a5e67de7f909c5daf665e72ae48703638023e5a20bbbf698936a10064"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "4305a33a797758c8fd6153c8791ea36b398544e93618033cafa127cf5073cba3"
+        },
+        {
+          "file": "notify.log",
+          "sha256": "578d9ce2ad40463e77ada864c407fe134ed506591e9439339926b71226e1231b"
+        },
+        {
+          "file": "board-check.log",
+          "sha256": "d1809baf8043c2de13a7c17648a0fbcf6316b1fced90c0d56d9d25ee22a622f1"
+        },
+        {
+          "file": "live-ledger-readiness.log",
+          "sha256": "817a7385f5a0be1acd73c440d1f0cf37c68791c6333481fd520a54eefed95d59"
         }
       ]
     }

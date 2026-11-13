@@ -68,9 +68,10 @@ class BoardIntegrityTests(unittest.TestCase):
                 self.rejects(f'v0.6.0 has an open {severity} defect')
 
     def test_candidate_gate_preserves_severity_scope_and_resolution(self):
-        release = next(r for r in self.board['releases'] if r['version'] == '0.6.0')
+        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
         release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
-        open_minor = next(t for t in self.board['tasks'] if t['release'] == '0.6.0' and t['status'] == 'verify')
+        open_minor = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'superseded')
+        open_minor['status'] = 'verify'
         resolved = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'done')
         future = next(t for t in self.board['tasks'] if t['release'] == '0.9.0' and t['status'] != 'done')
         open_minor['defect_severity'] = 'P2'
@@ -79,6 +80,28 @@ class BoardIntegrityTests(unittest.TestCase):
         validate(self.board)
         self.assertIn(' (P2 defect)', render(self.board))
         self.assertEqual(blocking_defects(self.board['tasks'], {'0.5.0', '0.6.0', '0.9.0'}), [future])
+
+    def test_candidate_rejects_required_work_in_current_and_earlier_releases(self):
+        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        for version in ('0.5.0', '0.5.1'):
+            with self.subTest(version=version):
+                task = next(t for t in self.board['tasks'] if t['release'] == version
+                            and t['launch_required'] and t['status'] == 'done')
+                task['status'] = 'verify'
+                self.rejects('v0.5.1 has 1 unresolved launch-required tasks')
+                task['status'] = 'done'
+
+    def test_candidate_rejects_an_expired_exception_in_scope(self):
+        release = next(r for r in self.board['releases'] if r['version'] == '0.5.1')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        task = next(t for t in self.board['tasks'] if t['release'] == '0.3.0' and t['status'] == 'done')
+        exception = record(task=task['key'], approved_at='2024-10-11T08:00:00Z',
+                           expires_at='2024-10-12T08:00:00Z')
+        self.board['dod_exceptions'] = [exception]
+        self.rejects('v0.5.1 has an expired Definition of Done exception')
+        exception.update(closed_at='2024-10-13T08:00:00Z', closure_ref='verified-review-receipt')
+        validate(self.board)
 
     def test_ready_reopens_expired_approval_at_the_scope_boundary(self):
         task = next(t for t in self.board['tasks'] if t['release'] == '0.3.0' and t['status'] == 'done')

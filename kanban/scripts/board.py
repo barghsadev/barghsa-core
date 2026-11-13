@@ -32,6 +32,17 @@ def blocking_defects(tasks, releases):
             and task.get('defect_severity') in ('P0', 'P1')]
 
 
+def unresolved_launch_tasks(tasks, releases):
+    return [task for task in tasks if task['release'] in releases
+            and task['launch_required'] and task['status'] != 'done']
+
+
+def expired_exceptions(tasks, releases, latest, now):
+    scoped_keys = {task['key'] for task in tasks if task['release'] in releases}
+    return [record for record in latest.values()
+            if record['task'] in scoped_keys and exception_state(record, now) == 'expired']
+
+
 def validate(board, root=ROOT, *, now=None):
     if board.get('schema_version') != 1:
         raise ValueError('Unsupported board schema')
@@ -43,7 +54,9 @@ def validate(board, root=ROOT, *, now=None):
         raise ValueError('Duplicate qualified task identity')
     if now is None:
         now = datetime.now(timezone.utc)
-    validate_exceptions(board.get('dod_exceptions', []), by_key, root, now)
+    exceptions = board.get('dod_exceptions', [])
+    validate_exceptions(exceptions, by_key, root, now)
+    latest = latest_exceptions(exceptions)
     releases = {r['version']: r for r in board['releases']}
     if len(releases) != len(board['releases']):
         raise ValueError('Duplicate release version')
@@ -122,6 +135,12 @@ def validate(board, root=ROOT, *, now=None):
             defects = blocking_defects(tasks, through)
             if defects:
                 raise ValueError(f"Release v{release['version']} has an open {defects[0]['defect_severity']} defect: {defects[0]['key']}")
+            unresolved = unresolved_launch_tasks(tasks, through)
+            if unresolved:
+                raise ValueError(f"Release v{release['version']} has {len(unresolved)} unresolved launch-required tasks: {unresolved[0]['key']}")
+            expired = expired_exceptions(tasks, through, latest, now)
+            if expired:
+                raise ValueError(f"Release v{release['version']} has an expired Definition of Done exception: {expired[0]['task']}")
     visiting, visited = set(), set()
     def visit(key):
         if key in visiting:
@@ -233,13 +252,9 @@ def main():
             if not release:
                 raise ValueError('Use --release with a known milestone')
             earlier = {r['version'] for r in board['releases'][:board['releases'].index(release) + 1]}
-            unresolved = [t for t in board['tasks'] if t['launch_required'] and t['release'] in earlier and t['status'] != 'done']
+            unresolved = unresolved_launch_tasks(board['tasks'], earlier)
             defects = blocking_defects(board['tasks'], earlier)
-            earlier_tasks = {t['key'] for t in board['tasks'] if t['release'] in earlier}
-            expired = [
-                record for record in latest.values()
-                if record['task'] in earlier_tasks and exception_state(record, now) == 'expired'
-            ]
+            expired = expired_exceptions(board['tasks'], earlier, latest, now)
             print(f"v{release['version']}: {len(unresolved)} unresolved launch-required tasks through this milestone")
             for defect in defects:
                 print(f"Open {defect['defect_severity']} defect: {defect['key']}")
