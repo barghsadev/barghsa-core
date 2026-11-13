@@ -356,7 +356,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - Each product's initial price is `null` (price must be set by admin before it becomes orderable)
 - Seed creates one admin bootstrap account using credentials from environment variables
 - Admin bootstrap only runs when `ADMIN_BOOTSTRAP_SECRET` env var is present; does not run in production with a hardcoded password
-- First-time admin must change password at first login and enroll MFA before accessing admin settings
+- The first administrator changes the temporary password before receiving any session, then signs in with the new password and staff OTP before accessing admin settings
 - Seed script is invokable via `pnpm db:seed`
 
 **Tasks:**
@@ -372,7 +372,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** M
 
 - **T-02.04.03:** Create admin bootstrap mechanism
-  - **Notes:** If `ADMIN_BOOTSTRAP_SECRET` is set and `ADMIN_BOOTSTRAP_KEY` exists, create an admin user with the provided email/phone, a temporary password (hashed with Argon2id). The temporary password is valid for one login; the first login forces password change and MFA enrollment. Bootstrap runs once and does not re-run if admin already exists.
+  - **Notes:** With complete explicit bootstrap credentials, create one administrator using the supplied email or phone and an Argon2id-hashed temporary password. The temporary sign-in issues a five-minute password-change token without a session. Retrying replaces the outstanding token. A successful change consumes the token and invalidates the temporary password. The first authenticated staff session requires the new password and OTP. Repeated seeding preserves an existing administrator.
   - **Dependencies:** T-02.04.01
   - **Complexity:** M
 
@@ -409,7 +409,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 - `Dockerfile.api` builds the NestJS API with SWC or webpack
 - `Dockerfile.worker` uses the same build stage as API but CMD differs (`CMD ["node", "dist/apps/api/main"]` vs `CMD ["node", "dist/apps/api/worker"]`)
 - Multi-stage builds with a `dependencies` stage, `build` stage, and `production` stage
-- Production stages use the tested Node 24 LTS Bookworm slim base image.
+- Production stages use the tested digest-pinned Node 24 LTS Alpine base image.
 - Image runs as non-root user (`node`), with read-only root filesystem where practical
 - `HEALTHCHECK` instruction in Dockerfiles
 - Node.js runs with `NODE_ENV=production`, inspector disabled, `insecureHTTPParser` not set

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-13T15:12:04+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-13T15:15:37+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1257 | Accepted with unchanged source bindings. |
+| done | 1258 | Accepted with unchanged source bindings. |
 | verify | 1 | Existing work may be complete; inspect evidence before building. |
-| partial | 102 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 6 | Named owner or external prerequisite. |
@@ -998,7 +998,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-02.03.04` | done | Earlier acceptance_verified | Implement expand/migrate/contract documentation and PR checklist |
 | `01-platform-infrastructure.md#T-02.04.01` | done | Earlier acceptance_verified | Create seed script `packages/db/src/seed/index.ts` |
 | `01-platform-infrastructure.md#T-02.04.02` | done | Earlier acceptance_verified | Create four default electricity products in seed |
-| `01-platform-infrastructure.md#T-02.04.03` | partial | Earlier acceptance_verified | Create admin bootstrap mechanism |
+| `01-platform-infrastructure.md#T-02.04.03` | done | Earlier acceptance_verified | Create admin bootstrap mechanism |
 | `01-platform-infrastructure.md#T-02.04.04` | done | Earlier partial | Wire `pnpm db:seed` script in `packages/db/package.json` |
 | `01-platform-infrastructure.md#T-02.04.05` | done | Earlier acceptance_verified | Add seed verification test |
 | `01-platform-infrastructure.md#T-02.04.06` | done | Earlier acceptance_verified | Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types |
