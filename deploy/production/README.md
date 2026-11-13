@@ -180,7 +180,8 @@ new receipt path for each invocation. The plan contains these fields.
 Both adapters read a JSON request on stdin and write one JSON object on stdout.
 Use `scope`, `candidate`, `previous` and `candidate_weight` to bind the
 responses to one rollout. Keep credentials in protected configuration.
-The baseline also includes `p95_upper_seconds` from the previous API pool.
+The baseline also includes `p95_upper_seconds` and, when measurable,
+`p99_upper_seconds` from the previous API pool.
 Set the approved absolute budget in `max_api_p95_seconds` and permitted
 increase in `max_api_p95_increase_seconds` in the rollout policy. These
 limits apply to the scoped pool's end-to-end API distribution. The
@@ -200,7 +201,8 @@ operation-specific performance checks use their own [service budgets](../../docs
   each of `electricity`, `saving`, `solar` and `consultation`. Check the candidate's release
   identity, liveness and readiness and use authorized synthetic journeys.
   Return the completed candidate API requests and server errors as
-  `attempts` and `failures` in `api`, with `p95_upper_seconds` for latency.
+  `attempts` and `failures` in `api`, with `p95_upper_seconds` and
+  `p99_upper_seconds` for latency.
   In `journeys`, return the two counts for
   each service using eligible authenticated attempts, including timeouts and
   dependency failures. Take drift and security counts from their current
@@ -263,16 +265,19 @@ gaps and stale rule evaluations make the observation unavailable. The HTTP
 ratio uses completed API responses and their 5xx subset. A lack of measured
 traffic leaves the ramp waiting for volume.
 The latency comparison uses cumulative bucket deltas over the same measured
-window. The smallest finite bucket containing 95% of the requests bounds the
-p95. Missing buckets or inconsistent counts invalidate the observation. An
-unbounded p95 halts the ramp once the minimum sample count is met.
+window. The smallest finite buckets containing 95% and 99% of requests bound
+p95 and p99. Missing buckets or inconsistent counts invalidate the observation.
+An unbounded p95 halts the ramp once the minimum sample count is met. The receipt
+reports p99 as unavailable below 1,000 completed requests or when the tail
+extends beyond the finite buckets. Rollout latency thresholds apply to p95.
 
 Before changing traffic, collect the previous release baseline with
 `python3 rollout-observer.py --config /protected/observer.json --baseline-seconds N`.
 Use a comparable workload and enough time to meet the plan's minimum
 observation and sample thresholds. Review the output and put it in the plan's
 `baseline` field. The receipt reports previous and candidate journey burn,
-HTTP error ratios and p95 upper bounds for each measured stage. A latency
+HTTP error ratios, p95 and p99 upper bounds, and the baseline sample window
+and counts for each measured stage. A latency
 regression after traffic moves triggers restoration of the previous pool.
 
 The protected JSONL receipt records requested and verified traffic, the

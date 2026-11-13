@@ -71,6 +71,14 @@ def journey_counts(value):
     )
 
 
+def observed_p99(traffic):
+    p99 = traffic.get('p99_upper_seconds')
+    p95 = traffic.get('p95_upper_seconds')
+    if traffic['attempts'] >= 1000 and finite(p95, 0.005, 10) and finite(p99, p95, 10):
+        return p99
+    return None
+
+
 def validate_plan(plan, now):
     require(isinstance(plan, dict), 'invalid_plan')
     require(identity(plan.get('scope')), 'invalid_scope')
@@ -284,10 +292,13 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
     return api_ready and journeys_ready and window_ready, {
         **signals,
         'api': {'attempts': api['attempts'], 'failures': api['failures']},
+        'baseline_api': {key: plan['baseline'][key] for key in ('attempts', 'failures', 'window_start', 'observed_at')},
         'baseline_http_error_ratio': baseline,
         'http_error_ratio': error_ratio,
         'baseline_api_p95_upper_seconds': baseline_p95,
         'api_p95_upper_seconds': candidate_p95 if finite(candidate_p95, 0.005, 10) else None,
+        'baseline_api_p99_upper_seconds': observed_p99(plan['baseline']),
+        'api_p99_upper_seconds': observed_p99(api),
         'journeys': {
             service: {'attempts': counts['attempts'], 'failures': counts['failures']}
             for service, counts in journeys.items()

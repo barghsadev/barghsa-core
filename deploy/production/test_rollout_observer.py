@@ -68,9 +68,10 @@ class Rehearsal:
                 add('barghsa_api_release_info', [1] * 13, revision=api_sha)
                 add('node_process_start_time_seconds',
                     [42] * 12 + [44 if self.fault == 'api-restarted' else 42])
+                scale = 20 if self.fault in ('p99-volume', 'p99-unbounded') else 1
                 for status, counts, latency in (
-                    ('200', [10] * 12 + [1] if self.fault == 'reset' else range(0, 260, 20), 0.25),
-                    ('503', range(13), 0.5),
+                    ('200', [10] * 12 + [1] if self.fault == 'reset' else [20 * i * scale for i in range(13)], 0.25),
+                    ('503', [i * scale for i in range(13)], 0.5),
                 ):
                     labels = {'route': '/api/example', 'method': 'GET', 'status': status}
                     add('barghsa_http_request_duration_seconds_count', counts, **labels)
@@ -79,7 +80,8 @@ class Rehearsal:
                     for bound in BUCKETS:
                         if bound == '0.25' and self.fault == 'missing-bucket':
                             continue
-                        minimum = float('inf') if self.fault == 'tail-latency' else latency
+                        unbounded = self.fault == 'tail-latency' or (self.fault == 'p99-unbounded' and status == '503')
+                        minimum = float('inf') if unbounded else latency
                         if self.fault == 'nonmonotonic-latency' and bound == '0.05':
                             minimum = 0
                         values = counts if float(bound) >= minimum else [0] * 13
@@ -215,6 +217,7 @@ class ObserverTest(unittest.TestCase):
         self.assertTrue(data['smoke']['wallet'])
         self.assertEqual(data['api']['attempts'], 21 * data['api']['failures'])
         self.assertEqual(data['api']['p95_upper_seconds'], 0.25)
+        self.assertIsNone(data['api']['p99_upper_seconds'])
         self.assertGreaterEqual(data['api']['failures'], 5)
         self.assertEqual(len(data['journeys']), 4)
         for counts in data['journeys'].values():
@@ -224,8 +227,21 @@ class ObserverTest(unittest.TestCase):
         baseline = json.loads(previous.stdout)
         self.assertEqual(baseline['revision'], revision('b'))
         self.assertEqual(baseline['p95_upper_seconds'], 0.25)
+        self.assertIsNone(baseline['p99_upper_seconds'])
         self.assertGreaterEqual(baseline['failures'], 5)
         self.assertEqual(set(baseline['journeys']), set(data['journeys']))
+
+    def test_p99_uses_the_same_window_and_reports_unbounded_tail_as_unavailable(self):
+        for fault, bound in (('p99-volume', 0.5), ('p99-unbounded', None)):
+            for baseline in (False, True):
+                with self.subTest(fault=fault, baseline=baseline):
+                    result = self.observe(fault, baseline=baseline)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    data = json.loads(result.stdout)
+                    api = data if baseline else data['api']
+                    self.assertGreaterEqual(api['attempts'], 1000)
+                    self.assertEqual(api['p95_upper_seconds'], 0.25)
+                    self.assertEqual(api['p99_upper_seconds'], bound)
 
     def test_native_api_scrape_covers_both_metric_families_without_duplicate_targets(self):
         config = self.rehearsal.config

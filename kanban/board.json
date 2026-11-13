@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T13:52:17+00:00",
+  "updated": "2026-11-13T13:56:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12354,7 +12354,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -12366,7 +12367,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12647,6 +12648,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -19368,7 +19377,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19380,7 +19390,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19544,6 +19554,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -19606,7 +19624,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19618,7 +19637,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19782,6 +19801,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -21751,7 +21778,7 @@
       "launch_required": true,
       "remaining": [
         "Repeat the native browser sign-in with the authorized synthetic account on the exact staged candidate. The isolated hosted case exercises a fresh OTP, the rendered owned dashboard and wallet, and logout revocation. Keep the deployed SHA and actual customer-scope, wallet and logout receipts alongside the observer results.",
-        "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology."
+        "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them."
       ],
       "owner": null,
       "depends_on": [],
@@ -21790,7 +21817,8 @@
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
-          "release-0.6-native-rollout-browser"
+          "release-0.6-native-rollout-browser",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": null
       }
@@ -31472,7 +31500,8 @@
           "release-0.6-promotion-receipt-binding",
           "release-0.6-pilot-post-retirement-rollback",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -31493,7 +31522,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -31906,6 +31935,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -33994,7 +34031,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -34022,7 +34060,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             }
           ],
           "checks": [
@@ -34190,6 +34228,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -650210,7 +650256,8 @@
         "batches": [
           "release-0.6-runtime-secret-resolution",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -650222,7 +650269,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -650278,6 +650325,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -672494,7 +672549,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -672516,7 +672572,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -672842,6 +672898,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -672956,7 +673020,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -672967,7 +673032,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -673224,6 +673289,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -673245,7 +673318,7 @@
       "launch_required": true,
       "remaining": [
         "Configure the approved topology with the exact pinned candidate and previous pools, route and image readbacks, dedicated customer fixtures and complete scoped API, journey, wallet and security monitoring.",
-        "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment."
+        "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them."
       ],
       "owner": null,
       "depends_on": [],
@@ -673264,7 +673337,8 @@
         "batches": [
           "release-0.6-launch-halt-and-rollback",
           "release-0.6-post-deploy-observation",
-          "release-0.6-native-rollout-browser"
+          "release-0.6-native-rollout-browser",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": null
       }
@@ -680304,7 +680378,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -680328,11 +680403,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "eb5a5e5b6ff93802060a27efa52b6cf90e3da0092dcc80d9b74b562546505086"
+              "sha256": "b929f0007a0964c72121f68743c8cedd699ff634aa91f15a5adeb82238a1ab00"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -680533,6 +680608,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -690083,7 +690167,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -690131,15 +690216,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "eb5a5e5b6ff93802060a27efa52b6cf90e3da0092dcc80d9b74b562546505086"
+              "sha256": "b929f0007a0964c72121f68743c8cedd699ff634aa91f15a5adeb82238a1ab00"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "392f14153d776f0b56f90b58d422fc32f64ecc925fb00ed70b643e0286aca115"
+              "sha256": "55b6525939361dfcd5cc47b0d3e31ffa5479d2064926c700306b59796eda5724"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -690324,6 +690409,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -690598,7 +690693,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-core-recovery-receipt",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -690646,7 +690742,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "14db3c53d0d1811165c43e378c07151a4b8d2f180a88ccb3e57f28cb1a367291"
+              "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -690870,6 +690966,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The guarded production command now checks the protected owner approval and its exact plan and promotion report hashes before invoking an ingress adapter. The existing staged rehearsal, smoke, monitoring, rollback, and promotion criteria retain their checks. Sixteen rollout tests and ten promotion tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-p99-evidence",
+              "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The rollout observer and receipt add p99 reporting and baseline sample counts. Existing deployment, security, smoke, p95 and rollback thresholds retain their assertions. The isolated observer and rollout suites passed."
             }
           ]
         }
@@ -691757,7 +691861,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "After the accepted candidate is deployed, verify measured scope and sufficient traffic for the previous and current windows. Retain the Grafana before-and-after comparisons for completed API 5xx ratio and p95/p99 latency, and each launch service SLO burn, with the guarded rollout receipt and exact deployment time and SHA."
+        "After the accepted candidate is deployed, verify measured scope and sufficient traffic for the previous and current windows. Retain the Grafana before-and-after comparisons for completed API 5xx ratio and p95/p99 latency, and each launch service SLO burn, with the guarded rollout receipt and exact deployment time and SHA. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them."
       ],
       "owner": null,
       "depends_on": [],
@@ -691767,7 +691871,8 @@
         "batches": [
           "release-0.6-executive-slo-dashboard",
           "release-0.6-journey-budget-burndown",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-rollout-p99-evidence"
         ],
         "current_acceptance": null
       }
@@ -1202269,6 +1202374,78 @@
         {
           "file": "browser-dispatch.json",
           "sha256": "96ab9cf52774d82d53a27596cecb31ff1606775b2f3d9508cd4a5151f2e28298"
+        }
+      ]
+    },
+    "release-0.6-rollout-p99-evidence": {
+      "batch": "release-0.6-rollout-p99-evidence",
+      "base_commit": "67a0de5df18c174a703d514d3cde5aeb2e3b9997",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.03",
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "06-security-testing-observability.md#T-06.18.02.04",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_guarded_rollout.py",
+        "deploy/production/test_rollout_observer.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "d5ce6956b2f627eda5294b94dd71d683777366c5ebd5a3fed7cb030d92ad702f"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "96e08a4179f409fb8ce8435d83646851445f86eef48ec173f2f58cf009cbc017"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "b929f0007a0964c72121f68743c8cedd699ff634aa91f15a5adeb82238a1ab00"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "97537082e04ae4b317d644d086fbf745fc32f9c7bb76f36ed71e4c20f5d976d8"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "55b6525939361dfcd5cc47b0d3e31ffa5479d2064926c700306b59796eda5724"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+        }
+      ],
+      "checks": [
+        "Baseline and candidate now record the finite p99 upper latency bound from the same validated histogram window as p95. Below 1,000 completed responses, above the finite tail, or with an invalid upper bound, p99 is unavailable. Existing p95 advancement and rollback checks are retained.",
+        "Protected rollout receipts retain the previous release sample counts and window boundaries alongside scoped error ratios, p95/p99 bounds and all four service burn rates.",
+        "Twelve observer and seventeen guarded rollout tests passed. Native fixture checks include distinct p95 and p99, low volume, unbounded p99, and the complete preserved rollout and rollback behavior."
+      ],
+      "limitations": [
+        "These are isolated observations. The selected deployed topology still needs measured previous and candidate traffic with sufficient volume, and operator readback of the Grafana comparison and actual alert receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollout-p99-evidence",
+      "execution_receipts": [
+        {
+          "file": "observer.log",
+          "sha256": "7204c2eba2348e13112638b3330a215dc76efd01e5b7bb8fd00e0fa7db8d2b63"
+        },
+        {
+          "file": "rollout.log",
+          "sha256": "455e7eded6fe6e54fef1de873e9be93ca57c9b5599c0d61c9b4a889ce8ecb7d4"
         }
       ]
     }

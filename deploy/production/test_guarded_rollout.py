@@ -68,9 +68,26 @@ class ObservationsTest(unittest.TestCase):
         self.assertEqual(details['baseline_http_error_ratio'], 0.02)
         self.assertEqual(details['baseline_api_p95_upper_seconds'], 0.25)
         self.assertEqual(details['api_p95_upper_seconds'], 0.25)
+        self.assertEqual(details['baseline_api'], {'attempts': 100, 'failures': 2, 'window_start': 97, 'observed_at': 99})
+        self.assertIsNone(details['baseline_api_p99_upper_seconds'])
+        self.assertIsNone(details['api_p99_upper_seconds'])
         self.assertEqual(details['journey_burn'], dict.fromkeys(rollout.SERVICES, 0))
         self.assertEqual(details['baseline_journey_burn'], dict.fromkeys(rollout.SERVICES, 2))
         self.assertNotIn('SYNTHETIC_SECRET', json.dumps(details))
+
+    def test_preserves_scoped_p99_without_changing_the_existing_latency_gate(self):
+        value = sample()
+        selected = plan()
+        selected['baseline'].update(attempts=1000, failures=20, p99_upper_seconds=0.5)
+        value['api'].update(attempts=1000, failures=20, p99_upper_seconds=0.75)
+        ready, details = self.evaluate(value, selected)
+        self.assertTrue(ready)
+        self.assertEqual(details['baseline_api_p99_upper_seconds'], 0.5)
+        self.assertEqual(details['api_p99_upper_seconds'], 0.75)
+        value['api']['p99_upper_seconds'] = 0.1
+        ready, details = self.evaluate(value, selected)
+        self.assertTrue(ready)
+        self.assertIsNone(details['api_p99_upper_seconds'])
 
     def test_every_rollback_signal_is_evaluated(self):
         for reason in (

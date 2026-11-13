@@ -465,6 +465,12 @@ def http_traffic(metrics, times, since, until):
     return attempts, failures, totals
 
 
+def latency_upper_bound(histogram, attempts, percentile):
+    # A finite upper bucket bounds the percentile without assuming a within-bucket distribution.
+    rank = (percentile * attempts + 99) // 100
+    return next((limit for limit, count in zip(HTTP_LIMITS[:-1], histogram) if rank and count >= rank), None)
+
+
 def traffic(targets, selected, since, until):
     api = {'attempts': 0, 'failures': 0}
     histogram = [0] * len(HTTP_LIMITS)
@@ -489,11 +495,9 @@ def traffic(targets, selected, since, until):
                 if outcome == 'failure':
                     journeys[service]['failures'] += count
             require(not expected, 'journey_counters_missing')
-    rank = (95 * api['attempts'] + 99) // 100
-    # A finite upper bucket bounds the percentile without assuming a within-bucket distribution.
-    api['p95_upper_seconds'] = next(
-        (limit for limit, count in zip(HTTP_LIMITS[:-1], histogram) if rank and count >= rank),
-        None,
+    api['p95_upper_seconds'] = latency_upper_bound(histogram, api['attempts'], 95)
+    api['p99_upper_seconds'] = (
+        latency_upper_bound(histogram, api['attempts'], 99) if api['attempts'] >= 1000 else None
     )
     return api, journeys
 
