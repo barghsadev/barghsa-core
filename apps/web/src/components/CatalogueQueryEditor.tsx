@@ -76,6 +76,16 @@ export function CatalogueQueryEditor(props: Props) {
             id="kb-test-query"
             aria-required="true"
             value={form.values.query}
+            onBlur={() => {
+              // Disabling the field for a submit can also blur it. A local check
+              // must not overwrite that submit's result or an unchanged server error.
+              if (form.isPending() || form.form.getFieldState('query').error?.type === 'server')
+                return;
+              form.form.setValue('query', form.form.getValues('query'), {
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+            }}
             onChange={(event) => {
               form.field('query')[1](event.target.value);
               props.onChange(event.target.value);

@@ -122,8 +122,13 @@ for (const locale of ['en', 'fa'] as const)
       await expect(query).toHaveValue('Meter question');
       await expect(query).toHaveAttribute('aria-invalid', 'true');
       await expect(query).toHaveAccessibleDescription(copy('query'));
+      await query.press('Tab');
+      await expect(button(k('runQuery'))).toBeFocused();
+      await expect(query).toHaveAttribute('aria-invalid', 'true');
+      await expect(query).toHaveAccessibleDescription(copy('query'));
       await button(k('runQuery')).click();
       await expect(page.getByText('Verified guidance', { exact: true })).toBeVisible();
+      await expect(query).not.toHaveAttribute('aria-invalid', 'true');
       await button(k('link')).click();
       await expect(member).toBeFocused();
       await expect(member).toHaveAttribute('aria-invalid', 'true');

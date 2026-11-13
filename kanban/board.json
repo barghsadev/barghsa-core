@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:54:57+00:00",
+  "updated": "2026-11-13T10:59:05+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header, AI catalogue and limit-settings corrections have targeted passing checks. Registration now waits for settled strength feedback before the consent click. Both registration suites passed 45 browser cases. The knowledge form and intermittent signed-in auth entry still need closure. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The intermittent signed-in auth entry remains open. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21796,7 +21796,8 @@
           "release-0.6-nightly-ai-catalogue-scroll",
           "release-0.6-nightly-limit-settings-isolation",
           "release-0.6-nightly-auth-entry-triage",
-          "release-0.6-registration-consent-timing"
+          "release-0.6-registration-consent-timing",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": null
       }
@@ -150716,7 +150717,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -150816,7 +150818,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -150892,7 +150894,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -151229,6 +151231,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -151526,7 +151537,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -151674,7 +151686,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -151891,6 +151903,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -600170,7 +600190,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -600270,7 +600291,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -600346,7 +600367,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -600683,6 +600704,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -600802,7 +600832,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -600902,7 +600933,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -600978,7 +601009,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -601315,6 +601346,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -601436,7 +601476,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -601536,7 +601577,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -601612,7 +601653,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -601949,6 +601990,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -602069,7 +602119,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -602169,7 +602220,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -602245,7 +602296,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -602582,6 +602633,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -602691,7 +602751,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -602839,7 +602900,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -603055,6 +603116,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -603173,7 +603242,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -603321,7 +603391,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -603538,6 +603608,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -603651,7 +603729,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "done",
@@ -603799,7 +603878,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -604015,6 +604094,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -743798,7 +743885,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-storage-provider-circuit",
           "release-0.6-notification-contrast",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -744054,7 +744142,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -744366,7 +744454,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -745632,6 +745720,15 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ]
         }
@@ -748682,7 +748779,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-nightly-ai-catalogue-scroll"
+          "release-0.6-nightly-ai-catalogue-scroll",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -748826,7 +748924,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -749796,6 +749894,14 @@
                 "apps/web/e2e/ai-catalogue-tables.spec.ts"
               ],
               "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ]
         }
@@ -749933,7 +750039,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-nightly-ai-catalogue-scroll"
+          "release-0.6-nightly-ai-catalogue-scroll",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -750077,7 +750184,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -751047,6 +751154,14 @@
                 "apps/web/e2e/ai-catalogue-tables.spec.ts"
               ],
               "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ]
         }
@@ -751940,7 +752055,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-nightly-ai-catalogue-scroll"
+          "release-0.6-nightly-ai-catalogue-scroll",
+          "release-0.6-knowledge-query-error"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -752084,7 +752200,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -753054,6 +753170,14 @@
                 "apps/web/e2e/ai-catalogue-tables.spec.ts"
               ],
               "scope": "Test-only viewport correction. Preserves wide desktop and mobile rendering, accessibility, operational metadata, protected drafts, and original keyboard scroll assertions. The overflowing 1024px desktop pane is explicitly verified. Both full affected specs passed on Chromium, WebKit and mobile Safari."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ]
         }
@@ -1014904,7 +1015028,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -1015020,7 +1015144,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -1018670,6 +1018794,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "presentation_renewals": [
@@ -1019062,7 +1019195,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-knowledge-query-error"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1020319,7 +1020453,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+              "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -1020427,7 +1020561,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRecordTable.tsx",
@@ -1023967,6 +1024101,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1024376,7 +1024519,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-knowledge-query-error"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1027835,7 +1027979,7 @@
             },
             {
               "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
-              "sha256": "540e00bd788a8dbe45fbc0279dacfdb1009869a7fa6c0d909553eb7c3a6fd980"
+              "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
             },
             {
               "path": "apps/web/src/components/CatalogueRelationEditor.tsx",
@@ -1028892,6 +1029036,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-knowledge-query-error",
+              "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+              "paths": [
+                "apps/web/src/components/CatalogueQueryEditor.tsx"
+              ],
+              "scope": "Knowledge test-query form only. Submit-related blur cannot supersede submit validation, and an unchanged server field error persists on blur. Existing authorization, timeout, retry, retained query, membership, priority, focus and accessible feedback checks pass. The new regression fails on the original production build and passes in all targeted browsers."
             }
           ]
         },
@@ -1029045,7 +1029197,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-knowledge-query-error"
         ]
       }
     },
@@ -1194399,6 +1194552,98 @@
         {
           "file": "probe-receipts.json",
           "sha256": "ccd94cb0d8a1b6edac9e7492b32459264c8a688aab98f9fa37f5613b1d62e9bb"
+        }
+      ]
+    },
+    "release-0.6-knowledge-query-error": {
+      "batch": "release-0.6-knowledge-query-error",
+      "base_commit": "9c20231abf98fad7a63ee2027794aa637873cf09",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.03",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "05-notifications-documents-ai.md#T-05.18.01",
+        "05-notifications-documents-ai.md#T-05.18.02",
+        "05-notifications-documents-ai.md#T-05.18.03",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/CatalogueQueryEditor.tsx",
+        "apps/web/e2e/knowledge-policy-membership.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
+          "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
+          "sha256": "d9870d58174a6087944adfd13f8630a578aa9e2366492d1a5760823b999fb0f4"
+        },
+        {
+          "path": "apps/web/src/hooks/useWizardForm.ts",
+          "sha256": "9a8427109858df56f43cc69ef89331e5058180f1c542a0e6f6b0928526abc5f7"
+        },
+        {
+          "path": "apps/web/src/hooks/useActionFieldErrors.ts",
+          "sha256": "76f46f24fcb99edf295ab01b1aaf0a1782dbf4af4805027315f2c0bef12840c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-recovery.spec.ts",
+          "sha256": "968214c68886442b4f6106fd2294f3d5c182aced41e056c18df26b52f1084bb3"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-bases.spec.ts",
+          "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-forms.test.tsx",
+          "sha256": "4209617f08e6c6ac7e206ff3a2a415f5361c35d023189611b93c3f8c06acc60b"
+        }
+      ],
+      "checks": [
+        "Hosted run 43398455059 intermittently lost the query field error after an authenticated staff search returned a recognized 400 field rejection. A deterministic Tab-away assertion failed all eight English and Persian light/dark cases on the original production build in WebKit and mobile Safari.",
+        "The query editor ignores blur-driven local validation while a submission owns the form or an unchanged query has a server error. Other blur validation, edit validation and retries still use the existing form. Regression assertions cover focus, linked feedback, successful retry and error clearing.",
+        "All 78 browser cases across Chromium, WebKit and mobile Safari and all 18 knowledge-policy unit cases passed. Typecheck, changed-file lint, formatting and all 102 route and interaction budgets passed."
+      ],
+      "limitations": [
+        "Local targeted browser and unit results cover the query repair. Auth entry and the final scheduled matrix and delivery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-knowledge-query-error",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "ab8c80903eebaed49bab95113df75d6eae21dcef1c0672bb44cf2686c1f663f8"
+        },
+        {
+          "file": "build.log",
+          "sha256": "24bc4a790384185a00d8db29aa97fe289eaaf4491eea74ed3269fbbcfdf0f09b"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "3fc62b4c8af9b20af17c7660e74acc41d0f447f1eb26b47d8b41448ba50f0143"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "1c1747184f888b5f149b06b1d9bf4bcc58df7846916f5c3ffd47621f6e49cf61"
+        },
+        {
+          "file": "bundle.log",
+          "sha256": "068871a200354308acbbd9390018a58d34a17c8fdbc8bfc5d5991d40e75812bd"
         }
       ]
     }
