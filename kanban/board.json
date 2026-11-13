@@ -18977,7 +18977,8 @@
       "launch_required": true,
       "remaining": [
         "Authenticated staging v0.5.1 readback confirmed enabled versioning and all five expected policy rules on the running object-store image. All four expiration rules require legal-hold=false and retain the five newest noncurrent versions. The seven-day bucket abort fallback remains enabled alongside the default 24-hour application worker. Verify the selected production storage policy, propagated rules, actual expiry and safe ownership of preview and superseded-file classification.",
-        "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API."
+        "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
+        "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -19069,7 +19070,8 @@
           "packages/shared/src/storage/storage-provider.ts"
         ],
         "batches": [
-          "release-0.6-storage-sdk-endpoint-policy"
+          "release-0.6-storage-sdk-endpoint-policy",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": null
       }
@@ -20158,7 +20160,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20178,7 +20181,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20399,6 +20402,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ]
         }
@@ -23792,7 +23803,8 @@
         "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release.",
         "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout.",
         "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout.",
-        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required."
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
+        "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23853,7 +23865,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-hosted-compose-fixtures"
+          "release-0.6-hosted-compose-fixtures",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": null
       }
@@ -24063,7 +24076,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-hosted-compose-fixtures"
+          "release-0.6-hosted-compose-fixtures",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24087,7 +24101,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -24233,6 +24247,14 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The test fixtures supply local env files and preserve all actual volume, WAL and rollback assertions. Thirteen local rollback tests and both affected Linux amd64 Compose 2.38.2 cases passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ]
         }
@@ -31857,7 +31879,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31912,7 +31935,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -32249,6 +32272,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ]
         }
@@ -35039,7 +35070,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35069,7 +35101,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35629,6 +35661,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ]
         }
@@ -162997,7 +163037,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -163369,7 +163410,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -164557,6 +164598,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -639416,7 +639465,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -639788,7 +639838,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -641000,6 +641050,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -671790,7 +671848,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -671802,7 +671861,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -672032,6 +672091,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ]
         }
@@ -1067651,7 +1067718,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1070857,6 +1070924,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ],
           "presentation_renewals": [
@@ -1071281,7 +1071356,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-probe-object-cleanup"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1073450,7 +1073526,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1076558,6 +1076634,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-probe-object-cleanup",
+              "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1076999,7 +1077083,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-probe-object-cleanup"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1082681,7 +1082766,8 @@
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
         "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open.",
         "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open.",
-        "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open."
+        "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open.",
+        "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -1082744,7 +1082830,8 @@
           "release-0.6-csp-window-followup",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-probe-object-cleanup"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1259945,6 +1260032,56 @@
         {
           "file": "diagnosed-preflight.json",
           "sha256": "1ea993fbee7c1a56faf832da4a138644c437f40c3c6d683c9d199b98db54ed3a"
+        }
+      ]
+    },
+    "release-0.6-probe-object-cleanup": {
+      "batch": "release-0.6-probe-object-cleanup",
+      "base_commit": "df4b7639ce9299d2338c23810aff39d1f7985097",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/check-s3.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+        },
+        {
+          "path": "deploy/staging/check-s3.py",
+          "sha256": "37e89429dfd13da47abaa9702c4dfced7b032653e813749241879250dc9c467d"
+        }
+      ],
+      "checks": [
+        "A Linux amd64 rehearsal used exact staging SeaweedFS image ce9e796f and an isolated bucket. The real SigV4 probe passed in versioned and unversioned buckets under python -O. Readback found zero unnecessary versions or delete markers and retained the existing object.",
+        "A mismatched read with one additional byte failed and removed its own object. The compatibility path recovered an omitted PUT version only when HEAD supplied a matching ETag. Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "Both S3 endpoints exercised the pinned gateway on an isolated network. This was not a live staging deployment or an authenticated off-server backup test."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-probe-object-cleanup",
+      "execution_receipts": [
+        {
+          "file": "verify-seaweedfs.py",
+          "sha256": "0d1283348ca7c4c5248fe0b96eeae58cf2ba2d1f069205ce0c5dfbc9c2bfd7b5"
+        },
+        {
+          "file": "seaweedfs-final.log",
+          "sha256": "0748e39791867f4e6d2ac53faac6f1738ec9f5a6c4398f9199b1e31a7c8aea48"
         }
       ]
     }
