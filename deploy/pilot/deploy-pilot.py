@@ -301,6 +301,17 @@ def drain(plan, old_workers, serving):
         time.sleep(2)
 
 
+def restore_previous_route(plan, path, previous_config, mode, *, switch_attempted):
+    previous = plan['previous']
+    if switch_attempted and path.read_text() != previous_config:
+        candidate_workers = workers(plan['proxy_pid'])
+        install_config(path, previous_config, mode)
+        wait_for_route(plan, previous)
+        drain(plan, candidate_workers, previous)
+    smoke(plan, previous, through_proxy=True)
+    compose(plan, plan['candidate'], 'stop', '--timeout', '40', *SERVICES, timeout=240)
+
+
 def rollout(plan):
     previous, candidate = plan['previous'], plan['candidate']
     path = Path(plan['proxy_config'])
@@ -338,13 +349,7 @@ def rollout(plan):
         smoke(plan, candidate, through_proxy=True)
     except (RolloutError, ValueError, OSError, KeyboardInterrupt) as error:
         try:
-            if switch_attempted and path.read_text() != previous_config:
-                candidate_workers = workers(plan['proxy_pid'])
-                install_config(path, previous_config, mode)
-                wait_for_route(plan, previous)
-                drain(plan, candidate_workers, previous)
-            smoke(plan, previous, through_proxy=True)
-            compose(plan, candidate, 'stop', '--timeout', '40', *SERVICES, timeout=240)
+            restore_previous_route(plan, path, previous_config, mode, switch_attempted=switch_attempted)
         except (RolloutError, ValueError, OSError, KeyboardInterrupt):
             raise RolloutError('Pilot rollback or cleanup could not be verified; inspect both slots') from error
         raise RolloutError(f'{error}; verified previous pilot route') from error
@@ -356,8 +361,17 @@ def rollout(plan):
         raise RolloutError(f'Candidate is serving; previous-slot shutdown needs inspection: {error}') from error
     try:
         smoke(plan, candidate, through_proxy=True)
-    except (RolloutError, ValueError) as error:
-        raise RolloutError('Post-retirement smoke failed; use the retained previous slot and proxy configuration') from error
+    except (RolloutError, ValueError, OSError, KeyboardInterrupt) as error:
+        try:
+            check_images(previous)
+            compose(plan, previous, 'up', '--detach', '--no-deps', '--wait', '--wait-timeout',
+                    '300', *SERVICES, timeout=340)
+            check_containers(previous)
+            smoke(plan, previous)
+            restore_previous_route(plan, path, previous_config, mode, switch_attempted=True)
+        except (RolloutError, ValueError, OSError, KeyboardInterrupt):
+            raise RolloutError('Post-retirement rollback could not be verified; inspect both slots') from error
+        raise RolloutError('Post-retirement smoke failed; verified previous pilot route') from error
     if transition:
         transition.unlink()
         sync_directory(transition.parent)

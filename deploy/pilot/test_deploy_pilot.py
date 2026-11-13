@@ -37,6 +37,7 @@ class PilotRolloutTest(unittest.TestCase):
         self.serving = 'blue'
         self.running = {'blue'}
         self.failure = None
+        self.previous_retired = False
         for name in ('compose', 'check_images', 'check_containers', 'containers', 'smoke',
                      'workers', 'install_config', 'wait_for_route', 'drain'):
             stack.enter_context(patch.object(pilot, name, side_effect=getattr(self, name)))
@@ -48,9 +49,13 @@ class PilotRolloutTest(unittest.TestCase):
         if self.failure == 'migration' and action == 'run':
             raise pilot.RolloutError('migration failed')
         if action == 'up':
+            if self.failure == 'previous-restart' and slot == 'blue':
+                raise pilot.RolloutError('previous slot did not restart')
             self.running.add(slot)
         if action == 'stop':
             self.running.remove(slot)
+            if slot == 'blue':
+                self.previous_retired = True
 
     def check_images(self, release, **kwargs):
         self.events.append(('image', release['slot'], kwargs.get('pull', False)))
@@ -70,6 +75,8 @@ class PilotRolloutTest(unittest.TestCase):
         self.assertIn(slot, self.running)
         if through_proxy:
             self.assertEqual(slot, self.serving)
+            if self.failure in ('post-retirement-smoke', 'previous-restart') and slot == 'green' and self.previous_retired:
+                raise pilot.RolloutError('candidate failed after retirement')
 
     def workers(self, path):
         return {1 if self.serving == 'blue' else 2: 'nginx: worker process'}
@@ -136,6 +143,33 @@ class PilotRolloutTest(unittest.TestCase):
             pilot.rollout(self.plan)
         self.assertEqual(self.running, {'blue', 'green'})
         self.assertEqual(self.config.read_text(), self.original)
+
+    def test_post_retirement_failure_restarts_previous_before_restoring_traffic(self):
+        self.failure = 'post-retirement-smoke'
+        transition = self.root / 'active.json'
+        transition.write_text('reviewed schema transition')
+        with patch.object(pilot, 'prepare_transition', return_value=transition):
+            with self.assertRaisesRegex(pilot.RolloutError, 'Post-retirement smoke failed; verified previous pilot route'):
+                pilot.rollout(self.plan)
+        recovery = self.events[self.events.index(('stop', 'blue')):]
+        order = [recovery.index(event) for event in (
+            ('stop', 'blue'), ('image', 'blue', False), ('up', 'blue'),
+            ('container-health', 'blue'), ('smoke', 'blue', False), ('switch', 'blue'), ('readback', 'blue'),
+            ('drain', 'blue', (2,)), ('stop', 'green'),
+        )]
+        self.assertEqual(order, sorted(order))
+        self.assertEqual(self.running, {'blue'})
+        self.assertEqual(self.config.read_text(), self.original)
+        self.assertTrue(transition.exists())
+
+    def test_failed_previous_restart_does_not_switch_or_stop_candidate(self):
+        self.failure = 'previous-restart'
+        with self.assertRaisesRegex(pilot.RolloutError, 'Post-retirement rollback could not be verified'):
+            pilot.rollout(self.plan)
+        self.assertEqual(self.serving, 'green')
+        self.assertEqual(self.running, {'green'})
+        self.assertNotIn(('switch', 'blue'), self.events)
+        self.assertNotIn(('stop', 'green'), self.events)
 
     def test_unknown_active_proxy_and_occupied_candidate_refuse_changes(self):
         self.config.write_text(self.original.replace(':4000 ', ':4001 '))

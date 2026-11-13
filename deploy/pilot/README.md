@@ -91,6 +91,10 @@ candidate. If recovery or cleanup remains uncertain, inspect both slots and
 the actual TLS route before retrying. The protected `.previous` copy next
 to the active config and the retained slot containers support operator
 recovery after an interruption. The database migration remains applied.
+If the final smoke fails after retirement, the launcher restarts the previous
+slot and verifies its images and readiness before restoring the TLS route.
+It stops the candidate only after the previous route is verified and the
+candidate's proxy workers have drained.
 The active schema transition remains available to the prior API on rollback.
 For a later authorized rollback, the protected `.schema.json` copy in the
 transition directory records the exact reviewed heads. Reconcile the actual

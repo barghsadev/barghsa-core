@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T12:36:14+00:00",
+  "updated": "2026-11-13T13:04:30+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -18122,7 +18122,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -18134,7 +18135,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -18190,6 +18191,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -18657,7 +18666,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -18669,7 +18679,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -18750,6 +18760,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -18830,7 +18848,8 @@
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -18862,7 +18881,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             }
           ],
           "checks": [
@@ -18919,6 +18938,14 @@
                 "apps/api/src/geography/geography-etag-http.integration.test.ts"
               ],
               "scope": "The geography API now validates filters and path IDs and checks the nested province on city detail and mutation. Routes, response schemas, existing authorized caller fields, current staff authority and mutation audit are preserved. The OpenAPI delta is limited to the two geography list bounds descriptions and the already present province path field for three nested city operations. Compiled geography suites and web caller regressions passed."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -18979,7 +19006,8 @@
           "apps/api/src/health/storage-health-http.integration.test.ts"
         ],
         "batches": [
-          "release-0.6-pilot-rollout"
+          "release-0.6-pilot-rollout",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-pilot-rollout",
@@ -18996,11 +19024,11 @@
             },
             {
               "path": "deploy/pilot/deploy-pilot.py",
-              "sha256": "6fd17ed743c2940accb88f569b8b065ad8c8169a0c14f63ef6f9162ec03f15f2"
+              "sha256": "dadd86f6eed84dc02c59ba13edeb93b5e6d39b79fff5612e285169129b394fd6"
             },
             {
               "path": "deploy/pilot/test_deploy_pilot.py",
-              "sha256": "4fbd373551876d76901ba2202b876e2e700a11ab19c95f65bb58b5cec4997498"
+              "sha256": "7542fd13e34db4bcd17fc18f28cae281c6b5394322062ed9711a91658eec0513"
             },
             {
               "path": "deploy/pilot/compose.yml",
@@ -19008,7 +19036,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -19055,6 +19083,16 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/deploy-pilot.py",
+                "deploy/pilot/test_deploy_pilot.py",
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -19273,7 +19311,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19281,7 +19320,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "deploy/production/README.md",
@@ -19425,6 +19464,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -19484,7 +19531,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19492,7 +19540,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "deploy/production/README.md",
@@ -19636,6 +19684,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -19656,7 +19712,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Repeat the native deployment and automatic rollback on the approved pilot or production-equivalent topology with the exact candidate and previous immutable images. Record migration, current readiness, smoke, route readback, in-flight drain and verified previous-slot restoration.",
+        "Repeat the native deployment and automatic rollback on the approved pilot or production-equivalent topology with the exact candidate and previous immutable images. Record migration, current readiness, smoke, route readback, in-flight drain and verified previous-slot restoration. The launcher now handles final smoke failure after retirement. The unit and isolated TLS checks passed. The exact approved image pair and topology remain open.",
         "Provision and verify independent application hosts and the approved load balancer for the commercial high-availability topology. The existing pilot slots share one host and the commercial rollout guard uses an operator-owned ingress adapter."
       ],
       "owner": null,
@@ -19688,7 +19744,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-blue-green-verification"
+          "release-0.6-blue-green-verification",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": null
       }
@@ -31202,7 +31259,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -31219,7 +31277,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+              "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
             },
             {
               "path": "deploy/production/README.md",
@@ -31612,6 +31670,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-pilot-post-retirement-rollback",
+              "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
             }
           ]
         }
@@ -669814,7 +669880,7 @@
       "launch_required": true,
       "remaining": [
         "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology.",
-        "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology."
+        "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images."
       ],
       "owner": null,
       "depends_on": [],
@@ -669832,7 +669898,8 @@
         "batches": [
           "release-0.6-staging-image-rollback",
           "release-0.6-launch-halt-and-rollback",
-          "release-0.6-schema-aware-staging-rollback"
+          "release-0.6-schema-aware-staging-rollback",
+          "release-0.6-pilot-post-retirement-rollback"
         ],
         "current_acceptance": null
       }
@@ -1194902,6 +1194969,75 @@
         {
           "file": "runtime-image-reports/release-licenses.json",
           "sha256": "663e1d1127f7b0c51b8d2a6ceb6391a007ed07102b35fc07431f504d8577eff2"
+        }
+      ]
+    },
+    "release-0.6-pilot-post-retirement-rollback": {
+      "batch": "release-0.6-pilot-post-retirement-rollback",
+      "base_commit": "c3211558b7839df676be627f26a8542d194d9d8e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.02",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05",
+        "01-platform-infrastructure.md#T-05.01.01",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03"
+      ],
+      "changed_paths": [
+        "deploy/pilot/deploy-pilot.py",
+        "deploy/pilot/test_deploy_pilot.py",
+        "deploy/pilot/README.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/deploy-pilot.py",
+          "sha256": "dadd86f6eed84dc02c59ba13edeb93b5e6d39b79fff5612e285169129b394fd6"
+        },
+        {
+          "path": "deploy/pilot/test_deploy_pilot.py",
+          "sha256": "7542fd13e34db4bcd17fc18f28cae281c6b5394322062ed9711a91658eec0513"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "78877abf87e83bea0538ac502655ec1d65e95a32ef86c128eda43d8075b659ee"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "d95372a08a1f01f591fe02fe6894246d1cbbe973194a6ec601fd00b8f1a5f62f"
+        },
+        {
+          "path": "deploy/pilot/compose.yml",
+          "sha256": "7fec2ec62e1a9e7f7adc9e65a7e9eb0e279115b7ca88e7407659ab4a9bfa8df0"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "cd8135b1c2d6e6445fa0998757a859abe7bea4502292148d23687b73f9f7f4b8"
+        }
+      ],
+      "checks": [
+        "The previous implementation reported failure after retirement without attempting to restore service. The pilot now revalidates the previous image, waits for its containers and exact API/web readiness, restores and verifies the TLS route, drains the candidate proxy workers and only then stops the candidate.",
+        "Eleven focused pilot tests passed. The new cases cover successful recovery with the schema transition preserved and failed restart with no routing change or candidate shutdown.",
+        "The isolated native NGINX check verified TLS switching, completion of a previous in-flight request, and previous API/web revision readback before the candidate stop callback. Formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The native fixture used local HTTP upstreams and a Compose stop callback. It does not substitute for an approved pilot host rehearsal with the exact immutable image pair and current credentials. No staging or production deployment ran."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-pilot-post-retirement-rollback",
+      "execution_receipts": [
+        {
+          "file": "pilot-final.log",
+          "sha256": "d972fe35366749355a77c57716e680c7097e7e9d11bfd59576453266abf6a8e5"
+        },
+        {
+          "file": "native-restore.py",
+          "sha256": "07ac08a04d0e1b845e42da3e1565905353f48a822e7b2f69aee89f0753b6feef"
+        },
+        {
+          "file": "native-restore.log",
+          "sha256": "20ac428ba7538f40bfcc45051a7a787bb6b9ef4056b6bed03ea12fcbd2770428"
         }
       ]
     }
