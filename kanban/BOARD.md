@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1259 | Accepted with unchanged source bindings. |
+| done | 1260 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
-| partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 6 | Named owner or external prerequisite. |
@@ -1146,7 +1146,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.03.02` | partial | Recorded batch work | Implement `Strict-Transport-Security` header configurable by env; enable HSTS only in production with verified TLS |
 | `06-security-testing-observability.md#T-06.02.03.03` | done | Recorded batch work | Ensure `frame-ancestors 'none'` in CSP prevents clickjacking |
 | `06-security-testing-observability.md#T-06.02.03.04` | partial | Recorded batch work | Write integration tests: verify all security headers present and correct on responses |
-| `06-security-testing-observability.md#T-06.02.03.05` | partial | Recorded batch work | Add CI check that fails if required security headers are missing or misconfigured |
+| `06-security-testing-observability.md#T-06.02.03.05` | done | Recorded batch work | Add CI check that fails if required security headers are missing or misconfigured |
 | `06-security-testing-observability.md#T-06.02.04.01` | done | Recorded batch work | Implement CORS middleware with exact origin allowlist (env config, not wildcard) |
 | `06-security-testing-observability.md#T-06.02.04.02` | done | Recorded batch work | Ensure credentialed CORS (credentials: include) never accepts wildcard origin |
 | `06-security-testing-observability.md#T-06.02.04.03` | done | Recorded batch work | Restrict allowed methods to required subset; restrict allowed headers |

@@ -656859,13 +656859,10 @@
         "story": "06-security-testing-observability.md#spec-9ca0fd6d9629"
       },
       "requirement": "| T-06.02.03.05 | Add CI check that fails if required security headers are missing or misconfigured | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify the integrated security-header checks on the final immutable candidate and complete the selected production-equivalent ingress TLS/HSTS gate. The exact isolated pilot and staging runs passed both positive checks and rejection of the original duplicate headers.",
-        "The protected dfe73b34a check passed the built web security headers, pilot TLS proxy, and staging proxy headers. Their workflow, ingress and test inputs match the current checkout. Repeat only invalidated checks and retain the final candidate and production-equivalent TLS/HSTS evidence."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -656886,7 +656883,77 @@
           "release-0.6-single-edge-security-headers",
           "release-0.6-protected-preflight-and-stateful-readback"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "protected-ci-security-header-assertions",
+          "base_commit": "dfe73b34a98ddf8d3326c11392c75797ec89aea3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "4059d8c4520ad2fbf498ca8d17b0d902cc2378ce701e62ab46d7ecf51b6bd9a4"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "dd3017b28bdb5fc701fedd46e02546dc4ef29c832378b0a00821ec3d9dd71b52"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "d95372a08a1f01f591fe02fe6894246d1cbbe973194a6ec601fd00b8f1a5f62f"
+            },
+            {
+              "path": "deploy/pilot/render-nginx.py",
+              "sha256": "8e128ce4807c142191ea1636303716b2cb02104c1b22ffcb73ae356b19e78c49"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "7e200bcd67036b403abbab1dee49d931955ffac8ded77041bade143a069c0ed6"
+            },
+            {
+              "path": "deploy/staging/nginx-api-proxy.conf",
+              "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+            },
+            {
+              "path": "deploy/staging/nginx-s3-proxy.conf",
+              "sha256": "9f1cd69e8b73bdafbf88dfec384820b7e158e3061a21d2bfab9f3fb05c7414ca"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+            },
+            {
+              "path": "scripts/check-production-security-headers.mjs",
+              "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
+            },
+            {
+              "path": "scripts/check-proxy-tls.mjs",
+              "sha256": "166c569cfe4e3400e118388483a35b7505bd4a896e5c70d71db8f53258c9681c"
+            },
+            {
+              "path": "scripts/check-staging-proxy.mjs",
+              "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "44d7617e6eb391201ed0897231437035cdc8f3bd22d4585ce07a2f70e1e21000"
+            },
+            {
+              "path": "scripts/test-pilot-proxy.py",
+              "sha256": "f6581d10d30ed8c66a2afdd96f5b03e9a70554bbed762a5b942c9e6778191c92"
+            }
+          ],
+          "checks": [
+            "Protected GitHub check 132177571405 passed on exact dfe73b34a in workflow run 43503647318. Its required application-integrity job ran the built web header, pilot TLS proxy and staging proxy checks successfully.",
+            "Disposable pilot and staging probes failed on duplicate X-Content-Type-Options with the earlier proxy templates. The corrected exact-value probes passed on HTTPS success, size rejection and rate rejection. The CI gate propagates failures of these assertions.",
+            "The current checkout matches all listed tested inputs at dfe73b34a. The live staging and production-equivalent TLS/HSTS evidence stays outstanding in T-04.04.02, T-06.02.03.02 and T-06.02.03.04."
+          ]
+        }
       }
     },
     {
