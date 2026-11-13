@@ -107,6 +107,15 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
         .find((sql) => sql.includes('ALTER TABLE "notification_outbox"'))!
     );
     await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql'
+        ),
+        'utf8'
+      )
+    );
+    await ctx.pool.query(
       `INSERT INTO users (user_id, timezone, notification_preferences)
        VALUES ($1, 'Asia/Tehran', 'IN_APP,EMAIL')
        ON CONFLICT (user_id) DO NOTHING`,

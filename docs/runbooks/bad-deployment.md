@@ -44,6 +44,13 @@ the current green product and quantity limits and records a new version linked
 to the draft and source revision. After a timeout, reload history and check the
 active rules before repeating any command.
 
+For contract electricity limits, open **Contract limits history** on the
+contract limits page. Prepare a draft from a prior revision, review the three
+limits and confirm **Activate recovery draft**. Activation records a new
+version linked to its draft and source. The current increase cap is checked
+when staff approve a pending request. If another save intervenes, refresh
+history and prepare a draft against the current revision.
+
 For a security rate limit, choose the action on the verification settings page
 and open **Rate-limit history**. Prepare a draft from a previously saved regular
 limit. Review the draft and confirm **Activate recovery draft**. Activation

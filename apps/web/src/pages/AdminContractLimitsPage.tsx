@@ -1,5 +1,6 @@
+import { lazy, Suspense, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
 import type { ContractElectricityLimits } from '@barghsa/shared/admin';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { SettingsFormSection } from '../components/SettingsFormSection.js';
@@ -23,10 +24,14 @@ import {
   type ContractLimitDraft,
 } from '../lib/limit-settings-form.js';
 const path = '/api/admin/config/contract-electricity-limits';
+const ContractLimitsRecovery = lazy(() => import('../components/ContractLimitsRecovery.js'));
+
 export default function AdminContractLimitsPage() {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
     label = (key: string) => t(`admin.contractLimits.${key}`, locale);
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryPending, setRecoveryPending] = useState(false);
   const messages = {
     maxQuantityIncreasePercent: label('invalidPercent'),
     maxContractDuration: label('invalidDuration'),
@@ -34,6 +39,7 @@ export default function AdminContractLimitsPage() {
   };
   const editor = useCatalogueEditor<ContractElectricityLimits, ContractLimitDraft>({
     identity: 'contract-electricity-limits',
+    disabled: recoveryPending,
     path,
     validate: validContractLimits,
     basis: contractLimitBasis,
@@ -129,6 +135,40 @@ export default function AdminContractLimitsPage() {
             })}
           </fieldset>
         </SettingsFormSection>
+      )}
+      {!editor.denied && editor.resource.data && (
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            aria-expanded={showRecovery}
+            aria-controls={showRecovery ? 'contract-limit-recovery' : undefined}
+            disabled={editor.busy || recoveryPending}
+            onClick={() => setShowRecovery((value) => !value)}
+          >
+            {label('recoveryTitle')}
+          </Button>
+          {showRecovery && (
+            <div id="contract-limit-recovery">
+              <Suspense fallback={<LoadingStatus>{label('recoveryLoading')}</LoadingStatus>}>
+                <ContractLimitsRecovery
+                  path={path}
+                  label={label}
+                  disabled={
+                    editor.busy ||
+                    !editor.resource.data ||
+                    editor.resource.loading ||
+                    !!editor.resource.error ||
+                    editor.uncertain
+                  }
+                  onBusyChange={setRecoveryPending}
+                  onDenied={editor.onDenied}
+                  onActivated={editor.resource.retry}
+                />
+              </Suspense>
+            </div>
+          )}
+        </>
       )}
       {editor.action && (
         <TeamActionDialog

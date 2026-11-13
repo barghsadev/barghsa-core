@@ -114,6 +114,73 @@ async function reload() {
   expect(button).toBeDefined();
   await act(async () => button!.click());
 }
+
+it.each([
+  ['en', 'Contract limits history', 'Draft from revision 1', 'Activate recovery draft'],
+  [
+    'fa',
+    'تاریخچه محدودیت‌های قرارداد برق',
+    'ایجاد پیش‌نویس از نسخه ۱',
+    'فعال‌سازی پیش‌نویس بازیابی',
+  ],
+] as const)(
+  'reviews and activates a contract limit revision in %s',
+  async (locale, title, stage, activate) => {
+    harness.locale = locale;
+    readValue = cases[0].saved;
+    const config = cases[0].initial;
+    const sourceId = '73c785ad-6059-4055-9a19-5ad1d4b534c3';
+    const draftId = '03899b68-02b2-4ff9-a52f-420ae91d5df0';
+    const draft = { id: draftId, baseVersion: 2, sourceId, sourceVersion: 1, config };
+    let history: object = {
+      baseVersion: 2,
+      items: [{ id: sourceId, version: 1, config }],
+      draft: null,
+      nextBeforeVersion: null,
+    };
+    vi.mocked(fetch).mockImplementation(async (path) =>
+      Response.json(String(path).endsWith('/rollback-history') ? history : readValue)
+    );
+    const button = (name: string) =>
+      [...host.querySelectorAll('button')].find((item) => item.textContent?.trim() === name);
+    const click = async (name: string) => {
+      await vi.waitFor(() => expect(button(name)).toBeDefined());
+      await act(async () => button(name)!.click());
+    };
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Limits />
+        </QueryProvider>
+      )
+    );
+    expect(host.querySelector('section')?.dir).toBe(locale === 'fa' ? 'rtl' : 'ltr');
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await click(title);
+    await act(async () => vi.dynamicImportSettled());
+    await click(stage);
+    expect(harness.confirmation?.action.body).toEqual({ sourceId, expectedVersion: 2 });
+    expect(harness.confirmation?.action.successStatus).toBe(201);
+    history = { ...history, draft };
+    await act(async () => {
+      await harness.confirmation!.onSuccess(draft);
+    });
+    expect(field(cases[0].selector).value).toBe('14');
+    await click(activate);
+    expect(harness.confirmation?.action.body).toEqual({ draftId, expectedVersion: 2 });
+    await expect(
+      harness.confirmation!.onSuccess({ config, version: 3, draftId: sourceId })
+    ).rejects.toThrow('Invalid recovery activation receipt');
+    expect(field(cases[0].selector).value).toBe('14');
+    readValue = config;
+    history = { ...history, baseVersion: 3, draft: null };
+    await act(async () => {
+      await harness.confirmation!.onSuccess({ config, version: 3, draftId });
+    });
+    await vi.waitFor(() => expect(field(cases[0].selector).value).toBe('0'));
+  }
+);
+
 for (const item of cases) {
   it.each(['en', 'fa'] as const)(
     `${item.name}: raw validation and owned API errors focus the retained draft (%s)`,

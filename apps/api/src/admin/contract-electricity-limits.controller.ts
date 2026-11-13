@@ -1,22 +1,38 @@
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
+  BadRequestException,
   Controller,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
+  Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type { ContractElectricityLimits } from '@barghsa/shared/admin';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js';
 import { assertContractLimitFields } from './limit-settings-fields.js';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { activationHistoryQuery } from './config-activation-history.js';
+import {
+  activateContractLimitRecovery,
+  stageContractLimitRecovery,
+} from './contract-limit-recovery.js';
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -107,6 +123,41 @@ export class ContractElectricityLimitsController {
   async get(@Req() req: AuthenticatedRequest): Promise<ContractElectricityLimits> {
     this.assertElectricitySettingsPermission(req);
     return this.service.get();
+  }
+
+  @Get('rollback-history')
+  @ApiOperation({ summary: 'Read earlier contract limit revisions and the current recovery draft' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  async recoveryHistory(@Req() req: AuthenticatedRequest, @Query() raw: unknown) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = activationHistoryQuery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery history query');
+    return this.service.recoveryHistory(req.session, parsed.data.beforeVersion);
+  }
+
+  @Post('rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a contract limit recovery draft' })
+  @ApiZodBody(stageContractLimitRecovery)
+  async stageRecovery(@Req() req: AuthenticatedRequest, @Body() raw: unknown) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = stageContractLimitRecovery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery draft request');
+    return this.service.stageRecovery(parsed.data, req.session, requestIp(req));
+  }
+
+  @Post('rollback-activate')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Activate the exact contract limit recovery draft as a new revision' })
+  @ApiZodBody(activateContractLimitRecovery)
+  async activateRecovery(@Req() req: AuthenticatedRequest, @Body() raw: unknown) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = activateContractLimitRecovery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery activation request');
+    return this.service.activateRecovery(parsed.data, req.session, requestIp(req));
   }
 
   @Put()

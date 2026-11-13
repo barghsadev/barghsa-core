@@ -423,6 +423,22 @@ export const fa: Record<string, string> = {
     'مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش مقدار در درخواست جدید ثبت می‌شود و هنگام تأیید درخواستِ در انتظار نیز دوباره بررسی می‌شود. سفارش‌های ثبت‌شده تغییر نمی‌کنند.',
   'admin.contractLimits.confirm':
     'محدودیت‌ها ذخیره شود؟ مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش در درخواست‌های جدید و هنگام تأیید درخواست‌های در انتظار اعمال می‌شود.',
+  'admin.contractLimits.recoveryTitle': 'تاریخچه محدودیت‌های قرارداد برق',
+  'admin.contractLimits.recoveryLoading': 'در حال دریافت تاریخچه محدودیت‌ها…',
+  'admin.contractLimits.recoveryReadError': 'دریافت تاریخچه محدودیت‌ها انجام نشد.',
+  'admin.contractLimits.recoveryEmpty': 'نسخه قبلی برای بازیابی وجود ندارد.',
+  'admin.contractLimits.recoveryRevision': 'نسخه {version}',
+  'admin.contractLimits.recoveryStage': 'ایجاد پیش‌نویس از نسخه {version}',
+  'admin.contractLimits.recoveryDraft': 'پیش‌نویس بازیابی نسخه {version}',
+  'admin.contractLimits.recoveryStageConfirm':
+    'این محدودیت‌ها را برای بررسی در پیش‌نویس ذخیره کنید.',
+  'admin.contractLimits.recoveryActivate': 'فعال‌سازی پیش‌نویس بازیابی',
+  'admin.contractLimits.recoveryActivateConfirm':
+    'این محدودیت‌ها به‌عنوان نسخه جدید فعال شوند؟ سقف افزایش هنگام تأیید درخواست‌های در انتظار دوباره بررسی می‌شود.',
+  'admin.contractLimits.recoveryConflict':
+    'محدودیت‌ها یا پیش‌نویس تغییر کرده است. تاریخچه را تازه کنید.',
+  'admin.contractLimits.recoveryLatest': 'نسخه‌های اخیر',
+  'admin.contractLimits.recoveryOlder': 'نسخه‌های قدیمی‌تر',
   'admin.contractLimits.maxQuantityIncreasePercent': 'حداکثر افزایش مقدار (درصد)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'عدد صحیح از ۰ تا ۱۰۰۰ وارد کنید. صفر به معنی ممنوعیت افزایش مقدار است.',
@@ -1421,6 +1437,21 @@ export const en: Record<string, string> = {
     'Duration and lead time apply to new drafts. New increase requests capture the cap, and approval of a pending request checks the current cap again. Submitted orders stay unchanged.',
   'admin.contractLimits.confirm':
     'Save these limits? Duration and lead time apply to new drafts. The increase cap applies to new requests and approval of pending requests.',
+  'admin.contractLimits.recoveryTitle': 'Contract limits history',
+  'admin.contractLimits.recoveryLoading': 'Loading contract limits history…',
+  'admin.contractLimits.recoveryReadError': 'Contract limits history could not be loaded.',
+  'admin.contractLimits.recoveryEmpty': 'There are no earlier revisions to recover.',
+  'admin.contractLimits.recoveryRevision': 'Revision {version}',
+  'admin.contractLimits.recoveryStage': 'Draft from revision {version}',
+  'admin.contractLimits.recoveryDraft': 'Recovery draft from revision {version}',
+  'admin.contractLimits.recoveryStageConfirm': 'Save these limits as a recovery draft for review.',
+  'admin.contractLimits.recoveryActivate': 'Activate recovery draft',
+  'admin.contractLimits.recoveryActivateConfirm':
+    'Activate these limits as a new revision? Approval of pending increase requests will check the current cap.',
+  'admin.contractLimits.recoveryConflict':
+    'The limits or draft changed. Refresh the history before continuing.',
+  'admin.contractLimits.recoveryLatest': 'Recent revisions',
+  'admin.contractLimits.recoveryOlder': 'Older revisions',
   'admin.contractLimits.maxQuantityIncreasePercent': 'Maximum quantity increase (%)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'Enter an integer from 0 to 1000. Zero prevents quantity increases.',
