@@ -19430,7 +19430,8 @@
       "launch_required": true,
       "remaining": [
         "Read back the approved headers on the accepted v0.6.0 staging release SHA.",
-        "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope."
+        "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope.",
+        "On live v0.5.1, / and /release.json emit duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options. The installed NGINX file lacks the three proxy_hide_header directives already verified in protected main. Read back the reviewed configuration and singular headers on the accepted staging SHA."
       ],
       "owner": null,
       "depends_on": [],
@@ -19537,7 +19538,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-single-edge-security-headers"
+          "release-0.6-single-edge-security-headers",
+          "release-0.6-staging-edge-live-readback"
         ],
         "current_acceptance": null
       }
@@ -655613,7 +655615,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the complete security header policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress. The isolated hosted proxy tests now enforce exact singular headers on HTTPS success, 413 and 429."
+        "Verify the complete security header policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress. The isolated hosted proxy tests now enforce exact singular headers on HTTPS success, 413 and 429.",
+        "The v0.5.1 live edge duplicates three web security headers. /api/health/ready emits one value each. The exact accepted staging SHA and reviewed NGINX configuration still need a fresh live header check."
       ],
       "owner": null,
       "depends_on": [],
@@ -655635,7 +655638,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-single-edge-security-headers"
+          "release-0.6-single-edge-security-headers",
+          "release-0.6-staging-edge-live-readback"
         ],
         "current_acceptance": null
       }
@@ -677983,7 +677987,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Staging is verified live and the production-mode pilot policy passed in isolation. Prove TLS, approved modern cipher negotiation and HSTS at the selected production-equivalent ingress with its actual hostnames, certificate chain and subdomain scope."
+        "Staging is verified live and the production-mode pilot policy passed in isolation. Prove TLS, approved modern cipher negotiation and HSTS at the selected production-equivalent ingress with its actual hostnames, certificate chain and subdomain scope.",
+        "On November 13 live staging negotiated verified TLS 1.2 and 1.3 with ECDHE-ECDSA-AES128-GCM-SHA256 and TLS_AES_256_GCM_SHA384. Production-equivalent ingress and HSTS still need their own readback."
       ],
       "owner": null,
       "depends_on": [],
@@ -677991,7 +677996,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-staging-edge-live-readback"
         ],
         "current_acceptance": null
       }
@@ -710750,7 +710756,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify live firing and resolution for WalletReconciliationReview, PublicTlsCertificateExpiring, StorageLifecycleNeedsReview and SmsProviderCreditReview in the deployed dashboards and private operations review path. Each rule and its private inbox delivery have isolated proof. Verify the independent runner, actual lifecycle job records and a recent balance from the approved SMS configuration. The existing SMS P2 limit and P1 critical wallet rule are still enforced."
+        "Verify live firing and resolution for WalletReconciliationReview, PublicTlsCertificateExpiring, StorageLifecycleNeedsReview and SmsProviderCreditReview in the deployed dashboards and private operations review path. Each rule and its private inbox delivery have isolated proof. Verify the independent runner, actual lifecycle job records and a recent balance from the approved SMS configuration. The existing SMS P2 limit and P1 critical wallet rule are still enforced.",
+        "The trusted staging certificate expires December 28 at 06:40:26 UTC. The Certbot timer and renewal hook were present, and the timer was active. This does not establish the deployed expiry alert or renewal delivery."
       ],
       "owner": null,
       "depends_on": [],
@@ -710792,7 +710799,8 @@
         "batches": [
           "release-0.6-reconciliation-review",
           "release-0.6-tls-expiry-warning",
-          "release-0.6-storage-sms-review"
+          "release-0.6-storage-sms-review",
+          "release-0.6-staging-edge-live-readback"
         ],
         "current_acceptance": null
       }
@@ -1250346,6 +1250354,49 @@
         {
           "file": "rules.log",
           "sha256": "bb643801ba9d96f65e120909ee2c292d78dea1db0b55eb564c0bbafab30a986d"
+        }
+      ]
+    },
+    "release-0.6-staging-edge-live-readback": {
+      "batch": "release-0.6-staging-edge-live-readback",
+      "base_commit": "39619e43990b47ba5cd36d26293eda73042fbfb0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.07.03.03",
+        "06-security-testing-observability.md#T-06.15.01.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "7e200bcd67036b403abbab1dee49d931955ffac8ded77041bade143a069c0ed6"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/certbot-reload-nginx.sh",
+          "sha256": "ec6a1b9862924a3ee7f1475e009dfd7f3192d14f2798cb483201d1300c708c4c"
+        },
+        {
+          "path": "scripts/check-proxy-tls.mjs",
+          "sha256": "166c569cfe4e3400e118388483a35b7505bd4a896e5c70d71db8f53258c9681c"
+        }
+      ],
+      "checks": [
+        "Public HTTPS readback on v0.5.1 isolated duplicate nosniff, referrer and frame headers on the web responses. The API readiness response had single copies. Staging omitted HSTS. The installed proxy hash differs from protected main and lacks the three already-reviewed upstream header overrides.",
+        "Trusted public TLS 1.2 and 1.3 sessions presented the same certificate and negotiated approved AEAD ciphers. Certbot timer was active, the renewal hook was present and nginx -t passed."
+      ],
+      "limitations": [
+        "Read-only staging observations. The reviewed ingress configuration, CSP enforcement, production-equivalent HSTS, certificate renewal and pager delivery were not exercised by this readback."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-edge-live-readback",
+      "execution_receipts": [
+        {
+          "file": "live-edge.json",
+          "sha256": "79ed1075205274f8e5c263d9c930c8ebbf9d75b36736674fe224b15cce209a44"
         }
       ]
     }
