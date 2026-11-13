@@ -19,6 +19,7 @@ const alertResources = {
   WorkerUnavailable: ['barghsa-worker-health', 'notification-outage'],
   ApplicationDatabasePoolSaturated: ['barghsa-postgresql', 'api-pressure'],
   CriticalApiRouteErrors: ['barghsa-api-health', 'api-pressure'],
+  AuthenticationFailuresElevated: ['barghsa-authentication-security', 'api-pressure'],
   JourneyErrorBudgetFastBurn: ['barghsa-executive-slo', 'journey-availability'],
   JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeFailed: ['barghsa-executive-slo', 'journey-availability'],

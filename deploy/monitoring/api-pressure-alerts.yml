@@ -1,6 +1,27 @@
 groups:
   - name: barghsa-api-pressure
     rules:
+      - record: barghsa:signin_responses:increase5m
+        expr: |
+          sum by (environment, database, route, status) (
+            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",method="POST",route="/api/auth/login",status=~"200|401"}[5m])
+            or
+            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",method="POST",route="/api/auth/login/verify",status=~"200|401|404|409"}[5m])
+          )
+      - alert: AuthenticationFailuresElevated
+        expr: |
+          max by (environment, database) (
+            (sum without (status) (barghsa:signin_responses:increase5m{status!="200"}) >= 30)
+            / sum without (status) (barghsa:signin_responses:increase5m)
+          ) >= 0.5
+        for: 5m
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: Sustained sign-in rejections require investigation
+          dashboard_uid: barghsa-authentication-security
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md
       - alert: ApplicationDatabasePoolSaturated
         expr: |
           max by (environment, database) (

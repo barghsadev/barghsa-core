@@ -33,6 +33,8 @@ const labels: Record<string, string> = {
   ApplicationDatabasePoolSaturated:
     'اشباع ظرفیت اتصال پایگاه داده / Application database pool saturated',
   CriticalApiRouteErrors: 'افزایش خطا در مسیر حیاتی / Elevated critical API route errors',
+  AuthenticationFailuresElevated:
+    'افزایش پایدار رد درخواست‌های ورود / Sustained sign-in rejections',
   JourneyErrorBudgetFastBurn: 'افت سریع دسترس‌پذیری خدمت / Rapid loss of service availability',
   JourneyErrorBudgetSlowBurn:
     'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
@@ -87,6 +89,7 @@ const criticalAlerts = new Set([
   'WalletReconciliationCritical',
   'PaymentCallbackAnomaly',
   'PaymentIdempotencyConflict',
+  'AuthenticationFailuresElevated',
   'WorkerUnavailable',
   'JourneyErrorBudgetFastBurn',
   'SyntheticProbeFailed',
@@ -111,6 +114,7 @@ const alertPriorities = new Map<string, AlertPriority>([
   ['PaymentIdempotencyConflict', 'P1'],
   ['ApplicationDatabasePoolSaturated', 'P2'],
   ['CriticalApiRouteErrors', 'P2'],
+  ['AuthenticationFailuresElevated', 'P1'],
   ['JourneyErrorBudgetFastBurn', 'P1'],
   ['JourneyErrorBudgetSlowBurn', 'P2'],
   ['SyntheticProbeFailed', 'P1'],

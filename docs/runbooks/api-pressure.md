@@ -1,6 +1,12 @@
 # API pressure
 
-Check the environment and database in the alert before taking action. Use the private PostgreSQL or API Health dashboard linked in the notice. The P2 operations recipient records the incident and follows the [service objectives](../operations/service-objectives.md) and [incident response process](../operations/incident-response.md).
+Check the environment and database in the alert before taking action. Open the private dashboard linked in the notice and follow the [service objectives](../operations/service-objectives.md) and [incident response process](../operations/incident-response.md).
+
+## Elevated authentication failures
+
+The P1 rule compares each sign-in stage separately. It requires at least 30 estimated rejections in a rolling five-minute window and a rejection ratio of at least 50% for five consecutive minutes. Password submissions count HTTP 401 as a rejection. OTP verification counts 401, 404 and 409. Both stages include HTTP 200 in the denominator. Review these initial thresholds against representative target traffic before accepting the live gate.
+
+Check the sign-in, MFA, rate-limit and recent security-event panels in the Authentication and Security dashboard. Verify a normal sign-in with the dedicated customer fixture, then check provider delivery and recent releases. A sustained spike can reflect abuse, an expired challenge flow or customer impact. Use the scoped metrics and sanitized request references. Keep credentials, OTP codes, identifiers and device values out of incident notes. Verify fresh metrics and a successful sign-in before recording recovery.
 
 ## Application database pool saturation
 

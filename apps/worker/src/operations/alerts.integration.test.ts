@@ -425,6 +425,7 @@ it.each([
   { alertname: 'WalletReconciliationCritical', severity: 'critical', priority: 'P1' },
   { alertname: 'PaymentCallbackAnomaly', severity: 'critical', priority: 'P1' },
   { alertname: 'PaymentIdempotencyConflict', severity: 'critical', priority: 'P1' },
+  { alertname: 'AuthenticationFailuresElevated', severity: 'critical', priority: 'P1' },
   {
     alertname: 'JourneyErrorBudgetFastBurn',
     severity: 'critical',

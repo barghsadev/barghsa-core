@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:17:22+00:00",
+  "updated": "2026-11-13T14:21:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -105883,7 +105883,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-verification-mode-recovery",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -106683,7 +106684,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -108905,6 +108906,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ],
           "presentation_renewals": [
@@ -112504,7 +112513,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -112536,7 +112546,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -112941,6 +112951,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ],
           "presentation_renewals": [
@@ -130990,7 +131008,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -131214,7 +131233,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -131786,6 +131805,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ],
           "presentation_renewals": [
@@ -577266,7 +577293,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-provider-lifecycle-input",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -577458,7 +577486,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -578117,6 +578145,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ],
           "presentation_renewals": [
@@ -580023,7 +580059,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -580247,7 +580284,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -580949,6 +580986,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ],
           "presentation_renewals": [
@@ -660464,7 +660509,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-compose-postgres17-acceptance"
+          "release-0.6-compose-postgres17-acceptance",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -660546,7 +660592,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
@@ -660709,6 +660755,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -667836,7 +667890,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -667892,7 +667947,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -668102,6 +668157,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -669986,7 +670049,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-reconciliation-recovery-tests",
@@ -670020,11 +670084,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -670224,6 +670288,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -679207,7 +679280,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -679231,7 +679305,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -679482,6 +679556,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -679530,7 +679612,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -679590,7 +679673,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -679912,6 +679995,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -679977,7 +680068,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -679993,11 +680085,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -680332,6 +680424,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -680378,7 +680479,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -680402,7 +680504,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -680653,6 +680755,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -684033,7 +684143,7 @@
       "launch_required": true,
       "remaining": [
         "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
-        "Reconcile elevated authentication failure thresholds and verify the remaining payment, wallet, notification and SLO signals in the target scope."
+        "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope."
       ],
       "owner": null,
       "depends_on": [],
@@ -684052,10 +684162,14 @@
           "docs/runbooks/postgresql-backup.md",
           "packages/db/scripts/backup/run_backup_job.py",
           "packages/db/scripts/backup/test_verify_restore.py",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "docs/runbooks/api-pressure.md"
         ],
         "batches": [
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": null
       }
@@ -684178,7 +684292,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the P1 pager or phone and P2 team channel and task with controlled delivery receipts on the authorized deployed receivers.",
+        "Verify the P1 pager or phone and P2 team channel and task with controlled delivery receipts on the authorized deployed receivers. Include firing and recovery for the authentication-failure P1 alert.",
         "Verify the P3 working-hours review board and operator access. Disposable PostgreSQL proved deduplicated firing and resolved notices to the current active admin inbox for all four P3 warnings with trusted dashboard and runbook links. Deployed routing and readback remain open."
       ],
       "owner": null,
@@ -684216,12 +684330,17 @@
           "deploy/monitoring/grafana-notifications-dashboard.json",
           "deploy/monitoring/grafana-storage-uploads-dashboard.json",
           "docs/runbooks/notification-outage.md",
-          "docs/runbooks/storage-outage.md"
+          "docs/runbooks/storage-outage.md",
+          "apps/worker/src/operations/journey-alerts.test.ts",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "docs/runbooks/api-pressure.md"
         ],
         "batches": [
           "release-0.6-reconciliation-review",
           "release-0.6-tls-expiry-warning",
-          "release-0.6-storage-sms-review"
+          "release-0.6-storage-sms-review",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": null
       }
@@ -684267,7 +684386,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -684287,11 +684407,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -684510,6 +684630,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -684566,7 +684695,7 @@
       "launch_required": true,
       "remaining": [
         "Select a patched immutable Grafana image that passes the image gate. The official Linux/amd64 13.1.10, 13.2.6 and 13.3.1 images had 3, 19 and 20 high findings, respectively. 13.1.10 flags Tempo in the core binary and x/net in Zipkin. The required Prometheus backend in 13.2.6 and 13.3.1 ships x/net v0.61.0. Staging remains healthy on its existing monitoring stack.",
-        "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack."
+        "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert."
       ],
       "owner": null,
       "depends_on": [],
@@ -684623,7 +684752,8 @@
           "apps/worker/src/notifications/worker-metrics.ts",
           "deploy/monitoring/grafana-storage-uploads-dashboard.json",
           "docs/runbooks/notification-outage.md",
-          "docs/runbooks/storage-outage.md"
+          "docs/runbooks/storage-outage.md",
+          "apps/worker/src/operations/journey-alerts.test.ts"
         ],
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
@@ -684639,7 +684769,8 @@
           "release-0.6-reconciliation-review",
           "release-0.6-tls-expiry-warning",
           "release-0.6-storage-sms-review",
-          "release-0.6-clamav-freshness-alert"
+          "release-0.6-clamav-freshness-alert",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": null
       }
@@ -685040,7 +685171,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -685056,11 +685188,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -685379,6 +685511,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -685442,7 +685583,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -685458,11 +685600,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -685797,6 +685939,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -685858,7 +686009,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -685874,11 +686026,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -686201,6 +686353,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -686243,7 +686404,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -686279,11 +686441,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -686548,6 +686710,15 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -686594,7 +686765,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-authentication-failure-alert"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -686622,11 +686794,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "39d667476209ad5ffa1b0364968e673fd8639660e7af7f55f61455637c2e9d6c"
+              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "eb9844a7656313b042defca714d500bc28dd9518dc5d34fe85b72636d75fa143"
+              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -686913,6 +687085,15 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-authentication-failure-alert",
+              "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
             }
           ]
         }
@@ -1203327,6 +1203508,99 @@
         {
           "file": "compose-and-rules.log",
           "sha256": "c8cde40f1bdb9bdac6418f88867d5a62f1f16637b774557af2249c9720c1af42"
+        }
+      ]
+    },
+    "release-0.6-authentication-failure-alert": {
+      "batch": "release-0.6-authentication-failure-alert",
+      "base_commit": "9f813541fc80a9a739d04eebccf5afce59c1051a",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "06-security-testing-observability.md#T-06.15.01.05",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05"
+      ],
+      "changed_paths": [
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "apps/worker/src/operations/alerts.ts",
+        "apps/worker/src/operations/journey-alerts.test.ts",
+        "deploy/monitoring/api-pressure-alerts.test.yml",
+        "deploy/monitoring/api-pressure-alerts.yml",
+        "docs/runbooks/api-pressure.md",
+        "packages/shared/src/notifications/operations-alert-links.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "e6e23c8c77d065d11d2fb72ac95f1e4e1b10bb1aea5071f6976dc71aaab1adc5"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.test.yml",
+          "sha256": "6b29e905aca595a0e8b387c69cc978ee9c2c4c22dd69ecfe56a78e985dc265b9"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.yml",
+          "sha256": "40c5492da47c9240e0d88ad8010c3813bfa08424114f0423e6af2a56e3dd0c03"
+        },
+        {
+          "path": "docs/runbooks/api-pressure.md",
+          "sha256": "056a966708d08447c9589bf3d8f27f3d6e52c708598caf7f33525f45671cafc6"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "feb275303b4dfbd42316a2d51f60c3ccc99ad71ae475f6fb072c3294ae016b02"
+        }
+      ],
+      "checks": [
+        "Promtool passed four API pressure scenarios. The authentication rule combines replica response increases, isolates environment/database, keeps password and OTP counts separate, ignores unrelated and rate-limited requests, suppresses low-volume and low-ratio noise, and clears after recovery.",
+        "59 worker tests and 12 shared link tests passed. The PostgreSQL HTTP fixture verified the P1 classification, wrong-priority rejection, persisted receipt and deduplicated private inbox intent. The unit suite verified the scoped receiver and trusted dashboard/runbook links.",
+        "Worker and shared typecheck, changed-file ESLint and formatting, and diff checks passed."
+      ],
+      "limitations": [
+        "The initial threshold still needs representative target-traffic verification. The deployed rule and actual P1 pager and recovery deliveries remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-authentication-failure-alert",
+      "execution_receipts": [
+        {
+          "file": "promtool.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "worker-tests.log",
+          "sha256": "6f1784d91d450b41a8bd8f7e4aa1f145047d5dace95893b036c69dda412b8611"
+        },
+        {
+          "file": "shared-links.log",
+          "sha256": "cb2dd04d5d2b33b332642d94edd4e16198e6931bc8b7d8db7234089c8d253f5e"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "466f56e06371720730c4bb825da44e7389ae0208b3c105119b5f867682fac110"
         }
       ]
     }

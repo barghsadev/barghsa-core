@@ -2,6 +2,65 @@ rule_files: [journey-slo-alerts.yml, api-pressure-alerts.yml]
 group_eval_order: [barghsa-journey-slo, barghsa-api-pressure]
 evaluation_interval: 1m
 tests:
+  - name: Sign-in rejections page once per scope across replicas and resolve after recovery
+    interval: 1m
+    input_series:
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
+        values: '0+5x8 40+0x6'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="b",method="POST",route="/api/auth/login",status="401"}'
+        values: '0+3x8 24+0x6'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+        values: '0+5x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="429"}'
+        values: '0+100x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
+        values: '0+40x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="401"}'
+        values: '0+3x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="200"}'
+        values: '0+0x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
+        values: '0+8x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+        values: '0+50x14'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: AuthenticationFailuresElevated
+        exp_alerts: []
+      - eval_time: 9m
+        alertname: AuthenticationFailuresElevated
+        exp_alerts: &signin_failure
+          - exp_labels: { environment: staging, database: core, severity: critical, priority: P1 }
+            exp_annotations:
+              summary: Sustained sign-in rejections require investigation
+              dashboard_uid: barghsa-authentication-security
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md
+      - eval_time: 13m
+        alertname: AuthenticationFailuresElevated
+        exp_alerts: []
+  - name: OTP uses its own response counts and ignores malformed or rate-limited requests
+    interval: 1m
+    input_series:
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="401"}'
+        values: '0+4x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="404"}'
+        values: '0+2x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="409"}'
+        values: '0+2x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
+        values: '0+8x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="400"}'
+        values: '0+100x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
+        values: '0+100x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+        values: '0+100x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
+        values: '0+100x14'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: AuthenticationFailuresElevated
+        exp_alerts: *signin_failure
   - name: Pool pressure requires capacity and waiters on the same API replica
     interval: 1m
     input_series:
