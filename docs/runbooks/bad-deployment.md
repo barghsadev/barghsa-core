@@ -8,6 +8,12 @@
 2. The release operator restores the last verified compatible app and web image digests through the deployment tooling. Verify API, worker, inference and web image readback. Keep additive forward-compatible migrations in place. If the schema is incompatible, use a tested roll-forward or the separately authorized migration recovery plan. A reverse migration must be explicitly tested against the current data and shown to preserve accepted writes.
 3. Check `GET /api/health/live`, `GET /api/health/ready`, worker readiness, the affected journey, reconciliation and the post-rollback error baseline before returning traffic. [Staging image restoration](../../deploy/staging/README.md). [Production image verification](../../deploy/production/README.md).
 
+Automatic staging rollback uses the app and web image IDs recorded in the active
+manifest. It checks the old app against the current schema, then verifies the
+running image IDs of the API, worker, AI inference and web services. If a recorded
+image is unavailable or the restored services fail verification, the runner
+stops the application services and reports the failed restoration.
+
 If the old image fails schema verification, keep writers stopped. Record the
 exact image digests, migration journal, active database identity and the last
 known healthy state. The database operator verifies a roll-forward or

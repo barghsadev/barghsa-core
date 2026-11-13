@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T19:53:04+00:00",
+  "updated": "2026-11-13T20:03:05+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -23261,7 +23261,8 @@
       "remaining": [
         "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication.",
         "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released.",
-        "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal."
+        "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal.",
+        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -23310,7 +23311,8 @@
           "release-0.6-portable-staging-images",
           "release-0.6-immutable-board-readiness",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-staging-rollback-image-identity"
         ],
         "current_acceptance": null
       }
@@ -23504,7 +23506,8 @@
           "release-0.6-maintenance-recovery",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-staging-rollback-image-identity"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23516,7 +23519,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "AGENTS.md",
@@ -23524,7 +23527,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/README.md",
@@ -23532,7 +23535,7 @@
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "d637a7c36572605f58d7913c9f7a2d4480de829ccae70001e310074670c9ecaa"
+              "sha256": "512cd51d648b82a862b34ffdacb8441e54a0d7f21bd807a27f9b6dfc6f9ff398"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23569,6 +23572,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py",
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -33901,7 +33914,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -34014,6 +34027,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -34247,7 +34268,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             }
           ],
           "source_renewals": [
@@ -34688,6 +34709,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -34806,7 +34835,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -35015,6 +35044,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "The quarterly schedule now includes the already exercised synthetic jobs. Their fixture commands are byte-for-byte unchanged. The review packet adds explicit event and attempt identity."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -98441,7 +98478,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -99850,6 +99887,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -162119,7 +162164,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -163208,6 +163253,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -612293,7 +612346,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -612885,6 +612938,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -633038,7 +633099,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -633501,6 +633562,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -633867,7 +633936,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634330,6 +634399,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -634694,7 +634771,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635157,6 +635234,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -635521,7 +635606,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636008,6 +636093,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -636866,7 +636959,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637329,6 +637422,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -637898,7 +637999,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -639011,6 +639112,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -639530,7 +639639,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -639993,6 +640102,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -640356,7 +640473,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640819,6 +640936,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -641183,7 +641308,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641646,6 +641771,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -642011,7 +642144,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642498,6 +642631,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -642861,7 +643002,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643324,6 +643465,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -643687,7 +643836,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644150,6 +644299,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -681065,7 +681222,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "docs/runbooks/security-incident.md",
@@ -681124,6 +681281,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -698688,7 +698853,8 @@
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. Preserve the original database volume and previous images together before accepting writes.",
         "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
-        "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required."
+        "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
+        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -698732,7 +698898,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-queue-schema-rehearsal",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-public-staging-revision-smoke"
+          "release-0.6-public-staging-revision-smoke",
+          "release-0.6-staging-rollback-image-identity"
         ],
         "current_acceptance": null
       }
@@ -700071,7 +700238,8 @@
       "launch_required": true,
       "remaining": [
         "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology. The observer now requires the authentication alert and checks both API pools carry the rule selector. Verify the scoped authentication hold during the authorized topology rehearsal.",
-        "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images."
+        "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images.",
+        "Rehearse a failed exact-candidate rollout and verify automatic restoration by the recorded previous app and web IDs. Confirm all four running service IDs and recovery readiness on the isolated candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -700096,7 +700264,8 @@
           "release-0.6-launch-halt-and-rollback",
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-pilot-post-retirement-rollback",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-staging-rollback-image-identity"
         ],
         "current_acceptance": null
       }
@@ -700166,7 +700335,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             }
           ],
           "source_renewals": [
@@ -700459,6 +700628,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -718586,7 +718763,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -718646,6 +718823,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -718722,7 +718907,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "b266a0c1374208b688dabcdf57ae279ba48637285217286bba6cee84c7746fe7"
+              "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
             },
             {
               "path": "docs/runbooks/credential-compromise.md",
@@ -718980,6 +719165,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ]
         }
@@ -1063332,7 +1063525,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1066391,6 +1066584,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -1069000,7 +1069201,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "eb518d2e8646d373a1a0084a19a3a151538b636048eea4d4240348c5a57bbfda"
+              "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1071961,6 +1072162,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-staging-rollback-image-identity",
+              "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Automatic staging rollback selects the previous app and web by the full image IDs in the protected active manifest. It verifies local availability and current schema, reads back all restored service IDs, and stops application services if the restore or identity readback fails. Existing forward rollout and staging notification behavior retain their scope. The focused rollback, deployment and queue fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1252638,6 +1252847,50 @@
         {
           "file": "checks.json",
           "sha256": "e458f12fd018b9c6b8e0561378bf3b732cf4b73f1ae53f867d978f6704fe03bf"
+        }
+      ]
+    },
+    "release-0.6-staging-rollback-image-identity": {
+      "batch": "release-0.6-staging-rollback-image-identity",
+      "base_commit": "840325e7d2708188b7daa6266d23c817bd728c01",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.04.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py",
+        "docs/runbooks/bad-deployment.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ab9d2c24634810a8f046e9525e41ba402e0582dfd5a58a350019395fbce1f63f"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "512cd51d648b82a862b34ffdacb8441e54a0d7f21bd807a27f9b6dfc6f9ff398"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "dbdd5c77f69d7d3e0ad736c6260d7bffe5e8db1af7b7116943a753d75981f89a"
+        }
+      ],
+      "checks": [
+        "Twelve staging rollback tests passed. The new cases detect missing or unavailable previous image IDs and a wrong running rollback image. Both new tests fail against the predecessor script across all three fault cases.",
+        "Fifteen notification and deployment tests and twenty staging queue tests passed with isolated fixture services. Bash syntax, ShellCheck, runbook formatting and git whitespace checks passed.",
+        "Local Docker Compose started a fixture by its full Docker image ID, passed its health check and returned the same running image ID. Read-only SSH confirmed that both recorded previous app and web IDs are present on the live staging host."
+      ],
+      "limitations": [
+        "No live rollback or deployment was triggered. The frozen v0.6.0 app, web and database pair still needs the approved staging rehearsal and actual recovery and deployment receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-rollback-image-identity",
+      "execution_receipts": [
+        {
+          "file": "checks.json",
+          "sha256": "eb5bcc1114f69770523146e1f883f30c2cd047b1adbeca20d52e52f20182fe27"
         }
       ]
     }

@@ -14,39 +14,63 @@ RESTORED_VOLUME = "barghsa-staging_pgdata-restore-1"
 
 
 class ReleaseRollbackTests(unittest.TestCase):
-    def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True):
+    app_id = f"sha256:{'a' * 64}"
+    web_id = f"sha256:{'b' * 64}"
+
+    def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True,
+                     identities=True, available=True, running_mismatch=""):
         with tempfile.TemporaryDirectory(prefix="barghsa-rollback-") as directory:
             root = Path(directory)
             runtime = root / "runtime.env"
             runtime.touch()
             active = root / "active.env"
-            active.write_text("BARGHSA_APP_IMAGE=barghsa-app:previous\n")
+            active.write_text(
+                "BARGHSA_APP_IMAGE=barghsa-app:previous\n"
+                "BARGHSA_WEB_IMAGE=barghsa-web:previous\n"
+                + (f"BARGHSA_APP_IMAGE_ID={self.app_id}\nBARGHSA_WEB_IMAGE_ID={self.web_id}\n"
+                   if identities else "")
+            )
             compose = root / "compose.yml"
             compose.write_text(
                 'services:\n  api:\n    image: "${BARGHSA_APP_IMAGE:?Set app image}"\n'
+                '  web:\n    image: "${BARGHSA_WEB_IMAGE:?Set web image}"\n'
             )
             fake_docker = root / "docker"
             fake_docker.write_text(
                 """#!/usr/bin/env bash
 set -eu
+if [[ $1 == image ]]; then
+  [[ $2 == inspect && $3 == --format && $4 == '{{.Id}}' ]]
+  [[ $5 == "$PREVIOUS_APP_ID" || $5 == "$PREVIOUS_WEB_ID" ]]
+  [[ "$AVAILABLE" == 1 || $5 != "$PREVIOUS_WEB_ID" ]] || exit 1
+  printf '%s\\n' "$5"
+  exit
+fi
 args=()
-while [[ $# -gt 0 && $1 != up && $1 != run && $1 != stop ]]; do
+while [[ $# -gt 0 && $1 != up && $1 != run && $1 != stop && $1 != ps ]]; do
   args+=("$1")
   shift
 done
+if [[ $1 == ps ]]; then
+  [[ $2 == -q && $BARGHSA_APP_IMAGE == "$PREVIOUS_APP_ID" && $BARGHSA_WEB_IMAGE == "$PREVIOUS_WEB_ID" ]]
+  printf '%s-running\\n' "$3"
+  exit
+fi
 if [[ $1 == run ]]; then
   [[ $2 == --rm && $3 == --no-deps && $4 == api && $5 == node && $6 == -e ]]
   [[ $7 == *'dbHealth({ verifySchema: true })'* ]]
-  [[ -z ${BARGHSA_APP_IMAGE+x} ]]
+  [[ $BARGHSA_APP_IMAGE == "$PREVIOUS_APP_ID" && $BARGHSA_WEB_IMAGE == "$PREVIOUS_WEB_ID" ]]
+  echo schema-check >&2
   [[ "$SCHEMA_READY" == 1 ]]
   exit
 fi
 if [[ $1 == stop ]]; then
   [[ $* == 'stop worker web api ai-inference' ]]
-  echo apps-stopped
+  echo apps-stopped >&2
   exit
 fi
 [[ $* == 'up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference' ]]
+echo apps-started >&2
 "$REAL_DOCKER" "${args[@]}" config --format json
 [[ "$SIMULATE_FAILURE" == 0 ]]
 """
@@ -59,6 +83,11 @@ fi
                 "PATH": f"{root}:{os.environ['PATH']}",
                 "REAL_DOCKER": shutil.which("docker") or "docker",
                 "BARGHSA_APP_IMAGE": "barghsa-app:failed-candidate",
+                "BARGHSA_WEB_IMAGE": "barghsa-web:failed-candidate",
+                "PREVIOUS_APP_ID": self.app_id,
+                "PREVIOUS_WEB_ID": self.web_id,
+                "AVAILABLE": "1" if available else "0",
+                "RUNNING_MISMATCH": running_mismatch,
                 "SCHEMA_READY": "1" if schema_ready else "0",
                 "POSTGRES_READY": "1" if postgres_ready else "0",
                 "SIMULATE_FAILURE": "1" if simulate_failure else "0",
@@ -66,7 +95,19 @@ fi
             script = (
                 'set -euo pipefail\n'
                 'runtime=$1\nactive=$2\ncompose=$3\n'
-                'postgres_id=fixture\nverify_running_image() { [[ $* == "postgres fixture" && "$POSTGRES_READY" == 1 ]]; }\n'
+                '''postgres_id=fixture
+verify_running_image() {
+  if [[ $1 == postgres ]]; then
+    [[ $2 == fixture && "$POSTGRES_READY" == 1 ]]
+    return
+  fi
+  [[ $3 == "$1-running" ]] || return 2
+  if [[ $1 == web ]]; then [[ $2 == "$PREVIOUS_WEB_ID" ]] || return 2
+  else [[ $2 == "$PREVIOUS_APP_ID" ]] || return 2; fi
+  printf 'verify %s\\n' "$1" >&2
+  [[ $1 != "$RUNNING_MISMATCH" ]]
+}
+'''
                 f'{function}\n'
                 "trap rollback ERR\nbash -c 'exit 17'\necho unreachable\n"
             )
@@ -81,25 +122,51 @@ fi
     def test_rollback_reads_previous_image_instead_of_exported_candidate(self):
         result = self.run_rollback()
         self.assertEqual(result.returncode, 17, result.stderr)
-        self.assertEqual(json.loads(result.stdout)["services"]["api"]["image"], "barghsa-app:previous")
+        services = json.loads(result.stdout)["services"]
+        self.assertEqual(services["api"]["image"], self.app_id)
+        self.assertEqual(services["web"]["image"], self.web_id)
+        self.assertEqual(
+            [line for line in result.stderr.splitlines() if line.startswith("verify ")],
+            ["verify api", "verify worker", "verify ai-inference", "verify web"],
+        )
         self.assertNotIn("Restoring the previous staging app images failed", result.stderr)
 
     def test_unhealthy_rollback_reports_failure_and_preserves_original_status(self):
         result = self.run_rollback(simulate_failure=True)
         self.assertEqual(result.returncode, 17, result.stderr)
         self.assertIn("Restoring the previous staging app images failed", result.stderr)
+        self.assertIn("apps-stopped", result.stderr)
+
+    def test_missing_or_unavailable_image_id_stops_before_schema_check(self):
+        for options in ({"identities": False}, {"available": False}):
+            with self.subTest(options=options):
+                result = self.run_rollback(**options)
+                self.assertEqual(result.returncode, 17, result.stderr)
+                self.assertIn("Previous staging app or web image ID is missing or unavailable", result.stderr)
+                self.assertIn("apps-stopped", result.stderr)
+                self.assertNotIn("schema-check", result.stderr)
+                self.assertNotIn("apps-started", result.stderr)
+
+    def test_running_image_mismatch_stops_restored_services(self):
+        result = self.run_rollback(running_mismatch="ai-inference")
+        self.assertEqual(result.returncode, 17, result.stderr)
+        self.assertIn("verify ai-inference\napps-stopped", result.stderr)
+        self.assertIn("Restoring the previous staging app images failed", result.stderr)
 
     def test_schema_mismatch_stops_application_instead_of_starting_previous_images(self):
         result = self.run_rollback(schema_ready=False)
         self.assertEqual(result.returncode, 17, result.stderr)
-        self.assertEqual(result.stdout.strip(), "apps-stopped")
+        self.assertIn("apps-stopped", result.stderr)
+        self.assertNotIn("apps-started", result.stderr)
         self.assertIn("Previous app could not verify the current database schema", result.stderr)
         self.assertIn("Recover the matching app and database pair, or roll forward", result.stderr)
 
     def test_postgres_mismatch_stops_application_before_rollback_schema_check(self):
         result = self.run_rollback(postgres_ready=False)
         self.assertEqual(result.returncode, 17, result.stderr)
-        self.assertEqual(result.stdout.strip(), "apps-stopped")
+        self.assertIn("apps-stopped", result.stderr)
+        self.assertNotIn("schema-check", result.stderr)
+        self.assertNotIn("apps-started", result.stderr)
         self.assertIn("PostgreSQL image or volume could not be verified for rollback", result.stderr)
         self.assertNotIn("Previous app could not verify", result.stderr)
 
@@ -262,7 +329,7 @@ echo promote
         before_start = text[text.index('# Check an existing container'):text.index('\ntrap rollback ERR')]
         stateful = text[text.index('\nverify_running_image postgres "$postgres_id"\n'):
                         text.index("\n# Host NGINX enters")]
-        running = text[text.index("for service in api worker ai-inference web"):
+        running = text[text.index("\nfor service in api worker ai-inference web"):
                        text.index("\nfor health in live ready")]
         final_stateful = text[text.rindex('\nverify_running_image postgres "$postgres_id"\n'):
                               text.index('\ninstall -m 0600 "$candidate" "$active"')]

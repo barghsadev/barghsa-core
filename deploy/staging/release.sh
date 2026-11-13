@@ -131,16 +131,26 @@ rollback() {
   trap - ERR
   if [[ -r "$active" ]]; then
     local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
-    # Compose gives exported shell variables priority over the previous manifest.
+    local previous_app_id previous_web_id loaded_app_id loaded_web_id service expected_id container
     if ! (
       if ! verify_running_image postgres "$postgres_id"; then
         echo 'PostgreSQL image or volume could not be verified for rollback' >&2
-        if ! "${previous[@]}" stop worker web api ai-inference; then
-          echo 'Stopping the staging application after the failed PostgreSQL check also failed' >&2
-        fi
+        stop_rollback_services "${previous[@]}"
         exit 1
       fi
-      unset BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE
+      if ! previous_app_id=$(sed -n 's/^BARGHSA_APP_IMAGE_ID=//p' "$active") ||
+        ! previous_web_id=$(sed -n 's/^BARGHSA_WEB_IMAGE_ID=//p' "$active") ||
+        [[ ! "$previous_app_id" =~ ^sha256:[0-9a-f]{64}$ || ! "$previous_web_id" =~ ^sha256:[0-9a-f]{64}$ ]] ||
+        ! loaded_app_id=$(docker image inspect --format '{{.Id}}' "$previous_app_id") ||
+        ! loaded_web_id=$(docker image inspect --format '{{.Id}}' "$previous_web_id") ||
+        [[ "$loaded_app_id" != "$previous_app_id" || "$loaded_web_id" != "$previous_web_id" ]]; then
+        echo 'Previous staging app or web image ID is missing or unavailable for rollback' >&2
+        stop_rollback_services "${previous[@]}"
+        exit 1
+      fi
+      # Compose gives exported shell variables priority over the previous manifest.
+      previous=(env "BARGHSA_APP_IMAGE=$previous_app_id" "BARGHSA_WEB_IMAGE=$previous_web_id" "${previous[@]}")
+      unset BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE
       if ! "${previous[@]}" run --rm --no-deps api node -e '
 const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
 (async () => {
@@ -153,13 +163,25 @@ const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
 })().catch(() => { process.exitCode = 1; });
 '; then
         echo 'Previous app could not verify the current database schema. Recover the matching app and database pair, or roll forward.' >&2
-        if ! "${previous[@]}" stop worker web api ai-inference; then
-          echo 'Stopping the staging application after the failed schema check also failed' >&2
-        fi
+        stop_rollback_services "${previous[@]}"
         exit 1
       fi
       echo 'Release failed; restoring previous app images' >&2
-      "${previous[@]}" up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference
+      if ! "${previous[@]}" up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference; then
+        stop_rollback_services "${previous[@]}"
+        exit 1
+      fi
+      for service in api worker ai-inference web; do
+        expected_id=$previous_app_id
+        if [[ "$service" == web ]]; then
+          expected_id=$previous_web_id
+        fi
+        if ! container=$("${previous[@]}" ps -q "$service") || [[ -z "$container" ]] ||
+          ! verify_running_image "$service" "$expected_id" "$container"; then
+          stop_rollback_services "${previous[@]}"
+          exit 1
+        fi
+      done
     ); then
       echo 'Restoring the previous staging app images failed' >&2
     fi
@@ -168,6 +190,13 @@ const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
   fi
   exit "$status"
 }
+
+stop_rollback_services() {
+  if ! "$@" stop worker web api ai-inference; then
+    echo 'Stopping the staging application during failed rollback also failed' >&2
+  fi
+}
+
 # Check an existing container, including a stopped one, before Compose can start it.
 postgres_container=$("${dc[@]}" ps --all -q postgres)
 if [[ -n "$postgres_container" ]]; then
