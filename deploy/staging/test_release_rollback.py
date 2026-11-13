@@ -251,40 +251,44 @@ echo compose-admitted
                     if diagnostic:
                         self.assertIn(diagnostic, result.stderr)
 
+    def staging_compose_config(self, fixture, *, volume='', archive=False):
+        # Some Compose versions load env_file even with --no-env-resolution.
+        # Use test-owned files and keep the live templates and host untouched.
+        env = {**os.environ, **dict.fromkeys((
+            'BARGHSA_APP_IMAGE', 'BARGHSA_WEB_IMAGE', 'BARGHSA_POSTGRES_IMAGE', 'BARGHSA_CLAMAV_IMAGE',
+            'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY',
+            'S3_BUCKET',
+        ), 'fixture'), 'BARGHSA_POSTGRES_VOLUME': volume}
+        runtime_env = fixture / 'runtime.env'
+        runtime_env.touch()
+        base = fixture / STAGING_COMPOSE.name
+        base.write_text(STAGING_COMPOSE.read_text().replace('/etc/barghsa/staging/runtime.env', str(runtime_env)))
+        command = ['docker', 'compose', '--env-file', '/dev/null', '--project-directory',
+                   str(STAGING_COMPOSE.parent), '-f', str(base)]
+        if archive:
+            overlay = STAGING_COMPOSE.with_name('compose.wal-archive.yml')
+            backup_env = fixture / 'wal-archive.env'
+            backup_env.write_text('BACKUP_CLUSTER_ID=fixture\n')
+            local_overlay = fixture / overlay.name
+            local_overlay.write_text(overlay.read_text().replace('/etc/barghsa/staging/wal-archive.env', str(backup_env)))
+            command.extend(['-f', str(local_overlay)])
+        result = subprocess.run([*command, 'config', '--no-env-resolution', '--format', 'json'],
+                                capture_output=True, text=True, check=False, env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return json.loads(result.stdout)
+
     def test_compose_mounts_the_default_or_recorded_volume(self):
-        compose_env = {**os.environ, 'BARGHSA_APP_IMAGE': 'fixture', 'BARGHSA_WEB_IMAGE': 'fixture',
-                       'BARGHSA_POSTGRES_IMAGE': 'fixture', 'BARGHSA_CLAMAV_IMAGE': 'fixture',
-                       'POSTGRES_DB': 'fixture', 'POSTGRES_USER': 'fixture', 'POSTGRES_PASSWORD': 'fixture',
-                       'S3_ACCESS_KEY_ID': 'fixture', 'S3_SECRET_ACCESS_KEY': 'fixture', 'S3_BUCKET': 'fixture'}
         for selected in ('', RESTORED_VOLUME):
-            with self.subTest(selected=selected):
-                result = subprocess.run(['docker', 'compose', '--env-file', '/dev/null', '-f', str(STAGING_COMPOSE),
-                                         'config', '--no-env-resolution', '--format', 'json'],
-                                        capture_output=True, text=True, check=True,
-                                        env={**compose_env, 'BARGHSA_POSTGRES_VOLUME': selected})
-                config = json.loads(result.stdout)
+            with self.subTest(selected=selected), tempfile.TemporaryDirectory(prefix='barghsa-compose-') as directory:
+                config = self.staging_compose_config(Path(directory), volume=selected)
                 self.assertEqual(config['volumes']['pgdata']['name'], selected or DEFAULT_VOLUME)
                 self.assertIn({'type': 'volume', 'source': 'pgdata', 'target': '/var/lib/postgresql/data', 'volume': {}},
                               config['services']['postgres']['volumes'])
 
     def test_wal_overlay_only_changes_postgres_and_mounts_the_existing_private_key(self):
-        overlay = STAGING_COMPOSE.with_name("compose.wal-archive.yml")
-        env = {**os.environ, **dict.fromkeys((
-            'BARGHSA_APP_IMAGE', 'BARGHSA_WEB_IMAGE', 'BARGHSA_POSTGRES_IMAGE', 'BARGHSA_CLAMAV_IMAGE',
-            'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY',
-            'S3_BUCKET',
-        ), 'fixture')}
-        command = ['docker', 'compose', '--env-file', '/dev/null', '-f', str(STAGING_COMPOSE)]
-        options = ['config', '--no-env-resolution', '--format', 'json']
-        baseline = json.loads(subprocess.check_output([*command, *options], env=env))
-        with tempfile.TemporaryDirectory() as directory:
-            backup_env = Path(directory) / 'wal-archive.env'
-            backup_env.write_text('BACKUP_CLUSTER_ID=fixture\n')
-            local_overlay = Path(directory) / overlay.name
-            local_overlay.write_text(overlay.read_text().replace(
-                '/etc/barghsa/staging/wal-archive.env', str(backup_env),
-            ))
-            enabled = json.loads(subprocess.check_output([*command, '-f', str(local_overlay), *options], env=env))
+        with tempfile.TemporaryDirectory(prefix='barghsa-compose-') as directory:
+            baseline = self.staging_compose_config(Path(directory))
+            enabled = self.staging_compose_config(Path(directory), archive=True)
         postgres = enabled['services'].pop('postgres')
         default_postgres = baseline['services'].pop('postgres')
         self.assertEqual(enabled, baseline)

@@ -16856,7 +16856,8 @@
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
         "Protected staging migrations can now create a verified encrypted checkpoint after quiescing writers. The native PostgreSQL image passed backup upload and isolated recovery over HTTPS. Configure a dedicated replication role and the approved protected destination and key. The live scheduled backup, WAL/PITR and pager evidence remain open.",
         "The staging PostgreSQL Compose overlay now signs and encrypts WAL using the existing archiver. The isolated HTTPS fixture on the exact Ubuntu image uploaded a completed WAL segment and recovered the requested target with the earlier commit present and the later one absent. Provision the live protected destination, key, schedule and monitored retention to close this task.",
-        "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open."
+        "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open.",
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -16940,7 +16941,8 @@
           "release-0.6-postgres-disk-capacity",
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-staging-wal-archive",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-hosted-compose-fixtures"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -23789,7 +23791,8 @@
         "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts.",
         "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release.",
         "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout.",
-        "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout."
+        "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout.",
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -23849,7 +23852,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-hosted-compose-fixtures"
         ],
         "current_acceptance": null
       }
@@ -24058,7 +24062,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-hosted-compose-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24086,7 +24091,7 @@
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "80c836e96c346a0c62b167211aa84bc2620cdb4ed29b8d32c7452da8d623d1aa"
+              "sha256": "f2afd321a8becb7328bdab11a2d0454dccbe6a66e220f3479bad9bbe80b22953"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -24220,6 +24225,14 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-hosted-compose-fixtures",
+              "base_commit": "4fe2b4d7c9123cf4622b24c342210a279beb7fd0",
+              "paths": [
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The test fixtures supply local env files and preserve all actual volume, WAL and rollback assertions. Thirteen local rollback tests and both affected Linux amd64 Compose 2.38.2 cases passed."
             }
           ]
         }
@@ -1082094,7 +1082107,9 @@
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
         "Closing the retained-image license gate requires the existing 244 named dispositions as well as approval for the remaining scopes. The initialized worker now enforces the policy before transfer and rechecks the report hash before announcement.",
         "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
-        "Run the new protected release-controls step on the exact v0.6.0 candidate. Local execution of the literal step passed all 79 staging and production fixture tests."
+        "Run the new protected release-controls step on the exact v0.6.0 candidate. Local execution of the literal step passed all 79 staging and production fixture tests.",
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
+        "Preflight 43523386018 passed the required integrity check and all four affected test tasks on 465def304. The exact SHA reached main and its push reused the affected-test receipt. Full candidate checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1082400,7 +1082415,8 @@
           "release-0.6-registration-request-observation",
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-hosted-compose-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1259888,6 +1259904,47 @@
         {
           "file": "independent-inventory-readback.json",
           "sha256": "b646e2424ea634bd4869d1e19722f6bba9d924f61e8e98ea67bb5ccaa99f6184"
+        }
+      ]
+    },
+    "release-0.6-hosted-compose-fixtures": {
+      "batch": "release-0.6-hosted-compose-fixtures",
+      "base_commit": "4fe2b4d7c9123cf4622b24c342210a279beb7fd0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "f2afd321a8becb7328bdab11a2d0454dccbe6a66e220f3479bad9bbe80b22953"
+        }
+      ],
+      "checks": [
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
+        "Verify monorepo integrity passed for 465def304 and the exact remote main ref was read back. GitHub reused its exact affected-test receipt on direct publication."
+      ],
+      "limitations": [
+        "The hosted failure remains part of the record. The isolated Linux Compose check tests the repair and does not certify the successor workflow or any live release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-hosted-compose-fixtures",
+      "execution_receipts": [
+        {
+          "file": "rollback.log",
+          "sha256": "61ede44acf08a1b39114a0e8d0339f75b3c2750f687e0c1c46be402248f3cad2"
+        },
+        {
+          "file": "runner-compose.log",
+          "sha256": "6e8baf68231ebb1bc55bf8709c96ff73d95ed0d125c91b4cf0fd963bd73a03e8"
+        },
+        {
+          "file": "diagnosed-preflight.json",
+          "sha256": "1ea993fbee7c1a56faf832da4a138644c437f40c3c6d683c9d199b98db54ed3a"
         }
       ]
     }
