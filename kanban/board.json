@@ -110805,7 +110805,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -111649,7 +111650,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -113911,6 +113912,14 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -117643,7 +117652,8 @@
           "release-0.6-authentication-failure-alert",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-web-server-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -117671,7 +117681,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -118114,6 +118124,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -118244,7 +118262,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -118264,7 +118283,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             }
           ],
           "checks": [
@@ -118429,6 +118448,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -129781,7 +129808,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -129977,7 +130005,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -130773,6 +130801,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -131199,7 +131235,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -131395,7 +131432,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -132191,6 +132228,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -132617,7 +132662,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -132813,7 +132859,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -133609,6 +133655,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -134036,7 +134090,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -134232,7 +134287,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -135028,6 +135083,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -135454,7 +135517,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -135650,7 +135714,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -136446,6 +136510,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -136884,7 +136956,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -137020,7 +137093,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -137746,6 +137819,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -138169,7 +138250,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -138329,7 +138411,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -138900,6 +138982,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -139194,7 +139284,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -139390,7 +139481,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -140186,6 +140277,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -597676,7 +597775,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -597896,7 +597996,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -598577,6 +598677,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -600590,7 +600698,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "status": "done",
@@ -600746,7 +600855,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -601566,6 +601675,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -705621,7 +705738,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-synthetic-target-loss",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -705669,7 +705787,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -706019,6 +706137,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -707950,7 +708076,8 @@
           "release-0.6-synthetic-target-loss",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -707983,7 +708110,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             }
           ],
           "source_renewals": [
@@ -708229,6 +708356,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -708274,7 +708409,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -708330,7 +708466,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -708448,6 +708584,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -709032,7 +709176,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -709092,7 +709237,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -709355,6 +709500,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -709402,7 +709555,8 @@
           "release-0.6-synthetic-target-loss",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -709446,7 +709600,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -709779,6 +709933,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -710208,7 +710370,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -710228,7 +710391,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             }
           ],
           "checks": [
@@ -710461,6 +710624,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -710737,7 +710908,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-synthetic-target-loss",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -710777,7 +710949,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             }
           ],
           "checks": [
@@ -710997,6 +711169,14 @@
                 "deploy/monitoring/staging-worker-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ]
         }
@@ -718882,7 +719062,8 @@
       "remaining": [
         "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent. The staging overlay now declares an expected target independently of file discovery. Verify its recording rule when the approved target is installed.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt.",
-        "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required."
+        "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required.",
+        "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -718915,7 +719096,8 @@
           "release-0.6-tls-expiry-warning",
           "release-0.6-gate-readback",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-synthetic-exact-fixture-read"
+          "release-0.6-synthetic-exact-fixture-read",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": null
       }
@@ -718975,7 +719157,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery. Include removal and restoration of the discovered target in the controlled reporting-outage rehearsal.",
-        "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver."
+        "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver.",
+        "Local Prometheus rules now page for fresh timestamps with missing check results or incomplete successes, and recover when complete results return. Explicit failures retain the six-minute check alert. Verify on the deployed runner and pager route."
       ],
       "owner": null,
       "depends_on": [],
@@ -718988,20 +719171,21 @@
           "deploy/monitoring/grafana-executive-slo-dashboard.json",
           "deploy/monitoring/staging-compose.yml",
           "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-synthetic-expectation.yml",
+          "deploy/monitoring/staging-synthetic.yml",
           "deploy/monitoring/synthetic-probe-alerts.test.yml",
           "deploy/monitoring/synthetic-probe-alerts.yml",
           "deploy/production/README.md",
-          "docs/runbooks/journey-availability.md",
-          "packages/shared/src/notifications/operations-alert-links.ts",
-          "deploy/monitoring/staging-synthetic.yml",
           "docs/operations/notification-monitoring.md",
-          "deploy/monitoring/staging-synthetic-expectation.yml"
+          "docs/runbooks/journey-availability.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-synthetic-staging-scrape",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_acceptance": null
       }
@@ -1061411,7 +1061595,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1064406,6 +1064590,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "presentation_renewals": [
@@ -1064818,7 +1065010,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1067035,7 +1067228,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+              "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1069932,6 +1070125,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-result-completeness",
+              "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1070361,7 +1070562,8 @@
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-synthetic-result-completeness"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1250055,6 +1250257,95 @@
         {
           "file": "verified.json",
           "sha256": "d35d550a39e7328871d6f394506aa9f48e5e714f8db3c7ff31188b4ca21fafc7"
+        }
+      ]
+    },
+    "release-0.6-synthetic-result-completeness": {
+      "batch": "release-0.6-synthetic-result-completeness",
+      "base_commit": "3e707698cc76b2e33a054120f8b79e4fa9925d74",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/synthetic-probe-alerts.yml",
+        "deploy/monitoring/synthetic-probe-alerts.test.yml",
+        "docs/operations/notification-monitoring.md",
+        "docs/runbooks/journey-availability.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "56c7bf85b713bc58246c5ebfac52840ce76f03f57bab4fb268023433f150f604"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "6d14b56375508043a600fce3873473007da7721658d79f64f8c3e0aedb9e0199"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "82756c26ab883b5d67e616a9792e6518290529fcd673baedddec4af380650c4f"
+        },
+        {
+          "path": "docs/runbooks/journey-availability.md",
+          "sha256": "bfbf8152368a34169211e50fb2fb42f980e705675b802cbee0ef5ebf3e659571"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic-expectation.yml",
+          "sha256": "de5c8454bb722dc9f445c1a3f718cc615b2df1c077bba6b2b734f6ff32635fde"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "5c40106ee5dbe1a7a8ea401e8858632c59c40aee0af9c4a10a081f8364efd8c2"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "9289579d0f066af97bc4f4f1cb539f1c14019e088ab58a1dbd4f4b5c5c52f40e"
+        }
+      ],
+      "checks": [
+        "The new scenario failed the previous Prometheus rules when a fresh target published no known check or only incomplete successful outcomes.",
+        "The pinned Linux amd64 Prometheus image passed the synthetic and journey SLO rule suites. Verified complete recovery, per-scope isolation, missing discovery, stale results, exporter failure, and the existing certificate and explicit check failure alerts.",
+        "Prettier and git diff --check passed."
+      ],
+      "limitations": [
+        "The Prometheus rule fixtures do not establish live independent runner or pager delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-result-completeness",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "fe7a4b100e5144d2b64453b887a86bd80dbc355c1ff2dd63bd4f188941308d44"
+        },
+        {
+          "file": "rules.log",
+          "sha256": "bb643801ba9d96f65e120909ee2c292d78dea1db0b55eb564c0bbafab30a986d"
         }
       ]
     }

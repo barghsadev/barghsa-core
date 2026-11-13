@@ -82,9 +82,11 @@ and publishing fresh results before relying on its alerts. Verify a controlled
 failure, a reporting outage, both recoveries and the authorized pager receipt.
 The overlay also declares that staging expects a synthetic target. If file
 discovery loses the target, the reporting-outage alert fires after two minutes
-and clears when Prometheus discovers the target again. A discovered target
-with a failing scrape or stale results still triggers the reporting-outage
-rule.
+and clears when the target returns with fresh check results. A discovered target
+with a failing scrape, stale results or incomplete check results still triggers
+the reporting-outage rule. A healthy run publishes passing results for all nine
+checks. When a check fails and later checks are skipped, the reported failure
+feeds the separate check-failure alert.
 [Synthetic runner setup](../../deploy/production/README.md#synthetic-health-probes)
 
 ### Operator dashboards

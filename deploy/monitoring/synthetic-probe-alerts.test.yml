@@ -9,10 +9,14 @@ tests:
         values: '1 1 stale _ _ _ 1 1'
       - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
         values: '0 60 stale _ _ _ 360 420'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '0 0 stale _ _ _ 0 0'
       - series: 'up{job="barghsa-synthetic",instance="other",environment="staging",database="other"}'
         values: '1+0x7'
       - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="other",environment="staging",database="other"}'
         values: '0+60x7'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="other",environment="staging",database="other",check="login"}'
+        values: '0+0x7'
       - series: 'up{job="barghsa-api",instance="api",environment="staging",database="core"}'
         values: '1+0x7'
     alert_rule_test:
@@ -105,13 +109,15 @@ tests:
         values: '1+0x3'
       - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
         values: '0+60x3'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '0+0x3'
       - series: 'up{job="barghsa-api",instance="api",environment="production",database="core"}'
         values: '1+0x3'
     alert_rule_test:
       - eval_time: 3m
         alertname: SyntheticProbeUnavailable
         exp_alerts: []
-  - name: An executed failure pages after six minutes and clears on recovery
+  - name: An executed failure pages after six minutes and clears on complete recovery
     interval: 1m
     input_series:
       - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
@@ -120,9 +126,28 @@ tests:
         values: '0+0x4 300+0x4 600+0x2'
       - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
         values: '0+0x9 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="liveness"}'
+        values: '1+0x12'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="readiness"}'
+        values: '1+0x12'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="account"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="electricity"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="saving"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="solar"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="consultation"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="logout"}'
+        values: '_ _ _ _ _ _ _ _ _ _ 1+0x2'
     alert_rule_test:
       - eval_time: 5m
         alertname: SyntheticProbeFailed
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: SyntheticProbeUnavailable
         exp_alerts: []
       - eval_time: 7m
         alertname: SyntheticProbeFailed
@@ -145,6 +170,9 @@ tests:
       - eval_time: 10m
         alertname: SyntheticProbeUnavailable
         exp_alerts: []
+      - eval_time: 12m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
   - name: A stale result cannot hide an outage and clears after a fresh completion
     interval: 1m
     input_series:
@@ -153,6 +181,22 @@ tests:
       - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
         values: '0+0x15 960+0x1'
       - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="liveness"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="readiness"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="account"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="electricity"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="saving"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="solar"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="consultation"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="logout"}'
         values: '1+0x17'
     alert_rule_test:
       - eval_time: 12m
@@ -174,6 +218,46 @@ tests:
               runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
       - eval_time: 16m
         alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+  - name: A timestamp alone and incomplete success cannot keep the runner available
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1+0x6'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0+60x6'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="unknown"}'
+        values: '0+0x6'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '_ _ _ 1 1 0 0'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="other",check="login"}'
+        values: '0+0x6'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: &runner_unavailable
+          - exp_labels:
+              job: barghsa-synthetic
+              instance: runner
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic runner stopped reporting
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 4m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: *runner_unavailable
+      - eval_time: 5m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: SyntheticProbeFailed
         exp_alerts: []
   - name: Exporter outage pages without replaying a stale failure or foreign result
     interval: 1m
