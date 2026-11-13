@@ -1,0 +1,218 @@
+rule_files: [postgres-alert-rules.json]
+evaluation_interval: 1m
+tests:
+  - name: PostgreSQL signals fire once per database and resolve after recovery
+    interval: 1m
+    input_series:
+      - series: 'pg_metrics_collection_success{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '1 0 0 0 0 0 0 1 1'
+      - series: 'pg_metrics_collection_success{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '1+0x8'
+      - series: 'pg_cache_hit_ratio{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '0.99 0.90 0.90 0.90 0.90 0.90 0.90 0.99 0.99'
+      - series: 'pg_cache_hit_ratio{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '0.99+0x8'
+      - series: 'pg_connection_saturation{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '0.8 0.81 0.81 0.81 0.81 0.81 0.81 0.8 0.8'
+      - series: 'pg_connection_saturation{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '0.2+0x8'
+      - series: 'pg_active_connections{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '50 51 51 51 51 51 51 50 50'
+      - series: 'pg_active_connections{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '10+0x8'
+      - series: 'pg_idle_in_transaction_connections{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '5 6 6 6 6 6 6 5 5'
+      - series: 'pg_idle_in_transaction_connections{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '1+0x8'
+      - series: 'pg_waiting_connections{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '3 4 4 4 4 4 4 3 3'
+      - series: 'pg_waiting_connections{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '1+0x8'
+      - series: 'pg_long_running_queries{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '0 1 1 1 1 1 1 0 0'
+      - series: 'pg_long_running_queries{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '0+0x8'
+      - series: 'pg_deadlocks_total{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '0 1 1 1 1 1 1 1 1'
+      - series: 'pg_deadlocks_total{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '0+0x8'
+      - series: 'pg_replication_lag_seconds{job="barghsa-api",instance="a",environment="staging",database="core"}'
+        values: '30 31 31 31 31 31 31 stale _'
+      - series: 'pg_replication_lag_seconds{job="barghsa-api",instance="b",environment="staging",database="core"}'
+        values: '0+0x8'
+      - series: 'pg_replication_lag_seconds{job="barghsa-worker",instance="c",environment="staging",database="other"}'
+        values: '99+0x8'
+      - series: 'pg_connection_saturation{job="barghsa-api",instance="d",environment="staging"}'
+        values: '1+0x8'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: PostgresMetricsCollectionFailed
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresMetricsCollectionFailed
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: 'PostgreSQL metrics collection is failing'
+              description: 'Core database metrics are unavailable. Check database connectivity and monitoring permissions; missing samples are not healthy zeros.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresMetricsCollectionFailed
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: PostgresCacheHitRatioLow
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: PostgresCacheHitRatioLow
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: 'PostgreSQL cache hit ratio below 95%'
+              description: 'Cache hit ratio is 90%. Compare query patterns, I/O and the recent cache baseline.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresCacheHitRatioLow
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresConnectionSaturationHigh
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: PostgresConnectionSaturationHigh
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: 'PostgreSQL client connections exceed 80% of max_connections'
+              description: 'Observed client connections use 81% of the server limit. Check connection usage and the database budget.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresConnectionSaturationHigh
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresActiveConnectionsHigh
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: PostgresActiveConnectionsHigh
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: 'High number of active PostgreSQL connections'
+              description: 'Active connections: 51. Investigate query patterns and connection pool settings.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresActiveConnectionsHigh
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PostgresIdleInTransaction
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresIdleInTransaction
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: 'Idle-in-transaction connections detected'
+              description: '6 connections are idle in transaction. These may block vacuum and hold locks.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresIdleInTransaction
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PostgresLockContention
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresLockContention
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: 'PostgreSQL lock contention detected'
+              description: '4 connections waiting on locks. Investigate long-running transactions.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresLockContention
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PostgresLongRunningQueries
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresLongRunningQueries
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: 'Long-running PostgreSQL queries detected'
+              description: 'Observed active queries at the 30-second threshold or above: 1. Inspect current query activity privately.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresLongRunningQueries
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PostgresDeadlocksDetected
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresDeadlocksDetected
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: 'PostgreSQL deadlocks detected'
+              description: 'Deadlocks are occurring. Review application transaction ordering and lock acquisition patterns.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md'
+      - eval_time: 8m
+        alertname: PostgresDeadlocksDetected
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PostgresReplicationLagHigh
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: PostgresReplicationLagHigh
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: 'PostgreSQL replication lag exceeds 30 seconds'
+              description: 'Replication lag is 31s. Investigate WAL shipping or standby performance.'
+              dashboard_uid: 'barghsa-postgresql'
+              runbook_url: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/database-failover.md'
+      - eval_time: 8m
+        alertname: PostgresReplicationLagHigh
+        exp_alerts: []

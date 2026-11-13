@@ -12,6 +12,12 @@ Check the sign-in, MFA, rate-limit and recent security-event panels in the Authe
 
 Check `pg_pool_connections{state="active"}`, `pg_pool_capacity`, and `pg_pool_waiting_requests` by scrape target. The alert requires waiting requests and an at-capacity pool on the same target for two minutes. The notification groups affected replicas by environment and database. Compare the affected target with database query latency, lock waits, transaction duration, and recent deployments before changing connection limits. Increasing each replica's pool can exceed the database connection budget.
 
+## PostgreSQL server alerts
+
+For `PostgresConnectionSaturationHigh`, check the client connection count across the PostgreSQL server against `max_connections` and compare it with the per-process application pool panels. Check query latency and recent deployments alongside active sessions, idle transactions, lock waits and deadlocks. Inspect active queries and blocking transactions in the private database console before choosing a recovery action. Use query IDs and timings in incident notes and keep statement text private.
+
+For `PostgresMetricsCollectionFailed`, check which API scrape targets report zero for `pg_metrics_collection_success`, then verify their database connectivity and effective `pg_read_all_stats` privileges. For `PostgresCacheHitRatioLow`, compare query mix and I/O with the normal baseline before considering any memory change. [PostgreSQL monitoring](../operations/postgresql-monitoring.md)
+
 ## Critical API route errors
 
 Inspect the named method and registered route template in the API Health dashboard. Compare response status and latency across revisions. The rule counts completed HTTP 408 and 5xx responses as failures and HTTP 2xx and 304 responses as successes. It requires an estimated 20 eligible responses in the rolling five-minute window and five minutes above the tier's fast burn threshold. Check the independent synthetic probes for low traffic, interrupted connections, and requests that never reached the API. Check the journey budget dashboard for customer impact and follow any related P1 response.

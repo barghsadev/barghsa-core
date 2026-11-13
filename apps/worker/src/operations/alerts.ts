@@ -46,6 +46,19 @@ const labels: Record<string, string> = {
   PostgresBackupStale: 'پشتیبان تأییدشده اخیر در دسترس نیست / No recent verified database backup',
   PostgresBackupMonitoringUnavailable:
     'گزارش پشتیبان‌گیری در دسترس نیست / Database backup monitoring unavailable',
+  PostgresMetricsCollectionFailed:
+    'جمع‌آوری سنجه‌های پایگاه داده ناموفق است / Database metrics collection failed',
+  PostgresCacheHitRatioLow:
+    'نرخ اصابت حافظهٔ نهان پایگاه داده پایین است / Low database cache hit ratio',
+  PostgresConnectionSaturationHigh:
+    'ظرفیت اتصال پایگاه داده رو به اتمام است / Database connections near capacity',
+  PostgresActiveConnectionsHigh:
+    'تعداد اتصال‌های فعال پایگاه داده بالا است / High active database connections',
+  PostgresIdleInTransaction: 'اتصال‌های بیکار در تراکنش / Idle database transactions',
+  PostgresLockContention: 'انتظار برای قفل پایگاه داده / Database lock contention',
+  PostgresLongRunningQueries: 'پرس‌وجوهای طولانی پایگاه داده / Long-running database queries',
+  PostgresDeadlocksDetected: 'بن‌بست در پایگاه داده / Database deadlocks detected',
+  PostgresReplicationLagHigh: 'تأخیر همگام‌سازی پایگاه داده / Database replication lag',
   MonthlyCostBudgetVariance: 'انحراف هزینه ماهانه از بودجه / Monthly cost budget variance',
 };
 const journeyNames: Record<string, string> = {
@@ -97,6 +110,10 @@ const criticalAlerts = new Set([
   'PostgresBackupFailed',
   'PostgresBackupStale',
   'PostgresBackupMonitoringUnavailable',
+  'PostgresMetricsCollectionFailed',
+  'PostgresConnectionSaturationHigh',
+  'PostgresDeadlocksDetected',
+  'PostgresReplicationLagHigh',
 ]);
 type AlertPriority = 'P1' | 'P2' | 'P3';
 
@@ -123,6 +140,15 @@ const alertPriorities = new Map<string, AlertPriority>([
   ['PostgresBackupFailed', 'P1'],
   ['PostgresBackupStale', 'P1'],
   ['PostgresBackupMonitoringUnavailable', 'P1'],
+  ['PostgresMetricsCollectionFailed', 'P1'],
+  ['PostgresCacheHitRatioLow', 'P2'],
+  ['PostgresConnectionSaturationHigh', 'P1'],
+  ['PostgresActiveConnectionsHigh', 'P2'],
+  ['PostgresIdleInTransaction', 'P2'],
+  ['PostgresLockContention', 'P2'],
+  ['PostgresLongRunningQueries', 'P2'],
+  ['PostgresDeadlocksDetected', 'P1'],
+  ['PostgresReplicationLagHigh', 'P1'],
   ['MonthlyCostBudgetVariance', 'P3'],
 ]);
 type Alert = {

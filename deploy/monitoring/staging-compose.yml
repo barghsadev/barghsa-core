@@ -11,6 +11,7 @@ services:
       - ./api-pressure-alerts.yml:/etc/prometheus/api-pressure-alerts.yml:ro
       - ./synthetic-probe-alerts.yml:/etc/prometheus/synthetic-probe-alerts.yml:ro
       - ./postgres-backup-alerts.yml:/etc/prometheus/postgres-backup-alerts.yml:ro
+      - ./postgres-alert-rules.json:/etc/prometheus/postgres-alert-rules.json:ro
       - prometheusdata:/prometheus
     ports: ['127.0.0.1:9095:9090']
     cap_drop: [ALL]

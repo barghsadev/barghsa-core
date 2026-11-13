@@ -92,22 +92,40 @@ it.each(['', '__proto__', 'unlisted'])('rejects an unknown synthetic check %j', 
 });
 
 it.each([
-  ['PostgresBackupFailed', 'barghsa-postgresql', 'postgresql-backup'],
-  ['PostgresBackupStale', 'barghsa-postgresql', 'postgresql-backup'],
-  ['PostgresBackupMonitoringUnavailable', 'barghsa-postgresql', 'postgresql-backup'],
-  ['AuthenticationFailuresElevated', 'barghsa-authentication-security', 'api-pressure'],
-])('validates the scoped P1 and recovery links for %s', (alertname, dashboard, runbook) => {
-  const labels = { ...base, alertname, severity: 'critical', priority: 'P1' };
-  expect(parse(labels)).toMatchObject([{ name: alertname, priority: 'P1' }]);
-  expect(() => parse({ ...labels, database: 'other' })).toThrow('Invalid alert scope or identity');
-  expect(() => parse({ ...labels, priority: 'P2' })).toThrow('Invalid alert scope or identity');
-  expect(
-    operationsAlertLinks('admin.operations_alert', {
-      operationsAlertName: alertname,
-      operationsDashboardOrigin: 'https://grafana.example.test',
-    }).map(({ href }) => href)
-  ).toEqual([
-    `https://grafana.example.test/d/${dashboard}`,
-    `https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/${runbook}.md`,
-  ]);
-});
+  ['PostgresBackupFailed', 'P1', 'barghsa-postgresql', 'postgresql-backup'],
+  ['PostgresBackupStale', 'P1', 'barghsa-postgresql', 'postgresql-backup'],
+  ['PostgresBackupMonitoringUnavailable', 'P1', 'barghsa-postgresql', 'postgresql-backup'],
+  ['PostgresMetricsCollectionFailed', 'P1', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresConnectionSaturationHigh', 'P1', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresDeadlocksDetected', 'P1', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresReplicationLagHigh', 'P1', 'barghsa-postgresql', 'database-failover'],
+  ['PostgresCacheHitRatioLow', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresActiveConnectionsHigh', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresIdleInTransaction', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresLockContention', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['PostgresLongRunningQueries', 'P2', 'barghsa-postgresql', 'api-pressure'],
+  ['AuthenticationFailuresElevated', 'P1', 'barghsa-authentication-security', 'api-pressure'],
+])(
+  'validates the scoped %s alert and its %s recovery links',
+  (alertname, priority, dashboard, runbook) => {
+    const severity = priority === 'P1' ? 'critical' : 'warning';
+    const labels = { ...base, alertname, severity, priority };
+    expect(parse(labels)).toMatchObject([{ name: alertname, priority, severity }]);
+    expect(parse(labels, 'resolved')).toMatchObject([{ name: alertname, status: 'resolved' }]);
+    expect(() => parse({ ...labels, database: 'other' })).toThrow(
+      'Invalid alert scope or identity'
+    );
+    expect(() => parse({ ...labels, priority: priority === 'P1' ? 'P2' : 'P1' })).toThrow(
+      'Invalid alert scope or identity'
+    );
+    expect(
+      operationsAlertLinks('admin.operations_alert', {
+        operationsAlertName: alertname,
+        operationsDashboardOrigin: 'https://grafana.example.test',
+      }).map(({ href }) => href)
+    ).toEqual([
+      `https://grafana.example.test/d/${dashboard}`,
+      `https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/${runbook}.md`,
+    ]);
+  }
+);

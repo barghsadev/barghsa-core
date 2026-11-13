@@ -1,0 +1,144 @@
+{
+  "groups": [
+    {
+      "name": "barghsa-postgresql",
+      "rules": [
+        {
+          "alert": "PostgresMetricsCollectionFailed",
+          "expr": "min by (environment, database) (pg_metrics_collection_success{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) == 0",
+          "for": "1m",
+          "labels": {
+            "severity": "critical",
+            "priority": "P1"
+          },
+          "annotations": {
+            "summary": "PostgreSQL metrics collection is failing",
+            "description": "Core database metrics are unavailable. Check database connectivity and monitoring permissions; missing samples are not healthy zeros.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresCacheHitRatioLow",
+          "expr": "min by (environment, database) (pg_cache_hit_ratio{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) < 0.95",
+          "for": "5m",
+          "labels": {
+            "severity": "warning",
+            "priority": "P2"
+          },
+          "annotations": {
+            "summary": "PostgreSQL cache hit ratio below 95%",
+            "description": "Cache hit ratio is {{ $value | humanizePercentage }}. Compare query patterns, I/O and the recent cache baseline.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresConnectionSaturationHigh",
+          "expr": "max by (environment, database) (pg_connection_saturation{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 0.8",
+          "for": "2m",
+          "labels": {
+            "severity": "critical",
+            "priority": "P1"
+          },
+          "annotations": {
+            "summary": "PostgreSQL client connections exceed 80% of max_connections",
+            "description": "Observed client connections use {{ $value | humanizePercentage }} of the server limit. Check connection usage and the database budget.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresActiveConnectionsHigh",
+          "expr": "max by (environment, database) (pg_active_connections{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 50",
+          "for": "2m",
+          "labels": {
+            "severity": "warning",
+            "priority": "P2"
+          },
+          "annotations": {
+            "summary": "High number of active PostgreSQL connections",
+            "description": "Active connections: {{ $value }}. Investigate query patterns and connection pool settings.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresIdleInTransaction",
+          "expr": "max by (environment, database) (pg_idle_in_transaction_connections{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 5",
+          "for": "1m",
+          "labels": {
+            "severity": "warning",
+            "priority": "P2"
+          },
+          "annotations": {
+            "summary": "Idle-in-transaction connections detected",
+            "description": "{{ $value }} connections are idle in transaction. These may block vacuum and hold locks.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresLockContention",
+          "expr": "max by (environment, database) (pg_waiting_connections{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 3",
+          "for": "1m",
+          "labels": {
+            "severity": "warning",
+            "priority": "P2"
+          },
+          "annotations": {
+            "summary": "PostgreSQL lock contention detected",
+            "description": "{{ $value }} connections waiting on locks. Investigate long-running transactions.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresLongRunningQueries",
+          "expr": "max by (environment, database) (pg_long_running_queries{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 0",
+          "for": "1m",
+          "labels": {
+            "severity": "warning",
+            "priority": "P2"
+          },
+          "annotations": {
+            "summary": "Long-running PostgreSQL queries detected",
+            "description": "Observed active queries at the 30-second threshold or above: {{ $value }}. Inspect current query activity privately.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresDeadlocksDetected",
+          "expr": "max by (environment, database) (rate(pg_deadlocks_total{job=\"barghsa-api\",environment!=\"\",database!=\"\"}[5m])) > 0",
+          "for": "1m",
+          "labels": {
+            "severity": "critical",
+            "priority": "P1"
+          },
+          "annotations": {
+            "summary": "PostgreSQL deadlocks detected",
+            "description": "Deadlocks are occurring. Review application transaction ordering and lock acquisition patterns.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md"
+          }
+        },
+        {
+          "alert": "PostgresReplicationLagHigh",
+          "expr": "max by (environment, database) (pg_replication_lag_seconds{job=\"barghsa-api\",environment!=\"\",database!=\"\"}) > 30",
+          "for": "1m",
+          "labels": {
+            "severity": "critical",
+            "priority": "P1"
+          },
+          "annotations": {
+            "summary": "PostgreSQL replication lag exceeds 30 seconds",
+            "description": "Replication lag is {{ $value }}s. Investigate WAL shipping or standby performance.",
+            "dashboard_uid": "barghsa-postgresql",
+            "runbook_url": "https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/database-failover.md"
+          }
+        }
+      ]
+    }
+  ]
+}

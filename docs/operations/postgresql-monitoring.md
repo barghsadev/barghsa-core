@@ -49,7 +49,9 @@ The collector distinguishes an absent extension from an empty query list. It rea
 
 After setup, confirm `pg_metrics_view_available{view="statements"}` is `1` and the private scrape reports `pg_top_query_duration_seconds` after ordinary queries run. Preloading alone does not install the extension in the monitored database.
 
-`postgres-config/alert-rules.json` defines collection-failure, lag, slow-query, saturation, lock and deadlock rules. Load these into your monitoring stack and exercise delivery before claiming operational readiness. The dashboard estimates query throughput from the five-minute slope of `pg_query_calls_total`, a gauge of calls retained by `pg_stat_statements`. Resets and entry eviction can reduce the gauge, so the panel omits negative slopes. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`. [Prometheus gauge slope](https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv).
+Staging Prometheus loads the [PostgreSQL alert rules](../../deploy/monitoring/postgres-alert-rules.json) through the [monitoring Compose configuration](../../deploy/monitoring/staging-compose.yml). Each rule takes the worst observation for its environment and database across API replicas. The private operations receiver validates both scope labels and the alert's severity and priority. In staging, verify the rule group is loaded, then capture firing and resolved receipts for the configured destination before claiming live delivery. Follow the [API pressure](../runbooks/api-pressure.md) and [database failover](../runbooks/database-failover.md) runbooks.
+
+The dashboard estimates query throughput from the five-minute slope of `pg_query_calls_total`, a gauge of calls retained by `pg_stat_statements`. Resets and entry eviction can reduce the gauge, so the panel omits negative slopes. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`. [Prometheus gauge slope](https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv).
 
 ## Verification scope
 

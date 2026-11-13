@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T18:51:14+00:00",
+  "updated": "2026-11-13T19:53:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4389,7 +4389,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             }
           ],
           "checks": [
@@ -4618,6 +4618,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -5005,7 +5013,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -5217,6 +5225,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -5461,7 +5477,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             }
           ],
           "checks": [
@@ -5838,6 +5854,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -6245,7 +6269,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -6473,6 +6497,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -6754,7 +6786,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6965,6 +6997,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -7078,7 +7118,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7289,6 +7329,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -7750,7 +7798,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -8090,6 +8138,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -8253,7 +8309,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8464,6 +8520,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -8598,7 +8662,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -8860,6 +8924,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -9798,7 +9870,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -9863,6 +9935,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -12514,7 +12594,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             }
           ],
           "checks": [
@@ -12689,6 +12769,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -16709,7 +16797,7 @@
       "launch_required": true,
       "remaining": [
         "Production host memory sizing and a measured load/performance baseline are not verified. Development settings are not evidence of production sizing.",
-        "Alert rules are defined locally, but deployment to a monitoring stack and real alert delivery are not exercised.",
+        "Apply the source-verified PostgreSQL rule group with the exact staging Prometheus and operations receiver. Capture live scoped firing and resolved receipts and exercise the approved operations destination.",
         "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised."
       ],
       "owner": null,
@@ -16793,7 +16881,8 @@
         ],
         "batches": [
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-otlp-connection-deadline"
+          "release-0.6-otlp-connection-deadline",
+          "release-0.6-postgres-alert-wiring"
         ],
         "current_acceptance": null,
         "verified_staging_postgres_monitoring": {
@@ -19075,7 +19164,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -19357,6 +19446,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -21570,7 +21667,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/development/ci.md",
@@ -21832,6 +21929,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -21908,7 +22013,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -22173,6 +22278,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -22260,7 +22373,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "package.json",
@@ -22689,6 +22802,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -22940,7 +23061,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -23110,6 +23231,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -28422,7 +28551,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -29106,6 +29235,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -32520,7 +32657,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/development/ci.md",
@@ -32810,6 +32947,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -32890,7 +33035,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".prettierignore",
@@ -33131,6 +33276,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -33219,7 +33372,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".husky/commit-msg",
@@ -33537,6 +33690,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -35061,7 +35222,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -36088,6 +36249,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -36181,7 +36350,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".prettierignore",
@@ -36721,6 +36890,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -111849,7 +112026,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -111873,11 +112050,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -114163,6 +114340,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -117928,7 +118115,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -117948,11 +118135,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -118375,6 +118562,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -137424,7 +137621,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -137444,11 +137641,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -138070,6 +138267,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -598220,7 +598427,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -598236,11 +598443,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -598937,6 +599144,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -600192,7 +600409,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -600803,6 +601020,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -600969,7 +601194,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -601185,7 +601410,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -601953,6 +602178,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -602110,7 +602344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -602698,6 +602932,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -602821,7 +603063,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -603409,6 +603651,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -603532,7 +603782,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -604120,6 +604370,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -654120,7 +654378,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "Dockerfile.web",
@@ -654396,6 +654654,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -654751,7 +655017,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -654975,6 +655241,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -655037,7 +655311,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "Dockerfile.web",
@@ -655313,6 +655587,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -655839,7 +656121,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             }
           ],
           "checks": [
@@ -656043,6 +656325,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -666197,7 +666487,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -666292,6 +666582,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -666344,7 +666642,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -666513,6 +666811,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -673646,7 +673952,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -674175,6 +674481,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -675629,7 +675943,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".gitignore",
@@ -675955,6 +676269,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -676019,7 +676341,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".gitignore",
@@ -676256,6 +676578,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         },
@@ -676380,7 +676710,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -676599,6 +676929,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         },
@@ -676706,7 +677044,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -676875,6 +677213,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -676935,7 +677281,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "Dockerfile.base",
@@ -677170,6 +677516,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -677234,7 +677588,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".gitignore",
@@ -677471,6 +677825,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         },
@@ -677580,7 +677942,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -677755,6 +678117,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -678739,7 +679109,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -678933,6 +679303,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -681083,7 +681461,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -681325,6 +681703,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -681374,7 +681760,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -681565,6 +681951,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -681613,7 +682007,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -681792,6 +682186,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -681839,7 +682241,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
@@ -681899,6 +682301,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -685522,7 +685932,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/development/ci.md",
@@ -685534,7 +685944,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
@@ -685738,6 +686148,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -690630,7 +691049,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -690864,6 +691283,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -691462,7 +691889,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -691786,6 +692213,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -691847,7 +692282,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -692148,6 +692583,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -692721,7 +693164,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -692890,6 +693333,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -692943,7 +693394,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -693136,6 +693587,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -693187,7 +693646,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -693342,6 +693801,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -693440,7 +693907,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -693658,6 +694125,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -693950,7 +694425,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -694272,6 +694747,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -694335,7 +694818,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -694651,6 +695134,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -695728,11 +696219,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -695950,6 +696441,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -696000,7 +696500,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696203,6 +696703,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -696252,7 +696760,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696455,6 +696963,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -696506,7 +697022,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696709,6 +697225,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -696757,7 +697281,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -696960,6 +697484,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -697041,7 +697573,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "docs/development/ci.md",
@@ -697164,6 +697696,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -697213,7 +697753,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -697464,6 +698004,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -697521,7 +698069,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/openapi.json",
@@ -697976,6 +698524,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -698236,7 +698792,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -698539,6 +699095,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -698588,7 +699152,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -698947,6 +699511,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -699021,7 +699593,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/README.md",
@@ -699434,6 +700006,14 @@
                 "kanban/scripts/board.py"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -700440,7 +701020,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -700703,6 +701283,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -700767,7 +701355,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -701030,6 +701618,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -705566,7 +706162,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -705578,7 +706174,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             }
           ],
           "checks": [
@@ -705854,6 +706450,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -705915,7 +706520,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             }
           ],
           "checks": [
@@ -706003,6 +706608,14 @@
                 "apps/api/src/metrics/http-request-metrics.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -706057,7 +706670,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -706118,6 +706731,14 @@
                 "apps/api/src/metrics/telemetry-http.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -706192,7 +706813,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -706475,6 +707096,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -706586,7 +707215,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -706932,6 +707561,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -707018,11 +707655,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -707399,6 +708036,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -707473,7 +708119,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -707756,6 +708402,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -708314,7 +708968,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -708632,6 +709286,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -708688,11 +709350,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "c5bd8c03508b8f9e57c202b35190baa36f68972aa00e6c7ff6d6d16b226c1fe9"
+              "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -708820,6 +709482,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/postgresql-monitoring.md"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -708893,7 +709564,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -709151,6 +709822,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -709486,7 +710165,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -709677,6 +710356,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -710020,7 +710707,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -710295,6 +710982,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -710809,7 +711504,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -710938,6 +711633,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -711440,7 +712143,8 @@
       "launch_required": true,
       "remaining": [
         "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
-        "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response."
+        "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response.",
+        "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route."
       ],
       "owner": null,
       "depends_on": [],
@@ -711470,7 +712174,8 @@
         "batches": [
           "release-0.6-postgres-backup-alerts",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-postgres-alert-wiring"
         ],
         "current_acceptance": null
       }
@@ -711492,7 +712197,8 @@
       "remaining": [
         "On the exact immutable candidate, verify collector ingestion and controlled firing and resolved receipts for application pool saturation and critical registered route errors. Confirm dashboard and runbook readback and approved operations recipient, response deadline and escalation.",
         "Confirm P2 routing and firing and recovery evidence for the existing circuit-breaker and queue-age rules. Classify existing provider alerts by their stable names when required to preserve already persisted alert and dedup identities.",
-        "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule. The rule now also covers a healthy expected worker that omits the scanner series. Apply the candidate rules with the candidate worker and operations receiver, then verify the exact live series and receipts."
+        "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule. The rule now also covers a healthy expected worker that omits the scanner series. Apply the candidate rules with the candidate worker and operations receiver, then verify the exact live series and receipts.",
+        "Verify live P2 firing and resolved PostgreSQL cache, connection, transaction, lock and slow-query receipts from the deployed candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -711517,7 +712223,8 @@
           "release-0.6-api-pressure-alerts",
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-scanner-current-signatures",
-          "release-0.6-clamav-missing-metric"
+          "release-0.6-clamav-missing-metric",
+          "release-0.6-postgres-alert-wiring"
         ],
         "current_acceptance": null
       }
@@ -711710,7 +712417,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -711718,11 +712425,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -711966,6 +712673,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Only the independent synthetic result and recovery guidance changed in the monitoring guide. The previously accepted notification and dashboard contracts retain their evidence."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -712022,7 +712739,8 @@
       "launch_required": true,
       "remaining": [
         "Select a patched immutable Grafana image that passes the image gate. The official Linux/amd64 13.1.10, 13.2.6 and 13.3.1 images had 3, 19 and 20 high findings, respectively. 13.1.10 flags Tempo in the core binary and x/net in Zipkin. The required Prometheus backend in 13.2.6 and 13.3.1 ships x/net v0.61.0. Staging remains healthy on its existing monitoring stack.",
-        "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert."
+        "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert.",
+        "Open the PostgreSQL dashboard and linked API pressure or database failover runbook from exact-candidate receipts with approved operator access."
       ],
       "owner": null,
       "depends_on": [],
@@ -712097,7 +712815,8 @@
           "release-0.6-tls-expiry-warning",
           "release-0.6-storage-sms-review",
           "release-0.6-clamav-freshness-alert",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-postgres-alert-wiring"
         ],
         "current_acceptance": null
       }
@@ -712522,11 +713241,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -712887,6 +713606,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -712971,11 +713699,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -713352,6 +714080,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -713434,11 +714171,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -713803,6 +714540,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -713884,11 +714630,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -713920,7 +714666,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -714180,6 +714926,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -714257,11 +715013,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c885e16a41e777101db60ea19c3f4ebbcb986117fb9754f8c99251c733338049"
+              "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "971d2db6d85171f170ab5d3a3759946e8187289eee2c0e3d31b17942b487b779"
+              "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -714305,7 +715061,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -714575,6 +715331,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -715573,7 +716339,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
@@ -715672,6 +716438,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -716805,7 +717579,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "Dockerfile.base",
@@ -717405,6 +718179,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -717924,7 +718706,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "a1db0864881e55fea72bebda68f934d72d65c5e64d43c3d0c259fdf2442955b5"
+              "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -718190,6 +718972,14 @@
                 "deploy/monitoring/staging-worker-alerts.yml"
               ],
               "scope": "The added rule branch covers missing signature samples only on opted-in reachable worker targets. Normal scraped metrics and WorkerUnavailable retain their prior alert labels. Existing signature thresholds, P2 delivery and notification alert assertions remain in place. Prometheus and the native worker receiver checks passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -720547,7 +721337,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "Dockerfile.base",
@@ -720559,7 +721349,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+              "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -720824,6 +721614,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -721033,7 +721832,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -721217,6 +722016,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -721341,7 +722148,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -721525,6 +722332,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -721587,7 +722402,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -721771,6 +722586,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -783651,7 +784474,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -784808,6 +785631,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -784959,7 +785790,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -786116,6 +786947,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -787062,7 +787901,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -788219,6 +789058,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -788303,7 +789150,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -788498,6 +789345,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         }
@@ -1060297,7 +1061152,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1065528,6 +1066383,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "presentation_renewals": [
@@ -1065997,7 +1066860,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1071090,6 +1071953,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging smoke verifies the candidate revision through the public API and web before replacing the active manifest. Existing storage, health, migration, rollback and notification boundaries were reviewed. Ten staging rollback cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1073541,7 +1074412,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "1c14e25875f7d3527a9d4d5349ea18442fa4d92cd72db14601aa546f29afe687"
+              "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
             },
             {
               "path": ".size-limit.json",
@@ -1076213,6 +1077084,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the existing Prometheus rule suites to the quality job using a pinned image. Existing workflow triggers, steps, dependencies, coverage and security gates were reviewed and retained. The added step passed locally."
+            },
+            {
+              "batch": "release-0.6-postgres-alert-wiring",
+              "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
             }
           ]
         },
@@ -1251673,6 +1252552,92 @@
         {
           "file": "checks.json",
           "sha256": "9d919147583cb66697e504071a95f8ce13cd3121a12ae2f395b6210beefc659e"
+        }
+      ]
+    },
+    "release-0.6-postgres-alert-wiring": {
+      "batch": "release-0.6-postgres-alert-wiring",
+      "base_commit": "047438cf9ef42287f4c170f142ecbfbbe6ac3d78",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.04",
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "06-security-testing-observability.md#T-06.15.01.08"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "apps/worker/src/operations/alerts.ts",
+        "apps/worker/src/operations/journey-alerts.test.ts",
+        "deploy/monitoring/postgres-alert-rules.json",
+        "deploy/monitoring/postgres-alerts.test.yml",
+        "deploy/monitoring/staging-compose.yml",
+        "deploy/monitoring/staging-prometheus.yml",
+        "docs/operations/postgresql-monitoring.md",
+        "docs/runbooks/api-pressure.md",
+        "packages/shared/src/notifications/operations-alert-links.ts",
+        "postgres-config/alert-rules.json"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "c0f96bba9d1ffe25622cf74c7cf7f9821b6348470ea21b7e056779651b83006d"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "c2cc82d57e157898723b10018a36a3efc0bd91968af7e6bc3450c558e6022e52"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "f95325cf24d2a4ca682ea36e4e819ac2f18465cfb3b0d885d71c03bbdec0e6d8"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "b5594bb48f680bef211f5a79ba1eaff158305c8bad11be641c28b05d45a35aaf"
+        },
+        {
+          "path": "deploy/monitoring/postgres-alert-rules.json",
+          "sha256": "115bbbd0c29da9f3d461337accadd672d80402f2034d10c666269ab9d5463e21"
+        },
+        {
+          "path": "deploy/monitoring/postgres-alerts.test.yml",
+          "sha256": "31089187dfacef9d97ff033936bb55f4d5836b49a8373f18d155815a69710eda"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "7311c345ad345e200b9bd5cf00b2bc9359f026a538d2d7735c1eac418f1e6403"
+        },
+        {
+          "path": "docs/runbooks/api-pressure.md",
+          "sha256": "59c448957c4ab4e86fcbad3868dcde71e65fed0dfc28eb8b0414f6e7a5268e0a"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "9174ceab503004df8d626a53dcefcb79db730db0048b1021259021fb0c7273de"
+        }
+      ],
+      "checks": [
+        "The previous rules fail validation on the pinned Prometheus image because the loader rejects the top-level $schema field. The updated monitoring Compose configuration resolves the read-only rules mount, and promtool validates all seven mounted rule files, including nine PostgreSQL alerts.",
+        "The exact CI Prometheus command passes all seven fixture suites. The PostgreSQL suite checks all nine alerts before the configured delay, during a scoped failure and after recovery. A second API replica does not duplicate a database alert, and a wrong job or missing scope is excluded.",
+        "The PostgreSQL receipt tests pass with the existing private receiver, real PostgreSQL and transactional notification path. The final focused runs cover 27 receiver/link unit cases, 44 worker integration cases and 12 shared resource-link cases. Typechecks for worker and shared, changed-file ESLint, Actionlint, formatting and git whitespace checks pass."
+      ],
+      "limitations": [
+        "The Compose and Prometheus checks use local container fixtures. The optional independent synthetic target directory is absent in the base Compose check. Existing staging still needs the exact candidate monitoring services, configured targets and real operations receipts.",
+        "The receiver tests verify private in-app delivery intent. The approved on-call destination, Grafana image and operator access, live replication and representative performance baseline remain separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-alert-wiring",
+      "execution_receipts": [
+        {
+          "file": "checks.json",
+          "sha256": "e458f12fd018b9c6b8e0561378bf3b732cf4b73f1ae53f867d978f6704fe03bf"
         }
       ]
     }

@@ -28,6 +28,15 @@ const alertResources = {
   PostgresBackupFailed: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupStale: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],
+  PostgresMetricsCollectionFailed: ['barghsa-postgresql', 'api-pressure'],
+  PostgresCacheHitRatioLow: ['barghsa-postgresql', 'api-pressure'],
+  PostgresConnectionSaturationHigh: ['barghsa-postgresql', 'api-pressure'],
+  PostgresActiveConnectionsHigh: ['barghsa-postgresql', 'api-pressure'],
+  PostgresIdleInTransaction: ['barghsa-postgresql', 'api-pressure'],
+  PostgresLockContention: ['barghsa-postgresql', 'api-pressure'],
+  PostgresLongRunningQueries: ['barghsa-postgresql', 'api-pressure'],
+  PostgresDeadlocksDetected: ['barghsa-postgresql', 'api-pressure'],
+  PostgresReplicationLagHigh: ['barghsa-postgresql', 'database-failover'],
   MonthlyCostBudgetVariance: ['barghsa-monthly-costs', 'monthly-cost-monitoring'],
 } as const;
 

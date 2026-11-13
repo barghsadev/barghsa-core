@@ -11,6 +11,7 @@ rule_files:
   - /etc/prometheus/api-pressure-alerts.yml
   - /etc/prometheus/synthetic-probe-alerts.yml
   - /etc/prometheus/postgres-backup-alerts.yml
+  - /etc/prometheus/postgres-alert-rules.json
   - /etc/prometheus/optional/*.yml
 alerting:
   alertmanagers:

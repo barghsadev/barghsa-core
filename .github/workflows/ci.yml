@@ -207,7 +207,7 @@ jobs:
             prom/prometheus@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e \
             test rules api-pressure-alerts.test.yml journey-slo-alerts.test.yml \
             monthly-cost-alerts.test.yml notification-alerts.test.yml postgres-backup-alerts.test.yml \
-            synthetic-probe-alerts.test.yml
+            synthetic-probe-alerts.test.yml postgres-alerts.test.yml
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
