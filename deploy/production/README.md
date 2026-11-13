@@ -251,11 +251,14 @@ operator ownership of that JSON file and mode `0600`. It contains:
   rule evaluation intervals and allow for normal jitter. Set the guard's
   observation age limit to accommodate that freshness bound.
   `additional_security_rules` can list other deployed security rule names
-  to evaluate alongside `PaymentCallbackAnomaly` and
-  `PaymentIdempotencyConflict`. Require both scope labels on those alerts.
+  to evaluate alongside `PaymentCallbackAnomaly`,
+  `PaymentIdempotencyConflict` and `AuthenticationFailuresElevated`. Require
+  both scope labels on those alerts.
 
 Label every scrape target with the exact `environment` and `database` in
-the plan. Scrape the API histogram, API process start time and revision, and
+the plan. Set the target label `barghsa_role: api` on both API pools so the
+authentication rule evaluates their traffic together. Scrape the API histogram,
+API process start time and revision, and
 the worker's wallet reconciliation gauge from their existing endpoints.
 The native API exports the eight `barghsa_rollout_journey_attempts_total`
 series for its exact build revision and provides the same

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:27:33+00:00",
+  "updated": "2026-11-13T14:31:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12365,7 +12365,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -12377,7 +12378,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12674,6 +12675,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -19406,7 +19415,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19418,7 +19428,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19598,6 +19608,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -19662,7 +19680,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19674,7 +19693,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19854,6 +19873,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -31569,7 +31596,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -31590,7 +31618,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -32027,6 +32055,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -34126,7 +34162,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -34154,7 +34191,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             }
           ],
           "checks": [
@@ -34338,6 +34375,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -105939,7 +105984,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-verification-mode-recovery",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -106767,7 +106813,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -108969,6 +109015,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ],
           "presentation_renewals": [
@@ -112569,7 +112623,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -112625,7 +112680,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -113014,6 +113069,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ],
           "presentation_renewals": [
@@ -131064,7 +131127,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-provider-lifecycle-input",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -131312,7 +131376,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -131868,6 +131932,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ],
           "presentation_renewals": [
@@ -577349,7 +577421,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-provider-lifecycle-input",
           "release-0.6-synthetic-target-loss",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "status": "done",
@@ -577561,7 +577634,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -578208,6 +578281,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ],
           "presentation_renewals": [
@@ -650794,7 +650875,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -650806,7 +650888,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -650878,6 +650960,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -673164,7 +673254,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -673186,7 +673277,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -673530,6 +673621,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -673586,7 +673685,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology.",
+        "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology. The observer now requires the authentication alert and checks both API pools carry the rule selector. Verify the scoped authentication hold during the authorized topology rehearsal.",
         "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images."
       ],
       "owner": null,
@@ -673600,13 +673699,19 @@
           "docs/runbooks/bad-deployment.md",
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py"
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
           "release-0.6-launch-halt-and-rollback",
           "release-0.6-schema-aware-staging-rollback",
-          "release-0.6-pilot-post-retirement-rollback"
+          "release-0.6-pilot-post-retirement-rollback",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": null
       }
@@ -673649,7 +673754,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -673660,7 +673766,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -673933,6 +674039,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -678820,7 +678934,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -678856,7 +678971,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             }
           ],
           "checks": [
@@ -679100,6 +679215,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -681080,7 +681203,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -681104,11 +681228,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "b929f0007a0964c72121f68743c8cedd699ff634aa91f15a5adeb82238a1ab00"
+              "sha256": "a8303be249d3728369e1030476be6983a67376893937f116ff2d7aeab43fce75"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -681326,6 +681450,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -681370,7 +681503,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -681410,7 +681544,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -681704,6 +681838,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Enforces strict license policy for locally built staging images before transfer and adds the license report digest to the verified runtime receipt. The staging suite passed with the existing release, scan, rollback and Telegram assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -681737,7 +681879,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -681758,7 +681901,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -681874,6 +682017,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -681914,7 +682065,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -681943,7 +682095,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -682168,6 +682320,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -682431,7 +682591,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -682491,7 +682652,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -682658,6 +682819,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -682913,7 +683082,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -682969,7 +683139,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -683202,6 +683372,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -683630,7 +683808,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -683676,7 +683855,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -683789,6 +683968,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -684273,7 +684460,7 @@
       "launch_required": true,
       "remaining": [
         "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
-        "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope."
+        "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response."
       ],
       "owner": null,
       "depends_on": [],
@@ -684295,11 +684482,15 @@
           "packages/shared/src/notifications/operations-alert-links.ts",
           "deploy/monitoring/api-pressure-alerts.test.yml",
           "deploy/monitoring/api-pressure-alerts.yml",
-          "docs/runbooks/api-pressure.md"
+          "docs/runbooks/api-pressure.md",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py"
         ],
         "batches": [
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": null
       }
@@ -686535,7 +686726,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -686607,7 +686799,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -686849,6 +687041,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -686896,7 +687096,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-authentication-failure-alert"
+          "release-0.6-authentication-failure-alert",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -686972,7 +687173,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -687224,6 +687425,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds one scoped P1 authentication failure alert to the operations receiver. The native receiver and links suites passed with existing authorization, receipt, deduplication and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -690043,7 +690252,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -690065,7 +690275,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+              "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -690288,6 +690498,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -691022,7 +691240,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -691070,15 +691289,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "b929f0007a0964c72121f68743c8cedd699ff634aa91f15a5adeb82238a1ab00"
+              "sha256": "a8303be249d3728369e1030476be6983a67376893937f116ff2d7aeab43fce75"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "55b6525939361dfcd5cc47b0d3e31ffa5479d2064926c700306b59796eda5724"
+              "sha256": "318844b7c539eda968d30832cc9a1b3065efbff6cb1ddaef7fb062101d7d377a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -691281,6 +691500,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -691557,7 +691786,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-rollout-authentication-alert"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -691605,7 +691835,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "83f322ea0cbee2ee12607bf047eed2b2d584ac70211f07de4b14f2a39bb62b52"
+              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -691845,6 +692075,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Promotion now verifies the staged image evidence and matches reported registry image IDs. Guarded rollout checks the plan IDs before calling ingress. Existing release, backup, ownership, and rollback verification passed."
+            },
+            {
+              "batch": "release-0.6-rollout-authentication-alert",
+              "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
             }
           ]
         }
@@ -1203850,6 +1204088,91 @@
         {
           "file": "rollout.log",
           "sha256": "dde35098cb487db8b2dacaf16c4841719bc18bfe180a1417f29614a8868c4bd5"
+        }
+      ]
+    },
+    "release-0.6-rollout-authentication-alert": {
+      "batch": "release-0.6-rollout-authentication-alert",
+      "base_commit": "142174b95818c1b4bedcf64dfa5be09fff19bc95",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/api-pressure-alerts.test.yml",
+        "deploy/monitoring/api-pressure-alerts.yml",
+        "deploy/monitoring/staging-prometheus.yml",
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_rollout_observer.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.test.yml",
+          "sha256": "df11003a0ac974fd7348b3b254e0a7b5bb3df0802b5ae0d5301b1cd7f27c2b7a"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.yml",
+          "sha256": "ef0479037ab9cb568034d18e4650557f212a974c162545b4122cc7b1563ff677"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "b74a8491d2330428f60a5b085cad2eab6c0621881b68bead896c4d1ad8f7cb10"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "a8303be249d3728369e1030476be6983a67376893937f116ff2d7aeab43fce75"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "318844b7c539eda968d30832cc9a1b3065efbff6cb1ddaef7fb062101d7d377a"
+        }
+      ],
+      "checks": [
+        "Promtool passed all four API pressure scenarios, including combined rejection counts from separately named API scrape pools and exclusion of non-API traffic.",
+        "Twelve rollout observer tests passed. Missing authentication rule or API role label refuses an observation. A scoped pending authentication alert reaches the guard input at zero traffic, while a foreign database alert does not."
+      ],
+      "limitations": [
+        "The isolated monitoring and observer checks do not establish the live production-equivalent scrape labels, rule evaluation, pager receipt, or ingress rollback."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollout-authentication-alert",
+      "execution_receipts": [
+        {
+          "file": "promtool.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "observer.log",
+          "sha256": "2e8d56cdfd8371d49e3969a3edf80811182ef7e67dd1f99fe030a4a5fec7188c"
         }
       ]
     }

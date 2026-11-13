@@ -65,7 +65,8 @@ class Rehearsal:
             add('up', [1] * 12 + [0 if job == 'candidate-api' and self.fault == 'scrape-down' else 1])
             if job.endswith('-api'):
                 api_sha = 'c' * 40 if job == 'candidate-api' and self.fault == 'mixed-release' else commit
-                add('barghsa_api_release_info', [1] * 13, revision=api_sha)
+                role = 'api' if self.fault != 'missing-previous-api-role' or job != 'previous-api' else 'unknown'
+                add('barghsa_api_release_info', [1] * 13, revision=api_sha, barghsa_role=role)
                 add('node_process_start_time_seconds',
                     [42] * 12 + [44 if self.fault == 'api-restarted' else 42])
                 scale = 20 if self.fault in ('p99-volume', 'p99-unbounded') else 1
@@ -104,9 +105,17 @@ class Rehearsal:
 
     def rules(self):
         rules = []
-        for name in ('PaymentCallbackAnomaly', 'PaymentIdempotencyConflict'):
+        for name in ('PaymentCallbackAnomaly', 'PaymentIdempotencyConflict', 'AuthenticationFailuresElevated'):
+            auth_rule = name == 'AuthenticationFailuresElevated'
+            if auth_rule and self.fault == 'missing-auth-rule':
+                continue
             evaluated = time.time() - (20 if self.fault == 'stale-security-rule' else 0.5)
-            alerts = [{'state': 'pending', 'labels': SCOPE}] if self.fault == 'security-alert' else []
+            alerts = []
+            if self.fault == 'security-alert' and not auth_rule:
+                alerts = [{'state': 'pending', 'labels': SCOPE}]
+            if auth_rule and self.fault in ('auth-alert', 'foreign-auth-alert'):
+                scope = SCOPE if self.fault == 'auth-alert' else {**SCOPE, 'database': 'other'}
+                alerts = [{'state': 'pending', 'labels': scope}]
             timestamp = datetime.fromtimestamp(evaluated, timezone.utc).isoformat(timespec='microseconds')
             rules.append({'name': name, 'type': 'alerting', 'health': 'ok',
                           'lastEvaluation': timestamp.replace('+00:00', '987Z'),
@@ -326,6 +335,8 @@ class ObserverTest(unittest.TestCase):
             ('missing-solar', 'journey_counters_missing'),
             ('scrape-down', 'incomplete_monitoring_coverage'),
             ('stale-security-rule', 'security_rule_unhealthy'),
+            ('missing-auth-rule', 'security_rules_missing'),
+            ('missing-previous-api-role', 'authentication_scrape_role_missing'),
         ):
             with self.subTest(fault=fault):
                 result = self.observe(fault)
@@ -335,7 +346,9 @@ class ObserverTest(unittest.TestCase):
 
     def test_preflight_observes_wallet_and_pending_alerts_without_traffic_volume(self):
         for fault, field, count in (('wallet-drift', 'critical_wallet_drift', 1),
-                                    ('security-alert', 'security_alerts', 2)):
+                                    ('security-alert', 'security_alerts', 2),
+                                    ('auth-alert', 'security_alerts', 1),
+                                    ('foreign-auth-alert', 'security_alerts', 0)):
             with self.subTest(fault=fault):
                 result = self.observe(fault, weight=0)
                 self.assertEqual(result.returncode, 0, result.stderr)

@@ -5,24 +5,26 @@ tests:
   - name: Sign-in rejections page once per scope across replicas and resolve after recovery
     interval: 1m
     input_series:
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
         values: '0+5x8 40+0x6'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="b",method="POST",route="/api/auth/login",status="401"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="previous-api",barghsa_role="api",environment="staging",database="core",instance="b",method="POST",route="/api/auth/login",status="401"}'
         values: '0+3x8 24+0x6'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
         values: '0+5x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="429"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="429"}'
         values: '0+100x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
         values: '0+40x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="401"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="401"}'
         values: '0+3x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="200"}'
         values: '0+0x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="401"}'
         values: '0+8x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="production",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
         values: '0+50x14'
+      - series: 'barghsa_http_request_duration_seconds_count{job="other-service",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login",status="401"}'
+        values: '0+100x14'
     alert_rule_test:
       - eval_time: 8m
         alertname: AuthenticationFailuresElevated
@@ -41,21 +43,21 @@ tests:
   - name: OTP uses its own response counts and ignores malformed or rate-limited requests
     interval: 1m
     input_series:
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="401"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="401"}'
         values: '0+4x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="404"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="404"}'
         values: '0+2x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="409"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="409"}'
         values: '0+2x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="200"}'
         values: '0+8x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="400"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="400"}'
         values: '0+100x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
         values: '0+100x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="core",instance="a",method="POST",route="/api/auth/login",status="200"}'
         values: '0+100x14'
-      - series: 'barghsa_http_request_duration_seconds_count{job="barghsa-api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
+      - series: 'barghsa_http_request_duration_seconds_count{job="candidate-api",barghsa_role="api",environment="staging",database="other",instance="a",method="POST",route="/api/auth/login/verify",status="429"}'
         values: '0+100x14'
     alert_rule_test:
       - eval_time: 10m

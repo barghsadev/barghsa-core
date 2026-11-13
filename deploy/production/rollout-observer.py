@@ -28,7 +28,7 @@ JOURNEYS = {
     'solar': ('/api/solar/requests', 'requests', 'id'),
     'consultation': ('/api/consultations/requests', 'requests', 'id'),
 }
-SECURITY_RULES = {'PaymentCallbackAnomaly', 'PaymentIdempotencyConflict'}
+SECURITY_RULES = {'PaymentCallbackAnomaly', 'PaymentIdempotencyConflict', 'AuthenticationFailuresElevated'}
 RELEASE = 'barghsa_api_release_info'
 HTTP = 'barghsa_http_request_duration_seconds_count'
 HTTP_BUCKET = 'barghsa_http_request_duration_seconds_bucket'
@@ -543,6 +543,7 @@ def monitoring(reader, config, selected, since, *, baseline=False, measure=True)
             labels, value = stable(metrics, RELEASE, times)
             require(labels.get('revision') == api_pools[job]['revision']['commit'] and value == 1,
                     'monitoring_release_mismatch')
+            require(labels.get('barghsa_role') == 'api', 'authentication_scrape_role_missing')
             stable(metrics, API_START, times)
         if not baseline and job == config['wallet_job']:
             _, values = only_series(metrics, DRIFT)

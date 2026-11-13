@@ -4,9 +4,9 @@ groups:
       - record: barghsa:signin_responses:increase5m
         expr: |
           sum by (environment, database, route, status) (
-            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",method="POST",route="/api/auth/login",status=~"200|401"}[5m])
+            increase(barghsa_http_request_duration_seconds_count{barghsa_role="api",environment!="",database!="",method="POST",route="/api/auth/login",status=~"200|401"}[5m])
             or
-            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",method="POST",route="/api/auth/login/verify",status=~"200|401|404|409"}[5m])
+            increase(barghsa_http_request_duration_seconds_count{barghsa_role="api",environment!="",database!="",method="POST",route="/api/auth/login/verify",status=~"200|401|404|409"}[5m])
           )
       - alert: AuthenticationFailuresElevated
         expr: |
