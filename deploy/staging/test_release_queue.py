@@ -17,6 +17,32 @@ spec.loader.exec_module(queue)
 
 
 class RuntimeImageReceiptTests(unittest.TestCase):
+    def test_migration_backup_distinguishes_verified_upload_and_disposable_staging(self):
+        commit = "a" * 40
+        marker = "BARGHSA_STAGING_MIGRATION_BACKUP_V1 "
+        backup = {"version": 1, "label": f"release-{commit[:12]}-20261113T230000Z-4321",
+                  "system_id": "123456", "blob": f"blobs/{'b' * 32}.tar.gpg",
+                  "size": 42000, "sha256": "c" * 64, "upload_verified": True}
+
+        def line(value):
+            return marker + json.dumps(value)
+
+        accepted = line(backup)
+        self.assertEqual(queue.verify_migration_backup(accepted, commit), {
+            "status": "verified", **{field: backup[field] for field in
+                                     ("label", "system_id", "blob", "size", "sha256")},
+        })
+        self.assertEqual(queue.verify_migration_backup(line({"disposable": True}), commit),
+                         {"status": "disposable"})
+        for output in ("", accepted + "\n" + line({"disposable": True})):
+            with self.assertRaisesRegex(ValueError, "exactly one"):
+                queue.verify_migration_backup(output, commit)
+        for value in ({"disposable": 1}, {**backup, "upload_verified": False},
+                      {**backup, "label": backup["label"].replace(commit[:12], "d" * 12)},
+                      {**backup, "blob": "unknown"}, {**backup, "size": True}):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "Invalid verified"):
+                queue.verify_migration_backup(line(value), commit)
+
     def test_rejects_invalid_or_ambiguous_image_receipts(self):
         commit = "a" * 40
         app, web, postgres, clamav = ["sha256:" + c * 64 for c in "bcde"]

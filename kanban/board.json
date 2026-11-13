@@ -11951,7 +11951,8 @@
         "Repeat migration-before-start, compatible rollout and rollback, and backup/restore verification on the designated production-equivalent topology. The isolated production Compose migration service has verified the canonical journal and rejects a mismatched expected version.",
         "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence.",
         "The isolated 0288-to-0289 migration and idempotent repeat passed on the retained Debian and Ubuntu trial runtimes. The Ubuntu staging rehearsal through 0296 also passed, including a no-op rerun and HTTP readiness for both matched pairs. The previous image rejected the migrated copy. Verify the final staging cutover and recovery on the production-equivalent topology.",
-        "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. The matching rollback pair was verified on isolated copies on the staging host. Verify the actual logical cutover on staging and repeat on the designated production-equivalent topology."
+        "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. The matching rollback pair was verified on isolated copies on the staging host. Verify the actual logical cutover on staging and repeat on the designated production-equivalent topology.",
+        "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -12136,7 +12137,8 @@
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-staging-migration-writer-stop",
           "release-0.6-staging-postgres-volume-guard",
-          "release-0.6-queue-schema-rehearsal"
+          "release-0.6-queue-schema-rehearsal",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": null
       }
@@ -19835,7 +19837,8 @@
       "remaining": [
         "Read back the approved headers on the accepted v0.6.0 staging release SHA.",
         "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope.",
-        "On live v0.5.1, / and /release.json emit duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options. The installed NGINX file lacks the three proxy_hide_header directives already verified in protected main. Read back the reviewed configuration and singular headers on the accepted staging SHA."
+        "On live v0.5.1, / and /release.json emit duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options. The installed NGINX file lacks the three proxy_hide_header directives already verified in protected main. Read back the reviewed configuration and singular headers on the accepted staging SHA.",
+        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -19943,7 +19946,8 @@
           "release-0.6-proxy-security-headers",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-single-edge-security-headers",
-          "release-0.6-staging-edge-live-readback"
+          "release-0.6-staging-edge-live-readback",
+          "release-0.6-csp-window-followup"
         ],
         "current_acceptance": null
       }
@@ -20033,7 +20037,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20053,7 +20058,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20258,6 +20263,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -23590,7 +23603,8 @@
         "The staging release path now uses an exact-cluster encrypted backup before migration on non-disposable hosts. The rollback suite and native restore fixture passed. The final isolated candidate and actual approved staging storage and recovery receipts remain open.",
         "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open.",
         "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open.",
-        "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts."
+        "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts.",
+        "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release."
       ],
       "owner": null,
       "depends_on": [],
@@ -23647,7 +23661,8 @@
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": null
       }
@@ -23848,7 +23863,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23868,15 +23884,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "1710ce284ade5c26582217e5f24b28ad4ec514ed11567fb159782a3f5a6704f7"
+              "sha256": "39506c62d085ddb9711844005b1912c87004191e7098ea7c708348a07f475c2e"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23990,6 +24006,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -24019,7 +24045,8 @@
         "Manual diagnostic 43504566627 reported the old 25-option assertion on Chromium, Firefox and WebKit. The corrected selector requires 26 options and the Operational Retention entry once. All 40 targeted cases across five browser projects passed with zero retries. The complete hosted matrix and scheduled delivery remain required.",
         "Hosted diagnostic 43504566627 reported one WebKit solar queue test flake from synchronously inspecting the request log after URL navigation. The test now starts an exact GET request observer before typing and still checks its search, cleared cursor and selection. Thirty focused Chromium, WebKit and Mobile Safari cases passed without retries. The full final scheduled run and actual report delivery remain open.",
         "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required.",
-        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required."
+        "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
+        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -24130,7 +24157,8 @@
           "release-0.6-retention-settings-browser",
           "release-0.6-solar-queue-browser",
           "release-0.6-published-d19812d0a",
-          "release-0.6-registration-request-observation"
+          "release-0.6-registration-request-observation",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": null
       }
@@ -31601,7 +31629,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31656,7 +31685,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31977,6 +32006,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -34735,7 +34772,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34765,7 +34803,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35301,6 +35339,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -99014,7 +99060,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -99162,7 +99209,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -100611,6 +100658,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -162612,7 +162667,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -162984,7 +163040,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -162996,7 +163052,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -164154,6 +164210,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -613161,7 +613226,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -613333,7 +613399,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -613965,6 +614031,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -633930,7 +634004,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634170,7 +634245,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634673,6 +634748,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -634801,7 +634884,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635041,7 +635125,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635544,6 +635628,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -635670,7 +635762,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635910,7 +636003,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636413,6 +636506,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -636539,7 +636640,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -636779,7 +636881,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637306,6 +637408,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -637926,7 +638036,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -638166,7 +638277,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638669,6 +638780,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -638858,7 +638977,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -639230,7 +639350,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -639242,7 +639362,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640424,6 +640544,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -640705,7 +640834,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -640945,7 +641075,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641448,6 +641578,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -641573,7 +641711,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -641813,7 +641952,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642316,6 +642455,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -642442,7 +642589,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642682,7 +642830,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643185,6 +643333,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -643312,7 +643468,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -643552,7 +643709,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644079,6 +644236,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -644204,7 +644369,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -644444,7 +644610,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644947,6 +645113,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -645072,7 +645246,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645312,7 +645487,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645815,6 +645990,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -657280,7 +657463,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement."
+        "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
+        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -657300,7 +657484,8 @@
           "release-0.6-staging-favicon-reactivation",
           "release-0.6-staging-favicon-observation-readback",
           "release-0.6-staging-favicon-final-readback",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-csp-window-followup"
         ],
         "current_acceptance": null
       }
@@ -671037,7 +671222,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -671049,7 +671235,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -671263,6 +671449,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -720042,7 +720236,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -720062,7 +720257,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e0dbb22cb7bdfa4677c729da326af22c3e89e45c3ae4bbaa2293bda47d702732"
+              "sha256": "7663d7224e9fdfee0c0232d458ab682ec62394983f939505b5aa68f766a868c9"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -720702,6 +720897,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         }
@@ -1052980,15 +1053183,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
+              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e0dbb22cb7bdfa4677c729da326af22c3e89e45c3ae4bbaa2293bda47d702732"
+              "sha256": "7663d7224e9fdfee0c0232d458ab682ec62394983f939505b5aa68f766a868c9"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "82a3f31e5f94a84c8fcd8c1bf0bed6d6044d2bb523bbed33ce79dcbee91779e2"
+              "sha256": "e27c370884630c313c0aad3bc04c06bca25afe09e984664880748d69e56ddf9f"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1053111,6 +1053314,16 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ]
         },
@@ -1053122,7 +1053335,8 @@
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-staging-migration-checkpoint"
         ]
       }
     },
@@ -1066256,7 +1066470,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1066276,11 +1066490,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
+              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1069434,6 +1069648,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "presentation_renewals": [
@@ -1069855,7 +1070079,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1072024,7 +1072249,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "bb96dce6dada5263ddcbb7232803cec3571d496d09ea88d335e327cd0b40969b"
+              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1072044,11 +1072269,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e4b920bdb99aafa20cbf9954fe429cda2e7a76bb2706d7353efabbd2c5ebe317"
+              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2e49dd9efd44a03b20e8ea196a319e33d86bd34fdb6adab37529d1ab14465d5b"
+              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1075104,6 +1075329,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-migration-checkpoint",
+              "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1075542,7 +1075777,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1080639,7 +1080875,8 @@
         "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open.",
         "Exact local Alertmanager priority delivery and recovery passed for the three isolated HTTPS endpoints. Enable only after approved destination provisioning and verify actual provider and native inbox readback.",
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
-        "Closing the retained-image license gate requires the existing 244 named dispositions as well as approval for the remaining scopes. The initialized worker now enforces the policy before transfer and rechecks the report hash before announcement."
+        "Closing the retained-image license gate requires the existing 244 named dispositions as well as approval for the remaining scopes. The initialized worker now enforces the policy before transfer and rechecks the report hash before announcement.",
+        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1080943,7 +1081180,8 @@
           "release-0.6-priority-routing",
           "release-0.6-published-d19812d0a",
           "release-0.6-registration-request-observation",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1081204,7 +1081442,9 @@
         "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover.",
         "The verified retained stateful images must be present by ID in the release worker local Docker. The stage worker enforces exact package dispositions and preserves the retained-image reports. The approved storage, database cutover and actual deployment and registry receipts remain open.",
         "Require fully healthy PostgreSQL, Redis and storage from the exact API SHA in addition to the candidate web revision and signed storage probe. The earlier v0.5.1 API response lacks the revision field. The staged replacement and protected operational receipts remain open.",
-        "The production approval package now requires the original source baseline, matching restored-table fingerprints and a consistent measured recovery point. The approved off-server backup, measured production-equivalent restore, cutover and external receipts remain open."
+        "The production approval package now requires the original source baseline, matching restored-table fingerprints and a consistent measured recovery point. The approved off-server backup, measured production-equivalent restore, cutover and external receipts remain open.",
+        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
+        "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1081263,7 +1081503,9 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-csp-window-followup",
+          "release-0.6-staging-migration-checkpoint"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1257949,6 +1258191,139 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-staging-migration-checkpoint": {
+      "batch": "release-0.6-staging-migration-checkpoint",
+      "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "7663d7224e9fdfee0c0232d458ab682ec62394983f939505b5aa68f766a868c9"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "e27c370884630c313c0aad3bc04c06bca25afe09e984664880748d69e56ddf9f"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "39506c62d085ddb9711844005b1912c87004191e7098ea7c708348a07f475c2e"
+        }
+      ],
+      "checks": [
+        "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts.",
+        "The shell rejects malformed backup object evidence before migration and rolls back. The deployment fixture rejects missing evidence before Telegram, with distinct disposable and verified receipts. ShellCheck, formatting and Git whitespace checks passed.",
+        "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open."
+      ],
+      "limitations": [
+        "The receipt and failure tests used isolated fixtures. No v0.6.0 deployment, Telegram delivery, reviewed license disposition or live off-server backup is asserted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-migration-checkpoint",
+      "execution_receipts": [
+        {
+          "file": "queue.log",
+          "sha256": "3ca4d9bd43e59fab370313047f0a211295de481c09811fdb4b9da88a678ccf86"
+        },
+        {
+          "file": "rollback.log",
+          "sha256": "e9f6e13ce6ad0914c6a1fb3f14f14a02a84a7a38f71a6e74bc44f7307109f780"
+        },
+        {
+          "file": "notify.log",
+          "sha256": "bb77798094dd152577424cb836cd050d334637786a27d27b566c686a02dd8201"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "f3d1c1d42202cf6a447fc17400b43eb6c617e945c6b0d3b14202186aaa65ba34"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diagnostic-43518112352/nightly-browser-summary.json",
+          "sha256": "6d39e9012556eec499ec8a3bc3dcc79fadfac65630ecd443c043894e7263398e"
+        }
+      ]
+    },
+    "release-0.6-csp-window-followup": {
+      "batch": "release-0.6-csp-window-followup",
+      "base_commit": "6ef4007cecf59296eec67e943fc727d2a6a69b18",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "f26d9500dae645791f0e7d82a8a986c0c54e21f5a1f7714de57b9f05df325a48"
+        }
+      ],
+      "checks": [
+        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks."
+      ],
+      "limitations": [
+        "This is the current v0.5.1 report-only window. It does not establish representative coverage for a full week or the candidate enforcement result."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-window-followup",
+      "execution_receipts": [
+        {
+          "file": "live-csp-window.json",
+          "sha256": "256dce034ba60f2a85d5760402531be370604c959abe1a7b956281bd6c44a528"
         }
       ]
     }

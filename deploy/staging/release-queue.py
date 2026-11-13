@@ -46,6 +46,31 @@ def verify_images(log, commit, app_id, web_id, postgres_id, clamav_id):
             "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
 
 
+def verify_migration_backup(log, commit):
+    marker = "BARGHSA_STAGING_MIGRATION_BACKUP_V1 "
+    records = [line.removeprefix(marker) for line in log.splitlines() if line.startswith(marker)]
+    if len(records) != 1:
+        raise ValueError("Expected exactly one staging migration backup receipt")
+    backup = json.loads(records[0])
+    if not isinstance(backup, dict):
+        raise ValueError("Invalid staging migration backup receipt")
+    if len(backup) == 1 and backup.get("disposable") is True:
+        return {"status": "disposable"}
+    checks = {
+        "label": rf"release-{re.escape(commit[:12])}-[0-9]{{8}}T[0-9]{{6}}Z-[0-9]+",
+        "system_id": r"[0-9]+",
+        "blob": r"blobs/[0-9a-f]{32}\.tar\.gpg",
+        "sha256": r"[0-9a-f]{64}",
+    }
+    if (type(backup.get("version")) is not int or backup["version"] != 1
+            or backup.get("upload_verified") is not True
+            or type(backup.get("size")) is not int or backup["size"] <= 0
+            or any(not isinstance(backup.get(field), str) or not re.fullmatch(pattern, backup[field])
+                   for field, pattern in checks.items())):
+        raise ValueError("Invalid verified staging migration backup receipt")
+    return {"status": "verified", **{field: backup[field] for field in (*checks, "size")}}
+
+
 def read_image_scans(directory, scopes, image_ids):
     scans = {}
     for index, scope in enumerate(scopes, 1):
@@ -390,8 +415,10 @@ def main():
         verify_retained_scans(args.directory, {"postgres": args.postgres_id, "clamav": args.clamav_id}, args.sha)
         return 0
     if args.action == "verify-images":
-        receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit,
-                                args.app_id, args.web_id, args.postgres_id, args.clamav_id)
+        release_log = args.release_log.read_text(errors="replace")
+        receipt = verify_images(release_log, args.commit, args.app_id, args.web_id,
+                                args.postgres_id, args.clamav_id)
+        receipt["migration_backup"] = verify_migration_backup(release_log, args.commit)
         ids = receipt["image_ids"]
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
         licensed_ids = {scope: ids[scope] for scope in ("app", "web")}

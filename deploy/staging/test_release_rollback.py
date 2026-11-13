@@ -330,17 +330,20 @@ docker() {{
     printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}"}}\\n' "${{@: -1}}" "$system"
     return
   fi
-  printf '{{"version":1,"label":"%s","system_id":"%s","sha256":"{'c' * 64}","upload_verified":true}}\\n' "${{@: -1}}" "$system"
+  local blob="blobs/{'d' * 32}.tar.gpg"
+  if [[ "$mode" == invalid-backup-object ]]; then blob=invalid; fi
+  printf '{{"version":1,"label":"%s","system_id":"%s","blob":"%s","sha256":"{'c' * 64}","size":42000,"upload_verified":true}}\\n' "${{@: -1}}" "$system" "$blob"
 }}
 trap 'status=$?; echo rollback; exit "$status"' ERR
 {text[start:end]}
 '''
         for mode, expected, code in (
-            ('disposable', ['stop worker api ai-inference', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
+            ('disposable', ['stop worker api ai-inference', 'disposable backup', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
             ('stop-failed', ['stop worker api ai-inference', 'rollback'], 19),
             ('backup-failed', ['stop worker api ai-inference', 'rollback'], 23),
             ('wrong-database', ['stop worker api ai-inference', 'rollback'], 1),
             ('prior-backup-image', ['stop worker api ai-inference', 'rollback'], 1),
+            ('invalid-backup-object', ['stop worker api ai-inference', 'rollback'], 1),
             ('protected', ['stop worker api ai-inference', 'verified backup', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
         ):
             with self.subTest(mode=mode):
@@ -348,9 +351,13 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
                                         capture_output=True, text=True, check=False)
                 self.assertEqual(result.returncode, code, result.stderr)
                 observed = result.stdout.splitlines()
-                if mode == 'protected':
+                if mode in ('disposable', 'protected'):
                     marker, receipt = observed[1].split(' ', 1)
                     self.assertEqual(marker, 'BARGHSA_STAGING_MIGRATION_BACKUP_V1')
+                if mode == 'disposable':
+                    self.assertEqual(json.loads(receipt), {'disposable': True})
+                    observed[1] = 'disposable backup'
+                if mode == 'protected':
                     self.assertEqual(json.loads(receipt)['system_id'], '123456')
                     self.assertIs(json.loads(receipt)['upload_verified'], True)
                     observed[1] = 'verified backup'

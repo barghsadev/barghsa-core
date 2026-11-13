@@ -244,6 +244,7 @@ BARGHSA_PROXY_IPS=$(docker network inspect barghsa-staging-private --format '{{(
 "${dc[@]}" stop worker api ai-inference
 if [[ "${BARGHSA_DISPOSABLE:-false}" == true ]]; then
   echo 'Disposable staging: no offsite backup is configured' >&2
+  printf 'BARGHSA_STAGING_MIGRATION_BACKUP_V1 %s\n' '{"disposable":true}'
 else
   backup_label="release-${commit:0:12}-$(date -u +%Y%m%dT%H%M%SZ)-$$"
   database_system_id=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
@@ -258,10 +259,15 @@ import json, re, sys
 
 label, system_id = sys.argv[1:]
 manifest = json.load(sys.stdin)
-if (not re.fullmatch(r"[0-9]+", system_id) or manifest["version"] != 1
-        or manifest["label"] != label or manifest["system_id"] != system_id
+if (not isinstance(manifest, dict) or not re.fullmatch(r"[0-9]+", system_id)
+        or type(manifest.get("version")) is not int or manifest["version"] != 1
+        or manifest.get("label") != label or manifest.get("system_id") != system_id
         or manifest.get("upload_verified") is not True
-        or not re.fullmatch(r"[a-f0-9]{64}", manifest["sha256"])):
+        or not isinstance(manifest.get("blob"), str)
+        or not re.fullmatch(r"blobs/[a-f0-9]{32}\.tar\.gpg", manifest["blob"])
+        or not isinstance(manifest.get("sha256"), str)
+        or not re.fullmatch(r"[a-f0-9]{64}", manifest["sha256"])
+        or type(manifest.get("size")) is not int or manifest["size"] <= 0):
     sys.exit("Verified encrypted backup receipt is missing or does not match the running staging database")
 print("BARGHSA_STAGING_MIGRATION_BACKUP_V1", json.dumps(manifest, separators=(",", ":")))
 ' "$backup_label" "$database_system_id"
