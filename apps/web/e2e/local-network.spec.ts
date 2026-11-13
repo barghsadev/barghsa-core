@@ -2,7 +2,7 @@ import { test, expect } from './coverage-fixture';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 
-test('provider addresses require an explicit browser fixture', async ({ page }) => {
+test('provider addresses require an explicit browser fixture', async ({ page, context }) => {
   const provider = 'http://provider-boundary.example.test/verification';
   const secureProvider = provider.replace('http:', 'https:');
   const server = createServer((_request, response) => {
@@ -20,9 +20,13 @@ test('provider addresses require an explicit browser fixture', async ({ page }) 
     await expect(page.locator('body')).toHaveText('Browser fixture blocked external network');
     await expect(page.goto(secureProvider)).rejects.toThrow();
 
-    await page.route(secureProvider, (route) => route.fulfill({ body: 'local test fixture' }));
-    expect((await page.goto(secureProvider))?.status()).toBe(200);
-    await expect(page.locator('body')).toHaveText('local test fixture');
+    // Firefox may still be committing its error page after the rejected navigation.
+    const fixturePage = await context.newPage();
+    await fixturePage.route(secureProvider, (route) =>
+      route.fulfill({ body: 'local test fixture' })
+    );
+    expect((await fixturePage.goto(secureProvider))?.status()).toBe(200);
+    await expect(fixturePage.locator('body')).toHaveText('local test fixture');
   } finally {
     await new Promise<void>((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));

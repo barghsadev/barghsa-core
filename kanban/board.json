@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:40:09+00:00",
+  "updated": "2026-11-13T14:48:34+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21976,7 +21976,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic run 43437113471 is in progress at protected-main commit 347938359. It does not certify the scheduled gate or report delivery. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic run 43437113471 is in progress at protected-main commit 347938359. It does not certify the scheduled gate or report delivery. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup. Firefox shard 5 reported one provider-boundary fixture flake after a rejected HTTPS navigation. The explicit fixture now uses a fresh page within the same proxied context. All 36 repeated cases passed without retries across Chromium, WebKit and pinned Firefox 1575.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -22018,7 +22018,8 @@
           "scripts/test_email_nightly_browser_report.py",
           "scripts/test_report_nightly_browser.py",
           "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-          "apps/web/src/pages/SolarRequestDetailPage.tsx"
+          "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "apps/web/e2e/local-network.spec.ts"
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
@@ -22074,7 +22075,8 @@
           "release-0.6-auth-entry-http-boundary",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-production-approval-binding",
-          "release-0.6-solar-back-touch-target"
+          "release-0.6-solar-back-touch-target",
+          "release-0.6-firefox-provider-fixture"
         ],
         "current_acceptance": null
       }
@@ -632295,7 +632297,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The reactivated same-origin favicon was verified in Chromium and WebKit on staging v0.5.1. The API observed zero image reports and one separate inline style report between activation and 13:28:57 UTC. The pinned Sonner patch resolved the earlier native inline-style issue locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise the customer and staff journeys before enforcement."
+        "The reactivated same-origin favicon was verified in Chromium and WebKit on staging v0.5.1. The API observed zero image reports and one separate inline style report between activation and 14:48 UTC on November 13. The pinned Sonner patch resolved the earlier native inline-style issue locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise the customer and staff journeys before enforcement."
       ],
       "owner": null,
       "depends_on": [],
@@ -632312,7 +632314,8 @@
           "release-0.6-sonner-csp-style-insertion",
           "release-0.6-staging-favicon-live-recheck",
           "release-0.6-staging-favicon-later-activation",
-          "release-0.6-staging-favicon-reactivation"
+          "release-0.6-staging-favicon-reactivation",
+          "release-0.6-staging-favicon-observation-readback"
         ],
         "current_acceptance": null
       }
@@ -665943,7 +665946,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-coverage-required-check",
-          "release-0.6-auth-entry-mounted-handoff"
+          "release-0.6-auth-entry-mounted-handoff",
+          "release-0.6-firefox-provider-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -665999,7 +666003,7 @@
             },
             {
               "path": "apps/web/e2e/local-network.spec.ts",
-              "sha256": "c582b32945cc069df2f283ef8fc3550e9be2195262314598c35a23700553e592"
+              "sha256": "c05916fee649cba2f47483b4ae2f67957f43deda14f36b31befa088cc68dbc7c"
             },
             {
               "path": "apps/web/e2e/local-network.ts",
@@ -666119,6 +666123,14 @@
                 "apps/web/e2e/auth-entry-session.spec.ts"
               ],
               "scope": "Only the production auth bundle now waits for its root to mount before leaving for the workspace. The original workspace root and fresh authority read remain in place. The existing auth-entry test adds visible staff workspace and fresh authority assertions. Other assertions are unchanged. The focused browser, bootstrap, locale and bundle checks passed."
+            },
+            {
+              "batch": "release-0.6-firefox-provider-fixture",
+              "base_commit": "f63aef9bbfaa441692bf1d22176050fbedd3221c",
+              "paths": [
+                "apps/web/e2e/local-network.spec.ts"
+              ],
+              "scope": "Isolates the explicitly fulfilled HTTPS navigation on a new page in the same browser context. The external HTTP, redirect and CONNECT denials and successful local fixture assertions passed across the three browser engines. Shared fixture, proxy and application sources retain their bytes."
             }
           ]
         }
@@ -1037995,7 +1038007,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO. The approval check now verifies core-service elapsed time and the four service journey receipts alongside the database exercise.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "The reactivated same-origin favicon was verified in Chromium and WebKit on staging v0.5.1. The API observed zero image reports and one separate inline style report between activation and 13:28:57 UTC. The pinned Sonner patch resolved the earlier native inline-style issue locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise the customer and staff journeys before enforcement.",
+        "The reactivated same-origin favicon was verified in Chromium and WebKit on staging v0.5.1. The API observed zero image reports and one separate inline style report between activation and 14:48 UTC on November 13. The pinned Sonner patch resolved the earlier native inline-style issue locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise the customer and staff journeys before enforcement.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "On live v0.5.1, ClamD loaded daily 28181. Official DNS and the EU mirror matched main 63, daily 28181 and bytecode 339. All three detached signatures and archive hashes verified. The live daemon accepted a clean input and detected the standard EICAR fixture. Hosted preflight separately proved the sealed document lifecycle against a real ClamAV daemon. Verify signature freshness, sealed application receipts, scanner outage recovery and alert delivery on the final application and operational topology.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts."
@@ -1038043,7 +1038055,8 @@
           "release-0.6-staging-favicon-live-recheck",
           "release-0.6-staging-favicon-later-activation",
           "release-0.6-staging-favicon-reactivation",
-          "release-0.6-core-recovery-receipt"
+          "release-0.6-core-recovery-receipt",
+          "release-0.6-staging-favicon-observation-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1204902,6 +1204915,98 @@
         {
           "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-diagnostic-43437113471/outcome-mobile-chrome-7/browser-outcomes.json",
           "sha256": "cf37383372f52f0505b7d9801fb196a38090b2a205c586351051c60b9c4276d9"
+        }
+      ]
+    },
+    "release-0.6-firefox-provider-fixture": {
+      "batch": "release-0.6-firefox-provider-fixture",
+      "base_commit": "f63aef9bbfaa441692bf1d22176050fbedd3221c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.10.03.15"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/local-network.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/local-network.spec.ts",
+          "sha256": "c05916fee649cba2f47483b4ae2f67957f43deda14f36b31befa088cc68dbc7c"
+        },
+        {
+          "path": "apps/web/e2e/local-network.ts",
+          "sha256": "a121fe7feaf0a217ee39b4ea5a7c60d1b90d0dd58062437080bd9a0b7b63008d"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+        }
+      ],
+      "checks": [
+        "Hosted diagnostic 43437113471 Firefox shard 5 at 347938359 recorded 386 expected cases and one flaky provider boundary test. Two attempts failed at the fixture navigation immediately after the proxy's expected HTTPS rejection.",
+        "Thirty-six focused production-browser cases passed with zero retries on Chromium, WebKit and pinned Firefox 1575. Changed-file ESLint and Prettier passed."
+      ],
+      "limitations": [
+        "The exact final hosted browser matrix and scheduled report delivery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-firefox-provider-fixture",
+      "execution_receipts": [
+        {
+          "file": "browser.log",
+          "sha256": "56358a25f07bd28d4fc8f5b175985facb844fb3977d1850be82a3068d544b514"
+        },
+        {
+          "file": "local-browser-last-run.json",
+          "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-diagnostic-43437113471/browser-outcome-firefox-5/browser-outcomes.json",
+          "sha256": "378d9c0e60e41982a9a500a3a282065f42d239435903147eb4647e07f2d28ad8"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-observation-readback": {
+      "batch": "release-0.6-staging-favicon-observation-readback",
+      "base_commit": "f63aef9bbfaa441692bf1d22176050fbedd3221c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "b5fb754d77b44e0d7b893d3c5ed68042ff26d682fd3e1af107331082a5defef5"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        }
+      ],
+      "checks": [
+        "At 14:46 UTC on November 13, live staging v0.5.1 still reported the sealed same-origin favicon. The retrieved PNG matched the original SHA-256.",
+        "The retained staging API container did not restart during the readback. Its logs from the 13:23 activation through 14:48 UTC contained one inline style-src-elem report and zero img-src reports."
+      ],
+      "limitations": [
+        "The exact staged Sonner fix, representative full-week report-only observation and customer and staff enforcement rehearsal remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-firefox-provider-fixture",
+      "execution_receipts": [
+        {
+          "file": "live-favicon.json",
+          "sha256": "4f267885b686717590c73fac4c4e11985d9c4227cc20e5cf708b70b2832e74ce"
+        },
+        {
+          "file": "live-csp-counts.json",
+          "sha256": "11498f1ceb630db7e375be41c8a5e29605cb061e52757342a49509343da6fc8c"
         }
       ]
     }
