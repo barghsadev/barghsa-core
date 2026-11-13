@@ -9,5 +9,6 @@ image="${1:?Usage: build-postgres-image.sh barghsa-postgres:vps-TAG}"
 }
 helpers="barghsa-postgres-helpers:${image#*:}"
 docker build --platform linux/amd64 -f packages/db/scripts/backup/Dockerfile -t "$helpers" .
-docker build --platform linux/amd64 --build-arg "BACKUP_HELPERS_IMAGE=$helpers" \
+docker buildx build --load --platform linux/amd64 --no-cache-filter ubuntu-archive \
+  --build-arg "BACKUP_HELPERS_IMAGE=$helpers" \
   -f deploy/staging/Dockerfile.postgres -t "$image" .

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T17:20:40+00:00",
+  "updated": "2026-11-13T17:38:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16292,7 +16292,8 @@
       "launch_required": true,
       "remaining": [
         "Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy.",
-        "Story-level disk alerts, protected backup monitoring host and exporter, real backup failure and stale detection, and verified P1 delivery remain operational prerequisites. The local backup status and alert rules passed focused checks."
+        "Story-level disk alerts, protected backup monitoring host and exporter, real backup failure and stale detection, and verified P1 delivery remain operational prerequisites. The local backup status and alert rules passed focused checks.",
+        "Live staging verified archive_mode=off, no matching host backup units, no protected host backup env and no backup keys in its runtime env. The approved separate backup host and protected storage destination remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -16371,7 +16372,8 @@
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-postgres-restore-readback"
+          "release-0.6-postgres-restore-readback",
+          "release-0.6-postgres-cutover-preflight"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -671533,7 +671535,8 @@
         "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately.",
         "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence.",
         "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts.",
-        "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required."
+        "Hosted 43468289014 at 0614369c verified all five Linux amd64 image IDs, matched CycloneDX and vulnerability report bytes and reproduced the approved review scope. Final deployed image and registry receipts remain required.",
+        "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -671582,7 +671585,8 @@
           "release-0.6-postgres-package-alignment",
           "release-0.6-promotion-image-receipts",
           "release-0.6-web-license-delta",
-          "release-0.6-amd64-license-readback"
+          "release-0.6-amd64-license-readback",
+          "release-0.6-postgres-cutover-preflight"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -708979,7 +708983,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-inference-http-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-postgres-cutover-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -708999,7 +709004,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "857661170655f894ae4755a1a07a6ccf3890349820249dd0c01fa17fa8b7241a"
+              "sha256": "73557d0d463c46991b9acee71c32031fd89dc36fa67fd7f7a286ef3a76f01d26"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -709553,6 +709558,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-postgres-cutover-preflight",
+              "base_commit": "d61d2013649aa1fe2a1dea8c3e6a14012efc43e6",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The existing staging release fixture now requires fresh signed package metadata for initial PostgreSQL builds. Its image build, scan, license check, transfer and delivery ordering assertions still pass."
             }
           ]
         }
@@ -1037327,7 +1037340,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "857661170655f894ae4755a1a07a6ccf3890349820249dd0c01fa17fa8b7241a"
+              "sha256": "73557d0d463c46991b9acee71c32031fd89dc36fa67fd7f7a286ef3a76f01d26"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1037409,6 +1037422,14 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The board applies its existing launch-task and exception readiness rules to accepted candidates. The immutable staging checkout checks the same readiness before notification or deployment work. Existing defect, version, source, image, provider, rollback and notification checks retain their scope."
+            },
+            {
+              "batch": "release-0.6-postgres-cutover-preflight",
+              "base_commit": "d61d2013649aa1fe2a1dea8c3e6a14012efc43e6",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The existing staging release fixture now requires fresh signed package metadata for initial PostgreSQL builds. Its image build, scan, license check, transfer and delivery ordering assertions still pass."
             }
           ]
         },
@@ -1037416,7 +1037437,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-immutable-board-readiness"
+          "release-0.6-immutable-board-readiness",
+          "release-0.6-postgres-cutover-preflight"
         ]
       }
     },
@@ -1064394,7 +1064416,8 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures. Preflight 43465392373 failed on the legacy invoice reminder fixture. The fixture now applies canonical migration 0291, and its focused PostgreSQL and unit suites pass. Verify the successor exact hosted run. The license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated bf902604 candidate pair applied 0289–0296, verified the new trace queue schema and passed HTTP/database readiness. The previous app rejected 0296 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open."
+        "Preflight 43321674107 passed Verify monorepo integrity and b9e0fa856 reached protected main. The deterministic scanner fixture and the green-rule test synchronization are included. The final v0.6.0 candidate and its strict gates remain open.",
+        "A stale BuildKit archive stage could rebuild the older glibc packages. The refreshed build matches all 241 hosted PostgreSQL package rows and the strict package gate remains open. The isolated native restore of both databases passed, with matching data and collation and the current service preserved. Staging WAL archiving is off, the checked host has no backup job, and its Docker filesystem was 93% full. Obtain the approved backup destination, verify recoverable backups and capacity, and preserve the old image and volume before any live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1064684,7 +1064707,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-queue-schema-rehearsal",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-postgres-cutover-preflight"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1236649,6 +1236673,148 @@
         {
           "file": "historical-runs.json",
           "sha256": "6d4f6880de4396d8c4b706c944c92bf1dc931a297b4600a25775c8163598b7a4"
+        }
+      ]
+    },
+    "release-0.6-postgres-cutover-preflight": {
+      "batch": "release-0.6-postgres-cutover-preflight",
+      "base_commit": "d61d2013649aa1fe2a1dea8c3e6a14012efc43e6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/build-postgres-image.sh",
+        "deploy/staging/test_notify_release.py",
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "5c375086df8ecf68755843c2505044ef6975e9885de7c40a855b5fd912c8e042"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "73557d0d463c46991b9acee71c32031fd89dc36fa67fd7f7a286ef3a76f01d26"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "78f6f7afc5d1d583e800a9c8f8d3c070bb3e358450dc9cd86a10e909a9596296"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "5316c0ab8fcfac0464598964557549b30674274810a6fb8f1550fa04fe8a488c"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "c8c38fcda4f1aa322e8ae614c6b84878be4184f85ccd2c5154cba098d89a0dd3"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "8403f43c0a4c78b10871fc6e3805fe623a87573b7f8cbca777cb14e272924b56"
+        }
+      ],
+      "checks": [
+        "The cached build retained glibc 2.39-0ubuntu8.9. Refreshing the signed archive stage produced the reviewed 2.39-0ubuntu8.12 versions without disabling the rest of the build cache.",
+        "Compared the exact Linux amd64 scan and CycloneDX bytes with their image receipt and verified installed notices for gosu, the PostgreSQL entrypoint and pgvector. All 241 PostgreSQL package rows match the hosted scope. The 217 package decisions remain open.",
+        "The new image starts backup and restore tooling as postgres. The focused release-orchestration test and all 14 unchanged notification tests passed across the two recorded runs. Shell syntax, Prettier and git diff --check passed.",
+        "Native Linux staging restored both databases into isolated volumes using the exact scanned image. Fingerprints match on 186 and 187 tables, and sort/case results match across 652 and 660 text columns. The active database and release stayed healthy; temporary resources were removed."
+      ],
+      "limitations": [
+        "Staging is still running v0.5.1 with the existing database. The cutover, separate encrypted backup and restore readback, exact license sign-offs and release/Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-cutover-preflight",
+      "execution_receipts": [
+        {
+          "file": "validation.log",
+          "sha256": "b267f22833d9b8feba7cd7135b96c0e8f6542f5a6eae70c21711bab67d315cd2"
+        },
+        {
+          "file": "staging-release-tests-before-fixture.log",
+          "sha256": "69b8e8ac18a5e973bf2f0df0cbf22f2b647b7c79cc61885881c176e3a05bedd1"
+        },
+        {
+          "file": "staging-release-tests.log",
+          "sha256": "a8df0f756c88289d1b92f7927a20ee532b0613c4696e4666eb6de4d617c6c804"
+        },
+        {
+          "file": "live-prerequisites.txt",
+          "sha256": "6344d685634a18bb7b143a6668d1826bd71163923fe426f332785cae6e4ce93c"
+        },
+        {
+          "file": "live-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "live-health.json",
+          "sha256": "eacaf175516263ef2d389b476facd813358868473c1cbeb2088153160a035dfc"
+        },
+        {
+          "file": "build-fresh-archive.log",
+          "sha256": "b00e996de8a7924e8ab6120925bd9b39c18c0a251176c7526969e65e8dde504b"
+        },
+        {
+          "file": "new-image-packages.txt",
+          "sha256": "8ee64d35409c8cd6939752ee5e1a2b7129deec1b08dfa71548447e766c847c97"
+        },
+        {
+          "file": "fresh-image-packages.txt",
+          "sha256": "e61284fe5807b2403d173a61f151658d7b5ac5d16157d237323d76baa4032dc5"
+        },
+        {
+          "file": "fresh-image-scan.log",
+          "sha256": "ef5af6f72618917855db96379dc08ec28bcf0c018b6384d9877afdd62192b605"
+        },
+        {
+          "file": "fresh-image-scan/1-image.json",
+          "sha256": "9b951a406950a956ff7dd689ea4eeb992384b7deba533bef7c9201e52751328c"
+        },
+        {
+          "file": "fresh-image-scan/1-sbom.cdx.json",
+          "sha256": "5525669bb1f8106d54fe762059e4922b7ed4016af38192b27c9f06fba028d909"
+        },
+        {
+          "file": "fresh-image-scan/1-vulnerabilities.json",
+          "sha256": "ed880782e9e7ac3699f91262786fe15f6e1358bed7e33065f2672ae04275c1c5"
+        },
+        {
+          "file": "fresh-image-license-comparison.json",
+          "sha256": "7ceb3467cce3ef45346c9c4a61b57ead76b6a5fc65a1cf58a9d2112f32efaa00"
+        },
+        {
+          "file": "fresh-image-helpers.log",
+          "sha256": "68e4ca406510b7b6864c94b2cdc123c8ebf48c47a39b042de544cefac17b44b7"
+        },
+        {
+          "file": "fresh-image.tar.gz.sha256",
+          "sha256": "0155d08c2f37a3c3f3d4f567a4a577a35f22c76f26eccb3cd32f5083053a1de5"
+        },
+        {
+          "file": "staging-image-load.log",
+          "sha256": "e506f6aeec115fcc0e52a2c7043b162471f06fa689b871ace9ff7ff7d5c855c1"
+        },
+        {
+          "file": "rehearse-fresh-restore.sh",
+          "sha256": "3aa3aa064ee547f8e8f49be607d0718628cdb53457562ae0b32c317ef782b6c4"
+        },
+        {
+          "file": "fresh-staging-rehearsal.log",
+          "sha256": "9dbc1732eb884528500141aab84fceb3c4b0bcbccc54d33a782dd7fde6b7686d"
+        },
+        {
+          "file": "staging-rehearsal-postcheck.txt",
+          "sha256": "84cf115ae3580848953e8c4b97a439da0b61550ee77b4536da3c4a557cea4816"
         }
       ]
     }

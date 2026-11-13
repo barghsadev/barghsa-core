@@ -372,7 +372,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         f'-t barghsa-postgres-helpers:{tag} .'
                     )
                     postgres = (
-                        f'docker build --platform linux/amd64 --build-arg BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:{tag} '
+                        'docker buildx build --load --platform linux/amd64 --no-cache-filter ubuntu-archive '
+                        f'--build-arg BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:{tag} '
                         f'-f deploy/staging/Dockerfile.postgres -t barghsa-postgres:{tag} .'
                     )
                     scan = next(line for line in calls if line.startswith('scan-runtime '))
