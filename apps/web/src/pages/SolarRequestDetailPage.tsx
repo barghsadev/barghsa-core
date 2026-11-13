@@ -392,7 +392,10 @@ function SolarRequestDetail({
   const action = request ? solarNextAction(request, locale) : null;
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <Link className="text-sm underline" to="/solar/requests">
+      <Link
+        className="touch-action text-sm underline pointer-coarse:min-h-[45px]!"
+        to="/solar/requests"
+      >
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>

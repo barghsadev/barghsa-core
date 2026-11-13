@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:31:04+00:00",
+  "updated": "2026-11-13T14:40:09+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21976,7 +21976,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic run 43437113471 is in progress at protected-main commit 347938359. It does not certify the scheduled gate or report delivery.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The signed-in auth entry repair passed 120 native timing cases and the existing auth and locale regressions. Obtain a clean scheduled rollup and verified report delivery on the final candidate. Manual 40-shard diagnostic run 43437113471 is in progress at protected-main commit 347938359. It does not certify the scheduled gate or report delivery. Shard mobile-chrome 7 reported one Persian solar detail flake when Chromium measured the back link at 43.99997 px. The touch link now has a 45 px minimum height. Sixteen targeted mobile cases passed with the existing 44 px assertion and zero retries. Complete the final hosted rollup.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -22017,7 +22017,8 @@
           "scripts/report-nightly-browser.py",
           "scripts/test_email_nightly_browser_report.py",
           "scripts/test_report_nightly_browser.py",
-          "apps/web/e2e/electricity-price-adjustment-history.spec.ts"
+          "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "apps/web/src/pages/SolarRequestDetailPage.tsx"
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
@@ -22072,7 +22073,8 @@
           "release-0.6-knowledge-query-error",
           "release-0.6-auth-entry-http-boundary",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-production-approval-binding"
+          "release-0.6-production-approval-binding",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": null
       }
@@ -64071,7 +64073,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-saving-address-deadline-fixture",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -64175,7 +64178,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -65085,6 +65088,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -271091,7 +271102,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -271383,7 +271395,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -273303,6 +273315,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -273520,7 +273540,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -273812,7 +273833,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -275732,6 +275753,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -511272,7 +511301,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -511324,7 +511354,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -512066,6 +512096,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -512209,7 +512247,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -512261,7 +512300,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -513003,6 +513042,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -513146,7 +513193,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -513198,7 +513246,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -513940,6 +513988,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -514085,7 +514141,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -514137,7 +514194,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -514879,6 +514936,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -516689,7 +516754,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -516741,7 +516807,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -517483,6 +517549,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -517626,7 +517700,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -517678,7 +517753,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -518420,6 +518495,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -518563,7 +518646,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -518615,7 +518699,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -519357,6 +519441,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -519501,7 +519593,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -519553,7 +519646,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -520295,6 +520388,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -520439,7 +520540,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -520491,7 +520593,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -521233,6 +521335,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -521378,7 +521488,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -521430,7 +521541,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -522172,6 +522283,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -522321,7 +522440,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -522373,7 +522493,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -523115,6 +523235,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -523258,7 +523386,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -523310,7 +523439,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -524052,6 +524181,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -524196,7 +524333,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -524248,7 +524386,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -524991,6 +525129,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -525142,7 +525288,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -525210,7 +525357,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -525861,6 +526008,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -526001,7 +526156,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -526069,7 +526225,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -526720,6 +526876,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -526860,7 +527024,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -526928,7 +527093,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -527579,6 +527744,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -527720,7 +527893,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -527788,7 +527962,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -528439,6 +528613,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -528583,7 +528765,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -528651,7 +528834,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -529302,6 +529485,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -529442,7 +529633,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -529510,7 +529702,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -530161,6 +530353,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -530302,7 +530502,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -530370,7 +530571,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -531021,6 +531222,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -531163,7 +531372,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -531231,7 +531441,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -531882,6 +532092,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -532022,7 +532240,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -532090,7 +532309,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -532741,6 +532960,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -532881,7 +533108,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -532949,7 +533177,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -533600,6 +533828,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -665058,7 +665294,8 @@
         "batches": [
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
@@ -665098,7 +665335,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "scripts/report-nightly-browser.py",
@@ -665140,6 +665377,14 @@
                 "scripts/report-nightly-browser.py"
               ],
               "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -666116,7 +666361,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the expanded fast Axe gate and critical journey states on the exact accepted staging candidate. The local production browser evidence covers both languages and includes intake, final review and confirmation states.",
+        "Verify the expanded fast Axe gate and critical journey states on the exact accepted staging candidate. The local production browser evidence covers both languages and includes intake, final review and confirmation states. The solar detail back link passed the existing 44 px minimum and the affected recovery and Axe checks in Persian and English on mobile Chromium and WebKit.",
         "Complete and record the manual keyboard and screen-reader review of final submission, payment and staff approval on the exact candidate, including actual staging workflow boundaries."
       ],
       "owner": null,
@@ -666135,14 +666380,16 @@
           "apps/web/e2e/approval-queue.spec.ts",
           "apps/web/e2e/critical-accessibility.ts",
           "apps/web/e2e/wallet-invoice-payment.spec.ts",
-          "apps/web/src/components/WalletInvoicePaymentPanel.tsx"
+          "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "apps/web/src/pages/SolarRequestDetailPage.tsx"
         ],
         "batches": [
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-shared-catalogue-wcag22",
           "release-0.6-notification-contrast",
           "release-0.6-critical-intake-accessibility",
-          "release-0.6-critical-review-accessibility"
+          "release-0.6-critical-review-accessibility",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": null
       }
@@ -711200,7 +711447,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -711656,7 +711904,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -712378,6 +712626,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         },
@@ -736663,7 +736919,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-consultation-and-threshold-browser-recovery"
+          "release-0.6-consultation-and-threshold-browser-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -736847,7 +737104,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -737058,6 +737315,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -742098,7 +742363,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -742486,7 +742752,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -742795,6 +743061,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -751575,7 +751849,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-consultation-and-threshold-browser-recovery"
+          "release-0.6-consultation-and-threshold-browser-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -751791,7 +752066,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -752013,6 +752288,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -817126,7 +817409,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -817762,7 +818046,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -819387,6 +819671,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -819515,7 +819807,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -820151,7 +820444,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -821776,6 +822069,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -821955,7 +822256,8 @@
           "release-0.6-nightly-limit-settings-isolation",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -824195,7 +824497,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -825180,6 +825482,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -825308,7 +825618,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -825964,7 +826275,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -827582,6 +827893,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -827710,7 +828029,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -828346,7 +828666,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -829971,6 +830291,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -830099,7 +830427,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -830735,7 +831064,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -832360,6 +832689,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -832488,7 +832825,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -833124,7 +833462,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -834749,6 +835087,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -834877,7 +835223,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -835513,7 +835860,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -837138,6 +837485,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -837266,7 +837621,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -837902,7 +838258,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -839527,6 +839883,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -839655,7 +840019,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -840291,7 +840656,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -841916,6 +842281,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -842044,7 +842417,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -842680,7 +843054,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -844305,6 +844679,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -844433,7 +844815,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -845069,7 +845452,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -846694,6 +847077,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -846822,7 +847213,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -847458,7 +847850,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -849083,6 +849475,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -849211,7 +849611,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -849847,7 +850248,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -851472,6 +851873,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -852498,7 +852907,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -853134,7 +853544,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -854759,6 +855169,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -854887,7 +855305,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -855523,7 +855942,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -857148,6 +857567,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -857359,7 +857786,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -858059,7 +858487,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -858665,6 +859093,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         }
@@ -925346,7 +925782,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -925770,7 +926207,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -926161,6 +926598,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -926401,7 +926846,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -926825,7 +927271,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -927216,6 +927662,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -927464,7 +927918,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -927888,7 +928343,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -928279,6 +928734,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -928511,7 +928974,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -928935,7 +929399,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -929326,6 +929790,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -929557,7 +930029,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -929981,7 +930454,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -930372,6 +930845,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -978224,7 +978705,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -978592,7 +979074,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -978971,6 +979453,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -979258,7 +979748,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -979626,7 +980117,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -980005,6 +980496,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -980294,7 +980793,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -980662,7 +981162,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -981041,6 +981541,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -981328,7 +981836,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -981696,7 +982205,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -982075,6 +982584,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -982362,7 +982879,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -982730,7 +983248,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -983109,6 +983627,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -983400,7 +983926,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -983768,7 +984295,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -984147,6 +984674,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -984438,7 +984973,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -984806,7 +985342,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -985185,6 +985721,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -985472,7 +986016,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -985840,7 +986385,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -986219,6 +986764,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -986506,7 +987059,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -986874,7 +987428,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -987253,6 +987807,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -987541,7 +988103,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -987909,7 +988472,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -988288,6 +988851,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -988581,7 +989152,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-solar-back-touch-target"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -988949,7 +989521,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -989328,6 +989900,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Three workspace header selectors only. Restores brand and breadcrumb interaction targets to the 44px minimum. The account, navigation and settings checks passed in English and Persian. No other CSS rule or browser assertion changed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -1017258,7 +1017838,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -1020652,6 +1021232,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -1021098,7 +1021686,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-solar-back-touch-target"
         ]
       }
     },
@@ -1032953,7 +1033542,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -1033627,6 +1034216,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         },
@@ -1033890,7 +1034487,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ]
       }
     },
@@ -1035042,7 +1035640,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+              "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -1036529,6 +1037127,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-back-touch-target",
+              "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+              "paths": [
+                "apps/web/src/pages/SolarRequestDetailPage.tsx"
+              ],
+              "scope": "Increases the coarse-pointer back-link height on the solar detail page. The existing recovery, no-replay, keyboard, Axe and touch-target assertions passed. Request behavior and prior business evidence retain their scope."
             }
           ]
         },
@@ -1036686,7 +1037292,8 @@
           "release-0.6-knowledge-query-error",
           "release-0.6-auth-entry-mounted-handoff",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-solar-back-touch-target"
         ]
       }
     },
@@ -1204173,6 +1204780,128 @@
         {
           "file": "observer.log",
           "sha256": "2e8d56cdfd8371d49e3969a3edf80811182ef7e67dd1f99fe030a4a5fec7188c"
+        }
+      ]
+    },
+    "release-0.6-solar-back-touch-target": {
+      "batch": "release-0.6-solar-back-touch-target",
+      "base_commit": "ebb6ad6c5c306f508278d511d1632e54b153d75e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.11.01.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03",
+        "03-core-business.md#T-03.12.01.01",
+        "03-core-business.md#T-03.12.01.02",
+        "03-core-business.md#T-03.12.01.03",
+        "03-core-business.md#T-03.12.01.04",
+        "03-core-business.md#T-03.12.02.01",
+        "03-core-business.md#T-03.12.02.02",
+        "03-core-business.md#T-03.12.02.03",
+        "03-core-business.md#T-03.12.02.04",
+        "03-core-business.md#T-03.12.02.05",
+        "03-core-business.md#T-03.12.02.06",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "07-ui-ux-design.md#T-07.26.01.01",
+        "07-ui-ux-design.md#T-07.26.01.02",
+        "07-ui-ux-design.md#T-07.26.01.03",
+        "07-ui-ux-design.md#T-07.26.01.04",
+        "07-ui-ux-design.md#T-07.27.01.01",
+        "07-ui-ux-design.md#T-07.27.01.02",
+        "07-ui-ux-design.md#T-07.27.01.03",
+        "07-ui-ux-design.md#T-07.27.01.04",
+        "07-ui-ux-design.md#T-07.27.01.05",
+        "07-ui-ux-design.md#T-07.27.01.06",
+        "07-ui-ux-design.md#T-07.27.01.07",
+        "release-readiness#R-02.02",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/SolarRequestDetailPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+        },
+        {
+          "path": "apps/web/src/pages/solar-documents.test.tsx",
+          "sha256": "c83c4567df7dd2415344f20467d32c43527d9b1983732ddfa11de523dfdf53f8"
+        }
+      ],
+      "checks": [
+        "Hosted diagnostic 43437113471 mobile-chrome shard 7 at 347938359 reported 370 expected cases, zero unexpected and one flaky Persian solar detail case. The retained first attempt measured 43.999969482421875 px against the unchanged 44 px requirement.",
+        "Production web build, web typecheck, changed-file lint and formatting passed. Nine solar document component cases and all 16 repeated mobile Chromium/WebKit cases passed without retries in Persian and English."
+      ],
+      "limitations": [
+        "The repaired candidate still needs the clean exact hosted and scheduled browser rollups and the deployed journey receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-solar-back-touch-target",
+      "execution_receipts": [
+        {
+          "file": "browser.log",
+          "sha256": "4d806372a3077a65a50ecd7807dceb1579196c493c4d67d63639abbdc60ff4fe"
+        },
+        {
+          "file": "component.log",
+          "sha256": "cda6e09f6a3a52b486540211f7a2afeb990090a6fac78c77bed2eabe61d0de31"
+        },
+        {
+          "file": "build.log",
+          "sha256": "7067466e010938b437345b4a9477280128a65aefc150995dc06c05f4a427bfe5"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-browser-diagnostic-43437113471/outcome-mobile-chrome-7/browser-outcomes.json",
+          "sha256": "cf37383372f52f0505b7d9801fb196a38090b2a205c586351051c60b9c4276d9"
         }
       ]
     }
