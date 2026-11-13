@@ -226,6 +226,25 @@ trap rollback ERR
 "${dc[@]}" up -d --no-recreate --wait --wait-timeout 900 postgres redis objectstore clamav
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
+if ! "${dc[@]}" exec -T clamav sh -c 'printf "nVERSION\n" | nc -w 3 127.0.0.1 3310' |
+  LC_ALL=C python3 -c '
+from datetime import datetime, timezone
+import re, sys
+
+reply = sys.stdin.read(257)
+match = re.fullmatch(r"ClamAV ([A-Za-z0-9_.+-]+)/([1-9][0-9]{0,9})/(.{24})\n?", reply)
+try:
+    built = datetime.strptime(match[3], "%a %b %d %H:%M:%S %Y").replace(tzinfo=timezone.utc) if match else None
+except ValueError:
+    built = None
+if (built is None or built.strftime("%a %b") != match[3][:7]
+        or not -300 <= (datetime.now(timezone.utc) - built).total_seconds() < 172800):
+    sys.exit("The staging ClamAV signature build time is invalid or stale")
+print("BARGHSA_STAGING_SCANNER_V1", match[1], match[2], int(built.timestamp()))
+'; then
+  echo 'Staging ClamAV verification failed before migration' >&2
+  exit 1
+fi
 if [[ "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]]; then
   archive_settings=$("${dc[@]}" exec -T --user postgres postgres psql -XAt -v ON_ERROR_STOP=1 \
     -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c 'SHOW archive_mode' -c 'SHOW archive_command')

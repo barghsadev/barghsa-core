@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta, timezone
 import os
 from pathlib import Path
 import shutil
@@ -445,6 +446,7 @@ fi
 dc=(compose)
 compose() {{
   if [[ $* == 'ps -q postgres' ]]; then printf '%s\\n' postgres-running; return; fi
+  if [[ $1 == exec && $3 == clamav ]]; then printf '%s\\n' "$SCANNER_REPLY"; return; fi
   printf '%s\\n' "${{@: -1}}"
 }}
 docker() {{
@@ -500,6 +502,9 @@ echo accepted
             ('container:postgres', 'Running image ID differs from the candidate manifest: postgres'),
             ('container:postgres-running', 'Running image ID differs from the candidate manifest: postgres'),
             ('container:clamav', 'Running image ID differs from the candidate manifest: clamav'),
+            ('stale-scanner', 'The staging ClamAV signature build time is invalid or stale'),
+            ('invalid-scanner', 'The staging ClamAV signature build time is invalid or stale'),
+            ('future-scanner', 'The staging ClamAV signature build time is invalid or stale'),
             ('container:ai-inference', 'Running image ID differs'),
             ('wrong-volume', 'PostgreSQL data mount differs from the active volume'),
             ('read-only-volume', 'PostgreSQL data mount differs from the active volume'),
@@ -510,9 +515,12 @@ echo accepted
                 with tempfile.TemporaryDirectory(prefix='barghsa-mount-') as directory:
                     mount = Path(directory) / 'mount'
                     mount.write_text(f'volume:{RESTORED_VOLUME}:true\n')
+                    now = datetime.now(timezone.utc)
+                    built = now + timedelta(hours={'stale-scanner': -49, 'future-scanner': 1}.get(mode, -1))
+                    reply = 'ClamAV 1.5.4' if mode == 'invalid-scanner' else f'ClamAV 1.5.4/28182/{built.ctime()}'
                     result = subprocess.run(['bash', '-c', script, 'image-fixture', mode],
                                             capture_output=True, text=True, check=False,
-                                            env={**os.environ, 'MOUNT_FIXTURE': str(mount)})
+                                            env={**os.environ, 'MOUNT_FIXTURE': str(mount), 'SCANNER_REPLY': reply})
                 self.assertIn(expected, result.stdout + result.stderr)
                 self.assertEqual(result.returncode, 0 if mode in ('match', 'bootstrap') else 1)
                 self.assertEqual('rollback' in result.stdout, mode in

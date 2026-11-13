@@ -71,6 +71,18 @@ def verify_migration_backup(log, commit):
     return {"status": "verified", **{field: backup[field] for field in (*checks, "size")}}
 
 
+def verify_scanner(log):
+    marker = "BARGHSA_STAGING_SCANNER_V1 "
+    records = [line.removeprefix(marker) for line in log.splitlines() if line.startswith(marker)]
+    match = None
+    if len(records) == 1:
+        match = re.fullmatch(r"([A-Za-z0-9_.+-]+) ([1-9][0-9]{0,9}) ([1-9][0-9]{0,11})", records[0])
+    if not match:
+        raise ValueError("Expected one verified staging ClamAV signature receipt")
+    return {"engine_version": match[1], "signature_version": int(match[2]),
+            "signature_built_at_epoch": int(match[3])}
+
+
 def read_image_scans(directory, scopes, image_ids):
     scans = {}
     for index, scope in enumerate(scopes, 1):
@@ -419,6 +431,7 @@ def main():
         receipt = verify_images(release_log, args.commit, args.app_id, args.web_id,
                                 args.postgres_id, args.clamav_id)
         receipt["migration_backup"] = verify_migration_backup(release_log, args.commit)
+        receipt["scanner"] = verify_scanner(release_log)
         ids = receipt["image_ids"]
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
         licensed_ids = {scope: ids[scope] for scope in ("app", "web")}

@@ -297,6 +297,8 @@ elif name=='scp' and pathlib.Path(args[-2]).name=='candidate.env':
     assert manifest['BARGHSA_POSTGRES_IMAGE_ID']=='sha256:'+'d'*64
     assert manifest['BARGHSA_CLAMAV_IMAGE_ID']=='sha256:'+'e'*64
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
+    if not os.environ.get('MISSING_SCANNER'):
+        print('BARGHSA_STAGING_SCANNER_V1 1.5.4 28182 1794551068')
     if not os.environ.get('MISSING_BACKUP'):
         backup = {'disposable': True} if os.environ['FRESH_STAGING']=='1' else {
             'version':1,'label':'release-'+'a'*12+'-20261113T230000Z-123',
@@ -340,7 +342,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         retained_sbom = retained / "2-sbom.cdx.json"
         retained_sbom_bytes = retained_sbom.read_bytes()
         scenarios = [(failure, False, False) for failure in (
-            "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", "MISSING_BACKUP", None,
+            "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", "MISSING_BACKUP", "MISSING_SCANNER", None,
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
             "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
         )]
@@ -393,6 +395,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                             "status": "verified", "label": "release-" + "a" * 12 + "-20261113T230000Z-123",
                             "system_id": "123456", "blob": "blobs/" + "d" * 32 + ".tar.gpg",
                             "size": 42000, "sha256": "f" * 64,
+                        })
+                        self.assertEqual(evidence["scanner"], {
+                            "engine_version": "1.5.4", "signature_version": 28182,
+                            "signature_built_at_epoch": 1794551068,
                         })
                         self.assertEqual(evidence["image_ids"], dict(zip(
                             ("app", "web", "postgres", "clamav"), ("sha256:" + c * 64 for c in "bcde"),

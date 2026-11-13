@@ -20038,7 +20038,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20058,7 +20059,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20271,6 +20272,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -23604,7 +23613,8 @@
         "The initialized migration path requires the retained image to report a verified remote upload. The release fixture rejects a legacy receipt before calling the migrator. The actual cutover and staging rollout remain open.",
         "The release checks the license policy on the retained image IDs for both local builds and prebuilt application bundles. A pending license prevents transfer. The worker checks that the report is unchanged before announcement. Actual cutover and accepted staging receipts remain open.",
         "Before promoting the active images, require verification of the exact public API commit and healthy PostgreSQL, Redis and object storage without readiness warnings. The tested probe rejects Redis fallback, degraded storage and a missing component. Verify the exact production-equivalent and staged release receipts.",
-        "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release."
+        "The worker rejects a missing or invalid migration checkpoint before announcement and retains the verified object identity in the release job. Complete the exact live staging release.",
+        "The worker requires current signatures on the exact retained ClamAV image before migration and records the daemon version in the release receipt. Complete the live accepted rollout."
       ],
       "owner": null,
       "depends_on": [],
@@ -23662,7 +23672,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": null
       }
@@ -23864,7 +23875,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -23884,15 +23896,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "39506c62d085ddb9711844005b1912c87004191e7098ea7c708348a07f475c2e"
+              "sha256": "80c836e96c346a0c62b167211aa84bc2620cdb4ed29b8d32c7452da8d623d1aa"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -24016,6 +24028,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -31630,7 +31652,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31685,7 +31708,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -32014,6 +32037,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -34773,7 +34804,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34803,7 +34835,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35347,6 +35379,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -99061,7 +99101,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -99209,7 +99250,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -100666,6 +100707,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -162668,7 +162717,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -163040,7 +163090,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -163052,7 +163102,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -164219,6 +164269,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -613227,7 +613286,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -613399,7 +613459,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -614039,6 +614099,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -634005,7 +634073,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634245,7 +634314,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -634756,6 +634825,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -634885,7 +634962,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635125,7 +635203,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635636,6 +635714,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -635763,7 +635849,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -636003,7 +636090,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636514,6 +636601,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -636641,7 +636736,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -636881,7 +636977,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637416,6 +637512,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -638037,7 +638141,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -638277,7 +638382,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638788,6 +638893,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -638978,7 +639091,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -639350,7 +639464,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -639362,7 +639476,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640553,6 +640667,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -640835,7 +640958,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -641075,7 +641199,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641586,6 +641710,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -641712,7 +641844,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -641952,7 +642085,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642463,6 +642596,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -642590,7 +642731,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642830,7 +642972,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643341,6 +643483,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -643469,7 +643619,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -643709,7 +643860,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644244,6 +644395,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -644370,7 +644529,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -644610,7 +644770,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645121,6 +645281,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -645247,7 +645415,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645487,7 +645656,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645998,6 +646167,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -671223,7 +671400,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -671235,7 +671413,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -671457,6 +671635,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -673808,7 +673994,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible."
+        "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible.",
+        "The private retained daemon returned ClamAV 1.5.4 with daily signatures 28182 at 23:26 UTC on November 13. The release probe accepted the actual read-only response. Verify fresh signatures and clean and quarantined uploads on the deployed candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -673833,7 +674020,8 @@
           "release-0.6-staging-scanner-ceiling",
           "release-0.6-sealed-clamav-lifecycle",
           "release-0.6-clamav-freshness-alert",
-          "release-0.6-staging-scanner-current-signatures"
+          "release-0.6-staging-scanner-current-signatures",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": null
       }
@@ -680550,7 +680738,8 @@
       "remaining": [
         "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed.",
         "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed.",
-        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts."
+        "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
+        "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release."
       ],
       "owner": null,
       "depends_on": [],
@@ -680582,7 +680771,8 @@
           "release-0.6-runtime-image-binding",
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-postgres-restore-readback",
-          "release-0.6-license-candidate-39619e439"
+          "release-0.6-license-candidate-39619e439",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -720237,7 +720427,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -720257,7 +720448,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7663d7224e9fdfee0c0232d458ab682ec62394983f939505b5aa68f766a868c9"
+              "sha256": "7c66da228e9ce8614f3be767bee2187d74a3f4cb7de4b7c52fa5946fadc2c776"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -720905,6 +721096,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         }
@@ -1053183,11 +1053382,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
+              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7663d7224e9fdfee0c0232d458ab682ec62394983f939505b5aa68f766a868c9"
+              "sha256": "7c66da228e9ce8614f3be767bee2187d74a3f4cb7de4b7c52fa5946fadc2c776"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1053324,6 +1053523,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ]
         },
@@ -1053336,7 +1053544,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ]
       }
     },
@@ -1066470,7 +1066679,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1066490,11 +1066699,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
+              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1069658,6 +1069867,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "presentation_renewals": [
@@ -1070080,7 +1070299,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1072249,7 +1072469,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "de5f95e1e1f715638109f7f87e2bc83afec3c188a72958b6a5d67b11c4ec28ca"
+              "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1072269,11 +1072489,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "a8007d7e1d58485598d1ad210c24cf0ed2fb7c633239f134355a84f9447590fb"
+              "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "399dcfcc5d05537c28508fe54d9477ad462fa0eb542a9e81dd05c97a69cb7b9a"
+              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1075339,6 +1075559,16 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging worker records the verified pre-migration backup with the exact deployment. The 22 queue, 13 rollback, 15 notification and 12 approval checks passed. Previously accepted criteria retain their independent receipts."
+            },
+            {
+              "batch": "release-0.6-staging-scanner-gate",
+              "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1075778,7 +1076008,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1081444,7 +1081675,8 @@
         "Require fully healthy PostgreSQL, Redis and storage from the exact API SHA in addition to the candidate web revision and signed storage probe. The earlier v0.5.1 API response lacks the revision field. The staged replacement and protected operational receipts remain open.",
         "The production approval package now requires the original source baseline, matching restored-table fingerprints and a consistent measured recovery point. The approved off-server backup, measured production-equivalent restore, cutover and external receipts remain open.",
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
-        "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open."
+        "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open.",
+        "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1081505,7 +1081737,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-csp-window-followup",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-staging-scanner-gate"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1258324,6 +1258557,103 @@
         {
           "file": "live-csp-window.json",
           "sha256": "256dce034ba60f2a85d5760402531be370604c959abe1a7b956281bd6c44a528"
+        }
+      ]
+    },
+    "release-0.6-staging-scanner-gate": {
+      "batch": "release-0.6-staging-scanner-gate",
+      "base_commit": "76e2dbcbe44d85104ca2ee4677bf82b4444abc5f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "96e60773b4d38e5e339c247191f70373d4706dc26cf489ab60035b363cdd1c32"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "eeeae8a8dea43fffe9b6c30d7cd121a16e7ca24142ca239a5affad2475e762f3"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "7c66da228e9ce8614f3be767bee2187d74a3f4cb7de4b7c52fa5946fadc2c776"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "80c836e96c346a0c62b167211aa84bc2620cdb4ed29b8d32c7452da8d623d1aa"
+        }
+      ],
+      "checks": [
+        "The 22 queue, 13 staging rollout, 15 notification and 12 production approval tests passed. Stale, future and malformed signatures fail before the writers are stopped. Missing queue evidence blocks announcement.",
+        "An SSH read-only ClamD VERSION response from the existing staging service passed the new parser. It reported version 1.5.4 and daily 28182. ShellCheck, documentation formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The live read checked the v0.5.1 scanner and its current data only. v0.6.0 has not deployed, and the exact release receipt and complete upload rehearsal remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-scanner-gate",
+      "execution_receipts": [
+        {
+          "file": "queue.log",
+          "sha256": "6e62edbdff3613abfe7ea4d56fb40046c4c85eedbdfe8d116d7f7b920970fda7"
+        },
+        {
+          "file": "rollback.log",
+          "sha256": "cc1a5ce59f0ca42ee5911bef988ebff2032e01d7494de7c438affe8e01e6084b"
+        },
+        {
+          "file": "notify.log",
+          "sha256": "a19b2dab17f7ffec381000d309c2bc383c90057bbd994697d9dc2bce0fbb20cb"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "a3c658e353b90c827fc46480608ab744a2ebdd4223220ef50821d70e6c9c6179"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "live-version.json",
+          "sha256": "5beb67503bf6c1abd116b99ed05080b69bb2d47b9db91539c5c269d4dd8d9c0d"
         }
       ]
     }

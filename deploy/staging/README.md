@@ -316,6 +316,13 @@ providers also require their own settings in the app's admin UI.
 
 ## Data and backups
 
+Before stopping application writers or running migrations, the release reads
+the exact retained ClamAV daemon's loaded signature version and UTC build time.
+An unavailable, invalid or at least 48-hour-old database blocks rollout. The
+worker stores the engine version, signature version and build timestamp in
+`runtime_images.scanner`. See the [scanner runbook](../../docs/operations/clamav-signatures.md)
+for mirror checks and the sealed upload rehearsal.
+
 The initial runtime sets `BARGHSA_DISPOSABLE=true`. Docker volumes survive
 container and image releases. An installation with data to retain needs an
 approved off-server backup destination and tested recovery before changing
