@@ -16858,7 +16858,8 @@
         "The staging PostgreSQL Compose overlay now signs and encrypts WAL using the existing archiver. The isolated HTTPS fixture on the exact Ubuntu image uploaded a completed WAL segment and recovered the requested target with the earlier commit present and the later one absent. Provision the live protected destination, key, schedule and monitored retention to close this task.",
         "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
-        "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover."
+        "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover.",
+        "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -16944,7 +16945,8 @@
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
           "release-0.6-hosted-compose-fixtures",
-          "release-0.6-live-operational-gate-readback"
+          "release-0.6-live-operational-gate-readback",
+          "release-0.6-existing-offsite-capacity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -724518,7 +724520,8 @@
         "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required.",
         "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open.",
         "The independent probe now records dependency degradation as readiness failure and skips authentication. All nine local cases passed. Install on the approved runner and verify live observations.",
-        "The running v0.5.1 Prometheus had exactly the API and worker targets and no synthetic completion time series. Approved runner and authenticated fixture provisioning remain open."
+        "The running v0.5.1 Prometheus had exactly the API and worker targets and no synthetic completion time series. Approved runner and authenticated fixture provisioning remain open.",
+        "A trusted SSH readback confirmed the existing EU host has capacity and no configured synthetic service. Host reuse is awaiting owner approval. The dedicated account, private exporter and on-call destination also require provisioned evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -724555,7 +724558,8 @@
           "release-0.6-synthetic-result-completeness",
           "release-0.6-rollout-api-revision",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-live-operational-gate-readback"
+          "release-0.6-live-operational-gate-readback",
+          "release-0.6-existing-offsite-capacity"
         ],
         "current_acceptance": null
       }
@@ -1082776,7 +1082780,8 @@
         "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open.",
         "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open.",
         "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending.",
-        "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment."
+        "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment.",
+        "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1082841,7 +1082846,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-live-operational-gate-readback"
+          "release-0.6-live-operational-gate-readback",
+          "release-0.6-existing-offsite-capacity"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1260143,6 +1260149,47 @@
         {
           "file": "queue.json",
           "sha256": "cf7bf3144c7c6e7da76ed492135c81328ea12f9c8362faa79fbb49c1e8d2f330"
+        }
+      ]
+    },
+    "release-0.6-existing-offsite-capacity": {
+      "batch": "release-0.6-existing-offsite-capacity",
+      "base_commit": "65eaa2e2e9cc7ff470e12658c010814c39e0b34f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "docs/operations/telegram-host.md",
+          "sha256": "b66d297bd69724ef801179eeb1f8967401f5154a738bf53794eb1c34d991d80d"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "94a4d1c004d8a0220527f7a3400e8bb90e751d0dea21f7dcfbf601383d10dc59"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "8b6dccf10edc049f07e39a3ec0497d0ac16c766db3101ffbea0addb1bd1ee92a"
+        }
+      ],
+      "checks": [
+        "The EU host was verified through the pinned ED25519 key held on staging. Read-only filesystem and service inventory established capacity without reading configuration contents. The active staging PostgreSQL mount was confirmed from Docker."
+      ],
+      "limitations": [
+        "This is a suitability readback. No new host service was authorized or provisioned. No backup, restoration, durable key custody, synthetic runner or external alert receipt is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-existing-offsite-capacity",
+      "execution_receipts": [
+        {
+          "file": "eu-readback.json",
+          "sha256": "242448a73f1dcf3740644465c432b6992763f2e66c410e1611aa7eddc9712f09"
+        },
+        {
+          "file": "staging-readback.json",
+          "sha256": "0b4d3fcf91eecd41a0ee1ea211cd13d7ee8bd6a8f76559c73c3e9464b3b0660b"
         }
       ]
     }
