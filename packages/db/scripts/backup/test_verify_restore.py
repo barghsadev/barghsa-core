@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -152,6 +153,7 @@ class RestoreExerciseTests(unittest.TestCase):
             result = verify.exercise(self.args())
         self.assertEqual(result['status'], 'passed', result)
         self.assertEqual(result['tables']['users']['count'], 3)
+        self.assertEqual(result['baseline_sha256'], hashlib.sha256(self.baseline.read_bytes()).hexdigest())
         self.assertEqual(result['rpo_seconds'], 0)
         self.assertGreater(result['database_rto_seconds'], 0)
         self.assertIsNone(result['core_service_rto_seconds'])

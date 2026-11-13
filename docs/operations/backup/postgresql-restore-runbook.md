@@ -169,8 +169,9 @@ a deletion target. Only owned temporary children are removed after the clone sto
 If shutdown fails, its files remain for inspection.
 
 The JSON result records replay-based `rpo_seconds`, `database_rto_seconds`, table
-evidence and pass/fail. Missing source/replay evidence is a failure, not zero loss.
-Limits are fixed at300 seconds and3600 seconds. Database RTO starts before download
+evidence, `baseline_sha256` and pass/fail. Retain the original baseline bytes with
+the report for the production approval check. Missing source or replay evidence
+fails verification. Limits are 300 seconds and 3600 seconds. Database RTO starts before download
 and ends after readiness and data checks; `core_service_rto_seconds` remains null
 until operators measure application cutover/readiness. These database checks must
 not be reported as proof of the full core-service recovery target.

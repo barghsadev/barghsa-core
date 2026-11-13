@@ -173,14 +173,18 @@ def receipt_bundle(index_path, path, fingerprint, required, optional=()):
             {key: digest for key, (_, digest) in entries.items()})
 
 
-def epoch(value):
+def receipt_time(value):
     try:
         parsed = datetime.fromisoformat(value.removesuffix('Z') + '+00:00' if value.endswith('Z') else value)
         if parsed.utcoffset() is not None:
-            return parsed.timestamp()
+            return parsed
     except (AttributeError, TypeError, ValueError, OverflowError, OSError):
         pass
     raise ValueError('A structured receipt has an invalid timestamp')
+
+
+def epoch(value):
+    return receipt_time(value).timestamp()
 
 
 def matches(pattern, value):
@@ -226,7 +230,7 @@ def verify_core_recovery(core, database, database_digest, directory, sha, now):
 def verify_backup_receipts(index_path, path, fingerprint, now, sha):
     data, digests = receipt_bundle(index_path, path, fingerprint,
                                   ('backup_job', 'backup_manifest', 'restore_manifest', 'restore_report',
-                                   'core_service_report'))
+                                   'source_baseline', 'core_service_report'))
     job, manifest = data['backup_job'], data['backup_manifest']
     restored, report = data['restore_manifest'], data['restore_report']
     for value in (manifest, restored):
@@ -261,6 +265,21 @@ def verify_backup_receipts(index_path, path, fingerprint, now, sha):
         or not matches(r'[a-f0-9]{64}', table.get('sha256')) for table in tables.values()
     ):
         raise ValueError('Restore report is missing verified table fingerprints')
+    baseline = data['source_baseline']
+    if (type(baseline.get('version')) is not int or baseline['version'] != 1
+            or report.get('baseline_sha256') != digests['source_baseline']
+            or baseline.get('tables') != tables):
+        raise ValueError('Restore report must match the independent source baseline and its fingerprints')
+    reference = receipt_time(baseline.get('reference_time'))
+    captured = receipt_time(baseline.get('captured_at'))
+    replayed = receipt_time(report.get('replayed_transaction_time'))
+    started = receipt_time(report.get('started_at'))
+    if (not reference <= captured <= started
+            or (replayed - started).total_seconds() > report['database_rto_seconds']):
+        raise ValueError('The source baseline and replay timestamps do not match the recovery window')
+    measured_rpo = max(0.0, (reference - replayed).total_seconds())
+    if measured_rpo > 300 or report['rpo_seconds'] != measured_rpo:
+        raise ValueError('Restore report does not match the measured recovery point')
     core_rto = verify_core_recovery(data['core_service_report'], report, digests['restore_report'],
                                     index_path.resolve().parent, sha, now)
     return {'backup_age_seconds': round(now - completed, 3), 'rpo_seconds': report['rpo_seconds'],

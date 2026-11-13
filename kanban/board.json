@@ -8677,7 +8677,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8697,7 +8698,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8983,6 +8984,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -13157,7 +13166,8 @@
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13170,7 +13180,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13229,6 +13239,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -13315,7 +13333,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13327,7 +13346,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13672,6 +13691,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -16826,7 +16853,8 @@
       "remaining": [
         "Production dataset recovery and core-service RTO including provisioning/cutover/application readiness remain unmeasured. The local verifier reports database RTO and leaves core-service RTO null.",
         "The exact staging PostgreSQL candidate restored the physical backup and encrypted archive to the selected point using the staged Compose archiver. The production-equivalent backup, configuration and object recovery, timed business recovery and alert receipts remain open.",
-        "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open."
+        "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open.",
+        "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints."
       ],
       "owner": null,
       "depends_on": [],
@@ -16877,12 +16905,20 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
+        ],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-postgres-restore-readback",
           "release-0.6-staging-wal-archive",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17017,7 +17053,8 @@
       "launch_required": true,
       "remaining": [
         "No quarterly schedule is installed or activated. Each exercise requires a coordinated fresh source baseline/confirmed commit and archived production results; live RPO/RTO and delivered alerts remain external.",
-        "Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover."
+        "Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover.",
+        "The restore report now identifies the exact independently captured source baseline. Keep both original artifacts from the first deployed quarterly exercise with the observed alert delivery."
       ],
       "owner": null,
       "depends_on": [],
@@ -17076,9 +17113,17 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
+        ],
         "batches": [
-          "release-0.6-database-clocks-and-recovery-rehearsal"
+          "release-0.6-database-clocks-and-recovery-rehearsal",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -20988,7 +21033,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21000,7 +21046,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21204,6 +21250,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -21271,7 +21325,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21283,7 +21338,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21487,6 +21542,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -24273,7 +24336,8 @@
       "remaining": [
         "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
         "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files.",
-        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews."
+        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews.",
+        "The approval check now recomputes RPO using the retained source baseline and replay time and enforces matching fingerprints. Repeat the complete measured recovery on the approved deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -24305,7 +24369,13 @@
           ".github/workflows/storage-recovery-quarterly.yml",
           "docs/operations/quarterly-recovery-exercise.md",
           "docs/runbooks/storage-outage.md",
-          "packages/db/scripts/backup/run_physical_backup_tests.py"
+          "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
         ],
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
@@ -24315,7 +24385,8 @@
           "release-0.6-quarterly-manual-exercise",
           "release-0.6-core-recovery-receipt",
           "release-0.6-quarterly-scheduled-fixtures",
-          "release-0.6-hosted-quarterly-exercise-readback"
+          "release-0.6-hosted-quarterly-exercise-readback",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": null
       }
@@ -34663,7 +34734,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -34685,7 +34757,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -34709,7 +34781,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "a5702982d77a667568af02a3b37f4b3c135e7f519b268f5dd7b67af279bbd3e2"
+              "sha256": "20a01c5ad67cc091a2c92fd333d7f7dd63a96a3e6a08f3e7b54f7920dce7d302"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -35220,6 +35292,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -37504,7 +37585,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-query-tracing",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -37532,7 +37614,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             }
           ],
           "checks": [
@@ -37748,6 +37830,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -667640,7 +667730,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-sql-data-flow",
           "release-0.6-async-job-tracing",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "batch": "release-0.6-sql-data-flow",
@@ -667677,7 +667768,7 @@
             },
             {
               "path": "packages/db/scripts/backup/verify_restore.py",
-              "sha256": "6d58774171678959d71eefdcd36bd42d32ad4911a2d5482c84d551708858fd38"
+              "sha256": "96d12710b9b659bd42e69064ce384751d380a311e60dfc0de72006ba722bd9c4"
             },
             {
               "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
@@ -667783,6 +667874,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "packages/db/scripts/backup/verify_restore.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -677212,7 +677311,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -677224,7 +677324,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -677320,6 +677420,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -700666,7 +700774,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -700688,11 +700797,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "b55808e377cb7b0dc24ab798c2d32a87d33d9bd8a0e1710f41b2fbdd6490c085"
+              "sha256": "ce382951dc3199939d5a7bd11e495dfb0d97456842e25f322debd0a20b8c79ef"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -701029,6 +701138,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -701514,7 +701632,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -701536,15 +701655,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "b55808e377cb7b0dc24ab798c2d32a87d33d9bd8a0e1710f41b2fbdd6490c085"
+              "sha256": "ce382951dc3199939d5a7bd11e495dfb0d97456842e25f322debd0a20b8c79ef"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -701980,6 +702099,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -702115,7 +702244,8 @@
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -702126,7 +702256,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -702447,6 +702577,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -703003,7 +703141,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -703024,7 +703163,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -703315,6 +703454,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -703364,7 +703511,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -703385,7 +703533,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -703676,6 +703824,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -710726,7 +710882,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-rollout-api-revision",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -710750,7 +710907,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -711007,6 +711164,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -715088,7 +715253,8 @@
           "release-0.6-journey-budget-burndown",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -715104,7 +715270,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "a5702982d77a667568af02a3b37f4b3c135e7f519b268f5dd7b67af279bbd3e2"
+              "sha256": "20a01c5ad67cc091a2c92fd333d7f7dd63a96a3e6a08f3e7b54f7920dce7d302"
             }
           ],
           "checks": [
@@ -715231,6 +715397,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -722103,7 +722277,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-rollout-api-revision",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -722151,7 +722326,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -722408,6 +722583,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -722697,7 +722880,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-postgres-query-tracing",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -722745,7 +722929,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "63ffd099d7fea82f4528d757d162a9b2a034be670faa501a6ff60a5d9f97a037"
+              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -723017,6 +723201,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -724248,7 +724440,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724268,7 +724461,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724472,6 +724665,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -724582,7 +724783,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724602,7 +724804,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -724806,6 +725008,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -724854,7 +725064,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -724874,7 +725085,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d5b6e616939b02fec8c826f78749f42064f3c5530841c235aa3ede1e70e39626"
+              "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -725078,6 +725289,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Release and approval verification require a healthy public API response for the exact revision and the three deployment dependencies. The staging rollback and production promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-recovery-baseline-proof",
+              "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
             }
           ]
         }
@@ -1080984,7 +1081203,8 @@
         "The opt-in staging WAL overlay is wired into the normal release and rollback. An isolated TLS storage rehearsal verified encrypted WAL and native point-in-time replay on the prepared image. Complete separate authorized provisioning and cutover before enabling it on live staging, then obtain the measured recovery and monitoring receipts.",
         "Before migrations, require readback of the encrypted backup from approved S3 storage. The corrected image builder avoids a stale glibc install layer. Exact rebuilt image dbb54d6c8c53 passed private TLS backup, WAL archive and PITR. Complete storage and key provisioning and verify live recovery and cutover.",
         "The verified retained stateful images must be present by ID in the release worker local Docker. The stage worker enforces exact package dispositions and preserves the retained-image reports. The approved storage, database cutover and actual deployment and registry receipts remain open.",
-        "Require fully healthy PostgreSQL, Redis and storage from the exact API SHA in addition to the candidate web revision and signed storage probe. The earlier v0.5.1 API response lacks the revision field. The staged replacement and protected operational receipts remain open."
+        "Require fully healthy PostgreSQL, Redis and storage from the exact API SHA in addition to the candidate web revision and signed storage probe. The earlier v0.5.1 API response lacks the revision field. The staged replacement and protected operational receipts remain open.",
+        "The production approval package now requires the original source baseline, matching restored-table fingerprints and a consistent measured recovery point. The approved off-server backup, measured production-equivalent restore, cutover and external receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1081042,7 +1081262,8 @@
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-recovery-baseline-proof"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1081080,7 +1081301,13 @@
           "deploy/monitoring/notification-alerts.test.yml",
           "deploy/monitoring/notification-alerts.yml",
           "deploy/monitoring/staging-prometheus.yml",
-          "deploy/monitoring/staging-worker-alerts.yml"
+          "deploy/monitoring/staging-worker-alerts.yml",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1257634,6 +1257861,94 @@
         {
           "file": "live-probe-boundary.json",
           "sha256": "ded26f9b1dd68c5fb62112e268374b416aa790f68bf84984dc65270cdf33a8b3"
+        }
+      ]
+    },
+    "release-0.6-recovery-baseline-proof": {
+      "batch": "release-0.6-recovery-baseline-proof",
+      "base_commit": "a7c5d8585462ed1097fe030f8690aa675d337d3a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.01.05",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/test_verify_restore.py",
+        "packages/db/scripts/backup/verify_restore.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "ce382951dc3199939d5a7bd11e495dfb0d97456842e25f322debd0a20b8c79ef"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "20a01c5ad67cc091a2c92fd333d7f7dd63a96a3e6a08f3e7b54f7920dce7d302"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "5b41f27aeeb06c1cfcbe59efda6c15ed6307e416e8732b11f40d430d65bcf8b8"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "96d12710b9b659bd42e69064ce384751d380a311e60dfc0de72006ba722bd9c4"
+        }
+      ],
+      "checks": [
+        "All 14 isolated backup and restore tests and 12 production approval tests passed. The native PostgreSQL exercise replayed WAL, verified exact restored row fingerprints and emitted the hash of the original source baseline.",
+        "Approval verification requires the exact original source baseline and identical table fingerprints, then independently computes the RPO. The focused cases preserve the inclusive 300-second limit and reject a mismatched hash, mismatched fingerprints, inconsistent timestamps and a reported RPO different from the measurement.",
+        "Documentation formatting and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The PostgreSQL and object-storage fixtures were isolated. Approved off-server storage and key recovery, the staging cutover, production-equivalent restore receipts and operational delivery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-recovery-baseline-proof",
+      "execution_receipts": [
+        {
+          "file": "native-backup.log",
+          "sha256": "cb674e70fd6ba622de10c7e1cee04062b7c96ff03e3de3a96aec40b9c0342387"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "9f9e013fe4af4c5d5e463621b3b6274e43df1deb4ceed678e02237fe83b1af2a"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

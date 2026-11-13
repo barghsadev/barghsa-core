@@ -94,9 +94,13 @@ inside both indexes are relative to the same protected approval package.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`
-  to the manifest used in that exercise. Add `core_service_report` using the
-  format below. The check enforces backup age under 24 hours, a matching database
-  system, verified table fingerprints, and the measured recovery limits.
+  to the manifest used in that exercise. Set `source_baseline` to the original
+  independently captured baseline file used by the restore verifier. Keep that
+  file byte-for-byte so its SHA-256 matches the restore report. Add
+  `core_service_report` using the format below. The check enforces backup age
+  under 24 hours, a matching database system and matching source/restored table
+  fingerprints. It recomputes the recovery point from the baseline's confirmed
+  commit time and the restored transaction replay time.
 - Under `staging_and_telegram`, point `deployment` to the completed staging
   queue `job.json`, `summary` to the confirmed release-worker message receipt,
   and `album` to its image receipt when available. The check matches the exact

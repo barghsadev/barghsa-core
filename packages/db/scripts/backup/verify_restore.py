@@ -58,7 +58,8 @@ def fingerprints(env):
 def baseline(path):
     if not path:
         raise BackupError("VERIFY_BASELINE_FILE is required; counts alone cannot prove no data loss")
-    value = json.loads(Path(path).read_text())
+    contents = Path(path).read_bytes()
+    value = json.loads(contents)
     if type(value.get("version")) is not int or value["version"] != 1:
         raise BackupError("Invalid baseline version")
     reference, captured = timestamp(value["reference_time"]), timestamp(value["captured_at"])
@@ -70,7 +71,7 @@ def baseline(path):
         if (type(item.get("count")) is not int or item["count"] < 0
                 or not re.fullmatch(r"[a-f0-9]{64}", item.get("sha256", ""))):
             raise BackupError("Invalid baseline table fingerprint")
-    return value
+    return value, hashlib.sha256(contents).hexdigest()
 
 
 def capture(path, reference):
@@ -116,7 +117,8 @@ def exercise(args):
               "database_rto_seconds": None, "core_service_rto_seconds": None,
               "started_at": utcnow().isoformat()}
     try:
-        expected = baseline(args.baseline)
+        expected, baseline_digest = baseline(args.baseline)
+        result["baseline_sha256"] = baseline_digest
         with workspace(args.work_dir) as root:
             target = root / "candidate"
             recovery = argparse.Namespace(target_dir=str(target), backup=None, pitr=args.pitr)

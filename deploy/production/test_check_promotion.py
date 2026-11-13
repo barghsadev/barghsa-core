@@ -186,6 +186,9 @@ class StructuredReceiptTest(unittest.TestCase):
                   'database_rto_seconds': 3300, 'core_service_rto_seconds': None,
                   'started_at': '2026-11-09T03:00:00Z', 'replayed_transaction_time': '2026-11-09T02:00:00Z',
                   'tables': {table: {'count': 2, 'sha256': 'c' * 64} for table in ('users', 'orders', 'invoices')}}
+        baseline = {'version': 1, 'reference_time': '2026-11-09T02:05:00Z',
+                    'captured_at': '2026-11-09T02:06:00Z', 'tables': deepcopy(report['tables'])}
+        report['baseline_sha256'] = hashlib.sha256(json.dumps(baseline).encode()).hexdigest()
         checks = {}
         for name in promotion.CORE_RECOVERY_CHECKS:
             path = self.root / f'{name}.log'
@@ -198,6 +201,7 @@ class StructuredReceiptTest(unittest.TestCase):
             'backup_manifest': manifest,
             'restore_manifest': {**manifest, 'label': older, 'started_at': older, 'completed_at': '2026-11-09T01:05:00Z'},
             'restore_report': report,
+            'source_baseline': baseline,
             'core_service_report': {
                 'status': 'passed', 'scope': 'core_service_recovery', 'candidate_sha': SHA,
                 'database_restore_sha256': hashlib.sha256(json.dumps(report).encode()).hexdigest(),
@@ -254,6 +258,30 @@ class StructuredReceiptTest(unittest.TestCase):
                 bad = deepcopy(entries)
                 bad['core_service_report']['checks'][name][field] = value
                 fingerprint = self.write_bundle(bad)
+                with self.assertRaisesRegex(ValueError, message):
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_requires_exact_source_baseline_and_recomputes_measured_rpo(self):
+        scenarios = (
+            ('restore_report', 'baseline_sha256', '0' * 64, 'independent source baseline'),
+            ('source_baseline', 'tables', {name: {'count': 2, 'sha256': 'e' * 64}
+                                            for name in ('users', 'orders', 'invoices')}, 'independent source baseline'),
+            ('source_baseline', 'captured_at', '2026-11-09T03:01:00Z', 'recovery window'),
+            ('source_baseline', 'reference_time', '2026-11-09T02:05:00.000001Z', 'measured recovery point'),
+            ('restore_report', 'rpo_seconds', 0, 'measured recovery point'),
+            ('restore_report', 'replayed_transaction_time', '2026-11-09T03:56:00Z', 'recovery window'),
+        )
+        for artifact, field, value, message in scenarios:
+            with self.subTest(artifact=artifact, field=field):
+                entries = self.backup()
+                entries[artifact][field] = value
+                report = entries['restore_report']
+                if artifact == 'source_baseline':
+                    report['baseline_sha256'] = hashlib.sha256(json.dumps(entries[artifact]).encode()).hexdigest()
+                entries['core_service_report']['database_restore_sha256'] = hashlib.sha256(
+                    json.dumps(report).encode()
+                ).hexdigest()
+                fingerprint = self.write_bundle(entries)
                 with self.assertRaisesRegex(ValueError, message):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
