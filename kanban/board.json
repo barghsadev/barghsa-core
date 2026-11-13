@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T16:15:11+00:00",
+  "updated": "2026-11-13T16:19:25+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -1018,7 +1018,7 @@
     }
   },
   "specification_sources": {
-    "kanban/epics/01-platform-infrastructure.md": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a",
+    "kanban/epics/01-platform-infrastructure.md": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3",
     "kanban/epics/02-auth-users-admin.md": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774",
     "kanban/epics/03-core-business.md": "3d1306e5a9443b63e23c9a2b50e646549a88b0ba8d3e7385452f43b49e42c8f8",
     "kanban/epics/04-invoices-wallet-contracts.md": "bc76f87142cad06f9d0feb3ab8d42728403a3bfa9f3f931a8636393cf1f85fb0",
@@ -5981,7 +5981,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-purchase-route-splitting",
@@ -5990,7 +5991,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/route-bundle-budgets.md",
@@ -6078,6 +6079,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -10148,7 +10157,8 @@
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "deployed_base_column_and_clock_verification",
@@ -10156,7 +10166,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/adr/001-base-column-exceptions.md",
@@ -10772,6 +10782,14 @@
                 "packages/db/src/schema/knowledge-bases.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -12765,7 +12783,8 @@
         ],
         "batches": [
           "release-0.6-native-seed-and-bootstrap-acceptance",
-          "release-0.6-admin-bootstrap-acceptance"
+          "release-0.6-admin-bootstrap-acceptance",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -12774,7 +12793,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "deploy/production/README.md",
@@ -12812,6 +12831,16 @@
           "checks": [
             "Four native PostgreSQL seed cases verify explicit credentials, one audited administrator, Argon2id hashing, concurrency and safe retry after audit failure.",
             "Twenty-three native forced-password cases and two selected HTTP staff authentication cases passed. They verify no session for the temporary sign-in, token replacement and consumption, password invalidation, and staff OTP enforcement. Thirty unselected delivery cases were skipped by the test filter."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
+            }
           ]
         }
       }
@@ -14197,7 +14226,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
-          "release-0.6-admin-bootstrap-acceptance"
+          "release-0.6-admin-bootstrap-acceptance",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -14233,7 +14263,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             }
           ],
           "checks": [
@@ -14335,6 +14365,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "Only the admin bootstrap and tested container base wording changes. The existing implementation, safeguards and unrelated requirements retain their scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -14715,7 +14753,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -14788,7 +14827,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2",
@@ -14915,6 +14954,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -22825,13 +22872,11 @@
         "line": 909,
         "story": "01-platform-infrastructure.md#spec-67a5e8a8c05f"
       },
-      "requirement": "- **T-05.04.04:** Create runbooks for rollback scenarios\n  - **Notes:** Runbooks: (1) Rollback code: redeploy previous Docker image, run migration rollback (reverse migration), verify. (2) Rollback config: activate previous safe config version. (3) Rollback data: restore PostgreSQL from backup + PITR if migration caused data loss. (4) Rollback feature: disable feature flag. Each runbook has severity, owner, steps, verification criteria.\n  - **Dependencies:** T-05.04.02\n  - **Complexity:** L\n  - **UI/UX:** N/A\n\n---",
-      "status": "partial",
+      "requirement": "- **T-05.04.04:** Create runbooks for rollback scenarios\n  - **Notes:** Runbooks: (1) Rollback code: verify schema compatibility before restoring the previous immutable app and web images. Keep compatible expand/migrate/contract migrations. For an incompatible schema, halt writers and use a verified roll-forward or an authorized, separately rehearsed database recovery that accounts for accepted writes. Use a reverse migration only when its candidate-specific rehearsal proves data and audit preservation. (2) Rollback config: activate a previous safe version through the current validation and authorization flow. (3) Rollback data: rehearse PostgreSQL backup and PITR on a separate target, reconcile accepted writes, then verify and authorize cutover. (4) Rollback feature: disable the capability and verify existing obligations and unaffected routes. Each runbook records severity, responsible roles, steps and verification criteria.\n  - **Dependencies:** T-05.04.02\n  - **Complexity:** L\n  - **UI/UX:** N/A\n\n---",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Four procedures are documented. Reconcile the reverse-migration clause with the deployed forward-only expand/migrate/contract workflow, or produce a verified candidate-specific reverse procedure that preserves committed writes. Production promotion and rollback rehearsal remain separate gates."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -22869,15 +22914,63 @@
           "apps/web/src/lib/maintenance-form.ts",
           "apps/web/src/pages/AdminMaintenancePage.tsx",
           "packages/api-client/src/openapi.generated.ts",
-          "packages/i18n/src/maintenance.ts"
+          "packages/i18n/src/maintenance.ts",
+          "kanban/epics/01-platform-infrastructure.md"
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-maintenance-recovery"
+          "release-0.6-maintenance-recovery",
+          "release-0.6-rollback-runbook-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "current-runbook-and-guard-verification",
+          "reviewed_sha": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+          "source_evidence": [
+            {
+              "path": "kanban/epics/01-platform-infrastructure.md",
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
+            },
+            {
+              "path": "AGENTS.md",
+              "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+            },
+            {
+              "path": "deploy/staging/release.sh",
+              "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+            },
+            {
+              "path": "deploy/staging/README.md",
+              "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+            },
+            {
+              "path": "deploy/staging/test_release_rollback.py",
+              "sha256": "837dcd9960f7fe11cfb227a485920b7c6ef78011a8d26fa96d40c850806dcf3f"
+            },
+            {
+              "path": "deploy/production/guarded-rollout.py",
+              "sha256": "5378d727e196ca6ab0b0163f39300623a11c67fff9376df825061d46cba335a4"
+            },
+            {
+              "path": "deploy/production/test_guarded_rollout.py",
+              "sha256": "d030334b1f7363a3ff85eaedbf77ed8496f127ed322a72e682b03d1040b1fe99"
+            },
+            {
+              "path": "docs/runbooks/database-restore.md",
+              "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+            }
+          ],
+          "checks": [
+            "The runbook defines severity, responsible roles, steps and verification for application, configuration, data and feature recovery.",
+            "The criterion follows the existing expand/migrate/contract convention. Previous images require a current schema check. An incompatible schema keeps writers stopped and requires a verified roll-forward or authorized, reconciled recovery.",
+            "Nine staging rollback tests and 17 guarded rollout tests passed. The existing isolated staging rehearsal independently demonstrated rejection of an incompatible app/schema pair and readiness of the preserved pair."
+          ]
+        }
       }
     },
     {
@@ -29648,7 +29741,8 @@
           "release-0.6-local-compose-storage",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
-          "release-0.6-admin-bootstrap-acceptance"
+          "release-0.6-admin-bootstrap-acceptance",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -29703,7 +29797,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw",
@@ -29756,6 +29850,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "Only the admin bootstrap and tested container base wording changes. The existing implementation, safeguards and unrelated requirements retain their scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -29817,7 +29919,8 @@
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -29826,7 +29929,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -29916,6 +30019,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -29972,7 +30083,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -29981,7 +30093,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -30031,6 +30143,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -30089,7 +30209,8 @@
           "release-0.6-admin-bootstrap-acceptance",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "migration-backed-development-workflow",
@@ -30098,7 +30219,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/development/database-migrations.md",
@@ -30188,6 +30309,14 @@
                 "package.json"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -30265,7 +30394,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -30339,7 +30469,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             }
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/environment-indicator.mrh0hhoy",
@@ -30576,6 +30706,14 @@
                 "apps/web/test/server.spec.ts"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -31256,7 +31394,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-service-workflow-recovery"
+          "release-0.6-service-workflow-recovery",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31340,7 +31479,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -31609,6 +31748,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The two additive workflow history and restore operations reuse the existing policy write transaction. All previous API paths and shared OpenAPI schema components are structurally identical. Existing workflow, verification and settings assertions remain and passed. Other dictionary entries and generated operation types retain their values."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -32806,7 +32953,8 @@
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-quarterly-storage-recovery"
+          "release-0.6-quarterly-storage-recovery",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -32846,7 +32994,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -32935,6 +33083,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -33116,7 +33272,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-local-staging-license-gate",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -33165,7 +33322,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             }
           ],
           "source_renewals": [
@@ -33582,6 +33739,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -33653,7 +33818,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -33697,7 +33863,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -33882,6 +34048,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -672466,7 +672640,8 @@
         ],
         "batches": [
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "reviewed-security-incident-runbook",
@@ -672478,7 +672653,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             },
             {
               "path": "docs/runbooks/security-incident.md",
@@ -672521,6 +672696,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -690526,7 +690709,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -690549,7 +690733,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             }
           ],
           "source_renewals": [
@@ -690818,6 +691002,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -707874,7 +708066,8 @@
           "release-0.6-staging-image-rollback",
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -707882,7 +708075,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -707926,6 +708119,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Added three scoped rate-limit recovery routes and browser controls. Existing contract paths match exactly. OTP issuance and resend share a database-calculated delivery deadline, verified by unchanged mounted expiry and delivery assertions."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -707960,7 +708161,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-rollback-runbook-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -707998,7 +708200,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "e3d03470c98af163141bb3da6df46fd34c8576076c09c05ba466068d4c7868ac"
+              "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
             },
             {
               "path": "docs/runbooks/credential-compromise.md",
@@ -708213,6 +708415,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         }
@@ -1060923,7 +1061133,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "c87654294e1ceee86f7a51c2ee119a92e59492634fde4c1ef1ab7bc8882fae3a"
+              "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
@@ -1061059,6 +1061269,14 @@
                 "Dockerfile.web"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-rollback-runbook-acceptance",
+              "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
             }
           ]
         },
@@ -1061076,7 +1061294,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-purchase-route-splitting",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-rollback-runbook-acceptance"
         ]
       }
     },
@@ -1232235,6 +1232454,101 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-rollback-runbook-acceptance": {
+      "batch": "release-0.6-rollback-runbook-acceptance",
+      "base_commit": "fa12fefb6773d56addd21fc1ca6997a7d95fc23e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-03.02.03",
+        "01-platform-infrastructure.md#T-06.04.01",
+        "01-platform-infrastructure.md#T-07.01.01",
+        "01-platform-infrastructure.md#T-07.01.02",
+        "01-platform-infrastructure.md#T-07.01.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.08.03.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.17.01.07",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "release-readiness#R-05.01"
+      ],
+      "changed_paths": [
+        "docs/runbooks/bad-deployment.md",
+        "kanban/epics/01-platform-infrastructure.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/epics/01-platform-infrastructure.md",
+          "sha256": "854f13a35e46a880099e776b51afb9196400d0675d235f013dc66063d017a5b3"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "621bb5b41bf688bb4f2e00d6c3ac68ce1b618c1b8b46e096b7aab061592fc136"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "e8902831bc0943720f4bf0f7f8cf10c8f05d3671689f0d111256040a841c93bf"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "8b3489d574dafda73a22d1ef872d0f1fd973556ad5aff280f6855d4f16aac955"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "2fa0043d1b319c8e2ee496d2be6ce88c20b9e0490ec99dcdb822413523c358a7"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "837dcd9960f7fe11cfb227a485920b7c6ef78011a8d26fa96d40c850806dcf3f"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "5378d727e196ca6ab0b0163f39300623a11c67fff9376df825061d46cba335a4"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "d030334b1f7363a3ff85eaedbf77ed8496f127ed322a72e682b03d1040b1fe99"
+        },
+        {
+          "path": "docs/runbooks/database-restore.md",
+          "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+        }
+      ],
+      "checks": [
+        "The runbook defines severity, responsible roles, steps and verification for application, configuration, data and feature recovery.",
+        "The criterion follows the existing expand/migrate/contract convention. Previous images require a current schema check. An incompatible schema keeps writers stopped and requires a verified roll-forward or authorized, reconciled recovery.",
+        "Nine staging rollback tests and 17 guarded rollout tests passed. The existing isolated staging rehearsal independently demonstrated rejection of an incompatible app/schema pair and readiness of the preserved pair."
+      ],
+      "limitations": [
+        "Accepts the rollback runbook requirement. The exact final candidate restore and rollback rehearsal, measured RPO/RTO and production approval are separate open gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollback-runbook-acceptance",
+      "execution_receipts": [
+        {
+          "file": "staging.log",
+          "sha256": "e49bad7eae395b7c5fe3b6adea621fc1b6402a6ef17ab0b742dc066717ee2509"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "9907f350a26753076ce9fc9e5a76790cfbae2e69640298b5c953d079686d96e3"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-schema-aware-staging-rollback/paired-rehearsal.log",
+          "sha256": "681dde43eaea0a4dbad6c008846af74618a38078c831de0de6531c96df3e70f8"
         }
       ]
     }

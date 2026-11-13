@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-13T16:15:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-13T16:19:25+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1258 | Accepted with unchanged source bindings. |
+| done | 1259 | Accepted with unchanged source bindings. |
 | verify | 1 | Existing work may be complete; inspect evidence before building. |
-| partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 6 | Named owner or external prerequisite. |
@@ -1051,7 +1051,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.04.01` | partial | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | partial | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
 | `01-platform-infrastructure.md#T-05.04.03` | partial | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
-| `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |
+| `01-platform-infrastructure.md#T-05.04.04` | done | Earlier deferred | Create runbooks for rollback scenarios |
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | partial | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | partial | Earlier deferred | Create quarterly disaster-recovery and restore exercise |

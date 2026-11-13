@@ -907,7 +907,7 @@ The PR gate MUST check all of the following, failing the PR if any fails:
   - **Complexity:** L
 
 - **T-05.04.04:** Create runbooks for rollback scenarios
-  - **Notes:** Runbooks: (1) Rollback code: redeploy previous Docker image, run migration rollback (reverse migration), verify. (2) Rollback config: activate previous safe config version. (3) Rollback data: restore PostgreSQL from backup + PITR if migration caused data loss. (4) Rollback feature: disable feature flag. Each runbook has severity, owner, steps, verification criteria.
+  - **Notes:** Runbooks: (1) Rollback code: verify schema compatibility before restoring the previous immutable app and web images. Keep compatible expand/migrate/contract migrations. For an incompatible schema, halt writers and use a verified roll-forward or an authorized, separately rehearsed database recovery that accounts for accepted writes. Use a reverse migration only when its candidate-specific rehearsal proves data and audit preservation. (2) Rollback config: activate a previous safe version through the current validation and authorization flow. (3) Rollback data: rehearse PostgreSQL backup and PITR on a separate target, reconcile accepted writes, then verify and authorize cutover. (4) Rollback feature: disable the capability and verify existing obligations and unaffected routes. Each runbook records severity, responsible roles, steps and verification criteria.
   - **Dependencies:** T-05.04.02
   - **Complexity:** L
   - **UI/UX:** N/A
