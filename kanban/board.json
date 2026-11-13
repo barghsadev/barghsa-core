@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T16:10:40+00:00",
+  "updated": "2026-11-13T16:15:11+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22232,7 +22232,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Preflight 43425084141 on 643867b4 independently reproduced all 848 package-scope rows, including the same 387 pending dispositions and 461 permitted entries, with no additions or removals. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Confirm their web scope and the unchanged review-required set on the final Linux amd64 images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -22289,7 +22289,8 @@
           "release-0.6-postgres-package-alignment",
           "release-0.6-postgres-restore-readback",
           "release-0.6-refreshed-license-review",
-          "release-0.6-license-inventory-reuse"
+          "release-0.6-license-inventory-reuse",
+          "release-0.6-web-license-delta"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -47554,7 +47555,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-license-review-roles",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-web-license-delta"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -47710,7 +47712,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "c4f1a07d5efade4b32f35b249b639202f56e1adf5ef0d046fae03e608a5b45c3"
+              "sha256": "11fe1873257336c20ce26e841c4e4ade4f082dc00d60d89e48d38b725c8a2b1e"
             }
           ],
           "checks": [
@@ -48210,6 +48212,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-web-license-delta",
+              "base_commit": "0808f448f1ad590d6babd4b9c98f5558a1749b22",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Additive web-runtime inventory and hosted receipt evidence. Existing license policy and accepted criteria are preserved."
             }
           ],
           "presentation_renewals": [
@@ -669580,7 +669590,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Hosted image job 131991434894 at b11f41263 reproduced all 848 exact package and scope rows. The later arm64 web fixture adds 11 allowlisted Apache-2.0 telemetry packages with their original notices. Confirm their web scope and the unchanged review-required set on the final Linux amd64 images.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts.",
         "Run the strict gate against the exact staging candidate. Local builds now enforce license dispositions before transfer and retain the report hash in the runtime receipt."
@@ -669635,7 +669645,8 @@
           "release-0.6-gate-readback",
           "release-0.6-postgres-restore-readback",
           "release-0.6-refreshed-license-review",
-          "release-0.6-local-staging-license-gate"
+          "release-0.6-local-staging-license-gate",
+          "release-0.6-web-license-delta"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -669779,7 +669790,8 @@
         "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
         "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
         "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately.",
-        "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence."
+        "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests. The promotion check verifies copied staged vulnerability, SBOM and license report bytes against the worker receipt and matches the recorded production registry platform IDs. Obtain the actual registry and separate retained stateful image evidence.",
+        "Hosted run 43456360315 binds all five image reports and CycloneDX SBOMs to their exact IDs and hashes. The later local Linux arm64 web fixture has its own image-ID-bound SBOM, zero high/critical findings and one medium zlib finding. Verify the final staging Linux amd64 images and separate production registry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -669826,7 +669838,8 @@
           "release-0.6-staging-image-scans",
           "release-0.6-portable-staging-images",
           "release-0.6-postgres-package-alignment",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-web-license-delta"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1232180,6 +1232193,48 @@
         {
           "file": "image-smoke.log",
           "sha256": "513c23d46ace422da3c19302a936cdff9937d4f4e3c74a5be65fa5767f5eb4f5"
+        }
+      ]
+    },
+    "release-0.6-web-license-delta": {
+      "batch": "release-0.6-web-license-delta",
+      "base_commit": "0808f448f1ad590d6babd4b9c98f5558a1749b22",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "11fe1873257336c20ce26e841c4e4ade4f082dc00d60d89e48d38b725c8a2b1e"
+        }
+      ],
+      "checks": [
+        "Downloaded hosted image job 131991434894 from preflight 43456360315 at b11f41263 and verified five exact image and report bindings. All 848 rows match the refreshed review inventory, including 387 review-required rows.",
+        "Verified the later local web image ID and arm64 platform, scanned metadata and all eleven installed Apache-2.0 license files. The same third-party versions are already present in the hosted app scope. Local scan recorded one medium zlib finding and zero high or critical findings.",
+        "The Markdown format check passed."
+      ],
+      "limitations": [
+        "The latest code requires an immutable Linux amd64 image run. Named exception dispositions and the strict final gate remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-web-license-delta",
+      "execution_receipts": [
+        {
+          "file": "verified-delta.json",
+          "sha256": "ea9be515507a0f80ab1122fc2fb0f167a44e37b7b53e5bf13b83ed9c96c2f23b"
+        },
+        {
+          "file": "verify.log",
+          "sha256": "84bc9fb8a6b480b1943bfb821b61acffbe22de6ce52496467627b926cd548304"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

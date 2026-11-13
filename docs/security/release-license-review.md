@@ -44,6 +44,27 @@ Named dispositions and the strict check on the final immutable images are
 required for release.
 [Hosted image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43299081923) · [Ubuntu source archive](https://security.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39-0ubuntu8.12.dsc)
 
+## Web telemetry supplement
+
+The hosted image job at `b11f41263` produced five image-bound reports. Its
+848 package and scope entries match the refreshed `c0487559` inventory by
+scope, package URL, observed license set, location and disposition. The
+report SHA-256 is
+`5c79a3829905120068b67ece13b76aa43a685c0d93b7467ff5e0dc928fd62fae`.
+[Hosted image job](https://github.com/barghsadev/barghsa-core/actions/runs/43456360315/job/131991434894).
+
+A subsequent Linux arm64 web fixture added 11 OpenTelemetry npm packages to
+the web runtime. Their exact versions and Apache-2.0 declarations match
+packages already in the hosted application image inventory. The fixture's
+CycloneDX SBOM identified all 11, and the original `LICENSE` file was
+read back from every installed package. Each of these web package entries
+passes the existing allowlist. The fixture scan found one medium zlib
+finding and zero high or critical findings. Its SBOM SHA-256 is
+`30cdbd1c2c7387e1cff56c3fce81762a2de562d2cc6d7c4c340ac49dd6548922`.
+The 387 hosted dispositions still require named sign-off. Confirm the
+telemetry package scopes, notices and scan results on the final immutable
+Linux amd64 images.
+
 ## Reviewer and approval
 
 The release gate accepts named owner or legal-reviewer sign-off on exact package exceptions. The owner can provide the policy approval once the stated obligations have been verified. For GPL/LGPL source and replacement questions, the recommended reviewer is a lawyer experienced in open-source software licensing. An internal compliance lead with access to that expertise can coordinate the review. OpenChain's guidance describes access to internal or external legal expertise and assignment of review and approval responsibilities. [OpenChain resource guidance](https://openchain-project.github.io/OpenChain-KWG/en/guide/iso5230_guide/2-relevant-tasks/2-resourced/).
