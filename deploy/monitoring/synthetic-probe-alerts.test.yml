@@ -1,6 +1,39 @@
-rule_files: [synthetic-probe-alerts.yml]
+rule_files: [staging-synthetic-expectation.yml, synthetic-probe-alerts.yml]
 evaluation_interval: 1m
+group_eval_order: [barghsa-staging-synthetic-expectation, barghsa-synthetic]
 tests:
+  - name: An enabled probe pages when discovery loses the target and clears when it returns
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1 1 stale _ _ _ 1 1'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0 60 stale _ _ _ 360 420'
+      - series: 'up{job="barghsa-synthetic",instance="other",environment="staging",database="other"}'
+        values: '1+0x7'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="other",environment="staging",database="other"}'
+        values: '0+60x7'
+      - series: 'up{job="barghsa-api",instance="api",environment="staging",database="core"}'
+        values: '1+0x7'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+      - eval_time: 4m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic runner stopped reporting
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 6m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
   - name: A verified certificate crosses the threshold once per scope and clears on loss of evidence or renewal
     interval: 1m
     input_series:
@@ -64,6 +97,19 @@ tests:
         exp_alerts: *certificate_warning
       - eval_time: 1m
         alertname: PublicTlsCertificateExpiring
+        exp_alerts: []
+  - name: A disabled scope with no discovered target does not page
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1+0x3'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0+60x3'
+      - series: 'up{job="barghsa-api",instance="api",environment="production",database="core"}'
+        values: '1+0x3'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: SyntheticProbeUnavailable
         exp_alerts: []
   - name: An executed failure pages after six minutes and clears on recovery
     interval: 1m

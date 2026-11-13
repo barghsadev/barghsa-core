@@ -1,6 +1,7 @@
 services:
   prometheus:
     volumes:
+      - ./staging-synthetic-expectation.yml:/etc/prometheus/optional/synthetic-expectation.yml:ro
       - type: bind
         source: ${BARGHSA_SYNTHETIC_TARGETS_DIR:?Set the protected synthetic target directory}
         target: /etc/prometheus/synthetic-targets

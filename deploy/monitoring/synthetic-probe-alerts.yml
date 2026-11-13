@@ -44,6 +44,10 @@ groups:
             (up{job="barghsa-synthetic",environment!="",database!=""} == 1)
             unless on (job, instance, environment, database) barghsa:synthetic_probe:fresh
           )
+          or (
+            (barghsa:synthetic_probe:expected{environment!="",database!=""} == 1)
+            unless on (environment, database) up{job="barghsa-synthetic"}
+          )
         for: 2m
         labels:
           severity: critical

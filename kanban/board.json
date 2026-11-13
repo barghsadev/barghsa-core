@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T14:12:09+00:00",
+  "updated": "2026-11-13T14:17:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -105882,7 +105882,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -106726,7 +106727,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -108896,6 +108897,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -112494,7 +112503,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "done",
@@ -112522,7 +112532,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -112923,6 +112933,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -113052,7 +113070,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -113072,7 +113091,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             }
           ],
           "checks": [
@@ -113229,6 +113248,14 @@
                 "deploy/monitoring/grafana-notifications-dashboard.json"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -124136,7 +124163,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -124332,7 +124360,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -125071,6 +125099,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -125490,7 +125526,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -125686,7 +125723,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -126425,6 +126462,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -126844,7 +126889,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -127040,7 +127086,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -127779,6 +127825,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -128199,7 +128253,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -128395,7 +128450,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -129134,6 +129189,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -129553,7 +129616,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -129749,7 +129813,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -130488,6 +130552,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -130917,7 +130989,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "done",
@@ -131053,7 +131126,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -131705,6 +131778,14 @@
                 "apps/api/src/provider-config/email-provider-config.controller.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -132122,7 +132203,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "done",
@@ -132282,7 +132364,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -132804,6 +132886,14 @@
                 "apps/api/src/provider-config/email-provider-config.controller.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -133091,7 +133181,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -133287,7 +133378,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -134026,6 +134117,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -577166,7 +577265,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "done",
@@ -577386,7 +577486,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -578009,6 +578109,14 @@
                 "apps/api/src/provider-config/sms-provider-config.controller.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -579914,7 +580022,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "status": "done",
@@ -580070,7 +580179,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -580832,6 +580941,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -679412,7 +679529,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -679460,7 +679578,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -679786,6 +679904,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -681547,7 +681673,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -681580,7 +681707,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             }
           ],
           "source_renewals": [
@@ -681793,6 +681920,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -681837,7 +681972,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -681893,7 +682029,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -682003,6 +682139,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -682528,7 +682672,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -682588,7 +682733,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -682809,6 +682954,14 @@
                 "deploy/monitoring/grafana-storage-uploads-dashboard.json"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -682852,7 +683005,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -682896,7 +683050,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -683195,6 +683349,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -683604,7 +683766,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -683624,7 +683787,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             }
           ],
           "checks": [
@@ -683841,6 +684004,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -684095,7 +684266,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -684135,7 +684307,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             }
           ],
           "checks": [
@@ -684330,6 +684502,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Added the loaded ClamAV timestamp probe, scoped alert and dashboard panel. Related scanner, worker, receiver, Compose and rule tests passed. Existing notification and scan behavior retains its previous acceptance."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ]
         }
@@ -691356,7 +691536,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent.",
+        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent. The staging overlay now declares an expected target independently of file discovery. Verify its recording rule when the approved target is installed.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
       ],
       "owner": null,
@@ -691379,14 +691559,16 @@
           "deploy/monitoring/synthetic-probe-alerts.yml",
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/staging-synthetic-expectation.yml"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-synthetic-staging-scrape",
           "release-0.6-tls-expiry-warning",
-          "release-0.6-gate-readback"
+          "release-0.6-gate-readback",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": null
       }
@@ -691442,7 +691624,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery.",
+        "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery. Include removal and restoration of the discovered target in the controlled reporting-outage rehearsal.",
         "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver."
       ],
       "owner": null,
@@ -691462,12 +691644,14 @@
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.ts",
           "deploy/monitoring/staging-synthetic.yml",
-          "docs/operations/notification-monitoring.md"
+          "docs/operations/notification-monitoring.md",
+          "deploy/monitoring/staging-synthetic-expectation.yml"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-synthetic-staging-scrape"
+          "release-0.6-synthetic-staging-scrape",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_acceptance": null
       }
@@ -1022552,7 +1022736,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1025392,6 +1025576,14 @@
                 "apps/api/src/provider-config/sms-provider-config.controller.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "presentation_renewals": [
@@ -1025790,7 +1025982,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1028007,7 +1028200,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+              "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -1030749,6 +1030942,14 @@
                 "apps/api/src/provider-config/sms-provider-config.controller.ts"
               ],
               "scope": "Provider lifecycle endpoints validate the optional empty body after the existing capability check. Native provider mutation cases preserved current authority, step-up, audit, rollback and credential masking. The generated API contract matched the committed contract."
+            },
+            {
+              "batch": "release-0.6-synthetic-target-loss",
+              "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbook adds the opt-in staging synthetic target expectation and describes discovery loss. Existing notification delivery, provider, and dashboard procedures retain their prior acceptance."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1031164,7 +1031365,8 @@
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
           "release-0.6-local-staging-license-gate",
-          "release-0.6-provider-lifecycle-input"
+          "release-0.6-provider-lifecycle-input",
+          "release-0.6-synthetic-target-loss"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1203048,6 +1203250,83 @@
         {
           "file": "openapi.log",
           "sha256": "6ba5670901270f4bcd04ad71c82701bb32c284af1a04dd982e8d0ea6206707fc"
+        }
+      ]
+    },
+    "release-0.6-synthetic-target-loss": {
+      "batch": "release-0.6-synthetic-target-loss",
+      "base_commit": "3cc8ba021f3dd87bcc2b1261a7a390b6b2739fe1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/staging-synthetic-expectation.yml",
+        "deploy/monitoring/staging-synthetic.yml",
+        "deploy/monitoring/synthetic-probe-alerts.test.yml",
+        "deploy/monitoring/synthetic-probe-alerts.yml",
+        "docs/operations/notification-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-synthetic-expectation.yml",
+          "sha256": "de5c8454bb722dc9f445c1a3f718cc615b2df1c077bba6b2b734f6ff32635fde"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic.yml",
+          "sha256": "2de9ef64c5189f27379db0a7f47a58194583398d7486bb03ea1c07f329919089"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "65d521b88ce0ddec277313922c5a9542db66294fb6007029fd9f795390284937"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "ee46e33f54a4b136ca2d313485cbdb0155f293879be3a3661547b57184ac1d1e"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "934acf927aca2caffcb813e2d648a748ce311ec3f155ddb934faa4ee34aa4c2b"
+        }
+      ],
+      "checks": [
+        "Promtool 3.15.0 passed seven synthetic rule scenarios. An enabled staging/core target that disappears from discovery raises SyntheticProbeUnavailable after two minutes. It clears when the target returns. A target in another database and an API scrape cannot suppress the alarm. A scope with no expectation and no target does not alarm.",
+        "The existing stale and failing scrape tests, executed-failure tests, and certificate warning checks passed. Compose resolved the expected rule to a read-only mount in the optional rules path. Promtool validated the expected-target and synthetic alert rule files."
+      ],
+      "limitations": [
+        "This is isolated rules and Compose evidence. The independent target, live Prometheus and Alertmanager readbacks, and approved pager delivery remain unverified."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-target-loss",
+      "execution_receipts": [
+        {
+          "file": "promtool.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "compose-and-rules.log",
+          "sha256": "c8cde40f1bdb9bdac6418f88867d5a62f1f16637b774557af2249c9720c1af42"
         }
       ]
     }

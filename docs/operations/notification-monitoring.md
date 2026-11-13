@@ -80,6 +80,11 @@ the staging and core labels and ingests only the probe result, completion
 timestamp and verified public certificate expiry from the exporter. Check that the `barghsa-synthetic` target is up
 and publishing fresh results before relying on its alerts. Verify a controlled
 failure, a reporting outage, both recoveries and the authorized pager receipt.
+The overlay also declares that staging expects a synthetic target. If file
+discovery loses the target, the reporting-outage alert fires after two minutes
+and clears when Prometheus discovers the target again. A discovered target
+with a failing scrape or stale results still triggers the reporting-outage
+rule.
 [Synthetic runner setup](../../deploy/production/README.md#synthetic-health-probes)
 
 ### Operator dashboards
