@@ -93,16 +93,31 @@ inside both indexes are relative to the same protected approval package.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`
-  to the manifest used in that exercise. The check enforces backup age under
-  24 hours, a matching database system, verified table fingerprints, and the
-  measured database RPO and RTO limits. Keep the core-service rehearsal and
-  independent source evidence with the approval package.
+  to the manifest used in that exercise. Add `core_service_report` using the
+  format below. The check enforces backup age under 24 hours, a matching database
+  system, verified table fingerprints, and the measured recovery limits.
 - Under `staging_and_telegram`, point `deployment` to the completed staging
   queue `job.json`, `summary` to the confirmed release-worker message receipt,
   and `album` to its image receipt when available. The check matches the exact
   candidate, channel, Persian notes and queued image hashes. If the queue
   recorded an optional image failure, keep the warning and resolve any unknown
   Telegram delivery through the [staging runbook](../staging/README.md).
+
+In `core_service_report`, set `status` to `passed`, `scope` to
+`core_service_recovery`, `candidate_sha` to the full candidate SHA, and
+`database_restore_sha256` to the SHA-256 of the original `restore_report` file.
+Set `started_at` to the start of the isolated recovery and `completed_at` to
+its finish, with timezone offsets. The verifier calculates elapsed time from
+these timestamps and enforces the 60-minute core-service limit.
+
+The `checks` object must contain `configuration_restore`, `object_restore`,
+`readiness`, `login`, `dashboard`, `wallet`, `electricity`, `saving`, `solar`,
+and `consultation`. Record `status`, `verified_at`, `evidence` and
+`evidence_sha256` for each check. Use the relative path and hash of the actual
+operator output from the [isolated exercise](../../docs/operations/quarterly-recovery-exercise.md).
+Verify readiness after the database, configuration and object restores. Verify
+login before the owned customer journeys. Keep the independent baseline evidence
+with the package for owner review.
 
 ```sh
 python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \

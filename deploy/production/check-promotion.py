@@ -31,6 +31,10 @@ OPERATIONAL_RECEIPTS = (
     'release_notes_and_on_call',
     'staging_and_telegram',
 )
+CORE_RECOVERY_CHECKS = frozenset({
+    'configuration_restore', 'object_restore', 'readiness', 'login', 'dashboard', 'wallet',
+    'electricity', 'saving', 'solar', 'consultation',
+})
 
 
 def command(label, *args):
@@ -111,6 +115,14 @@ def receipt_path(directory, name, kind):
     return path
 
 
+def file_digest(path):
+    digest = hashlib.sha256()
+    with path.open('rb') as receipt:
+        for block in iter(lambda: receipt.read(1024 * 1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def index_receipts(index_path, sha):
     index = json.loads(index_path.read_text())
     receipts = index['receipts']
@@ -121,11 +133,7 @@ def index_receipts(index_path, sha):
     paths, hashes = {}, {}
     for kind, name in receipts.items():
         path = paths[kind] = receipt_path(directory, name, kind)
-        digest = hashlib.sha256()
-        with path.open('rb') as receipt:
-            for block in iter(lambda: receipt.read(1024 * 1024), b''):
-                digest.update(block)
-        hashes[kind] = digest.hexdigest()
+        hashes[kind] = file_digest(path)
     return paths, hashes
 
 
@@ -163,9 +171,46 @@ def matches(pattern, value):
     return isinstance(value, str) and bool(re.fullmatch(pattern, value))
 
 
-def verify_backup_receipts(index_path, path, fingerprint, now):
+def verify_core_recovery(core, database, database_digest, directory, sha, now):
+    if (core.get('status') != 'passed' or core.get('scope') != 'core_service_recovery'
+            or core.get('candidate_sha') != sha
+            or core.get('database_restore_sha256') != database_digest):
+        raise ValueError('Core-service recovery must identify this candidate and database exercise')
+    started = epoch(core.get('started_at'))
+    completed = epoch(core.get('completed_at'))
+    database_start = epoch(database.get('started_at'))
+    database_ready = database_start + database['database_rto_seconds']
+    if (not started <= database_start <= database_ready <= completed <= now
+            or not 0 < completed - started <= 3600):
+        raise ValueError('Core-service recovery exceeds its 60-minute limit or has inconsistent timing')
+    checks = core.get('checks')
+    if not isinstance(checks, dict) or set(checks) != CORE_RECOVERY_CHECKS:
+        raise ValueError('Core-service recovery must record every required check')
+    times, evidence = {}, {}
+    for name, check in checks.items():
+        if not isinstance(check, dict) or check.get('status') != 'passed':
+            raise ValueError('A required core-service recovery check did not pass')
+        verified = times[name] = epoch(check.get('verified_at'))
+        if not started <= verified <= completed:
+            raise ValueError('A core-service recovery check is outside the verified exercise window')
+        path = receipt_path(directory, check.get('evidence'), name)
+        if path not in evidence:
+            evidence[path] = file_digest(path)
+        if evidence[path] != check.get('evidence_sha256'):
+            raise ValueError('A core-service recovery evidence file changed')
+    if (times['readiness'] < max(database_ready, times['configuration_restore'], times['object_restore'])
+            or times['login'] < times['readiness']
+            or any(times[name] < times['login'] for name in CORE_RECOVERY_CHECKS - {
+                'configuration_restore', 'object_restore', 'readiness', 'login',
+            })):
+        raise ValueError('Core-service recovery must verify the restored application before service journeys')
+    return round(completed - started, 3)
+
+
+def verify_backup_receipts(index_path, path, fingerprint, now, sha):
     data, digests = receipt_bundle(index_path, path, fingerprint,
-                                  ('backup_job', 'backup_manifest', 'restore_manifest', 'restore_report'))
+                                  ('backup_job', 'backup_manifest', 'restore_manifest', 'restore_report',
+                                   'core_service_report'))
     job, manifest = data['backup_job'], data['backup_manifest']
     restored, report = data['restore_manifest'], data['restore_report']
     for value in (manifest, restored):
@@ -200,8 +245,11 @@ def verify_backup_receipts(index_path, path, fingerprint, now):
         or not matches(r'[a-f0-9]{64}', table.get('sha256')) for table in tables.values()
     ):
         raise ValueError('Restore report is missing verified table fingerprints')
+    core_rto = verify_core_recovery(data['core_service_report'], report, digests['restore_report'],
+                                    index_path.resolve().parent, sha, now)
     return {'backup_age_seconds': round(now - completed, 3), 'rpo_seconds': report['rpo_seconds'],
-            'database_rto_seconds': report['database_rto_seconds'], 'sha256': digests}
+            'database_rto_seconds': report['database_rto_seconds'], 'core_service_rto_seconds': core_rto,
+            'sha256': digests}
 
 
 def verify_release_receipts(index_path, path, fingerprint, version, sha):
@@ -273,7 +321,7 @@ def main():
             counts = verify_browser_rollup(args.browser_run, directory)
         verify_staging(version, sha)
         backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
-                                        hashes['backup_and_restore'], time.time())
+                                        hashes['backup_and_restore'], time.time(), sha)
         release = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
                                           hashes['staging_and_telegram'], version, sha)
     except ValueError as error:

@@ -161,27 +161,40 @@ class StructuredReceiptTest(unittest.TestCase):
                     'size': 100, 'sha256': 'b' * 64, 'started_at': at(self.completed - 120),
                     'completed_at': at(self.completed)}
         report = {'status': 'passed', 'scope': 'database_restore', 'backup': older, 'rpo_seconds': 300,
-                  'database_rto_seconds': 3600, 'core_service_rto_seconds': None,
+                  'database_rto_seconds': 3300, 'core_service_rto_seconds': None,
                   'started_at': '2026-11-09T03:00:00Z', 'replayed_transaction_time': '2026-11-09T02:00:00Z',
                   'tables': {table: {'count': 2, 'sha256': 'c' * 64} for table in ('users', 'orders', 'invoices')}}
+        checks = {}
+        for name in promotion.CORE_RECOVERY_CHECKS:
+            path = self.root / f'{name}.log'
+            path.write_text(f'Controlled {name} recovery evidence\n')
+            checks[name] = {'status': 'passed', 'verified_at': '2026-11-09T03:59:00Z',
+                            'evidence': path.name, 'evidence_sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
         return {
             'backup_job': {'status': 'passed', 'phase': 'retention', 'backup': label,
                            'started_at': at(self.completed - 121)},
             'backup_manifest': manifest,
             'restore_manifest': {**manifest, 'label': older, 'started_at': older, 'completed_at': '2026-11-09T01:05:00Z'},
             'restore_report': report,
+            'core_service_report': {
+                'status': 'passed', 'scope': 'core_service_recovery', 'candidate_sha': SHA,
+                'database_restore_sha256': hashlib.sha256(json.dumps(report).encode()).hexdigest(),
+                'started_at': '2026-11-09T03:00:00Z', 'completed_at': '2026-11-09T04:00:00Z',
+                'checks': checks,
+            },
         }
 
     def test_backup_requires_fresh_success_and_a_verified_restore_for_the_same_database(self):
         entries = self.backup()
         fingerprint = self.write_bundle(entries)
-        result = promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now)
+        result = promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
         self.assertEqual(result['backup_age_seconds'], 3600)
         self.assertEqual(result['rpo_seconds'], 300)
-        self.assertEqual(result['database_rto_seconds'], 3600)
+        self.assertEqual(result['database_rto_seconds'], 3300)
+        self.assertEqual(result['core_service_rto_seconds'], 3600)
         self.assertEqual(set(result['sha256']), set(entries))
         with self.assertRaisesRegex(ValueError, 'less than 24 hours'):
-            promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.completed + 86400)
+            promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.completed + 86400, SHA)
 
         for artifact, field, value, expected in (
             ('backup_job', 'status', 'failed', 'successful verified backup'),
@@ -191,13 +204,36 @@ class StructuredReceiptTest(unittest.TestCase):
             ('restore_report', 'rpo_seconds', 300.001, 'recovery limits'),
             ('restore_report', 'database_rto_seconds', None, 'recovery limits'),
             ('restore_report', 'tables', {}, 'table fingerprints'),
+            ('core_service_report', 'candidate_sha', 'b' * 40, 'identify this candidate'),
+            ('core_service_report', 'database_restore_sha256', 'd' * 64, 'identify this candidate'),
+            ('core_service_report', 'completed_at', '2026-11-09T04:00:00.001Z', '60-minute limit'),
         ):
             with self.subTest(field=field):
                 bad = deepcopy(entries)
                 bad[artifact][field] = value
                 fingerprint = self.write_bundle(bad)
                 with self.assertRaisesRegex(ValueError, expected):
-                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now)
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_requires_core_recovery_journeys_and_their_original_evidence(self):
+        entries = self.backup()
+        core = entries.pop('core_service_report')
+        fingerprint = self.write_bundle(entries)
+        with self.assertRaisesRegex(ValueError, 'structured receipt index'):
+            promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+        entries['core_service_report'] = core
+        for name, field, value, message in (
+            ('saving', 'status', 'failed', 'did not pass'),
+            ('solar', 'verified_at', '2026-11-09T03:50:00Z', 'before service journeys'),
+            ('electricity', 'evidence', '../outside.log', 'invalid receipt'),
+            ('consultation', 'evidence_sha256', 'e' * 64, 'evidence file changed'),
+        ):
+            with self.subTest(check=name):
+                bad = deepcopy(entries)
+                bad['core_service_report']['checks'][name][field] = value
+                fingerprint = self.write_bundle(bad)
+                with self.assertRaisesRegex(ValueError, message):
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
     def release(self):
         (self.root / 'package.json').write_text('{"version":"0.9.0"}')

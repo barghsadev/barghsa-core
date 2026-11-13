@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T13:40:13+00:00",
+  "updated": "2026-11-13T13:44:46+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8167,7 +8167,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8187,7 +8188,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8381,6 +8382,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -12334,7 +12343,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -12346,7 +12356,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12611,6 +12621,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -19330,7 +19348,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-pilot-post-retirement-rollback"
+          "release-0.6-pilot-post-retirement-rollback",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19342,7 +19361,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19490,6 +19509,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -19550,7 +19577,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-pilot-post-retirement-rollback"
+          "release-0.6-pilot-post-retirement-rollback",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -19562,7 +19590,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -19710,6 +19738,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -21616,7 +21652,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Validate the final v0.9.0 staging, Telegram, daily backup and database exercise receipts with the promotion check. Bind that checked report, actual image and off-server backup readbacks, core-service recovery and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
+        "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. Bind the checked report, actual image and off-server backup readbacks, and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks."
       ],
       "owner": null,
@@ -21656,7 +21692,8 @@
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": null
       }
@@ -22101,7 +22138,7 @@
       "launch_required": true,
       "remaining": [
         "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
-        "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts."
+        "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files."
       ],
       "owner": null,
       "depends_on": [],
@@ -22140,7 +22177,8 @@
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-hosted-quarterly-storage-recovery",
           "release-0.6-quarterly-storage-schedule-activation",
-          "release-0.6-quarterly-manual-exercise"
+          "release-0.6-quarterly-manual-exercise",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": null
       }
@@ -31394,7 +31432,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-promotion-receipt-binding",
-          "release-0.6-pilot-post-retirement-rollback"
+          "release-0.6-pilot-post-retirement-rollback",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -31415,7 +31454,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -31812,6 +31851,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Pilot recovery now covers a failed final smoke after previous-slot retirement. The prior image and healthy containers are verified before traffic restoration. README changes cover the recovery step only. Eleven focused tests passed and the native TLS proxy check verified the route before candidate shutdown."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -33898,7 +33945,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -33926,7 +33974,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             }
           ],
           "checks": [
@@ -34078,6 +34126,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -650096,7 +650152,8 @@
           "deploy/production/test_compose_with_credentials.py"
         ],
         "batches": [
-          "release-0.6-runtime-secret-resolution"
+          "release-0.6-runtime-secret-resolution",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -650108,7 +650165,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -650148,6 +650205,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -671678,7 +671743,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -671700,11 +671766,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "3f9bab7e21af8bebe85157cca7ecfff397eabb817b0c033c2593f7863af791ff"
+              "sha256": "1676dbfca1ca79bf72b86da0c3ebe3dee39765d698b59907f1428c44a17e5ea9"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -671909,6 +671975,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -672343,7 +672418,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -672365,15 +672441,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "3f9bab7e21af8bebe85157cca7ecfff397eabb817b0c033c2593f7863af791ff"
+              "sha256": "1676dbfca1ca79bf72b86da0c3ebe3dee39765d698b59907f1428c44a17e5ea9"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -672672,6 +672748,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -672784,7 +672870,8 @@
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-release-markers",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -672795,7 +672882,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -673036,6 +673123,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -673504,7 +673599,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -673525,7 +673621,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -673726,6 +673822,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -673767,7 +673871,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -673788,7 +673893,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -673989,6 +674094,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -680078,7 +680191,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -680102,7 +680216,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -680291,6 +680405,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -689839,7 +689961,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -689887,7 +690010,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -690064,6 +690187,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -690336,7 +690467,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -690384,7 +690516,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "360fbdd67815fdb076f1672e0fbec339ec90ec2ec65bf588c9b9e977d7171656"
+              "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -690592,6 +690724,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a read-only profile inventory check to synthetic mode. Traffic ramp, authenticated rollout smoke and observation modes are unchanged and their 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -691643,7 +691783,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -691663,7 +691804,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -691777,6 +691918,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -691877,7 +692026,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -691897,7 +692047,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -692011,6 +692161,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -692049,7 +692207,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-core-recovery-receipt"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -692069,7 +692228,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+              "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -692183,6 +692342,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-core-recovery-receipt",
+              "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion check adds the existing core-service recovery requirement to the protected backup receipt and documentation. The other promotion checks, deployment controls and existing acceptance assertions remain in place. Ten focused promotion tests passed."
             }
           ]
         }
@@ -1035717,7 +1035884,7 @@
       "launch_required": true,
       "remaining": [
         "Verify topology, TLS/hostname checks, firewall, secrets, encrypted off-server backups and storage retention.",
-        "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
+        "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO. The approval check now verifies core-service elapsed time and the four service journey receipts alongside the database exercise.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "The reactivated same-origin favicon was verified in Chromium and WebKit on staging v0.5.1. The API observed zero image reports and one separate inline style report between activation and 13:28:57 UTC. The pinned Sonner patch resolved the earlier native inline-style issue locally. Verify the exact staged fix, complete a representative full-week report-only review and exercise the customer and staff journeys before enforcement.",
@@ -1035767,7 +1035934,8 @@
           "release-0.6-sonner-csp-style-insertion",
           "release-0.6-staging-favicon-live-recheck",
           "release-0.6-staging-favicon-later-activation",
-          "release-0.6-staging-favicon-reactivation"
+          "release-0.6-staging-favicon-reactivation",
+          "release-0.6-core-recovery-receipt"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1201781,6 +1201949,75 @@
         {
           "file": "web-typecheck.log",
           "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d"
+        }
+      ]
+    },
+    "release-0.6-core-recovery-receipt": {
+      "batch": "release-0.6-core-recovery-receipt",
+      "base_commit": "8015bc452ccf0c3109e8fd53123d5592cb3470ac",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "74fbc4ebd2ff66e732f1e64548b0f4bf4c402c35f78b04684a904f35426f0f02"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "0e6476684c26bb89bae299b261d05dc7f2d499a90e6f56a041d6282f0f55b3a0"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "1676dbfca1ca79bf72b86da0c3ebe3dee39765d698b59907f1428c44a17e5ea9"
+        },
+        {
+          "path": "docs/operations/quarterly-recovery-exercise.md",
+          "sha256": "124d177ec579c95cf9eb43672a782823083df26fd4fc9daf657d3a0192b3bfc1"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "6d58774171678959d71eefdcd36bd42d32ad4911a2d5482c84d551708858fd38"
+        }
+      ],
+      "checks": [
+        "The first-launch promotion check now requires a candidate-bound core-service rehearsal receipt alongside the native database restore report. It checks the database receipt hash, relative evidence paths and exact hashes, and the verified order of restore, readiness, login and all four service journeys.",
+        "The verifier measures the whole core-service interval from the recorded start and completion, including database recovery, against the existing 60-minute limit. The separate database RPO and RTO checks are retained.",
+        "Ten focused promotion tests passed, including rejection of missing core evidence, incorrect candidate or database hash, failed journeys, invalid paths, changed files, journey checks before login, and a time above the existing limit."
+      ],
+      "limitations": [
+        "The tests use controlled receipts. Production-equivalent restore, approved backup and isolation prerequisites, live measurement, candidate-specific evidence and owner authorization remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-core-recovery-receipt",
+      "execution_receipts": [
+        {
+          "file": "promotion.log",
+          "sha256": "3c3ae0732e4bc0064fc0a08e4ee6395f1c97f3ef32da02170909a9d946ab5457"
         }
       ]
     }
