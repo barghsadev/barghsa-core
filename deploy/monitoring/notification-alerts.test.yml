@@ -1,5 +1,5 @@
 {
-  'rule_files': ['notification-alerts.yml'],
+  'rule_files': ['notification-alerts.yml', 'staging-worker-alerts.yml'],
   'evaluation_interval': '1m',
   'tests':
     [
@@ -73,6 +73,86 @@
                 [{ 'exp_labels': *clamav_labels, 'exp_annotations': *clamav_annotations }],
             },
             { 'eval_time': '6m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'ClamAV alert reports an absent metric on one expected healthy worker and resolves when it returns',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'up{job="barghsa-worker",environment="staging",database="core",instance="a",clamav_signature_monitoring="required"}',
+              'values': '1+0x7',
+            },
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="a"}',
+              'values': '_ _ _ _ _ _ 300 300',
+            },
+            {
+              'series': 'up{job="barghsa-worker",environment="staging",database="core",instance="b",clamav_signature_monitoring="required"}',
+              'values': '1+0x7',
+            },
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="b"}',
+              'values': '60+0x7',
+            },
+            {
+              'series': 'up{job="barghsa-worker",environment="production",database="no-scanner",instance="c"}',
+              'values': '1+0x7',
+            },
+            {
+              'series': 'up{job="barghsa-worker",environment="production",database="unreachable",instance="d",clamav_signature_monitoring="required"}',
+              'values': '0+0x7',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '4m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+            {
+              'eval_time': '5m',
+              'alertname': 'ClamAvSignaturesStale',
+              'exp_alerts':
+                [{ 'exp_labels': *clamav_labels, 'exp_annotations': *clamav_annotations }],
+            },
+            { 'eval_time': '6m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'Worker availability keeps its existing labels with the scanner expectation enabled',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'up{job="barghsa-worker",environment="staging",database="core",instance="a",clamav_signature_monitoring="required"}',
+              'values': '0 0 1',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'WorkerUnavailable', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'WorkerUnavailable',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'barghsa-worker',
+                        'environment': 'staging',
+                        'database': 'core',
+                        'instance': 'a',
+                        'severity': 'critical',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'Background worker cannot be scraped',
+                        'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '2m', 'alertname': 'WorkerUnavailable', 'exp_alerts': [] },
           ],
       },
       {

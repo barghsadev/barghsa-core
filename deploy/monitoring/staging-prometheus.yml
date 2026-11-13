@@ -33,6 +33,10 @@ scrape_configs:
         labels:
           environment: staging
           database: core
+          clamav_signature_monitoring: required
+    metric_relabel_configs:
+      - action: labeldrop
+        regex: clamav_signature_monitoring
   - job_name: barghsa-synthetic
     scheme: https
     follow_redirects: false

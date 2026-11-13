@@ -4,6 +4,16 @@ A healthy daemon must also have current signature data. Compare the daemon's ver
 
 The worker reads ClamD's private `VERSION` response every 30 seconds and exports the loaded signature database's UTC build time. The staging and production scanner services run in UTC. `ClamAvSignaturesStale` opens one P2 alert per environment and database after five minutes with a missing or invalid build time, or signatures at least 48 hours old. Compare the mirror, archive signatures and loaded version. Confirm the alert clears after a current database loads. [Storage and Uploads dashboard](../../deploy/monitoring/grafana-storage-uploads-dashboard.json) · [ClamD protocol](https://docs.clamav.net/manual/Usage/ClamdProtocol.html)
 
+Set the scrape target label `clamav_signature_monitoring: required` on
+workers expected to publish ClamAV signature data. Staging declares it on its
+worker target. Drop that label from scraped samples with metric relabeling
+to preserve existing alert identities. Prometheus retains the label on its
+generated `up` series. The P2 alert fires when that worker is reachable and
+omits the metric for five minutes. The worker availability alert covers a
+failed scrape and excludes the new label from its identity. Apply the
+Prometheus rules and target label with the worker
+release that enables signature monitoring.
+
 If FreshClam receives HTTP 403, preserve the vendor's cooldown and investigate the response. Resume after the cooldown or switch to an approved private mirror with its own official upstream. Restrict access to the scanner hosts, verify signatures and freshness before reload, and alert on overdue updates. [ClamAV private mirror documentation](https://docs.clamav.net/appendix/CvdPrivateMirror.html)
 
 ## Staging mirror

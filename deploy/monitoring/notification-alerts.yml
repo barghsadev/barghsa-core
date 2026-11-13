@@ -149,6 +149,11 @@ groups:
             (barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} == 0)
             or (time() - barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} >= 172800)
             or (barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} > time() + 300)
+            or (
+              up{clamav_signature_monitoring="required",environment=~"staging|production",database!=""} == 1
+              unless on (job, instance, environment, database)
+                barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""}
+            )
           )
         for: 5m
         labels:
