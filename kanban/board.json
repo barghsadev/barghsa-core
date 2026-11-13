@@ -16857,7 +16857,8 @@
         "Protected staging migrations can now create a verified encrypted checkpoint after quiescing writers. The native PostgreSQL image passed backup upload and isolated recovery over HTTPS. Configure a dedicated replication role and the approved protected destination and key. The live scheduled backup, WAL/PITR and pager evidence remain open.",
         "The staging PostgreSQL Compose overlay now signs and encrypts WAL using the existing archiver. The isolated HTTPS fixture on the exact Ubuntu image uploaded a completed WAL segment and recovered the requested target with the earlier commit present and the later one absent. Provision the live protected destination, key, schedule and monitored retention to close this task.",
         "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open.",
-        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required."
+        "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
+        "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -16942,7 +16943,8 @@
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
-          "release-0.6-hosted-compose-fixtures"
+          "release-0.6-hosted-compose-fixtures",
+          "release-0.6-live-operational-gate-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -716329,7 +716331,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Provision the approved independent HTTPS heartbeat receiver and independent P1 on-call route per environment and database. Enable the protected monitoring overlay, verify consecutive actual delivery, and record the receiver’s missing-heartbeat page and resumed recovery. The local native rehearsal measured an alert sender outage and resumed HTTPS delivery."
+        "Provision the approved independent HTTPS heartbeat receiver and independent P1 on-call route per environment and database. Enable the protected monitoring overlay, verify consecutive actual delivery, and record the receiver’s missing-heartbeat page and resumed recovery. The local native rehearsal measured an alert sender outage and resumed HTTPS delivery.",
+        "The running v0.5.1 Prometheus had no OperationsWatchdog rule at the readback. Actuate only after an approved independent heartbeat destination and pager are provisioned, then verify missing-heartbeat and recovery receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -716344,7 +716347,8 @@
           "docs/runbooks/alert-delivery.md"
         ],
         "batches": [
-          "release-0.6-alert-delivery-watchdog"
+          "release-0.6-alert-delivery-watchdog",
+          "release-0.6-live-operational-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -716659,7 +716663,8 @@
         "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts.",
         "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open.",
         "The affected native test job 132178297496 at d19812d0a passed 46 operations alert tests. Staged evaluation and real P1 and P2 destination receipts remain open.",
-        "Isolated actual Alertmanager delivered P1 fast and P2 slow burn firing and recovery to different TLS fixtures and retained the protected operations route. Deployed scrape, alerts, approved page and team/task receipts remain open."
+        "Isolated actual Alertmanager delivered P1 fast and P2 slow burn firing and recovery to different TLS fixtures and retained the protected operations route. Deployed scrape, alerts, approved page and team/task receipts remain open.",
+        "The running v0.5.1 monitoring stack had healthy API and worker targets but no fast or slow burn-rate rule. Apply the current rule and receiver on the accepted staging candidate and verify protected receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -716690,7 +716695,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-priority-routing",
-          "release-0.6-published-d19812d0a"
+          "release-0.6-published-d19812d0a",
+          "release-0.6-live-operational-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -724511,7 +724517,8 @@
         "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required.",
         "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required.",
         "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open.",
-        "The independent probe now records dependency degradation as readiness failure and skips authentication. All nine local cases passed. Install on the approved runner and verify live observations."
+        "The independent probe now records dependency degradation as readiness failure and skips authentication. All nine local cases passed. Install on the approved runner and verify live observations.",
+        "The running v0.5.1 Prometheus had exactly the API and worker targets and no synthetic completion time series. Approved runner and authenticated fixture provisioning remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -724547,7 +724554,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-synthetic-result-completeness",
           "release-0.6-rollout-api-revision",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-live-operational-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -1082767,7 +1082775,8 @@
         "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open.",
         "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open.",
         "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open.",
-        "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending."
+        "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending.",
+        "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -1082831,7 +1082840,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-live-operational-gate-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1260082,6 +1260092,57 @@
         {
           "file": "seaweedfs-final.log",
           "sha256": "0748e39791867f4e6d2ac53faac6f1738ec9f5a6c4398f9199b1e31a7c8aea48"
+        }
+      ]
+    },
+    "release-0.6-live-operational-gate-readback": {
+      "batch": "release-0.6-live-operational-gate-readback",
+      "base_commit": "1f4717dba2c15f76bad9b5c6c1ac86084855c5bf",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "06-security-testing-observability.md#T-06.15.01.07",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "21608eb456d27bf658035782992109a658d906dbba6a84c62c8b07866a0983e4"
+        },
+        {
+          "path": "deploy/monitoring/staging-watchdog.yml",
+          "sha256": "36a6b9b92960c0c08d296e0e1a24b0a098ce06742b0e583255bcd5853e7b8137"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic.yml",
+          "sha256": "2de9ef64c5189f27379db0a7f47a58194583398d7486bb03ea1c07f329919089"
+        }
+      ],
+      "checks": [
+        "Read-only private Prometheus query verified live targets, rules and series. Public HTTPS and the release queue matched exact v0.5.1 commit 2c8d502ab. Protected backup file presence was checked without reading credentials."
+      ],
+      "limitations": [
+        "This is the current v0.5.1 deployment. It establishes the exact operational gaps only. Candidate topology, real delivery, backup and recovery still require approved configuration and live rehearsal."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-live-operational-gate-readback",
+      "execution_receipts": [
+        {
+          "file": "staging-monitoring.json",
+          "sha256": "948de4602dc2a419b2f9532989bcd3fcfa5fb2560278f6ed500e4a9a7bfcf3a4"
+        },
+        {
+          "file": "live-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "queue.json",
+          "sha256": "cf7bf3144c7c6e7da76ed492135c81328ea12f9c8362faa79fbb49c1e8d2f330"
         }
       ]
     }
