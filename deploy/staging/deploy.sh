@@ -5,6 +5,8 @@ umask 077
 receipt=${1:-}
 bundle_dir=${2:-}
 bundle_manifest_sha=${3:-}
+retained_scans=${4:-}
+retained_sha=${5:-}
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$root"
 if [[ -n $(git status --porcelain) ]]; then
@@ -57,6 +59,10 @@ if [[ -n "$stateful" ]]; then
   }
   echo 'Keeping the existing PostgreSQL and ClamAV images and volumes' >&2
 else
+  if [[ -n "$retained_scans" || -n "$retained_sha" ]]; then
+    echo 'First staging install scans its newly built stateful images' >&2
+    exit 1
+  fi
   if [[ -n "$bundle_dir" ]]; then
     echo 'The application image bundle needs an initialized staging database and scanner' >&2
     exit 1
@@ -73,6 +79,13 @@ fi
   echo 'Invalid PostgreSQL or ClamAV image ID' >&2
   exit 1
 }
+if [[ -n "$stateful" ]]; then
+  if [[ -z "$retained_scans" || -z "$retained_sha" ]]; then
+    echo 'Initialized staging requires --retained-scans. Supply the passing evidence when retrying this job.' >&2
+    exit 1
+  fi
+  python3 deploy/staging/release-queue.py verify-retained-scans "$retained_scans" "$postgres_id" "$clamav_id" "$retained_sha"
+fi
 
 if [[ -z "$bundle_dir" ]]; then
   docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
@@ -168,6 +181,8 @@ verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id"
   --postgres-id "$postgres_id" --clamav-id "$clamav_id" --release-log "$release_tmp/release.log" --scan-dir "$scan_dir")
 if [[ -z "$stateful" ]]; then
   verify+=(--includes-stateful)
+else
+  verify+=(--retained-scans "$retained_scans" --retained-sha "$retained_sha")
 fi
 if [[ -n "$receipt" ]]; then
   verify+=(--receipt "$receipt")

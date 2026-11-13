@@ -12614,7 +12614,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -12801,6 +12801,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -19934,7 +19942,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20091,6 +20099,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -21774,7 +21790,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             },
             {
               "path": "package.json",
@@ -22032,6 +22048,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The PostgreSQL Prometheus rules use the existing thresholds and add a scoped database alert group, read-only mounts, allowed alert identities and recovery links. Existing rules, receiver authorization, persistence, alert routing and CI assertions are preserved. All mounted rules and all seven CI fixture suites pass. Worker and shared focused tests, typecheck, lint and formatting pass."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -23362,7 +23386,8 @@
         "Rehearse the staging smoke on the frozen candidate in isolation and verify the release entry point rejects an unready immutable commit. The actual release worker job and live verification belong to the v0.6.0 release record before marking it released.",
         "The staging worker now requires the exact candidate revision through both public API readiness and web metadata before replacing the active manifest. The regression and rollback checks passed. Verify with the frozen candidate in its isolated rehearsal.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
-        "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt."
+        "The release worker pins exact PostgreSQL and ClamAV IDs alongside app and web before rollout. The local worker and release tests passed. Verify the frozen candidate rehearsal and the live deployment receipt.",
+        "The initialized staging worker now requires exact retained PostgreSQL and ClamAV scan and SBOM receipts before app build/transfer and revalidates them before sending the release note. Focused checks passed. Verify the cutover, complete frozen candidate and live job."
       ],
       "owner": null,
       "depends_on": [],
@@ -23414,7 +23439,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-retained-scan-binding"
         ],
         "current_acceptance": null
       }
@@ -23636,11 +23662,11 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "d207282942b63ba4e7f03831771144b56a62c4b9de14592a2a71b6527bea3fe8"
+              "sha256": "4342521f5fae9d26b126328ee1a422c9f49d83ad8dc8e613a043201e953cfe79"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -23697,6 +23723,15 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -31337,7 +31372,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -31610,6 +31645,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -34394,7 +34437,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34871,6 +34914,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -37478,7 +37529,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             }
           ],
           "source_renewals": [
@@ -37569,6 +37620,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The release ledger checks completed dependency receipts and matches the staging version and commit. The workflow records pre-acceptance staging rehearsal and post-acceptance actual receipts. Existing launch task, critical defect and exception checks stay in force."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -162331,7 +162390,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -163449,6 +163508,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -638286,7 +638353,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -639428,6 +639495,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -669836,7 +669911,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -670002,6 +670077,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -678971,7 +679054,8 @@
         "The Linux amd64 build with a fresh signed Ubuntu index produced image 7dee39bc with zero high or critical findings. Its 241 exact PostgreSQL package rows match hosted preflight 43468289014, including 217 pending dispositions in that scope. The live database still uses its original image. Verify the final deployed identities and registry receipts.",
         "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
         "The worker now pins both retained image IDs in the candidate manifest and rejects mismatched runtime IDs before announcement. On v0.5.1 both active tags matched their running IDs. The retained scan and SBOM references and the separate PostgreSQL replacement still require final evidence.",
-        "Protected preflight 43503647318 verified all five scan and SBOM receipts. The staged ClamAV archive and loaded PostgreSQL replacement have their own exact evidence. The old running PostgreSQL image still fails the gate. Verify the final cutover and deployment plus registry receipts."
+        "Protected preflight 43503647318 verified all five scan and SBOM receipts. The staged ClamAV archive and loaded PostgreSQL replacement have their own exact evidence. The old running PostgreSQL image still fails the gate. Verify the final cutover and deployment plus registry receipts.",
+        "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -679024,7 +679108,8 @@
           "release-0.6-postgres-cutover-preflight",
           "release-0.6-license-candidate-39619e439",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-protected-preflight-and-stateful-readback"
+          "release-0.6-protected-preflight-and-stateful-readback",
+          "release-0.6-retained-scan-binding"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -699387,7 +699472,8 @@
         "Rehearse migration, full liveness/readiness, the private S3 check and recovery with the frozen candidate images. Verify scan and SBOM evidence for the app, web and retained stateful image IDs. Keep the live release worker evidence and Telegram receipts in the v0.6.0 release record before marking it released.",
         "The staging smoke rejects stale or missing candidate API revision and stale or invalid web metadata before committing the manifest. Ten focused staging rollback tests passed. Exact rehearsal, private S3 and live deployment evidence remain required.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
-        "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence."
+        "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence.",
+        "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -699434,7 +699520,8 @@
           "release-0.6-public-staging-revision-smoke",
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
-          "release-0.6-retained-staging-image-identities"
+          "release-0.6-retained-staging-image-identities",
+          "release-0.6-retained-scan-binding"
         ],
         "current_acceptance": null
       }
@@ -699506,7 +699593,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -699813,6 +699900,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Only the build and handoff of compiled browser fixtures change. The shared build is selected by its job artifact ID, checked against its digest and source revision, and restored before Playwright. Browser selection, fixture source, test assertions, fail-on-flake behavior and report and delivery gates retain their scope. Verified the restored compiled files and targeted browser consumers locally."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -709800,7 +709895,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+              "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -710131,6 +710226,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -718496,11 +718599,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+              "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d099c10f50996522de98d2c8de2c9e56329dc6ddb30c41c07dbc6e261015aa62"
+              "sha256": "d5b4175b7612eafacbd0701caf361bc8f4c3ee49695ffd845835755e631c7230"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -719106,6 +719209,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -722313,7 +722425,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+              "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -722584,6 +722696,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         }
@@ -1051124,15 +1051244,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
+              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d099c10f50996522de98d2c8de2c9e56329dc6ddb30c41c07dbc6e261015aa62"
+              "sha256": "d5b4175b7612eafacbd0701caf361bc8f4c3ee49695ffd845835755e631c7230"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "b3152790756e4d8510cb09ebbb4721ac6c0325b4a0388d2963bcab5386e11156"
+              "sha256": "82a3f31e5f94a84c8fcd8c1bf0bed6d6044d2bb523bbed33ce79dcbee91779e2"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1051228,6 +1051348,16 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ]
         },
@@ -1064371,7 +1064501,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1064379,7 +1064509,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+              "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1064391,7 +1064521,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
+              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1064435,7 +1064565,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -1067483,6 +1067613,17 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ],
           "presentation_renewals": [
@@ -1070070,7 +1070211,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "799b1acfbfbd241673b2565f23f59ba2d7522cccb3489bf9e95b74ea499a801b"
+              "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1070078,7 +1070219,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "c2a9e69b78177f991266670cfb5a07e9e00be894f97548b8639122c09dc41ae0"
+              "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1070090,7 +1070231,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "21db0c8768622b9fc651217e3f2ea22aeee549779c353f78fbe4fb14b244bb09"
+              "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1070134,7 +1070275,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "bb6b9a62f68bb2cfc585088d78f68617fc5283c9fcf52e4ac647fd6446204081"
+              "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -1073084,6 +1073225,17 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-retained-scan-binding",
+              "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Initialized staging requires immutable retained PostgreSQL and ClamAV scan evidence before image transfer and rechecks it before announcements. Existing rollout, application, routing, license, notes and notification assertions passed in the affected staging suites. Runbook examples use the same boundary."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1078604,7 +1078756,8 @@
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "Protected preflight 43497840080 passed and 840325e7d reached main. The compiled native payment adapter recovered the existing synthetic settlement over staging HTTPS. Exact release acceptance, live deployment and external provider gates remain pending.",
         "dfe73b34a reached protected main after all seven preflight jobs passed. Verified the five image reports and unchanged license review scope. The loaded PostgreSQL replacement and retained scanner each match their hosted package and license scope. Final strict tests, exact staging acceptance and actual live receipts remain open.",
-        "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts."
+        "The remaining two current official Grafana release lines also fail the exact Linux amd64 image scan. Use a patched immutable image with passing scan and matching SBOM before verifying deployed dashboard, annotation and alert-link receipts.",
+        "The initialized staging worker now blocks transfer and release announcements when retained scan evidence is missing, stale, blocked or bound to a different image ID. The native exact-image fixture passed with the available replacement database and retained scanner. Final strict license, staging and operational receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1078903,7 +1079056,8 @@
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
-          "release-0.6-grafana-supported-alternative-images"
+          "release-0.6-grafana-supported-alternative-images",
+          "release-0.6-retained-scan-binding"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1254735,6 +1254889,141 @@
         {
           "file": "12.4.15/scan.log",
           "sha256": "a411b0ea0941586e75522fbc84e5ce2a7bd551a98eaabb01a7bf93d83ca921dc"
+        }
+      ]
+    },
+    "release-0.6-retained-scan-binding": {
+      "batch": "release-0.6-retained-scan-binding",
+      "base_commit": "566165c364452f473476aeb3261403127db24bf2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py",
+        "kanban/GOAL-PROMPT.md",
+        "kanban/WORKFLOW.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "775d79050d15861f17a601b0f1685018b3e362506770d5bd745a4e49ac50548b"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "eed229cef3d072c9d30cf20efdc30a80f3fe0d77b373c602f04a5d9ac80b8ac4"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "77170da021e6bee66805bb733d827efa789e08f08ae70c8379e3a5375ea8c9c6"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "d5b4175b7612eafacbd0701caf361bc8f4c3ee49695ffd845835755e631c7230"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "82a3f31e5f94a84c8fcd8c1bf0bed6d6044d2bb523bbed33ce79dcbee91779e2"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "4342521f5fae9d26b126328ee1a422c9f49d83ad8dc8e613a043201e953cfe79"
+        },
+        {
+          "path": "kanban/GOAL-PROMPT.md",
+          "sha256": "4d584cb4aa009f0f248048d4e4eece3be2ac7d6f687e1a0cf67a699331f0d1de"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "1f38567f6dca885dacab6ac4c50caf49416375347d96efd52ea9f5777593c7ff"
+        }
+      ],
+      "checks": [
+        "The exact saved ClamAV archive matched its compressed SHA-256, restored to the same Docker ID as live staging, and passed the standard runtime vulnerability scan on November 13 with zero high or critical findings and a matching CycloneDX subject.",
+        "The real retained evidence verifier accepted the replacement PostgreSQL 7dee39bc and ClamAV 9b036704 scans and corresponding artifacts. Against the currently deployed legacy PostgreSQL ID it failed closed.",
+        "The complete staging suite passed 61 tests. The final queue and notifier reruns passed after adding the omitted-evidence retry path. The staging fixtures verify missing, mismatched and modified retained evidence, valid prebuilt and local app transfers, bootstrap compatibility, and no release note after a failed receipt. All 11 affected promotion verifier tests, shell syntax, ShellCheck, formatting and whitespace passed."
+      ],
+      "limitations": [
+        "The first staging run exposed that the extracted bootstrap test fixture lacked the new argument defaults. The corrected fixture and combined suite passed.",
+        "The restored images and verifier ran locally. No live staging database cutover, accepted release deployment or Telegram announcement was run. Strict package dispositions and approved off-server backup and recovery are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-retained-scan-binding",
+      "execution_receipts": [
+        {
+          "file": "native-verifier.json",
+          "sha256": "bad88e9887244db03eb392685aea60f0eb85d0cd0c5c77c8bf49c02298452b27"
+        },
+        {
+          "file": "native-scan.log",
+          "sha256": "ca85e4e2bc6d83f5739aaf46d236a688c029baf382c589a4177b28c555e4a00d"
+        },
+        {
+          "file": "staging-tests.log",
+          "sha256": "019be14650c298ea259f288f6179d261653b654335f981c7daa8496aabd6041f"
+        },
+        {
+          "file": "staging-tests-final.log",
+          "sha256": "ffa54080ae0a277e6ea58180d3ef506cae2ad2503a24392b9d6aaee06a9cc253"
+        },
+        {
+          "file": "queue-tests-final.log",
+          "sha256": "76b39d553b5c6da574cfeb8e56c2455302a83ffe90ba99af414303517687dbf8"
+        },
+        {
+          "file": "notifier-tests-final.log",
+          "sha256": "cea3f9b100937fdff2e256f0b95ac692a07946c2a65f7c8ea72c19630635009d"
+        },
+        {
+          "file": "related-checks.log",
+          "sha256": "c8e209dd288ae20b20a9ffbdac1179ccda24acff19401194ab8241778590c68e"
+        },
+        {
+          "file": "verified-retained-scans/1-image.json",
+          "sha256": "9b951a406950a956ff7dd689ea4eeb992384b7deba533bef7c9201e52751328c"
+        },
+        {
+          "file": "verified-retained-scans/1-vulnerabilities.json",
+          "sha256": "ed880782e9e7ac3699f91262786fe15f6e1358bed7e33065f2672ae04275c1c5"
+        },
+        {
+          "file": "verified-retained-scans/1-sbom.cdx.json",
+          "sha256": "5525669bb1f8106d54fe762059e4922b7ed4016af38192b27c9f06fba028d909"
+        },
+        {
+          "file": "verified-retained-scans/2-image.json",
+          "sha256": "818e2f8fc1e37337596dd3769f025220cbc5f7f4f6853b0500efaf4e4edd7ac6"
+        },
+        {
+          "file": "verified-retained-scans/2-vulnerabilities.json",
+          "sha256": "8f60e9aa6aaa28b2faae32d1a06235be8f79ca751d516ccf330a67cf43e0128c"
+        },
+        {
+          "file": "verified-retained-scans/2-sbom.cdx.json",
+          "sha256": "2aae50adfdf462dbf50d6516522268e35cdcba7488db380b9db7eb29952828a2"
         }
       ]
     }

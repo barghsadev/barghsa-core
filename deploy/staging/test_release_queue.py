@@ -100,6 +100,9 @@ PYTHON
 if [ "$#" -gt 1 ]; then
     printf '%s\\n' "$2" "$3" > "$QUEUE_CAPTURE/image-bundle"
 fi
+if [ "$#" -gt 3 ]; then
+    printf '%s\\n' "$4" "$5" > "$QUEUE_CAPTURE/retained-scans"
+fi
 if [ "${QUEUE_TEST_WRITE_IMAGES:-}" = 1 ]; then
     printf '%s\\n' "$QUEUE_TEST_IMAGES" > "$1"
 fi
@@ -201,6 +204,45 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         with self.live():
             self.assertEqual(queue.work(self.state), 0)
         self.assertEqual((self.capture / "image-bundle").read_text().splitlines(), [str(directory.resolve()), sha])
+
+    def test_queued_retained_scan_selection_is_immutable_and_passed_to_worker(self):
+        directories = [self.root / name for name in ("retained", "changed")]
+        for directory in directories:
+            directory.mkdir()
+            for index, code in enumerate("de", 1):
+                artifact = f"{directory.name} fixture {index}".encode()
+                digest = hashlib.sha256(artifact).hexdigest()
+                (directory / f"{index}-vulnerabilities.json").write_bytes(artifact)
+                (directory / f"{index}-sbom.cdx.json").write_bytes(artifact)
+                (directory / f"{index}-image.json").write_text(json.dumps({
+                    "image_id": "sha256:" + code * 64, "blocked": False,
+                    "report_sha256": digest, "sbom_sha256": digest,
+                }))
+        retained, changed = directories
+        job = queue.enqueue(self.repo, self.state, self.commit, [], retained_scans=retained)
+        selection = job["retained_scans"]
+        self.assertEqual(selection["directory"], str(retained.resolve()))
+        with self.assertRaisesRegex(ValueError, "immutable retained scan selection"):
+            queue.enqueue(self.repo, self.state, self.commit, [], retained_scans=changed)
+        with self.live():
+            self.assertEqual(queue.work(self.state), 0)
+        self.assertEqual((self.capture / "retained-scans").read_text().splitlines(),
+                         [str(retained.resolve()), selection["sha256"]])
+
+        path = self.state / "jobs" / self.commit / "job.json"
+        path.write_text(json.dumps({**queue.jobs(self.state)[0], "phase": "failed"}))
+        retry = ["release-queue.py", "--state-dir", str(self.state), "retry", "--commit", self.commit,
+                 "--retained-scans"]
+        with patch.object(queue, "start_worker", return_value=123), patch.object(sys, "argv", [*retry, str(changed)]):
+            with self.assertRaisesRegex(ValueError, "immutable retained scan selection"):
+                queue.main()
+        job = queue.jobs(self.state)[0]
+        self.assertEqual(job["phase"], "failed")
+        del job["retained_scans"]
+        path.write_text(json.dumps(job))
+        with patch.object(queue, "start_worker", return_value=123), patch.object(sys, "argv", [*retry, str(retained)]):
+            self.assertEqual(queue.main(), 0)
+        self.assertEqual(queue.jobs(self.state)[0]["retained_scans"], selection)
 
     def test_bootstrap_license_receipt_requires_all_transferred_images_and_browser(self):
         path = self.root / "release-licenses.json"

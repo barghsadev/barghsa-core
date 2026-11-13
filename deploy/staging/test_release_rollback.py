@@ -176,6 +176,8 @@ verify_running_image() {
         script = f'''set -euo pipefail
 ssh_args=(-o BatchMode=yes)
 remote=fixture
+retained_scans=
+retained_sha=
 ssh() {{
   [[ $1 == -o && $2 == BatchMode=yes && $3 == fixture ]] || return 3
   case $4 in

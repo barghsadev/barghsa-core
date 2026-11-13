@@ -87,10 +87,12 @@ SHA and immediately enqueue the immutable release:
 
 ```sh
 python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)" \
+  --retained-scans /absolute/path/verified-retained-scans \
   --screenshot /absolute/path/reviewed-persian.png
 ```
 
-Screenshots are optional. This command returns immediately and starts a detached
+Omit `--retained-scans` for the first staging install, which scans all four
+new images. Screenshots are optional. This command returns immediately and starts a detached
 worker. Queue admission and the deployment entry point read the accepted
 milestone and gate evidence from the exact pushed commit. The subsequent
 `main` CI run and staging deployment are independent;
@@ -213,9 +215,17 @@ in `job.json`. Its `image_scans` field indexes the scan receipts and their
 checksums for transferred images. The worker checks the deployed IDs, report
 and SBOM checksums, and license dispositions before announcing. The
 `license_sha256` field binds the passing report to the deployment receipt.
-Match retained PostgreSQL and
-ClamAV IDs to their separately verified scan and SBOM receipts. Record
-registry manifest digests separately when publishing to a registry.
+Initialized staging requires `--retained-scans` at enqueue. Use a private
+directory with the passing runtime scanner's numbered PostgreSQL and ClamAV
+receipts, vulnerability reports and CycloneDX SBOMs, in that order. The queue
+pins the scan index when the job is created. The worker matches it to the
+retained Docker image IDs before building or transferring images, and checks
+the same evidence against the running image IDs before announcing. The
+result is stored as `runtime_images.retained_image_scans`. If a failed job
+omitted the directory, supply it with `retry --retained-scans`. A recorded
+selection stays fixed for that job. Keep signed license
+dispositions for the retained images with the candidate's release evidence.
+Record registry manifest digests separately when publishing to a registry.
 Subsequent releases preserve
 `/etc/barghsa/staging/runtime.env` and Docker volumes.
 The active image manifest also records `BARGHSA_POSTGRES_VOLUME`. Older
@@ -250,7 +260,7 @@ the usual queue command.
 
 ```sh
 python3 deploy/staging/release-queue.py enqueue --commit "$CANDIDATE_SHA" \
-  --image-bundle "$PROTECTED_BUNDLE_DIR"
+  --image-bundle "$PROTECTED_BUNDLE_DIR" --retained-scans "$PROTECTED_RETAINED_SCAN_DIR"
 ```
 
 The worker verifies the selected manifest, archive and image evidence without

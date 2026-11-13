@@ -70,10 +70,11 @@ Prepare the planned SemVer, Persian `releases/<version>.md` notes, and reviewed 
 Commit/push the accepted release, verify the exact remote SHA, then immediately enqueue:
 
 ```sh
-rtk proxy python3 deploy/staging/release-queue.py enqueue --commit <full-sha> --screenshot <reviewed-original.png>
+rtk proxy python3 deploy/staging/release-queue.py enqueue --commit <full-sha> \
+  --retained-scans <verified-retained-scan-directory> --screenshot <reviewed-original.png>
 ```
 
-The detached worker runs `./deploy/staging/deploy.sh` from an immutable checkout, verifies health and exact live metadata, and sends the release update. Staging has no real users. Do not wait for hosted CI or deployment before continuing independent building. Use the existing queue, not a new scheduler or deployment agent.
+For an initialized host, prepare the exact PostgreSQL and ClamAV evidence before acceptance. A first install scans the two newly built images itself and omits `--retained-scans`. Follow the [staging runbook](../deploy/staging/README.md) for the receipt format. The detached worker runs `./deploy/staging/deploy.sh` from an immutable checkout, verifies health and exact live metadata, and sends the release update. Staging has no real users. Do not wait for hosted CI or deployment before continuing independent building. Use the existing queue, not a new scheduler or deployment agent.
 
 Use @barghsa_dev_bot and Barghsa Release Radar `-1004467450624`, with existing private secrets. Send one Persian summary and at most one grouped photo album per release. Include version, concrete changes, staging link and commit. Attach one photo or up to ten representative reviewed images in one album; link a gallery for extras. Never post each screenshot separately or expose secrets/customer data.
 

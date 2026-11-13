@@ -46,13 +46,15 @@ def verify_images(log, commit, app_id, web_id, postgres_id, clamav_id):
             "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
 
 
-def verify_image_scans(directory, image_ids, includes_stateful):
-    scopes = ("postgres", "clamav", "app", "web") if includes_stateful else ("app", "web")
+def read_image_scans(directory, scopes, image_ids):
     scans = {}
     for index, scope in enumerate(scopes, 1):
         receipt = (directory / f"{index}-image.json").read_bytes()
         scan = json.loads(receipt)
-        if not isinstance(scan, dict) or scan.get("image_id") != image_ids[scope] or scan.get("blocked") is not False:
+        if (not isinstance(scan, dict) or scan.get("blocked") is not False
+                or not isinstance(scan.get("image_id"), str)
+                or not re.fullmatch(r"sha256:[0-9a-f]{64}", scan["image_id"])
+                or (image_ids is not None and scan["image_id"] != image_ids[scope])):
             raise ValueError(f"Missing passing scan for the deployed {scope} image")
         for suffix, field in (("vulnerabilities.json", "report_sha256"), ("sbom.cdx.json", "sbom_sha256")):
             payload = (directory / f"{index}-{suffix}").read_bytes()
@@ -60,6 +62,24 @@ def verify_image_scans(directory, image_ids, includes_stateful):
                 raise ValueError(f"Scan artifact checksum differs for the deployed {scope} image")
         scans[scope] = {"index": index, "receipt_sha256": hashlib.sha256(receipt).hexdigest()}
     return {"directory": str(directory.resolve()), "images": scans}
+
+
+def verify_image_scans(directory, image_ids, includes_stateful):
+    scopes = ("postgres", "clamav", "app", "web") if includes_stateful else ("app", "web")
+    return read_image_scans(directory, scopes, image_ids)
+
+
+def verify_retained_scans(directory, image_ids=None, expected_sha=None):
+    scans = read_image_scans(directory, ("postgres", "clamav"), image_ids)
+    digest = hashlib.sha256(json.dumps(scans["images"], sort_keys=True).encode()).hexdigest()
+    if expected_sha is not None and digest != expected_sha:
+        raise ValueError("The selected retained image scan evidence changed")
+    return {**scans, "sha256": digest}
+
+
+def retained_scan_selection(directory):
+    scans = verify_retained_scans(directory.resolve(strict=True))
+    return {"directory": scans["directory"], "sha256": scans["sha256"]}
 
 
 def file_sha256(path):
@@ -145,7 +165,7 @@ def check_release(repo, commit):
     return repo, version
 
 
-def enqueue(repo, state, commit, screenshots, image_bundle=None):
+def enqueue(repo, state, commit, screenshots, image_bundle=None, retained_scans=None):
     repo, version = check_release(repo, commit)
     bundle = None
     if image_bundle is not None:
@@ -153,6 +173,7 @@ def enqueue(repo, state, commit, screenshots, image_bundle=None):
         manifest_sha = file_sha256(directory / "bundle.json")
         verify_image_bundle(directory, commit, manifest_sha)
         bundle = {"directory": str(directory), "manifest_sha256": manifest_sha}
+    retained = retained_scan_selection(retained_scans) if retained_scans is not None else None
     images = {}
     for path in screenshots:
         data = Path(path).read_bytes()
@@ -170,6 +191,8 @@ def enqueue(repo, state, commit, screenshots, image_bundle=None):
                 raise ValueError("This commit already has an immutable screenshot selection")
             if bundle is not None and bundle != job.get("image_bundle"):
                 raise ValueError("This commit already has an immutable image bundle selection")
+            if retained is not None and retained != job.get("retained_scans"):
+                raise ValueError("This commit already has an immutable retained scan selection")
             return job
         if any(job["version"] == version for job in jobs(state)):
             raise ValueError("A different queued commit already uses this release version")
@@ -180,6 +203,8 @@ def enqueue(repo, state, commit, screenshots, image_bundle=None):
                "created_ns": time.time_ns(), "phase": "queued", "screenshots": sorted(images)}
         if bundle is not None:
             job["image_bundle"] = bundle
+        if retained is not None:
+            job["retained_scans"] = retained
         save(path, job)
         return job
 
@@ -222,6 +247,10 @@ def deploy(job, state):
     deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
     if bundle := job.get("image_bundle"):
         deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
+    if retained := job.get("retained_scans"):
+        if bundle is None:
+            deploy_args.extend(["", ""])
+        deploy_args.extend([retained["directory"], retained["sha256"]])
     command(checkout, *deploy_args)
     # Older immutable releases predate the receipt argument.
     if receipt.exists():
@@ -307,6 +336,7 @@ def main():
     add.add_argument("--commit", required=True)
     add.add_argument("--screenshot", action="append", default=[])
     add.add_argument("--image-bundle", type=Path)
+    add.add_argument("--retained-scans", type=Path, help="Exact PostgreSQL and ClamAV scan directory for initialized staging")
     check = actions.add_parser("check-release")
     check.add_argument("--repo", type=Path, default=Path.cwd())
     check.add_argument("--commit", required=True)
@@ -319,7 +349,14 @@ def main():
     verify.add_argument("--release-log", required=True, type=Path)
     verify.add_argument("--scan-dir", required=True, type=Path)
     verify.add_argument("--includes-stateful", action="store_true")
+    verify.add_argument("--retained-scans", type=Path)
+    verify.add_argument("--retained-sha")
     verify.add_argument("--receipt", type=Path)
+    retained = actions.add_parser("verify-retained-scans")
+    retained.add_argument("directory", type=Path)
+    retained.add_argument("postgres_id")
+    retained.add_argument("clamav_id")
+    retained.add_argument("sha")
     prepare_bundle = actions.add_parser("prepare-image-bundle")
     prepare_bundle.add_argument("directory", type=Path)
     prepare_bundle.add_argument("commit")
@@ -333,11 +370,15 @@ def main():
     actions.add_parser("status")
     retry = actions.add_parser("retry")
     retry.add_argument("--commit", required=True)
+    retry.add_argument("--retained-scans", type=Path, help="Supply an omitted retained scan directory")
     args = parser.parse_args()
     state = args.state_dir.expanduser().resolve()
     if args.action == "check-release":
         _, version = check_release(args.repo, args.commit)
         print(version)
+        return 0
+    if args.action == "verify-retained-scans":
+        verify_retained_scans(args.directory, {"postgres": args.postgres_id, "clamav": args.clamav_id}, args.sha)
         return 0
     if args.action == "verify-images":
         receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit,
@@ -346,7 +387,13 @@ def main():
         receipt["image_scans"] = verify_image_scans(args.scan_dir, ids, args.includes_stateful)
         licensed_ids = {scope: ids[scope] for scope in ("app", "web")}
         if args.includes_stateful:
+            if args.retained_scans or args.retained_sha:
+                raise ValueError("First staging install scans its newly built stateful images")
             licensed_ids.update({"postgres-staging": ids["postgres"], "clamav": ids["clamav"]})
+        else:
+            if not args.retained_scans or not args.retained_sha:
+                raise ValueError("Initialized staging requires retained PostgreSQL and ClamAV scans")
+            receipt["retained_image_scans"] = verify_retained_scans(args.retained_scans, ids, args.retained_sha)
         receipt["license_sha256"] = verify_image_licenses(args.scan_dir, args.commit, licensed_ids)
         if args.receipt:
             save(args.receipt, receipt)
@@ -376,11 +423,16 @@ def main():
             if len(matches) != 1:
                 raise ValueError("Only an existing failed release can be retried")
             job = matches[0]
+            if args.retained_scans is not None:
+                retained = retained_scan_selection(args.retained_scans)
+                if job.get("retained_scans", retained) != retained:
+                    raise ValueError("This commit already has an immutable retained scan selection")
+                job["retained_scans"] = retained
             job.update(phase="queued")
             job.pop("error", None)
             save(state / "jobs" / job["commit"] / "job.json", job)
     else:
-        job = enqueue(args.repo, state, args.commit, args.screenshot, args.image_bundle)
+        job = enqueue(args.repo, state, args.commit, args.screenshot, args.image_bundle, args.retained_scans)
     if job["phase"] == "failed":
         raise ValueError("Release failed; inspect its deploy.log before explicit retry")
     pid = start_worker(state) if job["phase"] != "completed" else None

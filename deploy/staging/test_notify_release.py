@@ -4,6 +4,7 @@ import io
 import json
 import os
 from pathlib import Path
+import runpy
 import shutil
 import subprocess
 import sys
@@ -239,7 +240,11 @@ elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-rel
     print('0.6.0')
 elif name=='python3' and args==['kanban/scripts/board.py','ready','--release','0.6.0']:
     sys.exit(int(os.environ.get('FAIL_READINESS','0')))
-elif name=='python3' and args[1] in ('verify-images','verify-image-bundle'): os.execv(sys.executable,[sys.executable,*args])
+elif name=='python3' and args[1] in ('verify-images','verify-image-bundle','verify-retained-scans'):
+    if args[1]=='verify-images' and os.environ.get('CHANGE_RETAINED_AFTER_TRANSFER'):
+        path=pathlib.Path(args[args.index('--retained-scans')+1])/'2-sbom.cdx.json'
+        path.write_text('tampered')
+    os.execv(sys.executable,[sys.executable,*args])
 elif name=='python3' and args[0]=='scripts/check-release-licenses.py':
     assert args[3:6]==['--staging-local','bootstrap' if os.environ['FRESH_STAGING']=='1' else 'initialized','--report']
     if os.environ.get('FAIL_LICENSE'): sys.exit(1)
@@ -306,9 +311,19 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             "sha256:" + "b" * 64, "sha256:" + "c" * 64,
         ], check=True)
         bundle_sha = hashlib.sha256((bundle / "bundle.json").read_bytes()).hexdigest()
+        retained = self.root / "retained"
+        retained.mkdir()
+        subprocess.run(
+            [str(bins / "scan-runtime"), str(retained), "barghsa-postgres:retained", "barghsa-clamav:retained"],
+            env={**os.environ, "CALL_LOG": str(log)}, check=True,
+        )
+        retained_sha = runpy.run_path(str(staging / "release-queue.py"))["verify_retained_scans"](retained)["sha256"]
+        retained_sbom = retained / "2-sbom.cdx.json"
+        retained_sbom_bytes = retained_sbom.read_bytes()
         scenarios = [(failure, False, False) for failure in (
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
-            "INVALID_RETAINED_ID", "WRONG_RETAINED_ID",
+            "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
+            "CHANGE_RETAINED_AFTER_TRANSFER",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True)]:
@@ -330,6 +345,11 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     command.append(str(receipt))
                 if prebuilt:
                     command.extend([str(bundle), bundle_sha])
+                if not fresh and failure != "ABSENT_RETAINED_EVIDENCE":
+                    if not prebuilt:
+                        command.extend(["", ""])
+                    command.extend([str(retained), "0" * 64 if failure == "WRONG_RETAINED_EVIDENCE" else retained_sha])
+                retained_sbom.write_bytes(retained_sbom_bytes)
                 result = subprocess.run(command, env=env, capture_output=True, text=True)
                 calls = log.read_text().splitlines()
                 sends = [line for line in calls if line.startswith('python3 deploy/staging/notify-release.py') and '--check' not in line]
@@ -351,6 +371,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                             ("app", "web", "postgres", "clamav"), ("sha256:" + c * 64 for c in "bcde"),
                         )))
                         self.assertEqual(set(evidence["image_scans"]["images"]), {"app", "web"})
+                        self.assertEqual(set(evidence["retained_image_scans"]["images"]), {"postgres", "clamav"})
+                        self.assertEqual(evidence["retained_image_scans"]["sha256"], retained_sha)
                         license_report = Path(evidence["image_scans"]["directory"]) / "release-licenses.json"
                         self.assertEqual(evidence["license_sha256"], hashlib.sha256(license_report.read_bytes()).hexdigest())
                         self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
@@ -366,6 +388,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
                 elif failure == "INVALID_RETAINED_ID":
                     self.assertIn("Invalid PostgreSQL or ClamAV image ID", result.stderr)
+                    self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))
+                elif failure in {"ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE"}:
+                    self.assertIn("retained", result.stderr)
                     self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))
                 elif prebuilt:
                     self.assertFalse(any(line.startswith(("docker build ", "docker save ", "scan-runtime ",

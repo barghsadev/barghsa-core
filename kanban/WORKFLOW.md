@@ -64,9 +64,12 @@ Set root `package.json` SemVer at the release boundary. Write Persian `releases/
 Commit and push the accepted release, verify its exact remote SHA, then enqueue the detached staging worker immediately. Do not wait for CI. The worker uses an immutable checkout, runs `./deploy/staging/deploy.sh`, verifies health and exact live version/commit, and then announces success. Development continues during deployment. Staging releases are serialized.
 
 ```sh
-python3 deploy/staging/release-queue.py enqueue --commit <full-sha> --screenshot <reviewed-original.png>
+python3 deploy/staging/release-queue.py enqueue --commit <full-sha> \
+  --retained-scans <verified-retained-scan-directory> --screenshot <reviewed-original.png>
 python3 deploy/staging/release-queue.py status
 ```
+
+Use the [staging runbook](../deploy/staging/README.md) to prepare the exact retained scans before accepting a release on an initialized host. On a first install the worker scans all four new images.
 
 Record acceptance, push, staging health, Telegram receipt and production promotion separately in the release record. Enqueue is not completed deployment. Diagnose failed jobs before explicit retry. An observation timeout does not authorize restarting a healthy worker. A deployment failure does not freeze independent building.
 
