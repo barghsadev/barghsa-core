@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:59:05+00:00",
+  "updated": "2026-11-13T12:31:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The intermittent signed-in auth entry remains open. Obtain a clean scheduled rollup and verified report delivery on the final candidate.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. Targeted checks cover the header, AI catalogue, limit-settings, registration and knowledge query corrections. The intermittent signed-in auth entry remains open. Obtain a clean scheduled rollup and verified report delivery on the final candidate. The instrumented auth replay recorded eight failures despite 72 completed workspace HTTP responses. Failures also reproduced without Playwright traces. A native same-origin fixture confirmed the failure without browser interception. The direct document redirect experiment also failed verification.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21797,7 +21797,8 @@
           "release-0.6-nightly-limit-settings-isolation",
           "release-0.6-nightly-auth-entry-triage",
           "release-0.6-registration-consent-timing",
-          "release-0.6-knowledge-query-error"
+          "release-0.6-knowledge-query-error",
+          "release-0.6-auth-entry-http-boundary"
         ],
         "current_acceptance": null
       }
@@ -1194644,6 +1194645,96 @@
         {
           "file": "bundle.log",
           "sha256": "068871a200354308acbbd9390018a58d34a17c8fdbc8bfc5d5991d40e75812bd"
+        }
+      ]
+    },
+    "release-0.6-auth-entry-http-boundary": {
+      "batch": "release-0.6-auth-entry-http-boundary",
+      "base_commit": "643867b40165d1483ee3c0cafcdda6aa20ae88a4",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "03deb3091711a09ab8e0ec51ea14bb1dc4e6ccac0bf3870600094301c1fe975b"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Five repeats of the original signed-in entry assertions in Firefox, WebKit and mobile Safari on the production build, with a read-only HTTP finish observer, recorded 67 passes and eight failures.",
+        "All 72 observed /app document requests completed server-side as HTTP 200. Four Firefox failure traces show an /app response but no browser commit. Three WebKit-family failure traces show the auth response without a later /app request. One trace was incomplete.",
+        "Repeating without Playwright trace collection still recorded two WebKit-family failures and 73 passes. Trace collection alone does not explain the intermittent behavior.",
+        "A same-origin HTTP fixture exercised all five auth entry routes with no browser interception, requiring the workspace document, rendered staff main landmark and a fresh workspace authority read. It recorded 68 passes and seven failures. The experimental direct document redirect still failed the same gate. Saved that patch outside the checkout, reverted it and restored the original production build."
+      ],
+      "limitations": [
+        "The observer and repeat trials did not change runtime code or assertions. A verified repair and clean scheduled browser gate remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-auth-entry",
+      "execution_receipts": [
+        {
+          "file": "http-observer.mjs",
+          "sha256": "da60a74376199ee4aa4064557085a21c0dba37702efe1b910d56df4df2308bba"
+        },
+        {
+          "file": "http-observer.jsonl",
+          "sha256": "07694a7025e23e9717427d81b9ef673baaea08ddf0d56ad5f8096c8c784db5f3"
+        },
+        {
+          "file": "http-observer-browser.log",
+          "sha256": "a2e1248a1be1b1f16396e5b700e908e4f01f23ff92928a332788ca50f5ffcbb8"
+        },
+        {
+          "file": "http-observer-results.json",
+          "sha256": "d02fc7cd178e912381c89223ef63aacd0598bf6c5c897213995c3c8dc9b02641"
+        },
+        {
+          "file": "without-trace.log",
+          "sha256": "45e5e2ce50ca84a73e4a03cd4a99ba56a8be4663c58281a90d99ee644779bc47"
+        },
+        {
+          "file": "native-auth-probe.spec.txt",
+          "sha256": "bff1f84afc6dcd63eedfbda2a25de1c3d520099fd3ad3adb6c4b5010f49e0096"
+        },
+        {
+          "file": "native-auth-events.jsonl",
+          "sha256": "f6bf426ae5faff390000948e25f511831a5c0c708d1dc1e56f38f27cb06a757f"
+        },
+        {
+          "file": "native-auth.log",
+          "sha256": "44253c69839c2577514e7b83f812365847e1ceff934075df014c848143b405fd"
+        },
+        {
+          "file": "native-auth-results.json",
+          "sha256": "c2579813beb5dd3869fb1edc63b29c3c109d5ad79e60d1c6346fd0c847bd7d62"
+        },
+        {
+          "file": "native-direct-events.jsonl",
+          "sha256": "5c4d50ec943d1ae50208e9193321d540333b1be2d4b058f882a1bc3fcb0f955d"
+        },
+        {
+          "file": "native-direct.log",
+          "sha256": "e5d886527e2a335018da95a2f13ce2449773ab3e627c968032ee02f43485de35"
+        },
+        {
+          "file": "native-direct-results.json",
+          "sha256": "be8fd0c2625b021530370abaee2bf5df37b8170d36dcf051f30fe1ecea270c22"
+        },
+        {
+          "file": "restore-knowledge-build.log",
+          "sha256": "d95e9070e1ef008f68e0520a62306ca33e152eee07504a9502d86b8bf164365d"
         }
       ]
     }
