@@ -149,7 +149,13 @@ class Rehearsal:
                     if kind == 'candidate' and fixture.fault == 'database-down':
                         self.send_error(503)
                         return
-                    payload = {'status': 'ok', 'checks': {'postgresql': {'status': 'ok'}}}
+                    payload = {'status': 'ok', 'checks': {
+                        name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')
+                    }}
+                    if fixture.fault == f'{kind}-redis-fallback':
+                        payload['warnings'] = ['redis-unavailable']
+                    if fixture.fault == f'{kind}-storage-omitted':
+                        del payload['checks']['objectStorage']
                     if fixture.fault != f'{kind}-api-revision-missing':
                         payload['commit'] = ('c' * 40 if fixture.fault == f'{kind}-api-revision-wrong'
                                              else fixture.config[kind]['revision']['commit'])
@@ -354,10 +360,10 @@ class ObserverTest(unittest.TestCase):
             ('candidate', '/api/health/ready', None, None),
         ])
 
-    def test_requires_both_api_revisions_before_authenticated_smoke(self):
+    def test_requires_both_api_revisions_and_dependencies_before_authenticated_smoke(self):
         for pool in ('candidate', 'previous'):
-            for issue in ('missing', 'wrong'):
-                fault = f'{pool}-api-revision-{issue}'
+            for issue in ('api-revision-missing', 'api-revision-wrong', 'redis-fallback', 'storage-omitted'):
+                fault = f'{pool}-{issue}'
                 with self.subTest(fault=fault):
                     result = self.observe(fault)
                     self.assertEqual(result.returncode, 0, result.stderr)

@@ -64,7 +64,14 @@ class SyntheticProbeTests(unittest.TestCase):
                 if path in ('/api/health/live', '/api/health/ready'):
                     if cookie:
                         return self.response({}, 403)
-                    return self.response({'status': 'ok'}, 503 if fixture.fault == 'health' else 200)
+                    payload = {'status': 'ok'}
+                    if path == '/api/health/ready':
+                        payload['checks'] = {
+                            name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')
+                        }
+                        if fixture.fault == 'redis-fallback':
+                            payload['warnings'] = ['redis-unavailable']
+                    return self.response(payload, 503 if fixture.fault == 'health' else 200)
                 if path == '/api/auth/csrf':
                     if f'barghsa_session={BEARER}' in cookie:
                         return self.response({'csrfToken': CSRF})
@@ -219,6 +226,15 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
         ])
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
         self.assertNotIn('certificate_expiry', self.metrics.read_text())
+
+    def test_redis_fallback_stops_probe_before_authentication(self):
+        self.fault = 'redis-fallback'
+        result = self.probe()
+        self.assertEqual(result.returncode, 1)
+        checks = self.check_report(result)
+        self.assertEqual(checks['liveness']['status'], 'passed')
+        self.assertEqual(checks['readiness']['reason'], 'readiness_failed')
+        self.assertEqual(self.calls, [('GET', '/api/health/live'), ('GET', '/api/health/ready')])
 
     def test_reports_only_a_verified_public_certificate_and_replaces_stale_results(self):
         cert = self.serve_tls()

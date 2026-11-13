@@ -281,7 +281,9 @@ that availability input.
 The synthetic smoke uses read-only health and account requests during a
 capability pause. For example, electricity checkout maintenance can reject a
 new order while liveness, database readiness and the existing order list
-remain available. A failed readiness check still stops the observation.
+remain available. The observer requires both pools to report exact API and web
+revisions and healthy PostgreSQL, Redis and object storage without warnings
+before making authenticated smoke requests.
 
 The observer computes counter deltas from complete scrapes within the
 window. Restarts, scope or target changes, missing journey series, scrape
@@ -417,7 +419,7 @@ Record the positive TLS connection and a rejected wrong hostname or untrusted CA
 
 ## Synthetic health probes
 
-Probe `GET /api/health/live` without credentials to verify the process can serve requests. Probe `GET /api/health/ready` for traffic admission. Treat PostgreSQL or schema failure as a readiness failure. The response can report degradation for optional dependencies while the API continues to serve traffic.
+Probe `GET /api/health/live` without credentials to verify the process can serve requests. The synthetic probe requires `GET /api/health/ready` to report healthy PostgreSQL, Redis and object storage without warnings before signing in. The API can continue serving traffic during dependency degradation.
 
 Use a dedicated customer test account and its protected verified contact for the authenticated journey. Bootstrap CSRF through `GET /api/auth/csrf`, sign in through `POST /api/auth/login`, and complete `POST /api/auth/login/verify` when challenged. Use the returned cookies to read `GET /api/auth/user` and verify only the expected test account identity. Sign out through `POST /api/auth/logout` with the active CSRF proof. Keep credentials, contact values and response bodies out of monitoring output. Report status, duration and the response correlation ID. The probe makes no financial or customer-profile changes.
 

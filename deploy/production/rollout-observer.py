@@ -113,13 +113,22 @@ class JsonReader:
         return json.loads(body)
 
 
+def dependencies_ready(body):
+    if not isinstance(body, dict) or body.get('status') != 'ok' or body.get('warnings', []) != []:
+        return False
+    checks = body.get('checks')
+    return isinstance(checks, dict) and all(
+        isinstance(checks.get(name), dict) and checks[name].get('status') == 'ok'
+        for name in ('postgresql', 'redis', 'objectStorage')
+    )
+
+
 def release_ready(reader, commit):
     if (reader.get('/release.json').get('commit') != commit
             or reader.get('/api/health/live').get('status') != 'ok'):
         return False
     ready = reader.get('/api/health/ready')
-    return (ready.get('commit') == commit and ready.get('status') == 'ok'
-            and ready.get('checks', {}).get('postgresql', {}).get('status') == 'ok')
+    return dependencies_ready(ready) and ready.get('commit') == commit
 
 
 def customer_matches(user, config):
@@ -334,7 +343,7 @@ def synthetic(config):
         public.request('/api/health/live').get('status') == 'ok', 'liveness_failed',
     ))
     ready = check('readiness', public, lambda: require(
-        public.request('/api/health/ready').get('status') == 'ok', 'readiness_failed',
+        dependencies_ready(public.request('/api/health/ready')), 'readiness_failed',
     ))
     if live and ready:
         try:

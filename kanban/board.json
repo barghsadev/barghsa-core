@@ -13259,7 +13259,8 @@
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13272,7 +13273,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13339,6 +13340,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -13426,7 +13435,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13438,7 +13448,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13791,6 +13801,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -21155,7 +21173,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21167,7 +21186,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21379,6 +21398,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -21447,7 +21474,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21459,7 +21487,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21671,6 +21699,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -23299,7 +23335,8 @@
         "Hosted preflight 43484917342 at 39619e439 reproduced all 859 package and scope rows. All 387 review-required rows match the refreshed workbook exactly. Package-specific approvals and the final strict check are still pending.",
         "Hosted 43497840080 on 840325e7d verified the same 859 exact inventory rows, including the same 387 pending dispositions. Complete package-specific sign-off and run the strict gate on the final immutable images.",
         "Protected preflight 43510245617 at d19812d0a reproduced all 859 exact package and scope rows and the same 387 pending dispositions. Obtain named approval and run the final strict check.",
-        "Initialized staging now applies the strict policy to the exact retained PostgreSQL and ClamAV images before transfer and binds the result to the deployed receipt. Native execution found the existing 244 retained-image dispositions in the 387-entry packet. Named approval and the final strict candidate gates remain open."
+        "Initialized staging now applies the strict policy to the exact retained PostgreSQL and ClamAV images before transfer and binds the result to the deployed receipt. Native execution found the existing 244 retained-image dispositions in the 387-entry packet. Named approval and the final strict candidate gates remain open.",
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23362,7 +23399,8 @@
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-published-d19812d0a",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-license-inventory-465def304"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -23833,7 +23871,8 @@
       "remaining": [
         "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. The guarded production CLI now binds the exact plan and checked report to the protected owner authorization record and checks backup age. Still verify actual image and off-server backup readbacks and rehearse approved canary provisioning and ingress. The report now binds app and web image IDs to the staging scans and rollout plan.",
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks.",
-        "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal."
+        "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal.",
+        "The exact rollout pools require healthy PostgreSQL, Redis and object storage without warnings before authenticated smoke. Tested locally. Verify the production-equivalent canary and compatible restoration on the approved topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -23876,7 +23915,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": null
       }
@@ -23899,7 +23939,8 @@
         "Repeat the native browser sign-in with the authorized synthetic account on the exact staged candidate. The isolated hosted case exercises a fresh OTP, the rendered owned dashboard and wallet, and logout revocation. Keep the deployed SHA and actual customer-scope, wallet and logout receipts alongside the observer results.",
         "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
         "The observer reads the four exact fixture records after checking the dedicated account and owned default profile. Local tests passed for guarded observation and scheduled synthetic checks. The exact staging and production-equivalent receipts remain required.",
-        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback.",
+        "The candidate and previous readiness checks now reject Redis fallback and missing storage before sending the synthetic session. The 13 observer checks passed. Repeat the real candidate, baseline and protected operating checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -23942,7 +23983,8 @@
           "release-0.6-native-rollout-browser",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": null
       }
@@ -34983,7 +35025,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35005,7 +35048,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -35565,6 +35608,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -37869,7 +37920,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -37897,7 +37949,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             }
           ],
           "checks": [
@@ -38121,6 +38173,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -678019,7 +678079,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -678031,7 +678092,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -678135,6 +678196,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -680815,7 +680884,8 @@
         "Hosted 43497840080 verified the five image scan and SBOM receipts and the unchanged 387 package-specific exceptions. Named dispositions and the strict final image check remain pending.",
         "The protected dfe73b34a image report reproduces the same 859 rows, including 387 pending. Retained ClamAV and the loaded PostgreSQL replacement match the corresponding 41 and 241 package URL/license rows. The 27 scanner and 217 staging PostgreSQL review dispositions remain in the existing packet.",
         "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open.",
-        "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added."
+        "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added.",
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -680874,7 +680944,8 @@
           "release-0.6-staging-preflight-readback",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-license-inventory-465def304"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -681027,7 +681098,8 @@
         "Protected preflight 43510245617 at d19812d0a verified all five hosted image scan subjects and their SBOM and scan digests. The approved cutover and exact deployed and registry receipts remain open.",
         "The exact retained ClamAV image now has a direct Docker scanner and SBOM receipt under its runtime image ID. The deployment verifier accepts that receipt with the separately reproduced replacement PostgreSQL receipt, and rejects the legacy running database. The live cutover and candidate receipts remain open.",
         "Rebuilt PostgreSQL image dbb54d6c8c53 has exact scan and SBOM evidence with zero high or critical findings. Complete authorized cutover and the exact deployed and registry receipts.",
-        "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open."
+        "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open.",
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -681084,7 +681156,8 @@
           "release-0.6-retained-scan-binding",
           "release-0.6-published-d19812d0a",
           "release-0.6-backup-object-readback",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-exact-license-inventory-465def304"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -681127,7 +681200,8 @@
         "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed.",
         "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed.",
         "Hosted preflight 43484917342 produced five verified Linux amd64 SBOM and scan receipts with zero high or critical findings. Read back the final staging image IDs and production registry digests with matching receipts.",
-        "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release."
+        "The release now checks the private scanner response before stopping writers and requires one scanner receipt before announcement. Verify actual candidate scans, image identities and signed feed in the live release.",
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -681160,7 +681234,8 @@
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-postgres-restore-readback",
           "release-0.6-license-candidate-39619e439",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-exact-license-inventory-465def304"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -702654,7 +702729,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -702676,7 +702752,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -703138,6 +703214,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -703274,7 +703358,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -703285,7 +703370,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -703614,6 +703699,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -711930,7 +712023,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-rollout-api-revision",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -711954,11 +712048,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "d0b91289efba34edb0b3cac5b6fb856e579eaeaf1b1a51b3ddf5bb9e2fccbbda"
+              "sha256": "1ff74e144512413d207ba574a7a7b9e0e5c548b81dca00911c40a9d794330cb7"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -712219,6 +712313,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -723352,7 +723455,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-rollout-api-revision",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -723400,15 +723504,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "d0b91289efba34edb0b3cac5b6fb856e579eaeaf1b1a51b3ddf5bb9e2fccbbda"
+              "sha256": "1ff74e144512413d207ba574a7a7b9e0e5c548b81dca00911c40a9d794330cb7"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "ece26bc5e25d8ea890fb595aa09f1a4e2c70f3658bbf32f4ae9dde4c2b3d17d5"
+              "sha256": "e46ba100cb493ece7dec2101c472cc1ec8f51ab8fa9a1a871935fda5bdbf061a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -723665,6 +723769,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -723955,7 +724069,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -724003,7 +724118,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "b097dafbd179471b9d3c265803313f2bdf93d0b65eb6120a771a29fcf3d22e58"
+              "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -724283,6 +724398,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-canary-dependency-readiness",
+              "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed."
             }
           ]
         }
@@ -724307,7 +724430,8 @@
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt.",
         "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required.",
         "Prometheus now requires the complete nine-check pass result or an explicit failed check alongside the fresh completion timestamp. Local rule verification passed. The approved live runner and private scrape are still required.",
-        "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open."
+        "The EU host reached v0.5.1 public health and metadata over verified TLS 1.3. Its protected synthetic configuration is absent. The dedicated runner scope, verified-contact authentication, timer, private scrape and actual pager receipts remain open.",
+        "The independent probe now records dependency degradation as readiness failure and skips authentication. All nine local cases passed. Install on the approved runner and verify live observations."
       ],
       "owner": null,
       "depends_on": [],
@@ -724342,7 +724466,8 @@
           "release-0.6-synthetic-target-loss",
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-synthetic-result-completeness",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-canary-dependency-readiness"
         ],
         "current_acceptance": null
       }
@@ -1082539,7 +1082664,8 @@
         "The production approval package now requires the original source baseline, matching restored-table fingerprints and a consistent measured recovery point. The approved off-server backup, measured production-equivalent restore, cutover and external receipts remain open.",
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
         "The staging migration checkpoint is now retained with the runtime images and exact release identity. Approved off-server provisioning and the live database cutover and restore remain open.",
-        "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open."
+        "Staging now rejects unavailable, invalid or 48-hour-old scanner signatures before stopping writers and retains the loaded signature identity. The approved live rollout and external operating receipts remain open.",
+        "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1082601,7 +1082727,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-csp-window-followup",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-canary-dependency-readiness"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1259651,6 +1259778,116 @@
         {
           "file": "workflow-step.log",
           "sha256": "a14786556b4b635b1c4e79c8102e5e4f275a6cc1804b43d9518a6354b2852686"
+        }
+      ]
+    },
+    "release-0.6-canary-dependency-readiness": {
+      "batch": "release-0.6-canary-dependency-readiness",
+      "base_commit": "1860c77b382e735c09773ba55cc16e992e827baa",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_rollout_observer.py",
+        "deploy/production/test_synthetic_probe.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "1ff74e144512413d207ba574a7a7b9e0e5c548b81dca00911c40a9d794330cb7"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "e46ba100cb493ece7dec2101c472cc1ec8f51ab8fa9a1a871935fda5bdbf061a"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "ec34e36b4af706010be4c5d6ff62d7129e41e7d990a0321238f6994cc7e34e05"
+        }
+      ],
+      "checks": [
+        "Canary and synthetic probes require healthy PostgreSQL, Redis and object storage before authentication. All 34 focused observer, synthetic and approval tests passed.",
+        "The protected fixtures preserve exact API and web revision checks and avoid authenticating on unhealthy dependency state. Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "This is isolated fixture evidence. Actual monitoring host, candidate and previous pool, staged provider and external operations receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-canary-dependency-readiness",
+      "execution_receipts": [
+        {
+          "file": "observer.log",
+          "sha256": "f7f9ac1c88bbfa58e5ef0e6c4ced5833b4691adcb8d8a1a59104ef94252141cc"
+        },
+        {
+          "file": "synthetic.log",
+          "sha256": "08f341a972c7833822591f0a3d77245996c92cbaac1e0ebc4fa7b805420016ac"
+        },
+        {
+          "file": "approval.log",
+          "sha256": "08950464b4874570a90c9ba87ee02c002dca3f6678430c8ca607c9e4891c9529"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-exact-license-inventory-465def304": {
+      "batch": "release-0.6-exact-license-inventory-465def304",
+      "base_commit": "465def30447d690624867b49652f81c23d19babb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "8403f43c0a4c78b10871fc6e3805fe623a87573b7f8cbca777cb14e272924b56"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        }
+      ],
+      "checks": [
+        "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open."
+      ],
+      "limitations": [
+        "Report-only preflight. It does not approve a package or establish the final image identity or deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-registration-request-observation/hosted-image-inventory",
+      "execution_receipts": [
+        {
+          "file": "release-licenses.json",
+          "sha256": "7f11c326367942a1264ebf9b8e4f9b333660c9b20c1e43572dd74dc62ea434bf"
+        },
+        {
+          "file": "independent-inventory-readback.json",
+          "sha256": "b646e2424ea634bd4869d1e19722f6bba9d924f61e8e98ea67bb5ccaa99f6184"
         }
       ]
     }
