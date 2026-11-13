@@ -3961,34 +3961,63 @@
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "action": {
-                    "enum": [
-                      "draft",
-                      "activate"
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "draft",
+                          "activate"
+                        ],
+                        "type": "string"
+                      },
+                      "expectedVersion": {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "mode": {
+                        "enum": [
+                          "DISABLED",
+                          "MANUAL",
+                          "API"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "expectedVersion",
+                      "action"
                     ],
-                    "type": "string"
+                    "type": "object"
                   },
-                  "expectedVersion": {
-                    "minimum": 0,
-                    "type": "integer"
-                  },
-                  "mode": {
-                    "enum": [
-                      "DISABLED",
-                      "MANUAL",
-                      "API"
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "restore"
+                        ],
+                        "type": "string"
+                      },
+                      "expectedVersion": {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "sourceId": {
+                        "format": "uuid",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "sourceId",
+                      "expectedVersion",
+                      "action"
                     ],
-                    "type": "string"
+                    "type": "object"
                   }
-                },
-                "required": [
-                  "mode",
-                  "expectedVersion",
-                  "action"
-                ],
-                "type": "object"
+                ]
               }
             }
           },
@@ -4046,7 +4075,81 @@
             "description": "Automatic verification has no configured provider"
           }
         },
-        "summary": "Save or activate a versioned profile verification draft",
+        "summary": "Save, restore or activate a versioned profile verification draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/profile-verification-mode/history": {
+      "get": {
+        "operationId": "AdminController_getProfileVerificationModeHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "value": {
+                            "enum": [
+                              "DISABLED",
+                              "MANUAL",
+                              "API"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "minimum": 1,
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version",
+                          "value"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 20,
+                      "type": "array"
+                    },
+                    "nextBeforeVersion": {
+                      "minimum": 1,
+                      "nullable": true,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "nextBeforeVersion"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read audited verification mode activations",
         "tags": [
           "Admin"
         ]

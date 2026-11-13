@@ -6,7 +6,6 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { toast } from '../lib/toast-api.js';
 import { Skeleton, Alert, AlertDescription } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
-import { Loader2 } from 'lucide-react';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useReceiptForm } from '../hooks/useReceiptForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -42,6 +41,11 @@ const OnlinePaymentReturnPanel = lazy(() =>
 const BankReceiptTopUpReviewDialog = lazy(
   () => import('../components/BankReceiptTopUpReviewDialog.js')
 );
+
+const formCardClass = 'space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm';
+const fieldLabelClass = 'block text-sm font-medium text-foreground';
+const amountInputClass =
+  'mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40';
 
 interface WalletBalance {
   balance: string;
@@ -654,11 +658,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           {maintenance?.active && <MaintenanceNotice setting={maintenance} />}
 
           {profileId && !maintenance?.active && (
-            <form
-              noValidate
-              onSubmit={handleSubmit}
-              className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
-            >
+            <form noValidate onSubmit={handleSubmit} className={formCardClass}>
               {(validationError ||
                 (errorMessage && error !== 'load' && error !== 'no-profile')) && (
                 <Alert variant="destructive" data-testid="wallet-error">
@@ -669,10 +669,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 {t('wallet.page.onlineTitle', locale)}
               </h2>
               <div>
-                <label
-                  htmlFor="top-up-amount"
-                  className="block text-sm font-medium text-foreground"
-                >
+                <label htmlFor="top-up-amount" className={fieldLabelClass}>
                   {t('wallet.page.amountLabel', locale)}
                 </label>
                 <input
@@ -695,7 +692,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className={amountInputClass}
                 />
                 <p id="top-up-amount-hint" className="mt-2 text-sm text-muted-foreground">
                   {advertisedLimit === 0
@@ -730,12 +727,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 aria-busy={onlineBusy || undefined}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
               >
-                {onlineBusy && (
-                  <Loader2
-                    aria-hidden="true"
-                    className="me-2 inline size-4 animate-spin motion-reduce:animate-none"
-                  />
-                )}
                 {onlineBusy
                   ? t(onlineReview ? 'wallet.page.submitting' : 'wallet.page.reviewLoading', locale)
                   : t('wallet.page.submit', locale)}
@@ -747,7 +738,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
             <form
               noValidate
               onSubmit={handleReceiptSubmit}
-              className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
+              className={formCardClass}
               data-testid="wallet-receipt-form"
             >
               <div>
@@ -778,10 +769,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
               )}
 
               <div>
-                <label
-                  htmlFor="receipt-amount"
-                  className="block text-sm font-medium text-foreground"
-                >
+                <label htmlFor="receipt-amount" className={fieldLabelClass}>
                   {t('wallet.page.receiptAmountLabel', locale)}
                 </label>
                 <input
@@ -798,7 +786,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className={amountInputClass}
                 />
                 {receiptFieldError('amount')}
                 {receiptTomanPreview !== null && (
@@ -815,7 +803,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
               </div>
 
               <div>
-                <label htmlFor="receipt-date" className="block text-sm font-medium text-foreground">
+                <label htmlFor="receipt-date" className={fieldLabelClass}>
                   {t('wallet.page.receiptDateLabel', locale)}
                 </label>
                 <input
@@ -831,16 +819,13 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptDate(event.target.value);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className={amountInputClass}
                 />
                 {receiptFieldError('paymentDate')}
               </div>
 
               <div>
-                <label
-                  htmlFor="receipt-payer-ref"
-                  className="block text-sm font-medium text-foreground"
-                >
+                <label htmlFor="receipt-payer-ref" className={fieldLabelClass}>
                   {t('wallet.page.receiptPayerRefLabel', locale)}
                 </label>
                 <input
@@ -857,16 +842,13 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => {
                     setReceiptPayerRef(event.target.value);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className={amountInputClass}
                 />
                 {receiptFieldError('payerReference')}
               </div>
 
               <div>
-                <label
-                  htmlFor="receipt-bank-name"
-                  className="block text-sm font-medium text-foreground"
-                >
+                <label htmlFor="receipt-bank-name" className={fieldLabelClass}>
                   {t('invoices.details.receiptBankNameLabel', locale)}
                 </label>
                 <input
@@ -886,7 +868,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 {receiptFieldError('bankName')}
               </div>
               <div>
-                <label htmlFor="receipt-file" className="block text-sm font-medium text-foreground">
+                <label htmlFor="receipt-file" className={fieldLabelClass}>
                   {t('wallet.page.receiptFileLabel', locale)}
                 </label>
                 <FormField
@@ -932,7 +914,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
               </div>
 
               <div>
-                <label htmlFor="receipt-note" className="block text-sm font-medium text-foreground">
+                <label htmlFor="receipt-note" className={fieldLabelClass}>
                   {t('wallet.page.receiptNoteLabel', locale)}
                 </label>
                 <textarea
@@ -957,12 +939,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 aria-busy={receiptBusy || undefined}
                 className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
               >
-                {receiptBusy && (
-                  <Loader2
-                    aria-hidden="true"
-                    className="me-2 inline size-4 animate-spin motion-reduce:animate-none"
-                  />
-                )}
                 {receiptBusy
                   ? t('wallet.page.receiptSubmitting', locale)
                   : t('wallet.page.receiptSubmit', locale)}

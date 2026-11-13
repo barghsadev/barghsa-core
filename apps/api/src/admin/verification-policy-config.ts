@@ -19,64 +19,28 @@ import { requireCurrentSession, requireSessionStepUp } from '../session/session-
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { VERIFICATION_MODE_LOCK } from './verification-mode-config.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { configActivations, readConfigActivationHistory } from './config-activation-history.js';
 
 export const VERIFICATION_POLICY_KEY = 'profile_verification_policy';
 const DRAFT_KEY = `${VERIFICATION_POLICY_KEY}_draft`;
-const HISTORY_PAGE_SIZE = 20;
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type Change = { expectedVersion: number } & (
   | { action: 'draft' | 'activate'; policy: VerificationPolicy }
   | { action: 'restore'; sourceId: string }
 );
 
-async function policyRevisions(client: PoolClient, beforeVersion?: number, sourceId?: string) {
-  const { rows } = await client.query<{ id: string; version: string; policy: unknown }>(
-    `WITH revisions AS (
-       SELECT id, data#>'{next,active}' AS policy,
-         CASE WHEN jsonb_typeof(data#>'{next,version}')='number'
-           THEN (data#>>'{next,version}')::numeric END AS version
-       FROM audit_log CROSS JOIN LATERAL (
-         SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
-       ) safe
-       WHERE event='config_change' AND data->>'key'=$1 AND data->>'action'='activate'
-         AND ($2::text IS NULL OR id=$2)
-     )
-     SELECT id,version::text,policy FROM revisions WHERE version>0
-       AND version<=2147483647 AND version=trunc(version)
-       AND ($3::integer IS NULL OR version<$3)
-     ORDER BY revisions.version DESC,id DESC LIMIT $4`,
-    [
-      VERIFICATION_POLICY_KEY,
-      sourceId ?? null,
-      beforeVersion ?? null,
-      sourceId ? 1 : HISTORY_PAGE_SIZE + 1,
-    ]
-  );
-  return rows;
-}
-
 export async function readVerificationPolicyHistory(actor: Actor, beforeVersion?: number) {
-  const client = await getDbPool().connect();
-  try {
-    await client.query('BEGIN');
-    await requireStaffMutationPermission(client, actor.userId, 'admin:config:read');
-    await requireCurrentSession(client, actor);
-    const rows = await policyRevisions(client, beforeVersion);
-    const page = rows.slice(0, HISTORY_PAGE_SIZE);
-    await requireCurrentSession(client, actor);
-    await client.query('COMMIT');
-    return {
-      items: page.flatMap(({ id, version, policy }) =>
-        isVerificationPolicy(policy) ? [{ id, version: Number(version), policy }] : []
-      ),
-      nextBeforeVersion: rows.length > HISTORY_PAGE_SIZE ? Number(page.at(-1)!.version) : null,
-    };
-  } catch (error) {
-    await client.query('ROLLBACK').catch(() => {});
-    throw error;
-  } finally {
-    client.release();
-  }
+  const history = await readConfigActivationHistory(
+    actor,
+    VERIFICATION_POLICY_KEY,
+    'active',
+    isVerificationPolicy,
+    beforeVersion
+  );
+  return {
+    items: history.items.map(({ id, version, value }) => ({ id, version, policy: value })),
+    nextBeforeVersion: history.nextBeforeVersion,
+  };
 }
 
 async function state(db: Pool | PoolClient) {
@@ -130,11 +94,15 @@ export async function changeVerificationPolicy(
     let restoredFrom = change.action === 'activate' ? current.restoredFrom : undefined;
     let policy: unknown;
     if (change.action === 'restore') {
-      const [source] = await policyRevisions(client, undefined, change.sourceId);
-      if (!source || Number(source.version) > current.view.version)
+      const {
+        items: [source],
+      } = await configActivations(client, VERIFICATION_POLICY_KEY, 'active', isVerificationPolicy, {
+        sourceId: change.sourceId,
+      });
+      if (!source || source.version > current.view.version)
         throw new NotFoundException('Verification policy revision not found');
-      restoredFrom = { id: source.id, version: Number(source.version) };
-      policy = source.policy;
+      restoredFrom = { id: source.id, version: source.version };
+      policy = source.value;
     } else {
       policy = change.policy;
     }

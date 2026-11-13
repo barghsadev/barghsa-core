@@ -2,8 +2,57 @@ import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
+for (const locale of ['en', 'fa'] as const) {
+  test(`reviews an audited verification mode before restoring its draft (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const text = (key: Parameters<typeof verificationConfigText>[0]) =>
+      verificationConfigText(key, locale);
+    const path = '/api/admin/config/profile-verification-mode';
+    const sourceId = '00000000-0000-4000-8000-000000000062';
+    const commands: unknown[] = [];
+    let state: { mode: string; draft: string | null; version: number } = {
+      mode: 'DISABLED',
+      draft: null,
+      version: 4,
+    };
+    await page.route('**' + path + '/history', (route) =>
+      route.fulfill({
+        json: {
+          items: [{ id: sourceId, version: 2, value: 'MANUAL' }],
+          nextBeforeVersion: null,
+        },
+      })
+    );
+    await page.route('**' + path, (route) => {
+      if (route.request().method() === 'PUT') {
+        commands.push(route.request().postDataJSON());
+        state = { ...state, draft: 'MANUAL', version: 5 };
+      }
+      return route.fulfill({ json: state });
+    });
+    await page.goto('/admin/verification');
+    await page.getByRole('button', { name: text('modeHistory'), exact: true }).click();
+    const history = page.getByRole('region', { name: text('modeHistory') });
+    await history.getByRole('button', { name: text('policyRestore') }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText(text('MANUAL'), { exact: true })).toBeVisible();
+    expect(commands).toEqual([]);
+    await dialog
+      .getByRole('button', { name: adminText('team.confirm', locale), exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    expect(commands).toEqual([{ action: 'restore', sourceId, expectedVersion: 4 }]);
+    await expect(
+      page.getByText(`${text('activeMode')}: ${text('DISABLED')}`, { exact: true })
+    ).toBeVisible();
+    await expect(page.locator('#verification-mode-MANUAL')).toBeChecked();
+  });
+}
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`verification and OTP forms preserve independent drafts and owned feedback (${locale}, ${dark ? 'dark' : 'light'})`, async ({

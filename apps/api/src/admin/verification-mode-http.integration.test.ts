@@ -105,6 +105,57 @@ it('allows only one simultaneous save of a reviewed revision', async () => {
   expect(responses.map((r) => r.status).sort()).toEqual([200, 409]);
   expect((await snapshot()).audit).toHaveLength(1);
 });
+it('restores only audited modes and publishes the restored draft after step-up', async () => {
+  expect((await write()).status).toBe(200);
+  expect((await write('activate', 1)).status).toBe(200);
+  expect((await write('draft', 2, 'DISABLED')).status).toBe(200);
+  expect((await write('activate', 3, 'DISABLED')).status).toBe(200);
+  const response = await fetch(http.base + path + '/history?beforeVersion=4', { headers });
+  expect(response.status).toBe(200);
+  const history = (await response.json()) as {
+    items: { id: string; version: number; value: string }[];
+  };
+  expect(history.items[0]).toMatchObject({ version: 2, value: 'MANUAL' });
+  const sourceId = history.items[0]!.id;
+  const restore = (id: string, expectedVersion: number) =>
+    fetch(http.base + path, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ action: 'restore', sourceId: id, expectedVersion }),
+    });
+  expect((await restore(randomUUID(), 4)).status).toBe(404);
+  expect((await restore(sourceId, 3)).status).toBe(409);
+  const apiSourceId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,'verifier','config_change',$2)`,
+    [
+      apiSourceId,
+      JSON.stringify({
+        key: 'profile_verification_mode',
+        action: 'activate',
+        next: { version: 1, mode: 'API' },
+      }),
+    ]
+  );
+  expect((await restore(apiSourceId, 4)).status).toBe(503);
+  const before = await snapshot();
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    session,
+  ]);
+  expect((await restore(sourceId, 4)).status).toBe(200);
+  expect(await read()).toEqual({ mode: 'DISABLED', draft: 'MANUAL', version: 5 });
+  expect((await snapshot()).global).toEqual(before.global);
+  expect((await write('activate', 5)).status).toBe(403);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+    session,
+  ]);
+  expect((await write('activate', 5)).status).toBe(200);
+  expect(await read()).toEqual({ mode: 'MANUAL', draft: null, version: 6 });
+  expect((await snapshot()).audit.slice(-2).map((row) => JSON.parse(row.metadata))).toEqual([
+    expect.objectContaining({ action: 'restore', restoredFrom: { id: sourceId, version: 2 } }),
+    expect.objectContaining({ action: 'activate', restoredFrom: { id: sourceId, version: 2 } }),
+  ]);
+});
 it('fails closed for invalid stored mode and honors legacy required verification', async () => {
   await http.pool.query(
     "INSERT INTO app_config(key,value) VALUES('verification.required','true'),('verification.method','\"api\"')"

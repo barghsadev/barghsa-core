@@ -6,6 +6,7 @@ const en = {
     'Required profiles still follow the active verification mode. Expiry uses the last successful verification and applies immediately after activation; older approvals with no recorded verification date require review when expiry is enabled. Staff auto-verification applies only to newly created staff profiles.',
   policySaved: 'Verification requirements saved at the confirmed revision.',
   policyHistory: 'Verification requirements history',
+  modeHistory: 'Verification mode history',
   policyHistoryEmpty: 'No previous activations on this page.',
   policyRestore: 'Prepare recovery draft',
   policyRestoreReview:
@@ -132,6 +133,7 @@ const fa: Record<keyof typeof en, string> = {
     'الزام احراز هویت پروفایل تابع روش فعال است. انقضا از آخرین تأیید موفق محاسبه می‌شود و پس از فعال‌سازی اعمال می‌شود؛ تأییدهای قدیمی فاقد تاریخ ثبت‌شده با فعال‌شدن انقضا نیازمند بررسی هستند. تأیید خودکار کارکنان فقط برای پروفایل جدید ایجادشده در مسیر محافظت‌شده کارکنان است.',
   policySaved: 'الزامات احراز هویت در نسخه تأییدشده ذخیره شد.',
   policyHistory: 'تاریخچه الزامات احراز هویت',
+  modeHistory: 'تاریخچه روش احراز هویت',
   policyHistoryEmpty: 'در این صفحه سابقه‌ای از فعال‌سازی وجود ندارد.',
   policyRestore: 'آماده‌سازی پیش‌نویس بازیابی',
   policyRestoreReview:

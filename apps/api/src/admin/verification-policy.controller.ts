@@ -28,6 +28,7 @@ import { z } from 'zod';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { activationHistoryQuery } from './config-activation-history.js';
 import {
   changeVerificationPolicy,
   readVerificationPolicyConfig,
@@ -82,14 +83,6 @@ const restoreChange = z.strictObject({
   sourceId: z.uuid(),
 });
 const changeSchema = z.discriminatedUnion('action', [policyChange, restoreChange]);
-const historyQuery = z.strictObject({
-  beforeVersion: z
-    .string()
-    .regex(/^[1-9]\d{0,9}$/)
-    .transform(Number)
-    .pipe(z.number().int().max(2_147_483_647))
-    .optional(),
-});
 @ApiTags('Admin verification policy')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
@@ -135,7 +128,7 @@ export class VerificationPolicyController {
   })
   history(@Query() query: unknown, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:config:read')) throw new ForbiddenException();
-    const parsed = historyQuery.safeParse(query);
+    const parsed = activationHistoryQuery.safeParse(query);
     if (!parsed.success) throw new InputFieldException(['beforeVersion']);
     return readVerificationPolicyHistory(req.session, parsed.data.beforeVersion);
   }

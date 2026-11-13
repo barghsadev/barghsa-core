@@ -4,7 +4,11 @@ import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
 import { assertServiceSettingsFields } from './service-settings-fields.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
-import type { VerificationModeConfig } from './verification-mode-config.js';
+import {
+  readVerificationModeHistory,
+  type VerificationModeConfig,
+} from './verification-mode-config.js';
+import { activationHistoryQuery, activationPageSize } from './config-activation-history.js';
 import {
   Body,
   BadRequestException,
@@ -340,6 +344,11 @@ export const SetProfileVerificationModeSchema = z.strictObject({
   mode: z.enum(['DISABLED', 'MANUAL', 'API']),
   expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
   action: z.enum(['draft', 'activate']),
+});
+const restoreVerificationModeSchema = z.strictObject({
+  action: z.literal('restore'),
+  sourceId: z.uuid(),
+  expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
 });
 
 export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificationModeSchema>;
@@ -1012,24 +1021,74 @@ export class AdminController {
     return this.adminService.getProfileVerificationMode();
   }
 
-  /**
-   * PUT /api/admin/config/profile-verification-mode
-   *
-   * Sets the profile verification mode. Changing it affects all profiles.
-   * Values: 'DISABLED' | 'MANUAL' | 'API'
-   */
-  @Put('config/profile-verification-mode')
-  @ApiOperation({ summary: 'Save or activate a versioned profile verification draft' })
-  @ApiBody({
+  @Get('config/profile-verification-mode/history')
+  @Header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+  @ApiOperation({ summary: 'Read audited verification mode activations' })
+  @ApiQuery({
+    name: 'beforeVersion',
+    required: false,
+    schema: { type: 'integer', minimum: 1, maximum: 2147483647 },
+  })
+  @ApiResponse({
+    status: 200,
     schema: {
       type: 'object',
-      required: ['mode', 'expectedVersion', 'action'],
-      additionalProperties: false,
+      required: ['items', 'nextBeforeVersion'],
       properties: {
-        mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
-        expectedVersion: { type: 'integer', minimum: 0 },
-        action: { type: 'string', enum: ['draft', 'activate'] },
+        items: {
+          type: 'array',
+          maxItems: activationPageSize,
+          items: {
+            type: 'object',
+            required: ['id', 'version', 'value'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              version: { type: 'integer', minimum: 1 },
+              value: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
+            },
+          },
+        },
+        nextBeforeVersion: { type: 'integer', minimum: 1, nullable: true },
       },
+    },
+  })
+  async getProfileVerificationModeHistory(
+    @Query() query: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!hasStaffPermission(req, 'admin:config:read'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    const parsed = activationHistoryQuery.safeParse(query);
+    if (!parsed.success) throw new InputFieldException(['beforeVersion']);
+    return readVerificationModeHistory(req.session, parsed.data.beforeVersion);
+  }
+
+  @Put('config/profile-verification-mode')
+  @ApiOperation({ summary: 'Save, restore or activate a versioned profile verification draft' })
+  @ApiBody({
+    schema: {
+      oneOf: [
+        {
+          type: 'object',
+          required: ['mode', 'expectedVersion', 'action'],
+          additionalProperties: false,
+          properties: {
+            mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
+            expectedVersion: { type: 'integer', minimum: 0 },
+            action: { type: 'string', enum: ['draft', 'activate'] },
+          },
+        },
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['sourceId', 'expectedVersion', 'action'],
+          properties: {
+            sourceId: { type: 'string', format: 'uuid' },
+            expectedVersion: { type: 'integer', minimum: 0 },
+            action: { type: 'string', enum: ['restore'] },
+          },
+        },
+      ],
     },
   })
   @ApiResponse({
@@ -1064,8 +1123,13 @@ export class AdminController {
       );
     }
 
-    const parsed = SetProfileVerificationModeSchema.safeParse(rawBody);
-    if (!parsed.success) rejectContentFields(parsed.error.issues, ['mode']);
+    const restoring =
+      rawBody && typeof rawBody === 'object' && 'action' in rawBody && rawBody.action === 'restore';
+    const parsed = restoring
+      ? restoreVerificationModeSchema.safeParse(rawBody)
+      : SetProfileVerificationModeSchema.safeParse(rawBody);
+    if (!parsed.success)
+      rejectContentFields(parsed.error.issues, restoring ? ['sourceId'] : ['mode']);
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setProfileVerificationMode(parsed.data, req.session, ip);

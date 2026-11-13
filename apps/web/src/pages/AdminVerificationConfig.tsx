@@ -7,6 +7,9 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
+import { useCatalogueResource } from '../hooks/useCatalogueResource.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { CONFIG_AUDIT_ID } from '@barghsa/shared/admin';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -19,6 +22,7 @@ import {
   invalidVerificationFields,
   type VerificationConfig,
   type VerificationDraft,
+  type VerificationMode,
 } from '../lib/verification-settings-form.js';
 import {
   CatalogueFieldFeedback,
@@ -33,6 +37,34 @@ const TeamActionDialog = lazy(() =>
     default: module.TeamActionDialog,
   }))
 );
+const modePath = '/api/admin/config/profile-verification-mode';
+type ModeRevision = { id: string; version: number; value: VerificationMode };
+type ModeHistory = { items: ModeRevision[]; nextBeforeVersion: number | null };
+type ModeAction = TeamAction & {
+  mode: VerificationMode;
+  body: { expectedVersion: number } & (
+    { action: 'activate'; mode: VerificationMode } | { action: 'restore'; sourceId: string }
+  );
+};
+const historyVersion = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value > 0 && value <= 2_147_483_647;
+function validModeHistory(value: unknown): value is ModeHistory {
+  if (!value || typeof value !== 'object') return false;
+  const { items, nextBeforeVersion } = value as Partial<ModeHistory>;
+  return (
+    Array.isArray(items) &&
+    items.length <= 20 &&
+    items.every(
+      (row: ModeRevision) =>
+        row &&
+        typeof row.id === 'string' &&
+        CONFIG_AUDIT_ID.test(row.id) &&
+        historyVersion(row.version) &&
+        verificationModes.includes(row.value)
+    ) &&
+    (nextBeforeVersion === null || historyVersion(nextBeforeVersion))
+  );
+}
 export default function AdminVerificationConfig() {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -63,7 +95,10 @@ function OwnedVerificationSettings() {
 }
 function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const [rateLimitsOpened, setRateLimitsOpened] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [beforeVersion, setBeforeVersion] = useState<number | null>(null);
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
     verificationConfigText(key, locale);
   const form = useWizardForm<VerificationDraft>(
@@ -109,13 +144,13 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
     },
     [register, focusEpoch]
   );
-  const [action, setAction] = useState<TeamAction | null>(null),
+  const [action, setAction] = useState<ModeAction | null>(null),
     [saved, setSaved] = useState(false),
     [activated, setActivated] = useState(false),
     [saveFailed, setSaveFailed] = useState(false),
     [pending, setPending] = useState(false);
   const activateRef = useRef<HTMLButtonElement>(null),
-    actionRef = useRef<TeamAction | null>(null),
+    actionRef = useRef<ModeAction | null>(null),
     generation = useRef(0),
     validating = useRef(false),
     commandPending = useRef(false),
@@ -136,7 +171,7 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
     onPendingChange(false);
   }, [form.setValidationPending, onPendingChange]);
   const state = useSettingsSnapshot(
-    '/api/admin/config/profile-verification-mode',
+    modePath,
     validVerificationConfig,
     verificationBasis,
     reset,
@@ -154,6 +189,39 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
   const current = state.current;
   const blocked = !state.ready || state.changed || state.uncertain;
   const busy = form.pending || !!action;
+  const history = useCatalogueResource(
+    { ...state.scope, deny: onReadDenied },
+    showHistory
+      ? modePath + '/history' + (beforeVersion === null ? '' : '?beforeVersion=' + beforeVersion)
+      : null,
+    validModeHistory
+  );
+  const olderPage = history.data?.nextBeforeVersion ?? null;
+  function restore(revision: ModeRevision) {
+    if (
+      blocked ||
+      busy ||
+      !current ||
+      revision.value === 'API' ||
+      revision.version > current.version
+    )
+      return;
+    const next: ModeAction = {
+      path: modePath,
+      method: 'PUT',
+      mode: revision.value,
+      title: text('policyRestore'),
+      description: text('policyRestoreReview'),
+      body: { action: 'restore', expectedVersion: current.version, sourceId: revision.id },
+      conflictMessage: text('conflict'),
+      forbiddenMessage: text('forbidden'),
+    };
+    actionRef.current = next;
+    setAction(next);
+    setSaved(false);
+    setActivated(false);
+    setSaveFailed(false);
+  }
   function refresh() {
     if (commandPending.current || directPending.current) return;
     if (validating.current || state.uncertain) withdraw();
@@ -179,13 +247,14 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
         if (epoch !== generation.current || state.scope.denied) return;
         const body = { mode: value.mode, expectedVersion: current.version, action: kind };
         if (kind === 'activate') {
-          const next: TeamAction = {
+          const next: ModeAction = {
             ...(value.mode === 'DISABLED' ? { risk: 'destructive' as const } : {}),
             title: text('activate'),
             description: `${text('warning')} ${text('draftMode')}: ${text(value.mode)}`,
-            path: '/api/admin/config/profile-verification-mode',
+            path: modePath,
             method: 'PUT',
-            body,
+            mode: value.mode,
+            body: { ...body, action: 'activate' },
             successStatus: 200,
             requiresPassword: true,
             conflictMessage: text('conflict'),
@@ -200,7 +269,7 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
         directRequest.current = controller;
         try {
           const { status, raw } = await readWithDeadline(controller.signal, async (signal) => {
-            const response = await fetch('/api/admin/config/profile-verification-mode', {
+            const response = await fetch(modePath, {
               method: 'PUT',
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify(body),
@@ -380,6 +449,77 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
           </Button>
         </div>
       )}
+      {current && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-expanded={showHistory}
+          disabled={busy}
+          onClick={() => {
+            setShowHistory(!showHistory);
+            setBeforeVersion(null);
+          }}
+        >
+          {text('modeHistory')}
+        </Button>
+      )}
+      {showHistory && current && (
+        <section aria-label={text('modeHistory')} className="max-w-xl space-y-3 border-t pt-4">
+          {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+          {history.error && (
+            <Alert variant="destructive">
+              {text('loadFailed')}{' '}
+              <Button type="button" onClick={history.retry}>
+                {text('retry')}
+              </Button>
+            </Alert>
+          )}
+          {!history.loading && !history.error && history.data && (
+            <>
+              {history.data.items.length === 0 ? (
+                <p>{text('policyHistoryEmpty')}</p>
+              ) : (
+                <ul className="divide-y">
+                  {history.data.items.map((entry) => (
+                    <li
+                      key={entry.id}
+                      className="flex flex-wrap items-center justify-between gap-3 py-2"
+                    >
+                      <span>
+                        {text('rateRecoveryVersion').replace(
+                          '{version}',
+                          numbers.number(entry.version, { useGrouping: false })
+                        )}{' '}
+                        · {text(entry.value)}
+                      </span>
+                      {entry.value !== 'API' && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={blocked || busy || entry.version > current.version}
+                          onClick={() => restore(entry)}
+                        >
+                          {text('policyRestore')}
+                        </Button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {beforeVersion !== null && (
+                <Button type="button" variant="ghost" onClick={() => setBeforeVersion(null)}>
+                  {text('rateRecoveryLatest')}
+                </Button>
+              )}
+              {olderPage !== null && (
+                <Button type="button" variant="ghost" onClick={() => setBeforeVersion(olderPage)}>
+                  {text('rateRecoveryOlder')}
+                </Button>
+              )}
+            </>
+          )}
+        </section>
+      )}
       <Button
         type="button"
         variant="outline"
@@ -392,7 +532,7 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
             action={action}
-            finalFocus={activateRef}
+            finalFocus={action.body.action === 'activate' ? activateRef : undefined}
             onClose={withdraw}
             onDenied={state.denyCommand}
             onPendingChange={onPendingChange}
@@ -400,14 +540,18 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
             onValidationError={modeErrors}
             confirmationDisabled={blocked}
             summary={
-              <Button
-                type="button"
-                variant="outline"
-                disabled={state.resource.loading || pending}
-                onClick={refresh}
-              >
-                {text('reload')}
-              </Button>
+              action.body.action === 'restore' ? (
+                <p>{text(action.mode)}</p>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={state.resource.loading || pending}
+                  onClick={refresh}
+                >
+                  {text('reload')}
+                </Button>
+              )
             }
             onSuccess={async (raw) => {
               if (
@@ -416,21 +560,21 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
                 state.scope.denied
               )
                 return;
-              const body = action.body as {
-                mode: VerificationDraft['mode'];
-                expectedVersion: number;
-              };
+              const { body, mode } = action;
+              const activating = body.action === 'activate';
               if (
                 !validVerificationConfig(raw) ||
-                raw.mode !== body.mode ||
-                raw.draft !== null ||
+                raw.mode !== (activating ? mode : current?.mode) ||
+                raw.draft !== (activating ? null : mode) ||
                 raw.version !== body.expectedVersion + 1
               )
                 throw new Error('Unconfirmed verification activation');
               if (!state.accept(raw)) throw new Error('Obsolete verification receipt');
               withdraw();
-              setActivated(true);
+              setActivated(activating);
+              setSaved(!activating);
               state.resource.retry();
+              if (activating && showHistory) history.retry();
             }}
           />
         </Suspense>

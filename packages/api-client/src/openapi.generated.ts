@@ -899,8 +899,25 @@ export interface paths {
         };
         /** Get profile verification mode */
         get: operations["AdminController_getProfileVerificationMode"];
-        /** Save or activate a versioned profile verification draft */
+        /** Save, restore or activate a versioned profile verification draft */
         put: operations["AdminController_setProfileVerificationMode"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/profile-verification-mode/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read audited verification mode activations */
+        get: operations["AdminController_getProfileVerificationModeHistory"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -13417,6 +13434,12 @@ export interface operations {
                     expectedVersion: number;
                     /** @enum {string} */
                     mode: "DISABLED" | "MANUAL" | "API";
+                } | {
+                    /** @enum {string} */
+                    action: "restore";
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
                 };
             };
         };
@@ -13463,6 +13486,36 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    AdminController_getProfileVerificationModeHistory: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: {
+                            /** Format: uuid */
+                            id: string;
+                            /** @enum {string} */
+                            value: "DISABLED" | "MANUAL" | "API";
+                            version: number;
+                        }[];
+                        nextBeforeVersion: number | null;
+                    };
+                };
             };
         };
     };
