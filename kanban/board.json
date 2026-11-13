@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-13T10:37:28+00:00",
+  "updated": "2026-11-13T10:47:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21704,7 +21704,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header and AI catalogue corrections address the shard-one deterministic failures. WebKit shard five exceeded its job budget while retrying a combined limit-settings test. All 36 isolated settings cases passed locally. Knowledge and registration had 39 local passes without retries. Signed-in auth entry still needs triage, and a clean scheduled rollup and delivery remain required.",
+        "Scheduled run 43398455059 on 44b94a3e had 39 of 40 valid shard reports, 42 unexpected results and five flaky results. The header and AI catalogue corrections address the shard-one deterministic failures. WebKit shard five exceeded its job budget while retrying a combined limit-settings test. All 36 isolated settings cases passed locally. Knowledge and registration had 39 local passes without retries. Signed-in auth entry still needs triage, and a clean scheduled rollup and delivery remain required. The auth stall reproduces even with a same-origin HTTP response fixture. Review preserved browser traces for response consumption and document commit. No experimental patch was accepted.",
         "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and mailbox receipt on a scheduled execution.",
         "The prior provider, ownership, registration, branding and contrast fixes retain their exact proof. For the new mobile Safari failure, the revised observer passed eight targeted cases and the missing-event and fade sensitivity probes. The next clean scheduled rollup remains required."
       ],
@@ -21794,7 +21794,8 @@
           "release-0.6-gate-readback",
           "release-0.6-nightly-header-target",
           "release-0.6-nightly-ai-catalogue-scroll",
-          "release-0.6-nightly-limit-settings-isolation"
+          "release-0.6-nightly-limit-settings-isolation",
+          "release-0.6-nightly-auth-entry-triage"
         ],
         "current_acceptance": null
       }
@@ -1194199,6 +1194200,62 @@
         {
           "file": "baseline.log",
           "sha256": "f990e507c256abdbcf8a14f969961c2cb560ea7dca21abad3ecdd7e439104e9f"
+        }
+      ]
+    },
+    "release-0.6-nightly-auth-entry-triage": {
+      "batch": "release-0.6-nightly-auth-entry-triage",
+      "base_commit": "97ae5e4308bf4ba9afd5d20bdfd0e8772c884d21",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+        },
+        {
+          "path": "apps/web/src/lib/auth-bootstrap-read.ts",
+          "sha256": "28f3d57a305a339ca4c1b6046bd4206a76e9afce0e0b4c3736bb0341ae4068fd"
+        },
+        {
+          "path": "apps/web/src/lib/route-bootstrap-read.ts",
+          "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+        }
+      ],
+      "checks": [
+        "Hosted Firefox on run 43398455059 stalled after a successful auth response and an HTTP 200 document request to /app. Local Chromium/WebKit/Firefox-family traces distinguish pending browser navigation from failure before the /app document request. The combined unchanged replay had three auth failures while all 36 settings cases passed.",
+        "An isolated same-origin HTTP authority fixture still had a mobile Safari failure. Direct production document redirect still had a Firefox failure. A navigation-commit observer still had five failures, and rewriting the authority request across loopback ports failed in WebKit. Preserved reports and reverted all experimental changes. The original source build was restored."
+      ],
+      "limitations": [
+        "Neither a product fix nor a stable replacement fixture was demonstrated. Isolate the exact session response consumption or browser navigation commit boundary, then obtain a clean scheduled rollup on the immutable candidate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-auth-entry",
+      "execution_receipts": [
+        {
+          "file": "loopback.log",
+          "sha256": "5da8e40156eaafee4e919ac0598d7ed6ccb300fab2c33eab8230a31ecfd9cd53"
+        },
+        {
+          "file": "direct-handoff-browser.log",
+          "sha256": "e0cdfc5040f82aac667174ab3d8e705f584353afbf48b47b11377fa1ebaf70ba"
+        },
+        {
+          "file": "handoff-commit-browser.log",
+          "sha256": "6b0ad14092295bcb078119a6745d63dd4f69ccb2b23365c99d3550a34bb4429d"
+        },
+        {
+          "file": "combined-handoff.log",
+          "sha256": "0ab37ea26b478d56d5180491c169a9d20182fa01d13a8fbd21e0769b609745cb"
+        },
+        {
+          "file": "restored-build.log",
+          "sha256": "8d0d0c04527b2d486b7dbfa6a3db7c9e8fb415f392907e42609e167caf0aebd0"
         }
       ]
     }
