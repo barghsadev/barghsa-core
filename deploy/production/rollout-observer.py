@@ -23,10 +23,10 @@ from urllib.request import HTTPCookieProcessor, HTTPRedirectHandler, ProxyHandle
 
 
 JOURNEYS = {
-    'electricity': ('/api/electricity/orders', 'orders', 'orderId'),
-    'saving': ('/api/saving/orders', 'orders', 'id'),
-    'solar': ('/api/solar/requests', 'requests', 'id'),
-    'consultation': ('/api/consultations/requests', 'requests', 'id'),
+    'electricity': ('/api/electricity/orders', None, 'orderId', 'profileId'),
+    'saving': ('/api/saving/orders', None, 'id', 'profile_id'),
+    'solar': ('/api/solar/requests', 'request', 'id', 'profile_id'),
+    'consultation': ('/api/consultations/requests', 'request', 'id', 'profile_id'),
 }
 SECURITY_RULES = {'PaymentCallbackAnomaly', 'PaymentIdempotencyConflict', 'AuthenticationFailuresElevated'}
 RELEASE = 'barghsa_api_release_info'
@@ -127,10 +127,23 @@ def customer_matches(user, config):
             and user.get('navigation', {}).get('profileId') == config['profile_id'])
 
 
-def fixture_present(rows, key, expected):
-    return isinstance(rows, list) and any(
-        isinstance(row, dict) and row.get(key) == expected for row in rows
-    )
+def fixture_profile_matches(account, profile_id):
+    profiles = account.get('profiles')
+    # The profile list marks only an owned default profile as isDefault.
+    return (account.get('activeProfileId') == profile_id
+            and isinstance(profiles, list) and len(profiles) == 1
+            and isinstance(profiles[0], dict) and profiles[0].get('id') == profile_id
+            and profiles[0].get('isDefault') is True)
+
+
+def read_fixture(get, name, config):
+    path, envelope, record_key, profile_key = JOURNEYS[name]
+    fixture_id = config['fixtures'][name]
+    record = get(f'{path}/{fixture_id}')
+    if envelope is not None and isinstance(record, dict):
+        record = record.get(envelope)
+    return (isinstance(record, dict) and record.get(record_key) == fixture_id
+            and record.get(profile_key) == config['profile_id'])
 
 
 def smoke(reader, previous, config):
@@ -139,20 +152,26 @@ def smoke(reader, previous, config):
                          and release_ready(previous, config['previous']['revision']['commit']))
     if not results['health']:
         return results
-    user = reader.get('/api/auth/user', authenticated=True)
-    if not customer_matches(user, config):
+    def get(path):
+        return reader.get(path, authenticated=True)
+
+    if (not customer_matches(get('/api/auth/user'), config)
+            or not fixture_profile_matches(get('/api/profiles'), config['profile_id'])):
         return results
-    dashboard = reader.get('/api/dashboard/context', authenticated=True)
+    dashboard = get('/api/dashboard/context')
     results['dashboard'] = (dashboard.get('profile', {}).get('id') == config['profile_id']
                             and dashboard.get('access', {}).get('wallet') is True)
     if results['dashboard']:
-        wallet = reader.get('/api/wallet/' + config['profile_id'], authenticated=True)
+        wallet = get('/api/wallet/' + config['profile_id'])
         balance = wallet.get('balance')
         results['wallet'] = (wallet.get('currency') == 'IRR' and isinstance(balance, str)
                              and bool(re.fullmatch(r'0|[1-9][0-9]{0,18}', balance)))
-    for name, (path, collection, key) in JOURNEYS.items():
-        rows = reader.get(path, {'profileId': config['profile_id']}, authenticated=True).get(collection)
-        results[name] = fixture_present(rows, key, config['fixtures'][name])
+    for name in JOURNEYS:
+        try:
+            results[name] = read_fixture(get, name, config)
+        except HTTPError as error:
+            if error.code != 404:
+                raise
     return results
 
 
@@ -280,14 +299,8 @@ def validate_synthetic(config):
 
 def verify_synthetic_account(browser, config):
     require(customer_matches(browser.request('/api/auth/user'), config), 'unexpected_account_identity')
-    account = browser.request('/api/profiles')
-    profiles = account.get('profiles')
-    profile_id = config['profile_id']
-    # The profile list marks only an owned default profile as isDefault.
-    require(account.get('activeProfileId') == profile_id
-            and isinstance(profiles, list) and len(profiles) == 1
-            and isinstance(profiles[0], dict) and profiles[0].get('id') == profile_id
-            and profiles[0].get('isDefault') is True, 'fixture_profile_not_isolated')
+    require(fixture_profile_matches(browser.request('/api/profiles'), config['profile_id']),
+            'fixture_profile_not_isolated')
 
 
 def synthetic(config):
@@ -326,12 +339,10 @@ def synthetic(config):
         try:
             login = check('login', browser, lambda: browser.login(config))
             if login and check('account', browser, lambda: verify_synthetic_account(browser, config)):
-                for name, (path, collection, key) in JOURNEYS.items():
-                    def read_fixture():
-                        value = browser.request(path + '?' + urlencode({'profileId': config['profile_id']}))
-                        require(fixture_present(value.get(collection), key, config['fixtures'][name]),
-                                'fixture_unavailable')
-                    check(name, browser, read_fixture)
+                for name in JOURNEYS:
+                    check(name, browser, lambda: require(
+                        read_fixture(browser.request, name, config), 'fixture_unavailable',
+                    ))
         finally:
             if browser.has_session():
                 check('logout', browser, browser.logout)

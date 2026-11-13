@@ -15,10 +15,10 @@ from urllib.parse import parse_qs, urlsplit
 SCRIPT = Path(__file__).with_name('rollout-observer.py')
 SCOPE = {'environment': 'rehearsal', 'database': 'core'}
 SERVICES = {
-    '/api/electricity/orders': ('electricity', 'orders', 'orderId'),
-    '/api/saving/orders': ('saving', 'orders', 'id'),
-    '/api/solar/requests': ('solar', 'requests', 'id'),
-    '/api/consultations/requests': ('consultation', 'requests', 'id'),
+    '/api/electricity/orders': ('electricity', None, 'orderId', 'profileId'),
+    '/api/saving/orders': ('saving', None, 'id', 'profile_id'),
+    '/api/solar/requests': ('solar', 'request', 'id', 'profile_id'),
+    '/api/consultations/requests': ('consultation', 'request', 'id', 'profile_id'),
 }
 BUCKETS = ('0.005', '0.01', '0.025', '0.05', '0.1', '0.25', '0.5', '1', '2', '5', '10', '+Inf')
 WALLET_FIXTURE_BALANCE = '8901234567890123456'
@@ -42,7 +42,7 @@ class Rehearsal:
                         ('candidate-api', 'previous-api', 'candidate-probes', 'previous-probes', 'wallet-worker')},
             'max_scrape_age_seconds': 5, 'wallet_job': 'wallet-worker',
             'user_id': fixture_id(1), 'profile_id': fixture_id(2),
-            'fixtures': {service: fixture_id(i) for i, (service, _, _) in enumerate(SERVICES.values(), 3)},
+            'fixtures': {service: fixture_id(i) for i, (service, *_) in enumerate(SERVICES.values(), 3)},
             'session_id': 'rehearsal-private-session', 'prometheus_token': 'rehearsal-private-monitoring',
         }
         self.fault = ''
@@ -92,7 +92,7 @@ class Rehearsal:
             if job in {self.config[pool]['journey_job'] for pool in ('candidate', 'previous')}:
                 if not job.endswith('-api'):
                     add('process_start_time_seconds', [43] * 13)
-                for service, _, _ in SERVICES.values():
+                for service, *_ in SERVICES.values():
                     if self.fault == 'missing-solar' and service == 'solar':
                         continue
                     add('barghsa_rollout_journey_attempts_total', range(0, 26, 2),
@@ -162,6 +162,12 @@ class Rehearsal:
                     profile = fixture_id(999) if fixture.fault == 'foreign-profile' else fixture.config['profile_id']
                     payload = {'userId': fixture.config['user_id'], 'isStaff': False,
                                'operatingContext': 'customer', 'navigation': {'profileId': profile}}
+                elif path == '/api/profiles':
+                    profile = fixture.config['profile_id']
+                    profiles = [{'id': profile, 'isDefault': fixture.fault != 'delegated-profile'}]
+                    if fixture.fault == 'additional-profile':
+                        profiles.append({'id': fixture_id(999), 'isDefault': False})
+                    payload = {'activeProfileId': profile, 'profiles': profiles}
                 elif path == '/api/dashboard/context':
                     profile = fixture_id(999) if fixture.fault == 'foreign-dashboard' else fixture.config['profile_id']
                     payload = {'profile': {'id': profile}, 'access': {'wallet': True}}
@@ -169,10 +175,18 @@ class Rehearsal:
                     payload = {'currency': 'IRR',
                                'balance': 'unavailable' if fixture.fault == 'invalid-wallet' else WALLET_FIXTURE_BALANCE}
                 else:
-                    service, collection, key = SERVICES[path]
-                    assert params['profileId'] == [fixture.config['profile_id']]
-                    row_id = fixture_id(999) if fixture.fault == 'foreign-' + service else fixture.config['fixtures'][service]
-                    payload = {collection: [{key: row_id}]}
+                    route, _, record_id = path.rpartition('/')
+                    if route not in SERVICES or params:
+                        self.send_error(404)
+                        return
+                    service, envelope, record_key, profile_key = SERVICES[route]
+                    if record_id != fixture.config['fixtures'][service] or fixture.fault == 'missing-' + service:
+                        self.send_error(404)
+                        return
+                    row_id = fixture_id(999) if fixture.fault == 'foreign-' + service else record_id
+                    profile = fixture_id(999) if fixture.fault == 'foreign-owner-' + service else fixture.config['profile_id']
+                    record = {record_key: row_id, profile_key: profile}
+                    payload = {envelope: record} if envelope else record
                 body = json.dumps(payload).encode()
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
@@ -283,11 +297,23 @@ class ObserverTest(unittest.TestCase):
         self.assertEqual(self.rehearsal.requests, [])
 
     def test_foreign_session_or_fixture_cannot_pass_smoke(self):
-        for fault in ('foreign-profile', 'foreign-saving'):
+        for fault in ('foreign-profile', 'additional-profile', 'delegated-profile'):
             with self.subTest(fault=fault):
                 result = self.observe(fault)
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertFalse(json.loads(result.stdout)['smoke']['saving'])
+                smoke = json.loads(result.stdout)['smoke']
+                self.assertTrue(smoke.pop('health'))
+                self.assertFalse(any(smoke.values()))
+                paths = {path for _, path, _, _ in self.rehearsal.requests}
+                self.assertNotIn('/api/dashboard/context', paths)
+                self.assertFalse(any(path.startswith(tuple(SERVICES)) for path in paths))
+        for fault in ('foreign-saving', 'foreign-owner-saving', 'missing-saving'):
+            with self.subTest(fault=fault):
+                result = self.observe(fault)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                smoke = json.loads(result.stdout)['smoke']
+                self.assertFalse(smoke.pop('saving'))
+                self.assertTrue(all(smoke.values()))
 
     def test_dashboard_and_wallet_smoke_are_profile_scoped(self):
         result = self.observe('foreign-dashboard')

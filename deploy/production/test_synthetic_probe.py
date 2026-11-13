@@ -7,7 +7,7 @@ import sys
 import tempfile
 import threading
 import unittest
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import urlsplit
 
 
 OBSERVER = Path(__file__).with_name('rollout-observer.py')
@@ -15,17 +15,17 @@ USER = '00000000-0000-4000-8000-000000000001'
 PROFILE = '00000000-0000-4000-8000-000000000002'
 CHALLENGE = '00000000-0000-4000-8000-000000000003'
 CORRELATION = '00000000-0000-4000-8000-000000000004'
-FIXTURE = '00000000-0000-4000-8000-000000000005'
 PASSWORD = 'synthetic-only-password'
 BEARER = 'synthetic-session-bearer'
 DEVICE = 'd' * 64
 CSRF = 'f' * 64
 JOURNEYS = {
-    'electricity': ('/api/electricity/orders', 'orders', 'orderId'),
-    'saving': ('/api/saving/orders', 'orders', 'id'),
-    'solar': ('/api/solar/requests', 'requests', 'id'),
-    'consultation': ('/api/consultations/requests', 'requests', 'id'),
+    'electricity': ('/api/electricity/orders', None, 'orderId', 'profileId'),
+    'saving': ('/api/saving/orders', None, 'id', 'profile_id'),
+    'solar': ('/api/solar/requests', 'request', 'id', 'profile_id'),
+    'consultation': ('/api/consultations/requests', 'request', 'id', 'profile_id'),
 }
+FIXTURES = {name: f'00000000-0000-4000-8000-{i:012d}' for i, name in enumerate(JOURNEYS, 5)}
 
 
 class SyntheticProbeTests(unittest.TestCase):
@@ -86,11 +86,16 @@ class SyntheticProbeTests(unittest.TestCase):
                     if fixture.fault == 'additional_profile':
                         profiles.append({'id': USER, 'isDefault': False})
                     return self.response({'activeProfileId': PROFILE, 'profiles': profiles})
-                for route, collection, key in JOURNEYS.values():
-                    if path == route and parse_qs(parsed.query) == {'profileId': [PROFILE]}:
-                        if fixture.fault == 'missing_fixture' and path == JOURNEYS['solar'][0]:
-                            return self.response({collection: [{key: PROFILE}]})
-                        return self.response({collection: [{key: FIXTURE, 'private': PASSWORD}]})
+                for name, (route, envelope, record_key, profile_key) in JOURNEYS.items():
+                    if path == f'{route}/{FIXTURES[name]}' and not parsed.query:
+                        if name == 'solar' and fixture.fault == 'missing_fixture':
+                            return self.response({}, 404)
+                        record = {record_key: FIXTURES[name], profile_key: PROFILE, 'private': PASSWORD}
+                        if name == 'solar' and fixture.fault == 'wrong_fixture':
+                            record[record_key] = USER
+                        if name == 'solar' and fixture.fault == 'wrong_fixture_profile':
+                            record[profile_key] = USER
+                        return self.response({envelope: record} if envelope else record)
                 return self.response({}, 404)
 
             def do_POST(self):
@@ -139,7 +144,7 @@ class SyntheticProbeTests(unittest.TestCase):
         self.config = {
             'origin': self.origin,
             'user_id': USER, 'profile_id': PROFILE,
-            'fixtures': dict.fromkeys(JOURNEYS, FIXTURE),
+            'fixtures': FIXTURES,
             'username': 'probe@example.test', 'password': PASSWORD, 'device_token': DEVICE,
         }
 
@@ -194,7 +199,7 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
     def check_report(self, result):
         self.assertEqual(result.stderr, '')
         self.assertTrue(self.metrics.is_file())
-        for protected in (USER, PROFILE, CHALLENGE, FIXTURE, PASSWORD, BEARER, DEVICE, CSRF):
+        for protected in (USER, PROFILE, CHALLENGE, *FIXTURES.values(), PASSWORD, BEARER, DEVICE, CSRF):
             self.assertNotIn(protected, result.stdout + self.metrics.read_text())
         return json.loads(result.stdout)['checks']
 
@@ -209,7 +214,7 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
             ('GET', '/api/health/live'), ('GET', '/api/health/ready'),
             ('GET', '/api/auth/csrf'), ('POST', '/api/auth/login'),
             ('GET', '/api/auth/user'), ('GET', '/api/profiles'),
-            *(('GET', route[0]) for route in JOURNEYS.values()),
+            *(('GET', f'{route[0]}/{FIXTURES[name]}') for name, route in JOURNEYS.items()),
             ('POST', '/api/auth/logout'),
         ])
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
@@ -267,7 +272,9 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 checks = self.check_report(result)
                 self.assertEqual(checks['electricity']['status'], 'skipped')
                 self.assertEqual(checks['logout']['status'], 'passed')
-                self.assertNotIn(('GET', JOURNEYS['electricity'][0]), self.calls)
+                self.assertEqual(self.calls[-1], ('POST', '/api/auth/logout'))
+                for route, *_ in JOURNEYS.values():
+                    self.assertFalse(any(path.startswith(route) for _, path in self.calls))
                 self.assertNotIn('check="electricity"', self.metrics.read_text())
 
     def test_rejects_an_account_with_multiple_profiles_or_delegated_access(self):
@@ -285,14 +292,20 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
                 self.assertNotIn('check="electricity"', self.metrics.read_text())
 
     def test_read_failure_does_not_hide_other_journeys_or_skip_logout(self):
-        self.fault = 'missing_fixture'
-        result = self.probe()
-        self.assertEqual(result.returncode, 1)
-        checks = self.check_report(result)
-        self.assertEqual(checks['solar']['reason'], 'fixture_unavailable')
-        self.assertEqual(checks['consultation']['status'], 'passed')
-        self.assertEqual(checks['logout']['status'], 'passed')
-        self.assertIn('barghsa_synthetic_probe_success{check="solar"} 0', self.metrics.read_text())
+        for fault in ('missing_fixture', 'wrong_fixture', 'wrong_fixture_profile'):
+            with self.subTest(fault=fault):
+                self.fault = fault
+                result = self.probe()
+                self.assertEqual(result.returncode, 1)
+                checks = self.check_report(result)
+                if fault == 'missing_fixture':
+                    self.assertEqual(checks['solar']['reason'], 'http_failure')
+                    self.assertEqual(checks['solar']['http_status'], 404)
+                else:
+                    self.assertEqual(checks['solar']['reason'], 'fixture_unavailable')
+                self.assertEqual(checks['consultation']['status'], 'passed')
+                self.assertEqual(checks['logout']['status'], 'passed')
+                self.assertIn('barghsa_synthetic_probe_success{check="solar"} 0', self.metrics.read_text())
 
     def test_failed_health_and_login_redirect_do_not_send_follow_up_authentication(self):
         for fault in ('health', 'redirect'):

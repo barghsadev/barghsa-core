@@ -12869,7 +12869,8 @@
         "batches": [
           "release-0.6-native-seed-and-bootstrap-acceptance",
           "release-0.6-admin-bootstrap-acceptance",
-          "release-0.6-rollback-runbook-acceptance"
+          "release-0.6-rollback-runbook-acceptance",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -12882,7 +12883,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -12925,6 +12926,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "Only the rollback task wording and its runbook changed. All other task specification lines, application code and deployment guards are unchanged."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -13009,7 +13018,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13021,7 +13031,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13350,6 +13360,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -20505,7 +20523,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -20517,7 +20536,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -20705,6 +20724,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -20770,7 +20797,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -20782,7 +20810,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -20970,6 +20998,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -23025,7 +23061,8 @@
       "launch_required": true,
       "remaining": [
         "Repeat the native browser sign-in with the authorized synthetic account on the exact staged candidate. The isolated hosted case exercises a fresh OTP, the rendered owned dashboard and wallet, and logout revocation. Keep the deployed SHA and actual customer-scope, wallet and logout receipts alongside the observer results.",
-        "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them."
+        "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
+        "The observer reads the four exact fixture records after checking the dedicated account and owned default profile. Local tests passed for guarded observation and scheduled synthetic checks. The exact staging and production-equivalent receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -23053,19 +23090,21 @@
           "historically_skipped": true
         },
         "changed_paths": [
+          "apps/api/src/test/http-fixture.ts",
+          "apps/web/e2e/rollout-smoke.spec.ts",
           "audit/skipped-work-handoff.md",
           "deploy/production/README.md",
           "deploy/production/guarded-rollout.py",
           "deploy/production/rollout-observer.py",
           "deploy/production/test_guarded_rollout.py",
           "deploy/production/test_rollout_observer.py",
-          "apps/api/src/test/http-fixture.ts",
-          "apps/web/e2e/rollout-smoke.spec.ts"
+          "deploy/production/test_synthetic_probe.py"
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
           "release-0.6-native-rollout-browser",
-          "release-0.6-rollout-p99-evidence"
+          "release-0.6-rollout-p99-evidence",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": null
       }
@@ -33724,7 +33763,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -33745,7 +33785,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -34206,6 +34246,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -36437,7 +36485,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -36465,7 +36514,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             }
           ],
           "checks": [
@@ -36665,6 +36714,14 @@
                 "apps/api/src/metrics/telemetry-http.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -674394,7 +674451,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -674406,7 +674464,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -674486,6 +674544,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -697820,7 +697886,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-immutable-board-readiness",
-          "release-0.6-browser-attempt-receipts"
+          "release-0.6-browser-attempt-receipts",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -697842,7 +697909,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -698213,6 +698280,14 @@
                 "scripts/report-nightly-browser.py"
               ],
               "scope": "Strengthens the existing hosted browser and promotion evidence with exact attempt identity. The 40-shard browser matrix, report delivery controls and accepted CI assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -698341,7 +698416,8 @@
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
           "release-0.6-rollback-runbook-acceptance",
-          "release-0.6-contract-limit-recovery"
+          "release-0.6-contract-limit-recovery",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -698352,7 +698428,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -698649,6 +698725,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Three additive contract-limit recovery endpoints and a lazy settings panel. Existing settings PUT/GET values, constraints and financial request readers keep their established paths. Green recovery uses the same reviewed behavior through the shared panel. Invoice reminder production code is unchanged and its fixture applies existing migration 0291. Other dictionary keys and OpenAPI paths/schemas were compared bytewise or structurally as applicable. Relevant native, browser, artifact and budget receipts are attached."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -698670,27 +698754,30 @@
       "launch_required": true,
       "remaining": [
         "Configure the approved topology with the exact pinned candidate and previous pools, route and image readbacks, dedicated customer fixtures and complete scoped API, journey, wallet and security monitoring.",
-        "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them."
+        "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
+        "The local guarded observer verifies each service fixture through its detail endpoint with the exact record and profile IDs. The actual staged comparison and rollback receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/test/http-fixture.ts",
+          "apps/web/e2e/rollout-smoke.spec.ts",
           "deploy/production/README.md",
           "deploy/production/guarded-rollout.py",
-          "deploy/production/test_guarded_rollout.py",
-          "docs/runbooks/bad-deployment.md",
           "deploy/production/rollout-observer.py",
+          "deploy/production/test_guarded_rollout.py",
           "deploy/production/test_rollout_observer.py",
-          "apps/api/src/test/http-fixture.ts",
-          "apps/web/e2e/rollout-smoke.spec.ts"
+          "deploy/production/test_synthetic_probe.py",
+          "docs/runbooks/bad-deployment.md"
         ],
         "batches": [
           "release-0.6-launch-halt-and-rollback",
           "release-0.6-post-deploy-observation",
           "release-0.6-native-rollout-browser",
-          "release-0.6-rollout-p99-evidence"
+          "release-0.6-rollout-p99-evidence",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": null
       }
@@ -706654,7 +706741,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
-          "release-0.6-rollout-authentication-alert"
+          "release-0.6-rollout-authentication-alert",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -706678,11 +706766,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "a8303be249d3728369e1030476be6983a67376893937f116ff2d7aeab43fce75"
+              "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -706909,6 +706997,15 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "The staging scrape adds an API role label. The authentication alert includes both rollout pools and the observer requires a healthy scoped rule and the API label. Existing dashboard, smoke, traffic, security and collector assertions passed in the focused suites."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Observer fixture reads now use authenticated detail GETs after proving account isolation. Existing read-only health, maintenance, telemetry and rollback boundaries were reviewed. The observer, synthetic and guarded rollout suites passed."
             }
           ]
         }
@@ -717567,7 +717664,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -717615,15 +717713,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "a8303be249d3728369e1030476be6983a67376893937f116ff2d7aeab43fce75"
+              "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "318844b7c539eda968d30832cc9a1b3065efbff6cb1ddaef7fb062101d7d377a"
+              "sha256": "1ef07227ab6dcc5b024ea320a8b2ff658dd67752ef1eda2690f22eef656b533f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -717844,6 +717942,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The existing OpenTelemetry SDK, collector validation and environment labeling move to a small server-side workspace. Every third-party package and lockfile snapshot retains its version and resolution. The shared ESM/CommonJS export and established request/outbox traces passed. The web runtime adds only the telemetry package and its locked runtime dependencies. The license gate identifies the exact first-party package and still inventories its third-party dependencies by scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "Observer fixture reads now use authenticated detail GETs after proving account isolation. Existing read-only health, maintenance, telemetry and rollback boundaries were reviewed. The observer, synthetic and guarded rollout suites passed."
             }
           ]
         }
@@ -718131,7 +718239,8 @@
           "release-0.6-rollout-p99-evidence",
           "release-0.6-promotion-image-receipts",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -718179,7 +718288,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0e690c5e9c068c4ffb4a1246423499cc54fc2e0d7eed4512c28ca6ba3ab293b8"
+              "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -718435,6 +718544,14 @@
                 "apps/api/src/metrics/telemetry-http.integration.test.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-synthetic-exact-fixture-read",
+              "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the two fixture-reading paragraphs changed in the operator guide."
             }
           ]
         }
@@ -718456,30 +718573,32 @@
       "launch_required": true,
       "remaining": [
         "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry. Live staging Prometheus showed healthy API and worker targets at 19:20 UTC on 12 November. The independent synthetic target was absent. The staging overlay now declares an expected target independently of file discovery. Verify its recording rule when the approved target is installed.",
-        "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
+        "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt.",
+        "Both observer modes now request each configured service fixture by its exact ID and verify the returned record and profile IDs. The eight local synthetic tests passed. The independent deployed schedule, target and authentication are still required."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-synthetic-expectation.yml",
+          "deploy/monitoring/staging-synthetic.yml",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
           "deploy/monitoring/systemd/barghsa-synthetic.service",
           "deploy/monitoring/systemd/barghsa-synthetic.timer",
           "deploy/production/README.md",
           "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py",
           "deploy/production/test_synthetic_probe.py",
-          "deploy/monitoring/staging-prometheus.yml",
-          "deploy/monitoring/staging-synthetic.yml",
           "docs/operations/notification-monitoring.md",
-          "apps/worker/src/operations/alerts.integration.test.ts",
-          "apps/worker/src/operations/alerts.ts",
-          "deploy/monitoring/grafana-executive-slo-dashboard.json",
-          "deploy/monitoring/synthetic-probe-alerts.test.yml",
-          "deploy/monitoring/synthetic-probe-alerts.yml",
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
-          "packages/shared/src/notifications/operations-alert-links.ts",
-          "deploy/monitoring/staging-synthetic-expectation.yml"
+          "packages/shared/src/notifications/operations-alert-links.ts"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
@@ -718487,7 +718606,8 @@
           "release-0.6-synthetic-staging-scrape",
           "release-0.6-tls-expiry-warning",
           "release-0.6-gate-readback",
-          "release-0.6-synthetic-target-loss"
+          "release-0.6-synthetic-target-loss",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": null
       }
@@ -718508,7 +718628,8 @@
       "launch_required": true,
       "remaining": [
         "The probe now requires the configured fixture to be the only accessible profile and the owned active default. An additional owned or delegated profile stops all service reads and retains logout.",
-        "On the approved independent runner, configure the dedicated non-staff account, protected normal trusted-device or verified-contact OTP path and its four existing records. The documented protected config was absent on the staging and EU hosts at readback. Verify native live identity, scoped GETs and logout before accepting this task."
+        "On the approved independent runner, configure the dedicated non-staff account, protected normal trusted-device or verified-contact OTP path and its four existing records. The documented protected config was absent on the staging and EU hosts at readback. Verify native live identity, scoped GETs and logout before accepting this task.",
+        "The scheduled probe and guarded rollout smoke both require a single accessible owned active default profile. An additional or delegated profile stops business reads. The four detail GETs verify record and profile IDs. Local checks verified that a missing or mismatched record fails its journey and the scheduled probe still logs out."
       ],
       "owner": null,
       "depends_on": [],
@@ -718519,11 +718640,13 @@
           "deploy/monitoring/systemd/barghsa-synthetic.timer",
           "deploy/production/README.md",
           "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py",
           "deploy/production/test_synthetic_probe.py"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-profile-isolation"
+          "release-0.6-synthetic-profile-isolation",
+          "release-0.6-synthetic-exact-fixture-read"
         ],
         "current_acceptance": null
       }
@@ -1249244,6 +1249367,111 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-synthetic-exact-fixture-read": {
+      "batch": "release-0.6-synthetic-exact-fixture-read",
+      "base_commit": "2a056eda4662ceff9339f4a251327a286712e9e9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_rollout_observer.py",
+        "deploy/production/test_synthetic_probe.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-request.controller.ts",
+          "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "201a3f9ab8a8e470961e911c946c8fbf83b13ac5c45211da51e7c291a5877511"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "edbeb9f7e3970b44b3ea54f87c6e05a2a2496a3f2a58a07b8cfe82dd09ae0b11"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "80b31daa81378924d16a40ed12b70032ceb1fa8b404076589c6bdf0842104aa5"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.controller.ts",
+          "sha256": "c40ed001c911f3a80d3538d6536540f18d8bf0fc9d22c2e134e89b06015f3cbe"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "a33ca4fb1a13babbcc9deb822f6741bf1e8eec9f3d340aec0e43069212aca0c8"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.controller.ts",
+          "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "6272aba36765e57e0b939b70db67904c27de77f40c29d60eb07d4412a22f1473"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "99adb90c53e7cbae3f0a3b753bc56f41b5c0db2a73cb893a57a1fd0f3279fa6c"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "15aa0572867be8fde0064749130711c6388790848f660200ee3070f243c4dd7f"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "1ef07227ab6dcc5b024ea320a8b2ff658dd67752ef1eda2690f22eef656b533f"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "d88987f871eb8eac2d8ac2837a9d506cdb95f2cad630fa8de6b6606347673171"
+        }
+      ],
+      "checks": [
+        "Reviewed the four existing authenticated detail routes, exact response envelopes and ownership fields, native journey metric route templates and the owned-default profile list response.",
+        "Eight scheduled synthetic tests and twelve rollout observer tests passed. Direct reads use the configured fixture IDs. Missing fixtures, incorrect record or profile IDs and extra or delegated profiles fail. Unaffected journeys continue after a missing fixture, and the scheduled probe logs out.",
+        "Seventeen guarded rollout tests passed. Python compilation and git diff --check passed."
+      ],
+      "limitations": [
+        "Local checks used protected loopback fixtures. No deployed synthetic customer, independent timer or live candidate receipt is established by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-exact-fixture-read",
+      "execution_receipts": [
+        {
+          "file": "local-checks.json",
+          "sha256": "2bd2006a1f8acae0cd01ccb104ea4ec09466d5874a5d4382ea3d9d679f37e2ac"
         }
       ]
     }

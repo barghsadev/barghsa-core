@@ -237,11 +237,12 @@ operator ownership of that JSON file and mode `0600`. It contains:
   hook verifies route weight and running image IDs.
 - `user_id`, `profile_id`, `session_id` and a `fixtures` object mapping
   `electricity`, `saving`, `solar` and `consultation` to a known order or
-  request ID from that synthetic customer profile. Put the fixture on the
-  first page returned by each service. Use a current ordinary customer
-  session from the candidate environment. The observer reads the active
-  dashboard context, checks wallet access, validates the profile's IRR
-  balance response and verifies the four expected records. The receipt
+  request ID from that synthetic customer profile. Use a current ordinary
+  customer session from the candidate environment. The observer verifies the
+  account's only accessible profile is its owned active default, reads the
+  dashboard context, checks wallet access and validates the profile's IRR
+  balance response. It reads each configured record by ID and verifies the
+  returned record and profile IDs. The receipt
   includes pass or fail signals. Keep the fresh sign-in receipt from the
   synthetic login journey with the operational evidence.
 - `prometheus_origin`, `prometheus_token` for a read-only bearer credential,
@@ -413,7 +414,7 @@ Probe `GET /api/health/live` without credentials to verify the process can serve
 
 Use a dedicated customer test account and its protected verified contact for the authenticated journey. Bootstrap CSRF through `GET /api/auth/csrf`, sign in through `POST /api/auth/login`, and complete `POST /api/auth/login/verify` when challenged. Use the returned cookies to read `GET /api/auth/user` and verify only the expected test account identity. Sign out through `POST /api/auth/logout` with the active CSRF proof. Keep credentials, contact values and response bodies out of monitoring output. Report status, duration and the response correlation ID. The probe makes no financial or customer-profile changes.
 
-Run `rollout-observer.py --synthetic --config /etc/barghsa/synthetic.json --metrics-file /var/lib/barghsa-synthetic/probe.prom` on an approved monitoring host outside the application VM. The protected JSON file must be owned by the probe user and mode `0600`. It contains the HTTPS `origin`, the dedicated fixture's `username` and `password`, its expected `user_id` and `profile_id`, and `fixtures` mapping electricity, saving, solar and consultation to existing fixture IDs. Use a non-staff customer whose only accessible profile is the owned, active default fixture profile. The probe verifies the profile list before reading the four existing records. Each authenticated business request is a GET.
+Run `rollout-observer.py --synthetic --config /etc/barghsa/synthetic.json --metrics-file /var/lib/barghsa-synthetic/probe.prom` on an approved monitoring host outside the application VM. The protected JSON file must be owned by the probe user and mode `0600`. It contains the HTTPS `origin`, the dedicated fixture's `username` and `password`, its expected `user_id` and `profile_id`, and `fixtures` mapping electricity, saving, solar and consultation to existing fixture IDs. Use a non-staff customer whose only accessible profile is the owned, active default fixture profile. The probe verifies the profile list before reading the four existing records by ID. Each authenticated business request is a GET. A check passes only when the response contains the configured record and profile IDs.
 
 Use a `device_token` issued by normal trusted-device enrollment for that account or an approved `otp_reader`. The reader is an absolute executable path owned by root or the probe user and protected against group and world writes. It reads the challenge ID and request time from stdin and returns the six-digit code for that fresh challenge through stdout. Configure its verified contact and credentials separately. There is one login attempt per run and no automatic resend. If the product challenges a trusted device, the check needs the protected reader to complete sign-in.
 
