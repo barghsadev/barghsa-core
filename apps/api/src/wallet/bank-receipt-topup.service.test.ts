@@ -374,6 +374,55 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     ).toBe(false);
   });
 
+  it('returns the first reviewed receipt after retry and refuses inconsistent stored terms', async () => {
+    scriptClient();
+    const initial = await service.review(submitInput());
+    expect(initial.data).toMatchObject({
+      profileId: PROFILE_ID,
+      amountIrR: AMOUNT.toString(),
+      stateAfterSubmission: 'Pending',
+      creditRule: 'after_finance_confirmation',
+    });
+    const matching = makePendingRow({
+      metadata: { channel: BANK_RECEIPT_TOPUP_CHANNEL, receipt: RECEIPT, financialReview: initial },
+    });
+    scriptClient({ existing: matching });
+    await expect(service.review(submitInput())).resolves.toEqual(initial);
+    scriptClient({
+      existing: makePendingRow({ wallet_id: 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb' }),
+    });
+    await expect(service.review(submitInput())).rejects.toThrow(
+      'Idempotency key already used for a different wallet'
+    );
+    for (const financialReview of [
+      { ...initial, data: { ...initial.data, customerNote: 'Different original note' } },
+      { malformed: true },
+    ]) {
+      scriptClient({
+        existing: makePendingRow({
+          metadata: { channel: BANK_RECEIPT_TOPUP_CHANNEL, receipt: RECEIPT, financialReview },
+        }),
+      });
+      await expect(service.review(submitInput())).rejects.toThrow(
+        'Stored receipt review requires reconciliation'
+      );
+    }
+    scriptClient({ existing: makePendingRow() });
+    await expect(service.review(submitInput())).resolves.toEqual(initial);
+    expect(walletService.credit).not.toHaveBeenCalled();
+    expect(walletService.createWallet).not.toHaveBeenCalled();
+  });
+
+  it('rejects an empty idempotency key or invalid payment date before a receipt review', async () => {
+    await expect(service.review(submitInput({ idempotencyKey: ' ' }))).rejects.toMatchObject({
+      status: 400,
+    });
+    await expect(service.review(submitInput({ paymentDate: '2026-02-30' }))).rejects.toMatchObject({
+      status: 400,
+    });
+    expect(mockPool.connect).not.toHaveBeenCalled();
+  });
+
   it('reuses a matching in-flight Pending row for the same idempotency key', async () => {
     scriptClient({ existing: makePendingRow() });
     const result = await service.submit(submitInput());
