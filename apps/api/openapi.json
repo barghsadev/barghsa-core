@@ -30888,6 +30888,114 @@
         ]
       }
     },
+    "/api/admin/storage/multipart-cleanup-policy/rollback-activate": {
+      "post": {
+        "operationId": "StorageAdminController_activateCleanupRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate a reviewed multipart cleanup age recovery draft",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
+    "/api/admin/storage/multipart-cleanup-policy/rollback-draft": {
+      "post": {
+        "operationId": "StorageAdminController_prepareCleanupRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a multipart cleanup age recovery draft",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
+    "/api/admin/storage/multipart-cleanup-policy/rollback-history": {
+      "get": {
+        "operationId": "StorageAdminController_cleanupRecoveryHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous multipart cleanup age settings",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
     "/api/admin/storage/records/{key}": {
       "delete": {
         "operationId": "StorageRecordsController_deleteRecord",

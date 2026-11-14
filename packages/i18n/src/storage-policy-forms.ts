@@ -97,7 +97,32 @@ const recoveryFa: Record<keyof typeof recoveryEn, string> = {
   recoveryOn: 'روشن',
   recoveryOff: 'خاموش',
 };
-export function storageRecoveryText(key: string, locale: 'fa' | 'en'): string | undefined {
+const cleanupRecoveryEn = {
+  recoveryTitle: 'Restore multipart cleanup policy',
+  recoveryLoading: 'Loading previous cleanup policies…',
+  recoveryReadError: 'Cleanup policy history could not be loaded.',
+  recoveryEmpty: 'No earlier cleanup policies are available to restore.',
+  recoveryStageConfirm: 'Prepare a recovery draft to review this cleanup age.',
+  recoveryActivateConfirm: 'Activate the reviewed cleanup age as a new policy version.',
+};
+const cleanupRecoveryFa: Record<keyof typeof cleanupRecoveryEn, string> = {
+  recoveryTitle: 'بازیابی سیاست پاک‌سازی بارگذاری‌های ناتمام',
+  recoveryLoading: 'در حال دریافت سیاست‌های پیشین پاک‌سازی…',
+  recoveryReadError: 'دریافت سابقهٔ سیاست پاک‌سازی انجام نشد.',
+  recoveryEmpty: 'سیاست پیشینی برای بازیابی در دسترس نیست.',
+  recoveryStageConfirm: 'برای بررسی این مدت پاک‌سازی، پیش‌نویس بازیابی بسازید.',
+  recoveryActivateConfirm: 'مدت بررسی‌شده را به‌عنوان نسخهٔ جدید سیاست پاک‌سازی فعال کنید.',
+};
+
+export function storageRecoveryText(
+  key: string,
+  locale: 'fa' | 'en',
+  owner: 'config' | 'cleanup' = 'config'
+): string | undefined {
+  if (owner === 'cleanup' && Object.hasOwn(cleanupRecoveryEn, key))
+    return (locale === 'fa' ? cleanupRecoveryFa : cleanupRecoveryEn)[
+      key as keyof typeof cleanupRecoveryEn
+    ];
   if (!Object.hasOwn(recoveryEn, key)) return undefined;
   return (locale === 'fa' ? recoveryFa : recoveryEn)[key as keyof typeof recoveryEn];
 }

@@ -26,17 +26,24 @@ import {
   storageConnectionBasis,
   validStorageConfig,
   validCleanupPolicy,
+  validCleanupSettings,
+  cleanupSettingsBasis,
   cleanupInvalidFields,
   type StorageConfigView,
   type StorageConnectionSettings,
   type StorageDraft,
   type CleanupDraft,
+  type CleanupSettings,
   type CleanupPolicyView,
 } from '../lib/storage-policy-form.js';
 
 const StorageRecovery = lazy(async () => {
   const { default: Recovery } = await import('../components/ConfigRecovery.js');
   return { default: Recovery<StorageConnectionSettings> };
+});
+const CleanupRecovery = lazy(async () => {
+  const { default: Recovery } = await import('../components/ConfigRecovery.js');
+  return { default: Recovery<CleanupSettings> };
 });
 type Owner = 'config' | 'cleanup';
 const basis = (value: StorageConfigView | CleanupPolicyView) =>
@@ -56,12 +63,13 @@ export default function AdminStorageConfig() {
   const label = (key: string) => t(`admin.storage.${key}`, locale);
   const text = (key: Parameters<typeof storagePolicyFormText>[0]) =>
     storagePolicyFormText(key, locale);
-  const recoveryLabel = (key: string) =>
-    storageRecoveryText(key, locale) ??
+  const recoveryLabel = (key: string, owner: Owner = 'config') =>
+    storageRecoveryText(key, locale, owner) ??
     (key === 'retry' ? label('reload') : key === 'unverified' ? text('unverified') : label(key));
+  const cleanupRecoveryLabel = (key: string) => recoveryLabel(key, 'cleanup');
   const acceptedConfig = useRef<StorageConfigView | null>(null),
     acceptedCleanup = useRef<CleanupPolicyView | null>(null);
-  const [showStorageRecovery, setShowStorageRecovery] = useState(false);
+  const [openRecovery, setOpenRecovery] = useState<Owner | null>(null);
   const [storageRecoveryBusy, setStorageRecoveryBusy] = useState(false);
   const recoveryBusy = useRef(false);
   const setRecoveryBusy = useCallback((busy: boolean) => {
@@ -128,7 +136,7 @@ export default function AdminStorageConfig() {
     acceptedCleanup.current = null;
     resetConfig(emptyStorageDraft());
     resetCleanup({ hours: '' });
-    setShowStorageRecovery(false);
+    setOpenRecovery(null);
     setRecoveryBusy(false);
     setChanged({ config: false, cleanup: false });
     setUncertain({ config: false, cleanup: false });
@@ -503,15 +511,15 @@ export default function AdminStorageConfig() {
         <Button
           type="button"
           variant="outline"
-          aria-expanded={showStorageRecovery}
-          aria-controls={showStorageRecovery ? 'storage-recovery' : undefined}
+          aria-expanded={openRecovery === 'config'}
+          aria-controls={openRecovery === 'config' ? 'storage-recovery' : undefined}
           disabled={busy || storageRecoveryBusy || !configReady}
-          onClick={() => setShowStorageRecovery((visible) => !visible)}
+          onClick={() => setOpenRecovery((visible) => (visible === 'config' ? null : 'config'))}
         >
           {recoveryLabel('recoveryTitle')}
         </Button>
       )}
-      {showStorageRecovery && !scope.denied && config.data && (
+      {openRecovery === 'config' && !scope.denied && config.data && (
         <div id="storage-recovery">
           <Suspense fallback={<LoadingStatus>{recoveryLabel('recoveryLoading')}</LoadingStatus>}>
             <StorageRecovery
@@ -595,12 +603,51 @@ export default function AdminStorageConfig() {
               message={text('hours')}
             />
           </fieldset>
-          <CatalogueSaveButton
-            label={label('cleanupSave')}
-            pending={cleanupForm.pending}
-            disabled={cleanupDisabled}
-          />
+          <div className="flex flex-wrap gap-3">
+            <CatalogueSaveButton
+              label={label('cleanupSave')}
+              pending={cleanupForm.pending}
+              disabled={cleanupDisabled}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              aria-expanded={openRecovery === 'cleanup'}
+              aria-controls={openRecovery === 'cleanup' ? 'cleanup-recovery' : undefined}
+              disabled={busy || storageRecoveryBusy || !cleanupReady}
+              onClick={() =>
+                setOpenRecovery((visible) => (visible === 'cleanup' ? null : 'cleanup'))
+              }
+            >
+              {cleanupRecoveryLabel('recoveryTitle')}
+            </Button>
+          </div>
         </form>
+      )}
+      {openRecovery === 'cleanup' && !scope.denied && cleanup.data && (
+        <div id="cleanup-recovery">
+          <Suspense
+            fallback={<LoadingStatus>{cleanupRecoveryLabel('recoveryLoading')}</LoadingStatus>}
+          >
+            <CleanupRecovery
+              key={cleanup.data.version}
+              path="/api/admin/storage/multipart-cleanup-policy"
+              valid={validCleanupSettings}
+              basis={cleanupSettingsBasis}
+              label={cleanupRecoveryLabel}
+              disabled={busy || !cleanupReady || uncertain.cleanup}
+              onBusyChange={setRecoveryBusy}
+              onDenied={scope.deny}
+              onActivated={cleanup.retry}
+              renderValues={(value) => (
+                <dl className="flex flex-wrap gap-x-2">
+                  <dt className="font-medium">{label('cleanupHours')}</dt>
+                  <dd>{numbers.number(value.hours)}</dd>
+                </dl>
+              )}
+            />
+          </Suspense>
+        </div>
       )}
       {action && (
         <TeamActionDialog

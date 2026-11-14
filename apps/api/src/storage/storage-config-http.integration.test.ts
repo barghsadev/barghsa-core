@@ -302,6 +302,98 @@ it('reports a paused cleanup policy and lets authorized staff repair its current
   });
 });
 
+it('restores a historical cleanup age through a separate version-bound activation', async () => {
+  type Revision = { id: string; version: number; config: { hours: number } };
+  type Draft = {
+    id: string;
+    baseVersion: number;
+    sourceId: string;
+    sourceVersion: number;
+    config: { hours: number };
+  };
+  const policy = '/multipart-cleanup-policy';
+  const read = async () =>
+    (await (await request(policy)).json()) as { hours: number; version: number };
+  const base = await read();
+  const first = await request(policy, 'PUT', { hours: 36, version: base.version });
+  expect(first.status, http.logs()).toBe(200);
+  const second = await request(policy, 'PUT', { hours: 60, version: base.version + 1 });
+  expect(second.status, http.logs()).toBe(200);
+  const third = await request(policy, 'PUT', { hours: 84, version: base.version + 2 });
+  expect(third.status, http.logs()).toBe(200);
+  const active = { hours: 84, version: base.version + 3 };
+  const history = `${policy}/rollback-history`;
+  const stage = `${policy}/rollback-draft`;
+  const activate = `${policy}/rollback-activate`;
+  expect((await request(history, 'GET', undefined, {})).status).toBe(401);
+  expect((await request(`${history}?beforeVersion=0`)).status).toBe(400);
+  const result = await request(history);
+  expect(result.status, http.logs()).toBe(200);
+  expect(result.headers.get('cache-control')).toContain('no-store');
+  const data = (await result.json()) as {
+    baseVersion: number;
+    draft: Draft | null;
+    items: Revision[];
+  };
+  expect(data).toMatchObject({ baseVersion: active.version, draft: null });
+  const source = data.items[0]!;
+  const older = data.items[1]!;
+  expect(source).toMatchObject({ version: base.version + 2, config: { hours: 60 } });
+  expect(older).toMatchObject({ version: base.version + 1, config: { hours: 36 } });
+  const command = { sourceId: source.id, expectedVersion: active.version };
+  expect((await request(stage, 'POST', command, { Cookie: headers.Cookie! })).status).toBe(403);
+  const firstDraft = await request(stage, 'POST', command);
+  expect(firstDraft.status, http.logs()).toBe(201);
+  const replaced = (await firstDraft.json()) as Draft;
+  expect(await (await request(stage, 'POST', command)).json()).toEqual(replaced);
+  expect((await request(stage, 'POST', { ...command, sourceId: older.id })).status).toBe(201);
+  expect(
+    (await request(activate, 'POST', { draftId: replaced.id, expectedVersion: active.version }))
+      .status
+  ).toBe(409);
+  const prepared = await request(stage, 'POST', command);
+  expect(prepared.status, http.logs()).toBe(201);
+  const draft = (await prepared.json()) as Draft;
+  expect(draft).toMatchObject({ ...replaced, id: expect.any(String) });
+  expect(draft.id).not.toBe(replaced.id);
+  expect(await read()).toEqual(active);
+  const activation = { draftId: draft.id, expectedVersion: active.version };
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='storage-editor'"
+  );
+  try {
+    expect((await request(activate, 'POST', activation)).status).toBe(403);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='storage-editor'"
+    );
+  }
+  expect(await read()).toEqual(active);
+  const outcomes = await Promise.all([
+    request(activate, 'POST', activation),
+    request(activate, 'POST', activation),
+  ]);
+  expect(outcomes.map((response) => response.status).sort()).toEqual([200, 409]);
+  expect(await outcomes.find((response) => response.ok)!.json()).toEqual({
+    config: { hours: 60 },
+    version: active.version + 1,
+    draftId: draft.id,
+  });
+  expect(await read()).toEqual({ hours: 60, version: active.version + 1 });
+  const { rows } = await http.pool.query(
+    "SELECT metadata FROM audit_log WHERE event='storage.multipart_cleanup_policy_updated' AND metadata::jsonb->>'draftId'=$1",
+    [draft.id]
+  );
+  expect(rows).toHaveLength(1);
+  expect(JSON.parse(rows[0].metadata)).toMatchObject({
+    hours: 60,
+    previousVersion: active.version,
+    sourceId: source.id,
+    sourceVersion: source.version,
+  });
+  expect(await (await request(history)).json()).toMatchObject({ draft: null });
+});
+
 it('persists encrypted configuration, activates new signing credentials, and rejects stale saves', async () => {
   const initial = await update('new-secret-never-return');
   const candidate = { ...initial, accessKeyId: 'new-access-key' };

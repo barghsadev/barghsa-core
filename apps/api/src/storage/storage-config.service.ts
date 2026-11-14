@@ -10,6 +10,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import {
   STORAGE_CONFIG_KEY,
   MULTIPART_CLEANUP_POLICY_KEY,
@@ -32,6 +33,9 @@ import { rejectContentFields } from '../admin/content-input-fields.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
+  cleanupRecoveryDraftEvent,
+  cleanupRevisions,
+  currentCleanupDraft,
   currentStorageDraft,
   storageRevisions,
   type StorageRecoveryDraft,
@@ -74,11 +78,7 @@ export class StorageConfigService {
   }
 
   async saveMultipartCleanupPolicy(raw: unknown, session: MutationSession) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
-      await requireSessionStepUp(client, session);
+    return this.editCleanupPolicy(session, async (client) => {
       const parsed = multipartCleanupPolicyUpdate.safeParse(raw);
       if (!parsed.success) rejectContentFields(parsed.error.issues, ['hours']);
       await client.query(
@@ -86,40 +86,141 @@ export class StorageConfigService {
          ON CONFLICT(key) DO NOTHING`,
         [MULTIPART_CLEANUP_POLICY_KEY, JSON.stringify({ hours: DEFAULT_MULTIPART_CLEANUP_HOURS })]
       );
-      const current = (
-        await client.query<{ version: number }>(
-          'SELECT version FROM app_config WHERE key=$1 FOR UPDATE',
-          [MULTIPART_CLEANUP_POLICY_KEY]
-        )
-      ).rows[0];
-      if ((current?.version ?? 0) !== parsed.data.version)
-        throw new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });
-      await client.query(
-        `INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,1)
-         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
-           version=app_config.version+1,updated_at=NOW()`,
-        [MULTIPART_CLEANUP_POLICY_KEY, JSON.stringify({ hours: parsed.data.hours })]
+      const version = await this.lockCleanupVersion(client);
+      if (version !== parsed.data.version) throw changedConfig();
+      return this.writeCleanupPolicy(client, session, parsed.data.hours, version);
+    });
+  }
+
+  cleanupHistory(session: MutationSession, before?: number) {
+    return withStaffReadAuthority(session, 'admin:storage:edit', async (client) => {
+      const { rows } = await client.query<{ version: number }>(
+        'SELECT version FROM app_config WHERE key=$1 FOR SHARE',
+        [MULTIPART_CLEANUP_POLICY_KEY]
       );
+      const baseVersion = rows[0]?.version ?? 0;
+      return {
+        baseVersion,
+        ...(await cleanupRevisions(client, Math.min(baseVersion, before ?? baseVersion))),
+        draft: await currentCleanupDraft(client, baseVersion),
+      };
+    });
+  }
+
+  prepareCleanupRecovery(
+    input: { sourceId: string; expectedVersion: number },
+    session: MutationSession
+  ) {
+    return this.editCleanupPolicy(session, async (client) => {
+      const baseVersion = await this.lockCleanupVersion(client);
+      if (baseVersion !== input.expectedVersion) throw changedConfig();
+      const {
+        items: [source],
+      } = await cleanupRevisions(client, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException({ error: 'NOT_FOUND' });
+      const existing = await currentCleanupDraft(client, baseVersion);
+      if (existing?.sourceId === source.id) return existing;
+      const draft = {
+        id: randomUUID(),
+        baseVersion,
+        sourceId: source.id,
+        sourceVersion: source.version,
+        config: source.config,
+      };
       await client.query(
-        `INSERT INTO audit_log(id,user_id,event,metadata)
-         VALUES(uuid_generate_v7()::text,$1,'storage.multipart_cleanup_policy_updated',$2::jsonb)`,
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES($1,$2,$3,$4,$5,clock_timestamp())`,
         [
+          draft.id,
           session.userId,
-          JSON.stringify({
-            hours: parsed.data.hours,
-            previousVersion: parsed.data.version,
-          }),
+          cleanupRecoveryDraftEvent,
+          JSON.stringify(draft),
+          correlationIdStorage.getStore() ?? randomUUID(),
         ]
       );
+      return draft;
+    });
+  }
+
+  activateCleanupRecovery(
+    input: { draftId: string; expectedVersion: number },
+    session: MutationSession
+  ) {
+    return this.editCleanupPolicy(session, async (client) => {
+      const version = await this.lockCleanupVersion(client);
+      if (version !== input.expectedVersion) throw changedConfig();
+      const draft = await currentCleanupDraft(client, version);
+      if (draft?.id !== input.draftId) throw changedConfig();
+      const active = await this.writeCleanupPolicy(
+        client,
+        session,
+        draft.config.hours,
+        version,
+        draft
+      );
+      return { config: draft.config, version: active.version, draftId: draft.id };
+    });
+  }
+
+  private async editCleanupPolicy<T>(
+    session: MutationSession,
+    write: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
+      await requireSessionStepUp(client, session);
+      const result = await write(client);
       await requireSessionStepUp(client, session);
       await client.query('COMMIT');
-      return { hours: parsed.data.hours, version: parsed.data.version + 1 };
+      return result;
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;
     } finally {
       client.release();
     }
+  }
+
+  private async lockCleanupVersion(client: PoolClient) {
+    const { rows } = await client.query<{ version: number }>(
+      'SELECT version FROM app_config WHERE key=$1 FOR UPDATE',
+      [MULTIPART_CLEANUP_POLICY_KEY]
+    );
+    return rows[0]?.version ?? 0;
+  }
+
+  private async writeCleanupPolicy(
+    client: PoolClient,
+    session: MutationSession,
+    hours: number,
+    previousVersion: number,
+    draft?: NonNullable<Awaited<ReturnType<typeof currentCleanupDraft>>>
+  ) {
+    const version = previousVersion + 1;
+    await client.query(
+      'UPDATE app_config SET value=$2::jsonb,version=$3,updated_at=NOW() WHERE key=$1',
+      [MULTIPART_CLEANUP_POLICY_KEY, JSON.stringify({ hours }), version]
+    );
+    await client.query(
+      `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
+       VALUES(uuid_generate_v7()::text,$1,'storage.multipart_cleanup_policy_updated',$2,$3)`,
+      [
+        session.userId,
+        JSON.stringify({
+          hours,
+          previousVersion,
+          ...(draft && {
+            draftId: draft.id,
+            sourceId: draft.sourceId,
+            sourceVersion: draft.sourceVersion,
+          }),
+        }),
+        correlationIdStorage.getStore() ?? randomUUID(),
+      ]
+    );
+    return { hours, version };
   }
   async read() {
     const row = (

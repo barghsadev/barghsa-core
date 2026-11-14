@@ -1,6 +1,6 @@
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
-import { storageConfigFields } from '@barghsa/shared/storage';
+import { multipartCleanupPolicy, storageConfigFields } from '@barghsa/shared/storage';
 import { activationPageSize } from '../admin/config-activation-history.js';
 
 export const storageRecoverySettings = storageConfigFields.omit({ accessKeyId: true });
@@ -61,6 +61,57 @@ export async function currentStorageDraft(
   const row = rows[0];
   if (!row) return null;
   const parsed = storedDraft.safeParse(row.data);
+  return parsed.success && parsed.data.sourceVersion < baseVersion
+    ? { id: row.id, baseVersion, ...parsed.data }
+    : null;
+}
+
+const cleanupDraft = storedDraft.extend({ config: multipartCleanupPolicy });
+export const cleanupRecoveryDraftEvent = 'storage.multipart_cleanup_policy_rollback_draft';
+
+export async function cleanupRevisions(
+  client: PoolClient,
+  beforeVersion: number,
+  sourceId?: string
+) {
+  const { rows } = await client.query<{ id: string; version: string; hours: number }>(
+    `WITH revisions AS (
+       SELECT id,data->'hours' AS hours,
+         CASE WHEN jsonb_typeof(data->'previousVersion')='number'
+           THEN (data->>'previousVersion')::numeric + 1 END AS version
+       FROM audit_log CROSS JOIN LATERAL (
+         SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
+       ) safe
+       WHERE event='storage.multipart_cleanup_policy_updated'
+         AND ($2::text IS NULL OR id=$2)
+     )
+     SELECT id,version::text,hours FROM revisions
+     WHERE version>0 AND version<$1 AND version=trunc(version)
+     ORDER BY revisions.version DESC,id DESC LIMIT $3`,
+    [beforeVersion, sourceId ?? null, sourceId ? 1 : activationPageSize + 1]
+  );
+  const page = rows.slice(0, activationPageSize);
+  return {
+    items: page.flatMap(({ id, version, hours }) => {
+      const config = multipartCleanupPolicy.safeParse({ hours });
+      return config.success ? [{ id, version: Number(version), config: config.data }] : [];
+    }),
+    nextBeforeVersion: rows.length > activationPageSize ? Number(page.at(-1)!.version) : null,
+  };
+}
+
+export async function currentCleanupDraft(client: PoolClient, baseVersion: number) {
+  const { rows } = await client.query<{ id: string; data: unknown }>(
+    `SELECT id,data FROM audit_log CROSS JOIN LATERAL (
+       SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
+     ) safe
+     WHERE event=$1 AND data->>'baseVersion'=$2::text
+     ORDER BY created_at DESC,id DESC LIMIT 1`,
+    [cleanupRecoveryDraftEvent, baseVersion]
+  );
+  const row = rows[0];
+  if (!row) return null;
+  const parsed = cleanupDraft.safeParse(row.data);
   return parsed.success && parsed.data.sourceVersion < baseVersion
     ? { id: row.id, baseVersion, ...parsed.data }
     : null;

@@ -18,6 +18,68 @@ const initial = {
 };
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`multipart cleanup history restores a reviewed age (${locale})`, async ({ page }) => {
+    await setupCatalogueForms(page, locale, false);
+    const text = (key: string) => storageRecoveryText(key, locale, 'cleanup')!;
+    const source = {
+      id: '0199f2eb-de42-78d9-8ba7-1afedd591be1',
+      version: 2,
+      config: { hours: 48 },
+    };
+    const draft = {
+      id: '0199f2eb-de42-78d9-8ba7-1afedd591be2',
+      sourceId: source.id,
+      sourceVersion: source.version,
+      baseVersion: 3,
+      config: source.config,
+    };
+    const path = '**/api/admin/storage/multipart-cleanup-policy';
+    let active = { hours: 24, version: 3 };
+    let pending = false;
+    await page.route('**/api/admin/storage/config', (route) => route.fulfill({ json: initial }));
+    await page.route(path, (route) => route.fulfill({ json: active }));
+    await page.route(`${path}/rollback-history`, (route) =>
+      route.fulfill({
+        json: {
+          baseVersion: active.version,
+          items: [source],
+          nextBeforeVersion: null,
+          draft: pending && active.version === draft.baseVersion ? draft : null,
+        },
+      })
+    );
+    await page.route(`${path}/rollback-draft`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ sourceId: source.id, expectedVersion: 3 });
+      pending = true;
+      return route.fulfill({ status: 201, json: draft });
+    });
+    await page.route(`${path}/rollback-activate`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ draftId: draft.id, expectedVersion: 3 });
+      active = { ...source.config, version: 4 };
+      return route.fulfill({
+        json: { draftId: draft.id, config: source.config, version: active.version },
+      });
+    });
+    await page.goto('/admin/storage');
+    const hours = page.getByRole('spinbutton', { name: t('admin.storage.cleanupHours', locale) });
+    await expect(hours).toHaveValue('24');
+    await page.getByRole('button', { name: text('recoveryTitle') }).click();
+    const recovery = page.getByRole('region', { name: text('recoveryTitle') });
+    await recovery
+      .getByRole('button', { name: new RegExp(text('recoveryStage').split('{version}')[0]!) })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(/48|۴۸/);
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(hours).toHaveValue('24');
+    await recovery.getByRole('button', { name: text('recoveryActivate') }).click();
+    await expect(dialog).toContainText(/48|۴۸/);
+    await dialog.locator('button[type=submit]').click();
+    await page.getByRole('button', { name: storagePolicyFormText('reset', locale) }).click();
+    await expect(hours).toHaveValue('48');
+  });
+
   test(`storage recovery separates draft review from activation (${locale})`, async ({ page }) => {
     await setupCatalogueForms(page, locale, false);
     const text = (key: string) => storageRecoveryText(key, locale)!;

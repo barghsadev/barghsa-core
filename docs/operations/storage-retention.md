@@ -118,6 +118,14 @@ are stored in `upload_cleanup_log`, and failed provider aborts are retried on a
 later scan. An invalid saved cleanup age stops the worker's cleanup pass before
 provider calls. Storage settings shows the paused state and lets an authorized
 administrator save a valid age against the current policy version.
+To restore an earlier age, open **Restore multipart cleanup policy** in Storage
+settings. Select a superseded revision, review its age in the draft, then
+activate the draft with staff verification. Activation writes a new revision
+and audits the source revision and draft. A concurrent save or activation
+invalidates drafts based on the previous active version. History starts with
+the first saved age. The default before that first save can be entered in the
+normal form.
+
 Reapply `pnpm setup:bucket` to install the seven-day S3 fallback
 after reviewing deployed custom rules. MinIO uses its separate stale-upload
 server settings; bucket setup cannot install the S3 abort rule there.
