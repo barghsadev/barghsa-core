@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:52:11+00:00",
+  "updated": "2026-11-14T13:56:17+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -38580,7 +38580,8 @@
           "release-0.6-empty-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38793,7 +38794,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
+              "sha256": "73b9954ec23eed49f3ee5efd8059bc1ed8db1d9e93ccaf77a5a097d1739d1c86"
             },
             {
               "path": "apps/api/src/contract/contract-pdf.service.ts",
@@ -165952,7 +165953,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -165972,23 +165974,23 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "a16df11525c50c796ab8cb5ce8b6e4164ff92e0dc0b3ebea7ac8fa0b7c074637"
+              "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.test.ts",
-              "sha256": "9e6499e9a6878a5352c5b3e2ea971bc559d2dbba072f36d33f515ca18d632130"
+              "sha256": "df3cbd64fa11a2862939971d943e235b9e5316de1edf3af206717072a40b4adf"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.ts",
-              "sha256": "e35afb3af509f0356454f15f7ab495290a166aebb3fed7bc95f1207a349186f3"
+              "sha256": "dba44cc77efc2a0987247b518ae5b577b144298c5d8a16df23b9bba5e79563f5"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
+              "sha256": "c6cbe3123592d4c4608312404e18785922e761703a0a0da16bac744c317e4fab"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
+              "sha256": "73b9954ec23eed49f3ee5efd8059bc1ed8db1d9e93ccaf77a5a097d1739d1c86"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -167216,7 +167218,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -167236,23 +167239,23 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "a16df11525c50c796ab8cb5ce8b6e4164ff92e0dc0b3ebea7ac8fa0b7c074637"
+              "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.test.ts",
-              "sha256": "9e6499e9a6878a5352c5b3e2ea971bc559d2dbba072f36d33f515ca18d632130"
+              "sha256": "df3cbd64fa11a2862939971d943e235b9e5316de1edf3af206717072a40b4adf"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.ts",
-              "sha256": "e35afb3af509f0356454f15f7ab495290a166aebb3fed7bc95f1207a349186f3"
+              "sha256": "dba44cc77efc2a0987247b518ae5b577b144298c5d8a16df23b9bba5e79563f5"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
+              "sha256": "c6cbe3123592d4c4608312404e18785922e761703a0a0da16bac744c317e4fab"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
+              "sha256": "73b9954ec23eed49f3ee5efd8059bc1ed8db1d9e93ccaf77a5a097d1739d1c86"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -177778,7 +177781,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -177798,23 +177802,23 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "a16df11525c50c796ab8cb5ce8b6e4164ff92e0dc0b3ebea7ac8fa0b7c074637"
+              "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.test.ts",
-              "sha256": "9e6499e9a6878a5352c5b3e2ea971bc559d2dbba072f36d33f515ca18d632130"
+              "sha256": "df3cbd64fa11a2862939971d943e235b9e5316de1edf3af206717072a40b4adf"
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.ts",
-              "sha256": "e35afb3af509f0356454f15f7ab495290a166aebb3fed7bc95f1207a349186f3"
+              "sha256": "dba44cc77efc2a0987247b518ae5b577b144298c5d8a16df23b9bba5e79563f5"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
+              "sha256": "c6cbe3123592d4c4608312404e18785922e761703a0a0da16bac744c317e4fab"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
+              "sha256": "73b9954ec23eed49f3ee5efd8059bc1ed8db1d9e93ccaf77a5a097d1739d1c86"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -600320,7 +600324,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -603319,7 +603324,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-kb-command-validation",
-          "release-0.6-kb-read-authority"
+          "release-0.6-kb-read-authority",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -603447,7 +603453,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "a16df11525c50c796ab8cb5ce8b6e4164ff92e0dc0b3ebea7ac8fa0b7c074637"
+              "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
             },
             {
               "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
@@ -685914,7 +685920,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-kb-read-authority"
+          "release-0.6-kb-read-authority",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "batch": "release-0.6-central-authorization",
@@ -685954,7 +685961,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.test.ts",
-              "sha256": "9e6499e9a6878a5352c5b3e2ea971bc559d2dbba072f36d33f515ca18d632130"
+              "sha256": "df3cbd64fa11a2862939971d943e235b9e5316de1edf3af206717072a40b4adf"
             },
             {
               "path": "apps/api/src/admin/delivery-window-config.controller.test.ts",
@@ -690928,7 +690935,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-kb-command-validation",
-          "release-0.6-kb-read-authority"
+          "release-0.6-kb-read-authority",
+          "release-0.6-contract-template-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -690968,7 +690976,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.controller.ts",
-              "sha256": "e35afb3af509f0356454f15f7ab495290a166aebb3fed7bc95f1207a349186f3"
+              "sha256": "dba44cc77efc2a0987247b518ae5b577b144298c5d8a16df23b9bba5e79563f5"
             },
             {
               "path": "apps/api/src/admin/customer-corrections.controller.ts",
@@ -1111056,7 +1111064,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
-              "sha256": "a16df11525c50c796ab8cb5ce8b6e4164ff92e0dc0b3ebea7ac8fa0b7c074637"
+              "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
             },
             {
               "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
@@ -1114618,7 +1114626,8 @@
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-contract-template-coverage"
         ]
       }
     },
@@ -1132296,7 +1132305,8 @@
         "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files.",
         "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved.",
         "The 122 operator queue cases passed with the compiled API and native PostgreSQL. The replay date regression preserved queue and audit state. All three controller thresholds passed at 214/214 lines and 110/110 branches. The full exact combined and live replay gates remain open.",
-        "All three session and device API files passed the unchanged scoped critical coverage gate with 54 passing tests and a compiled PostgreSQL-backed HTTP fixture. The final exact combined release run remains open."
+        "All three session and device API files passed the unchanged scoped critical coverage gate with 54 passing tests and a compiled PostgreSQL-backed HTTP fixture. The final exact combined release run remains open.",
+        "The contract-template controller and service pass the original critical thresholds, with compiled PostgreSQL checks for invalid upload names, immutable storage, audit rollback and affected electricity template callers. The full exact combined gate is still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132665,7 +1132675,8 @@
           "release-0.6-web-admin-coverage",
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-session-read-coverage"
+          "release-0.6-session-read-coverage",
+          "release-0.6-contract-template-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1321919,6 +1321930,98 @@
         {
           "file": "static.log",
           "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
+        }
+      ]
+    },
+    "release-0.6-contract-template-coverage": {
+      "batch": "release-0.6-contract-template-coverage",
+      "base_commit": "acdbf357b1f2e7414c3c5c76786f19e4caaa6085",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "03-core-business.md#T-03.90.01",
+        "03-core-business.md#T-03.90.03",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/contract-template-http.integration.test.ts",
+        "apps/api/src/admin/contract-template.controller.test.ts",
+        "apps/api/src/admin/contract-template.controller.ts",
+        "apps/api/src/admin/contract-template.service.test.ts",
+        "apps/api/src/admin/contract-template.service.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
+          "sha256": "3c7355e4c9b106d1dc7bfff89e7e13b53c43006517eb99d1447a744e6a0c54ce"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.controller.test.ts",
+          "sha256": "df3cbd64fa11a2862939971d943e235b9e5316de1edf3af206717072a40b4adf"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.controller.ts",
+          "sha256": "dba44cc77efc2a0987247b518ae5b577b144298c5d8a16df23b9bba5e79563f5"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.test.ts",
+          "sha256": "c6cbe3123592d4c4608312404e18785922e761703a0a0da16bac744c317e4fab"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.ts",
+          "sha256": "73b9954ec23eed49f3ee5efd8059bc1ed8db1d9e93ccaf77a5a097d1739d1c86"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+          "sha256": "df0bd5caebc5c418aa463b7efe58f0fe3e2962d3cc8e0b93a8a32b36d6a5aff6"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-contract-template.ts",
+          "sha256": "bf4bd3fc4dea8fb580847cf7c4533787e7d8538ec378fa480dac7d521c8f17d6"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
+          "sha256": "554da3bebca49779e77ebb4cf5b9b2ade47663dc0a4340869d357c30cf98831d"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-contract-template.test.ts",
+          "sha256": "a8f5408c97fb08b1305fc9c92a11c6983417917f0b615f60044a61f9430b3897"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Template uploads reject a missing basename and dot-only path entries before allocating storage. The PostgreSQL-backed HTTP regression confirmed no storage reservation, object, version or audit entry.",
+        "The controller forwards the validated default text/plain MIME type. Existing upload byte bounds, staff authority, provisional storage cleanup, immutable versions, and electricity template snapshots were verified in 75 passing tests across six suites.",
+        "The two-file critical gate passed with 237/237 lines and 128/137 branches. API types, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "Scoped verification with a disposable native PostgreSQL fixture and local storage emulation. The final combined gate and exact staged launch journey remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-contract-template-coverage",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "90a0b80d968e7a4b8a9e2a8247d9e6d892549b16d16df8fb8919d53005c58872"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
+        },
+        {
+          "file": "postgres-init.log",
+          "sha256": "d5e1af933106874f4ff633b401919041f31620df594b3f2ee533206711395cef"
+        },
+        {
+          "file": "scoped-gate.json",
+          "sha256": "55a2f2ac58c5965fdff368e8bba091017ee81ad0e7b40bcd668a71276ec7bff6"
         }
       ]
     }

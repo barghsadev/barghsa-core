@@ -572,3 +572,132 @@ describe('ContractTemplateService pg race translation (T-09.12.04)', () => {
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_VERSION_CONFLICT' });
   });
 });
+
+it('skips version lookup for an empty catalogue and preserves metadata for legacy versions without file size', async () => {
+  db.router.on('FROM contract_templates', () => ({ rows: [] }));
+  const { service } = await loadService(db.pool);
+  await expect(service.list()).resolves.toEqual([]);
+  expect(db.router.queries('SELECT DISTINCT ON')).toHaveLength(0);
+
+  db.router.on('FROM contract_templates', () => ({ rows: [templateRow({ version_count: 1 })] }));
+  db.router.on('SELECT DISTINCT ON', () => ({ rows: [versionRow({ file_size: null })] }));
+  await expect(service.list()).resolves.toEqual([
+    expect.objectContaining({
+      id: TEMPLATE_ID,
+      versionCount: 1,
+      latestVersion: expect.objectContaining({ fileSize: null, versionNumber: 1 }),
+    }),
+  ]);
+});
+
+it('keeps existing metadata for a status-only edit and audits explicit description removal', async () => {
+  const previous = templateRow({ description: 'Old description' });
+  let current = previous;
+  let audit: object | undefined;
+  db.router.on('FROM contract_templates', () => ({ rows: [current] }));
+  db.router.on('UPDATE contract_templates', ([name, description, status, id]) => {
+    expect(id).toBe(TEMPLATE_ID);
+    current = templateRow({ name, description, status });
+    return { rows: [] };
+  });
+  db.router.on('INSERT INTO audit_log', (args) => {
+    audit = JSON.parse(String(args[2])) as object;
+    return { rows: [] };
+  });
+  const { service } = await loadService(db.pool);
+  const action = { actor: createInput().actor, ip: '192.0.2.40' };
+  await expect(
+    service.update(TEMPLATE_ID, { ...action, status: 'inactive' })
+  ).resolves.toMatchObject({ description: previous.description, status: 'inactive' });
+  expect(audit).toMatchObject({ action: 'updated', status: 'inactive' });
+  expect(audit).not.toHaveProperty('description');
+  await expect(
+    service.update(TEMPLATE_ID, { ...action, description: null })
+  ).resolves.toMatchObject({ description: null, status: 'inactive' });
+  expect(audit).toMatchObject({ description: null });
+  expect(audit).not.toHaveProperty('status');
+  expect(db.router.queries('id <> $2')).toHaveLength(0);
+});
+
+it('rolls back conflicting names and reports storage publication loss before creating a version', async () => {
+  db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }));
+  db.router.on('id <> $2', () => ({ rows: [{ id: 'existing' }] }));
+  const { service, storage } = await loadService(db.pool);
+  const action = { actor: createInput().actor, ip: '192.0.2.40' };
+  await expect(
+    service.update(TEMPLATE_ID, { ...action, name: 'Occupied name' })
+  ).rejects.toMatchObject({ status: 409, response: { error: 'CONTRACT_TEMPLATE_ALREADY_EXISTS' } });
+  db.router.on('UPDATE storage_records SET status=', () => ({ rows: [], rowCount: 0 }));
+  await expect(
+    service.uploadVersion(TEMPLATE_ID, { ...action, fileName: 'document.txt', content: '{{date}}' })
+  ).rejects.toMatchObject({ status: 503 });
+  expect(storage.putObject).toHaveBeenCalledOnce();
+  expect(db.router.queries('INSERT INTO contract_template_versions')).toHaveLength(0);
+  expect(db.router.queries('INSERT INTO audit_log')).toHaveLength(0);
+  expect(db.router.queries('ROLLBACK')).toHaveLength(2);
+});
+
+it('preserves retryable DB conflicts and leaves unrelated failures visible after rollback', async () => {
+  const { service } = await loadService(db.pool);
+  const unrelated = new Error('Fixture unavailable');
+  for (const [reason, expected] of [
+    [
+      { code: '23505', constraint: 'uq_contract_templates_name_lower' },
+      'CONTRACT_TEMPLATE_ALREADY_EXISTS',
+    ],
+    [{ code: '23505', constraint: 'unrelated_index' }, 'CONTRACT_TEMPLATE_CONFLICT'],
+    [
+      { code: '23503', constraint: 'contract_templates_created_by_fkey' },
+      'CONTRACT_TEMPLATE_REFERENCED',
+    ],
+  ] as const) {
+    db.router.on('INSERT INTO contract_templates', () => {
+      throw reason;
+    });
+    await expect(
+      service.create(createInput({ description: 'Fixture log text' }))
+    ).rejects.toMatchObject({ status: 409, response: { error: expected } });
+  }
+  db.router.on('INSERT INTO contract_templates', () => {
+    throw unrelated;
+  });
+  await expect(service.create(createInput())).rejects.toBe(unrelated);
+  expect(db.router.queries('ROLLBACK')).toHaveLength(4);
+  expect(db.router.queries('COMMIT')).toHaveLength(0);
+  expect(db.router.queries('INSERT INTO audit_log')).toHaveLength(0);
+});
+
+it('retains description audit on create and rejects invalid values before storage or database changes', async () => {
+  const { service, storage } = await loadService(db.pool);
+  const action = { actor: createInput().actor, ip: '192.0.2.40' };
+  for (const fileName of [' ', 'folder/', 'folder/.', 'folder/..', 'folder/  ', null as never]) {
+    await expect(
+      service.uploadVersion(TEMPLATE_ID, { ...action, fileName, content: 'template' })
+    ).rejects.toMatchObject({ status: 400, response: { error: 'CONTRACT_TEMPLATE_INVALID_FILE' } });
+  }
+  await expect(
+    service.uploadVersion(TEMPLATE_ID, {
+      ...action,
+      fileName: 'template.txt',
+      content: null as never,
+    })
+  ).rejects.toMatchObject({ status: 400, response: { error: 'CONTRACT_TEMPLATE_INVALID_FILE' } });
+  for (const name of [null, 'a'.repeat(201)]) {
+    await expect(service.create(createInput({ name }))).rejects.toMatchObject({ status: 400 });
+  }
+  expect(storage.putObject).not.toHaveBeenCalled();
+  expect(db.router.calls).toHaveLength(0);
+
+  const description = 'Document metadata';
+  let audit: object | undefined;
+  db.router.on('FROM contract_templates WHERE LOWER(name) = $1', () => ({ rows: [] }));
+  db.router.on('FROM contract_templates', () => ({ rows: [templateRow({ description })] }));
+  db.router.on('INSERT INTO audit_log', (args) => {
+    audit = JSON.parse(String(args[2])) as object;
+    return { rows: [] };
+  });
+  await expect(service.create(createInput({ description }))).resolves.toMatchObject({
+    description,
+  });
+  expect(audit).toMatchObject({ action: 'created', description });
+});

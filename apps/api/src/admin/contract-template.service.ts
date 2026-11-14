@@ -575,7 +575,9 @@ export class ContractTemplateService {
   }
 
   private assertFileName(raw: string): string {
-    if (typeof raw !== 'string' || raw.trim().length === 0) {
+    // Store the basename as display metadata, never a directory or dot entry.
+    const name = typeof raw === 'string' ? raw.split(/[\\/]/).at(-1)!.trim() : '';
+    if (!name || name === '.' || name === '..') {
       throw new HttpException(
         {
           statusCode: 400,
@@ -585,9 +587,7 @@ export class ContractTemplateService {
         400
       );
     }
-    // Prevent path traversal in the storage suffix and trim surrounding
-    // whitespace (r2 minor: a ' power.docx ' name persisted verbatim).
-    return (raw.split(/[\\/]/).pop() ?? raw).trim();
+    return name;
   }
 
   /**

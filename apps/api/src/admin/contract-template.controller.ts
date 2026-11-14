@@ -244,7 +244,7 @@ export class ContractTemplateController {
     }
     return this.service.uploadVersion(id, {
       fileName: parsed.data.fileName,
-      ...(parsed.data.contentType !== undefined ? { contentType: parsed.data.contentType } : {}),
+      contentType: parsed.data.contentType,
       content: parsed.data.content,
       actor: req.session,
       ip: requestIp(req),

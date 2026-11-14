@@ -397,3 +397,34 @@ it('protects a referenced template through HTTP and the database before permitti
     ]);
   }
 });
+
+it('rejects uploads whose name has no file basename before reserving storage or writing an audit', async () => {
+  const path = http.base + '/api/admin/contract-templates/' + templateId + '/versions';
+  for (const fileName of ['contracts/', 'contracts/.', 'contracts/..']) {
+    const response = await fetch(path, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ fileName, content: '{{date}}' }),
+    });
+    expect(response.status, await response.clone().text()).toBe(400);
+  }
+  expect(objects.size).toBe(0);
+  expect(
+    (
+      await http.pool.query('SELECT id FROM contract_template_versions WHERE template_id=$1', [
+        templateId,
+      ])
+    ).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT storage_key FROM storage_records WHERE metadata->>'templateId'=$1",
+        [templateId]
+      )
+    ).rows
+  ).toEqual([]);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toEqual([]);
+});

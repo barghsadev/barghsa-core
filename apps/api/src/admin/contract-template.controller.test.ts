@@ -188,3 +188,34 @@ it('validates update status without exposing document content', async () => {
   expect(error).toMatchObject({ status: 400, fields: ['status'] });
   expect(service.update).not.toHaveBeenCalled();
 });
+
+it('applies the default type and forwards explicit metadata edits independently', async () => {
+  const { controller, service } = makeController();
+  const socketRequest = {
+    session: adminReq.session,
+    socket: { remoteAddress: '192.0.2.41' },
+  } as AuthenticatedRequest;
+  await controller.uploadVersion(socketRequest, TEMPLATE_ID, {
+    fileName: 'template.txt',
+    content: '{{date}}',
+    contentType: undefined,
+  } as never);
+  expect(service.uploadVersion).toHaveBeenCalledExactlyOnceWith(TEMPLATE_ID, {
+    fileName: 'template.txt',
+    content: '{{date}}',
+    contentType: 'text/plain',
+    actor: adminReq.session,
+    ip: '192.0.2.41',
+  });
+  const requestWithoutAddress = { session: adminReq.session } as AuthenticatedRequest;
+  await controller.update(requestWithoutAddress, TEMPLATE_ID, {
+    name: '  Updated ',
+    description: null,
+  });
+  expect(service.update).toHaveBeenCalledExactlyOnceWith(TEMPLATE_ID, {
+    name: 'Updated',
+    description: null,
+    actor: adminReq.session,
+    ip: 'unknown',
+  });
+});
