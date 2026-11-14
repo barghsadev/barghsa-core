@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:26:12+00:00",
+  "updated": "2026-11-14T14:28:08+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -56137,7 +56137,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -57630,6 +57630,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -83171,7 +83179,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -84571,6 +84579,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -85020,7 +85036,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -86059,6 +86075,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -86537,7 +86561,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -87597,6 +87621,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -105409,7 +105441,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -106903,6 +106935,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -117762,7 +117802,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -119018,6 +119058,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -119597,7 +119645,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -122555,6 +122603,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -123025,7 +123081,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -124217,6 +124273,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -125010,7 +125074,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -126240,6 +126304,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -152574,7 +152646,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -153895,6 +153967,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -154548,7 +154628,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -155869,6 +155949,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -164524,7 +164612,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -165845,6 +165933,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -186913,7 +187009,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -188077,6 +188173,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -188473,7 +188577,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -189638,6 +189742,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -190667,7 +190779,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -191831,6 +191943,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -192226,7 +192346,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -193391,6 +193511,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -193786,7 +193914,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -194950,6 +195078,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -195345,7 +195481,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -196509,6 +196645,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -196922,7 +197066,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -198095,6 +198239,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -198490,7 +198642,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -199654,6 +199806,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -232170,7 +232330,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/auth/session-notifications.ts",
@@ -232883,6 +233043,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -241528,7 +241696,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -242643,6 +242811,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -242852,7 +243028,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -243967,6 +244143,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -245490,7 +245674,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -246605,6 +246789,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -246815,7 +247007,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -247930,6 +248122,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -248137,7 +248337,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -249252,6 +249452,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -249459,7 +249667,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -250574,6 +250782,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -251436,7 +251652,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -252551,6 +252767,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -252757,7 +252981,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -253872,6 +254096,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -254078,7 +254310,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -255193,6 +255425,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -297094,7 +297334,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -299395,6 +299635,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -299701,7 +299949,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -302002,6 +302250,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -303657,7 +303913,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -305067,6 +305323,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -305314,7 +305578,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -306724,6 +306988,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -306971,7 +307243,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -308381,6 +308653,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -308629,7 +308909,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -310039,6 +310319,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -310246,7 +310534,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -311656,6 +311944,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -311863,7 +312159,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -313273,6 +313569,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -313480,7 +313784,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -314890,6 +315194,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -315097,7 +315409,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -316507,6 +316819,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -316714,7 +317034,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -318124,6 +318444,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -318331,7 +318659,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -319741,6 +320069,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -319949,7 +320285,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -321359,6 +321695,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -321566,7 +321910,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -322976,6 +323320,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -323184,7 +323536,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -324594,6 +324946,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -324801,7 +325161,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -326211,6 +326571,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -326418,7 +326786,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -327828,6 +328196,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -328035,7 +328411,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -329445,6 +329821,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -329652,7 +330036,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -331062,6 +331446,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -331269,7 +331661,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -332679,6 +333071,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -332887,7 +333287,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -334297,6 +334697,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -334504,7 +334912,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -335914,6 +336322,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -336121,7 +336537,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -337531,6 +337947,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -337738,7 +338162,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -339148,6 +339572,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -339355,7 +339787,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -340765,6 +341197,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -340972,7 +341412,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -342382,6 +342822,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -342590,7 +343038,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -344000,6 +344448,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -344208,7 +344664,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -345618,6 +346074,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -345826,7 +346290,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -347236,6 +347700,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -347443,7 +347915,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -348853,6 +349325,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -349060,7 +349540,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -350470,6 +350950,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -350677,7 +351165,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -352087,6 +352575,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -355473,7 +355969,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -356565,6 +357061,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -356729,7 +357233,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -357821,6 +358325,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -357984,7 +358496,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -359076,6 +359588,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -359239,7 +359759,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -360331,6 +360851,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -360494,7 +361022,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -361586,6 +362114,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -361749,7 +362285,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -362841,6 +363377,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -363014,7 +363558,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -364122,6 +364666,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -364294,7 +364846,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -365402,6 +365954,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -365575,7 +366135,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -366683,6 +367243,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -474500,7 +475068,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -475675,6 +476243,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -475858,7 +476434,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -477033,6 +477609,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -477216,7 +477800,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -478391,6 +478975,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -478574,7 +479166,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -479749,6 +480341,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -479932,7 +480532,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -481107,6 +481707,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -481290,7 +481898,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -482465,6 +483073,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -482648,7 +483264,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -483823,6 +484439,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -503959,7 +504583,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -505023,6 +505647,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -505226,7 +505858,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -506290,6 +506922,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -506495,7 +507135,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -507559,6 +508199,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -507762,7 +508410,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -508826,6 +509474,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -509029,7 +509685,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -510093,6 +510749,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -510296,7 +510960,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -511360,6 +512024,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -511564,7 +512236,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -512628,6 +513300,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -512831,7 +513511,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -513895,6 +514575,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -514098,7 +514786,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -515162,6 +515850,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -515365,7 +516061,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -516429,6 +517125,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -517655,7 +518359,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -518719,6 +519423,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -519961,7 +520673,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -521025,6 +521737,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -521228,7 +521948,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -522292,6 +523012,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -522495,7 +523223,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -523559,6 +524287,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -523764,7 +524500,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -524828,6 +525564,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -525031,7 +525775,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -526095,6 +526839,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -526303,7 +527055,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -527367,6 +528119,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -527579,7 +528339,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -528643,6 +529403,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -528855,7 +529623,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -529919,6 +530687,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -530314,7 +531090,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -531831,6 +532607,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -532215,7 +532999,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -533732,6 +534516,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -534116,7 +534908,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -535633,6 +536425,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -536017,7 +536817,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -537534,6 +538334,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -537919,7 +538727,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -539436,6 +540244,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -539602,7 +540418,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -540539,6 +541355,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -540699,7 +541523,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -541636,6 +542460,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -541792,7 +542624,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -542729,6 +543561,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -542885,7 +543725,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -543822,6 +544662,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -543977,7 +544825,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -544914,6 +545762,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -545099,7 +545955,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -546244,6 +547100,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -546434,7 +547298,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -547579,6 +548443,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -547768,7 +548640,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -548913,6 +549785,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -549084,7 +549964,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -550005,6 +550885,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -550190,7 +551078,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -551111,6 +551999,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -551297,7 +552193,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -552218,6 +553114,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -606004,7 +606908,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
@@ -607936,6 +608840,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -689437,7 +690349,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -689737,6 +690649,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ]
         }
@@ -721261,7 +722181,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
@@ -721478,6 +722398,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ]
         }
@@ -1099315,7 +1100243,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -1100193,6 +1101121,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1103030,7 +1103966,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -1104317,6 +1105253,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1105629,7 +1106573,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -1106908,6 +1107852,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1107722,7 +1108674,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -1112506,6 +1113458,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1114333,7 +1115293,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -1118431,6 +1119391,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1119762,7 +1120730,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -1124668,6 +1125636,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "presentation_renewals": [
@@ -1125985,7 +1126961,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "869aef6b550fbf1887eb51456662297f9267a6f9ec21d22e1ec9d562da9a9573"
+              "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -1130786,6 +1131762,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-saving-quote-boundaries",
+              "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+              "paths": [
+                "apps/api/src/saving/saving-order.integration.test.ts"
+              ],
+              "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1136626,7 +1137610,8 @@
         "The three contract cancellation, PDF and authoring API files pass the scoped critical coverage gate. Seventy-seven selected cases passed, with retained hosted coverage bound to byte-identical source. The local Docker MinIO setup timed out before the 14-case signature suite could run, so verify it on the exact hosted candidate.",
         "All five electricity API files flagged by the original combined report pass scoped coverage. The two service files used seven native PostgreSQL cases with byte-identical retained coverage. The full combined coverage gate on the final candidate and the exact staging journey remain open.",
         "Run 43602481512 failed the existing Wallet production budget. The revised actual disclosure boundary passes all 104 local budgets and 24 relevant production-browser cases. Verify the cumulative successor hosted preflight and full final candidate gates.",
-        "The solar contract source service passed the unchanged scoped critical threshold after focused cases for sealed provenance, rendering and reservation loss. Retain the existing native solar attachment and scan tests in the final exact combined run."
+        "The solar contract source service passed the unchanged scoped critical threshold after focused cases for sealed provenance, rendering and reservation loss. Retain the existing native solar attachment and scan tests in the final exact combined run.",
+        "The saving order service passed the unchanged scoped critical gate after proving current agreement, catalogue, address and gift eligibility against compiled HTTP and native PostgreSQL. Verify the full final candidate coverage report."
       ],
       "owner": null,
       "depends_on": [],
@@ -1137001,7 +1137986,8 @@
           "release-0.6-electricity-order-boundaries",
           "release-0.6-wallet-receipt-timeline-budget",
           "release-0.6-electricity-price-and-periods",
-          "release-0.6-solar-contract-source-validation"
+          "release-0.6-solar-contract-source-validation",
+          "release-0.6-saving-quote-boundaries"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1327217,6 +1328203,171 @@
         {
           "file": "scoped-gate-final.json",
           "sha256": "da63a7906361bcc2505ee5753b876b56f59a443b7a1701d8e96130d8bdba8935"
+        }
+      ]
+    },
+    "release-0.6-saving-quote-boundaries": {
+      "batch": "release-0.6-saving-quote-boundaries",
+      "base_commit": "a26e8b51f1acde8b9062344f53b1024e961691ea",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "03-core-business.md#T-03.01.01.01",
+        "03-core-business.md#T-03.01.01.02",
+        "03-core-business.md#T-03.01.01.03",
+        "03-core-business.md#T-03.01.01.04",
+        "03-core-business.md#T-03.01.01.05",
+        "03-core-business.md#T-03.01.01.06",
+        "03-core-business.md#T-03.01.01.07",
+        "03-core-business.md#T-03.01.02.01",
+        "03-core-business.md#T-03.01.02.02",
+        "03-core-business.md#T-03.01.02.03",
+        "03-core-business.md#T-03.01.02.04",
+        "03-core-business.md#T-03.01.03.01",
+        "03-core-business.md#T-03.01.03.02",
+        "03-core-business.md#T-03.01.03.03",
+        "03-core-business.md#T-03.01.03.04",
+        "03-core-business.md#T-03.01.03.05",
+        "03-core-business.md#T-03.01.03.06",
+        "03-core-business.md#T-03.01.03.07",
+        "03-core-business.md#T-03.01.04.01",
+        "03-core-business.md#T-03.01.04.02",
+        "03-core-business.md#T-03.01.04.03",
+        "03-core-business.md#T-03.01.04.04",
+        "03-core-business.md#T-03.01.04.05",
+        "03-core-business.md#T-03.01.04.06",
+        "03-core-business.md#T-03.01.04.07",
+        "03-core-business.md#T-03.01.04.08",
+        "03-core-business.md#T-03.01.05.01",
+        "03-core-business.md#T-03.01.05.02",
+        "03-core-business.md#T-03.01.05.03",
+        "03-core-business.md#T-03.01.05.04",
+        "03-core-business.md#T-03.02.03.01",
+        "03-core-business.md#T-03.02.03.02",
+        "03-core-business.md#T-03.02.03.03",
+        "03-core-business.md#T-03.02.03.04",
+        "03-core-business.md#T-03.02.03.05",
+        "03-core-business.md#T-03.02.03.06",
+        "03-core-business.md#T-03.02.04.01",
+        "03-core-business.md#T-03.02.04.02",
+        "03-core-business.md#T-03.02.04.03",
+        "03-core-business.md#T-03.07.03.01",
+        "03-core-business.md#T-03.07.03.02",
+        "03-core-business.md#T-03.07.03.03",
+        "03-core-business.md#T-03.07.03.04",
+        "03-core-business.md#T-03.07.03.05",
+        "03-core-business.md#T-03.07.03.06",
+        "03-core-business.md#T-03.07.03.07",
+        "03-core-business.md#T-03.09.01.02",
+        "03-core-business.md#T-03.09.01.03",
+        "03-core-business.md#T-03.09.02.01",
+        "03-core-business.md#T-03.09.02.02",
+        "03-core-business.md#T-03.09.02.03",
+        "03-core-business.md#T-03.09.02.04",
+        "03-core-business.md#T-03.09.02.05",
+        "03-core-business.md#T-03.09.02.06",
+        "03-core-business.md#T-03.09.02.07",
+        "03-core-business.md#T-03.09.02.08",
+        "03-core-business.md#T-03.09.03.02",
+        "03-core-business.md#T-03.09.03.04",
+        "03-core-business.md#T-03.09.03.05",
+        "03-core-business.md#T-03.09.03.06",
+        "03-core-business.md#T-03.09.04.01",
+        "03-core-business.md#T-03.09.04.02",
+        "03-core-business.md#T-03.09.04.03",
+        "03-core-business.md#T-03.09.04.04",
+        "03-core-business.md#T-03.09.04.05",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "03-core-business.md#T-03.10.01.01",
+        "03-core-business.md#T-03.10.01.02",
+        "03-core-business.md#T-03.10.01.03",
+        "03-core-business.md#T-03.10.01.04",
+        "03-core-business.md#T-03.10.01.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "03-core-business.md#T-03.10.03.01",
+        "03-core-business.md#T-03.10.03.02",
+        "03-core-business.md#T-03.10.03.03",
+        "03-core-business.md#T-03.90.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.02.01",
+        "04-invoices-wallet-contracts.md#T-04.4.02.03",
+        "04-invoices-wallet-contracts.md#T-04.4.02.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.05",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.10.02.05",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/saving/saving-order.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "a33ca4fb1a13babbcc9deb822f6741bf1e8eec9f3d340aec0e43069212aca0c8"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.integration.test.ts",
+          "sha256": "974063e3f503983ae21912d6da3ed5ad20ed1c85b0f1c524e0c92deb0d56ad67"
+        }
+      ],
+      "checks": [
+        "The compiled HTTP case passed against native PostgreSQL 17.9 with production migrations. Foreign address, unavailable equipment, unknown plan, stale agreement and an ineligible or inactive gift code were refused. The eligible profile-specific gift quote preserved exact VAT and left business records and inventory unchanged.",
+        "The service passed the original critical thresholds with 325/342 lines and 179/207 branches. The retained hosted coverage was checksum-verified and bound to byte-identical source. API type checking and focused ESLint passed."
+      ],
+      "limitations": [
+        "Ten existing cases were outside this local selection. The instrumented subset fell below whole-package floors. The complete hosted combined gate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-saving-quote-boundaries",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "ba8522771e8545b57196f211039b9577e64b17faee0bd04d8ca596f3f0cac550"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "d59384be91b234fb8b8be50d6d32a6ffbd75859fc35494716da17794148cf53d"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "4a299a3b7935fa6db9197d3e38334d29b62e823b510a6ddfd3e1b69df3e0b1f2"
         }
       ]
     }

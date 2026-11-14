@@ -4818,6 +4818,60 @@ it('limits gift-code guesses across saving and electricity quotes without blocki
   expect(ordinary.status, http.logs()).toBe(201);
 }, 60000);
 
+it('keeps saving quote eligibility scoped to the current profile and catalogue', async () => {
+  const quotePath = '/api/saving/orders/quote';
+  const profileGift = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO gift_codes(code,discount_type,discount_value,categories,eligibility,created_by)
+       VALUES('SAVING-PROFILE','fixed_irr',30000,ARRAY['saving_plan'],'profile','saving-order-staff')
+       RETURNING id`
+    )
+  ).rows[0]!;
+  const financialState = async () =>
+    (
+      await http.pool.query(
+        `SELECT
+       (SELECT count(*)::int FROM saving_orders) AS orders,
+       (SELECT count(*)::int FROM invoices) AS invoices,
+       (SELECT count(*)::int FROM gift_code_redemptions) AS redemptions,
+       (SELECT reserved_count FROM products WHERE id=$1) AS reserved`,
+        [input.hardwareProductId]
+      )
+    ).rows;
+  const before = await financialState();
+  const applied = { ...input, giftCode: 'saving-profile' };
+  for (const attempt of [
+    { body: applied, status: 400 },
+    { body: { ...input, installationAddressId: randomUUID() }, status: 400 },
+    { body: { ...input, agreementVersionId: randomUUID() }, status: 409 },
+    { body: { ...input, hardwareProductId: randomUUID() }, status: 409 },
+  ]) {
+    const rejected = await request(quotePath, 'POST', attempt.body);
+    expect(rejected.status, http.logs()).toBe(attempt.status);
+  }
+  const missing = await request('/api/saving/orders/duplicate', 'POST', {
+    profileId: input.profileId,
+    billIdentifier: input.billIdentifier,
+    savingPlanId: randomUUID(),
+  });
+  expect(missing.status, http.logs()).toBe(404);
+  await http.pool.query('INSERT INTO gift_code_profiles(gift_code_id,profile_id) VALUES($1,$2)', [
+    profileGift.id,
+    input.profileId,
+  ]);
+  const accepted = await request(quotePath, 'POST', applied);
+  expect(accepted.status, http.logs()).toBe(201);
+  expect(await accepted.json()).toMatchObject({
+    discountIrR: '30000',
+    vatIrR: '8100',
+    totalIrR: '278100',
+  });
+  await http.pool.query("UPDATE gift_codes SET status='inactive' WHERE id=$1", [profileGift.id]);
+  const inactive = await request(quotePath, 'POST', applied);
+  expect(inactive.status, http.logs()).toBe(400);
+  expect(await financialState()).toEqual(before);
+});
+
 it('binds specified saving cancellation routes to customer requests, approved decisions and completed partial returns', async () => {
   const reserved = (
     await http.pool.query<{ reserved_count: number }>(
