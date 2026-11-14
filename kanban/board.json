@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T19:38:14+00:00",
+  "updated": "2026-11-14T19:45:09+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13922,7 +13922,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13935,7 +13936,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14146,6 +14147,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -14246,7 +14255,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -14258,7 +14268,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14756,6 +14766,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -22754,7 +22772,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22766,7 +22785,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23114,6 +23133,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -23195,7 +23222,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -23207,7 +23235,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23555,6 +23583,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -26041,7 +26077,8 @@
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
-        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
+        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -26081,7 +26118,9 @@
           "deploy/staging/release-queue.py",
           "deploy/staging/test_notify_release.py",
           "deploy/staging/test_release_queue.py",
-          "deploy/production/release_evidence.py"
+          "deploy/production/release_evidence.py",
+          ".github/workflows/production-promotion.yml",
+          "deploy/production/select-staged-candidate.py"
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
@@ -26102,7 +26141,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": null
       }
@@ -38705,7 +38745,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38728,7 +38769,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -39589,6 +39630,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -42217,7 +42266,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -42245,7 +42295,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             }
           ],
           "checks": [
@@ -42605,6 +42655,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -719556,7 +719614,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -719568,7 +719627,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -719810,6 +719869,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -745826,7 +745893,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -745852,7 +745920,7 @@
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "6284df06bd574eda7b330176327be664d54d7d90e6d56f30197894003b49913b"
+              "sha256": "d497a9e8ffe45fecebdc2924a59cfc6eadb53c9190551a4de772e8d737e2a667"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -746367,6 +746435,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -746915,7 +746991,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -746937,7 +747014,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -746945,7 +747022,7 @@
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "6284df06bd574eda7b330176327be664d54d7d90e6d56f30197894003b49913b"
+              "sha256": "d497a9e8ffe45fecebdc2924a59cfc6eadb53c9190551a4de772e8d737e2a667"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -747624,6 +747701,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -747644,7 +747730,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Provision the approved candidate and previous pools and connect the guarded ramp to the protected production-equivalent ingress. Rehearse the approved high-risk traffic steps and record live image and traffic readbacks. Verify the approved rollout plan against exact staged app and web image identities."
+        "Provision the approved candidate and previous pools and connect the guarded ramp to the protected production-equivalent ingress. Rehearse the approved high-risk traffic steps and record live image and traffic readbacks. Verify the approved rollout plan against exact staged app and web image identities.",
+        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -747656,11 +747743,14 @@
           "deploy/production/test_guarded_rollout.py",
           "docs/runbooks/bad-deployment.md",
           "deploy/production/check-promotion.py",
-          "deploy/production/test_check_promotion.py"
+          "deploy/production/test_check_promotion.py",
+          ".github/workflows/production-promotion.yml",
+          "deploy/production/select-staged-candidate.py"
         ],
         "batches": [
           "release-0.6-launch-halt-and-rollback",
-          "release-0.6-promotion-image-receipts"
+          "release-0.6-promotion-image-receipts",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": null
       }
@@ -747788,7 +747878,8 @@
           "release-0.6-journey-source-pairing",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -747799,7 +747890,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -748280,6 +748371,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -757195,7 +757294,8 @@
           "release-0.6-journey-source-pairing",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -757219,7 +757319,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -757631,6 +757731,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -770035,7 +770143,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -770083,7 +770192,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -770504,6 +770613,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -770843,7 +770960,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-production-telemetry-labels"
+          "release-0.6-production-telemetry-labels",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -770891,7 +771009,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "d5c943c825763ca872c9ac7b130660e48a4cce3ed3e372eaa059950fa4189e85"
+              "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -771316,6 +771434,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-promotion-staged-ancestor",
+              "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
             }
           ]
         }
@@ -1155883,7 +1156009,8 @@
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
-        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
+        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1155977,7 +1156104,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-promotion-staged-ancestor"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1156035,7 +1156163,9 @@
           ".github/workflows/ci.yml",
           "docs/development/ci.md",
           "deploy/production/release_evidence.py",
-          "deploy/staging/deploy.sh"
+          "deploy/staging/deploy.sh",
+          ".github/workflows/production-promotion.yml",
+          "deploy/production/select-staged-candidate.py"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1351318,6 +1351448,82 @@
         {
           "file": "static.log",
           "sha256": "6f184d5fac1cca6fef5bb7dec77e2a6f6e2f457f4093f09603437327f91aa8d7"
+        }
+      ]
+    },
+    "release-0.6-promotion-staged-ancestor": {
+      "batch": "release-0.6-promotion-staged-ancestor",
+      "base_commit": "e1a3cff6e0fec8b3662ddc4eabd2cc127b6947f3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.02",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        ".github/workflows/production-promotion.yml",
+        "deploy/production/README.md",
+        "deploy/production/select-staged-candidate.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/production-promotion.yml",
+          "sha256": "635309c583df4b8143f06dce484fe1e798fe966e30f820b49650ec397f56e353"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "5823777a8ab5b03935c9ce18d3b71527a7d72557e2f5d72fffc1ab6dd96030b6"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "28790cd11f7916e2d72bf32993b821dfa8fe8f143687d67c4ebb1376e9bb6837"
+        },
+        {
+          "path": "deploy/production/select-staged-candidate.py",
+          "sha256": "a971b215103c41836ee80170aab6f7978f4f2135612112a82e17b1cd26ebf587"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "d497a9e8ffe45fecebdc2924a59cfc6eadb53c9190551a4de772e8d737e2a667"
+        }
+      ],
+      "checks": [
+        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open.",
+        "Actionlint, Prettier and git diff checks passed."
+      ],
+      "limitations": [
+        "The workflow steps ran against local fixture Git commits and a temporary evidence directory. The production environment and ingress were not used. The original test harness initially used a Python 3.11 convenience method and was corrected for local Python 3.9."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-staged-ancestor",
+      "execution_receipts": [
+        {
+          "file": "promotion.log",
+          "sha256": "545d4aed6d6fb4fbc55b2008a0b1efb0dda32f3ab9cece6127b1d2642942a5ab"
+        },
+        {
+          "file": "promotion-final.log",
+          "sha256": "1d4c57f3235394803566f3b6f0027698fd4fd3e7bc8642c464be7af5c5679df2"
+        },
+        {
+          "file": "static.log",
+          "sha256": "c66c6e1290b309208ac50e587566b537b81f17123ec64585453de2f29854cb25"
         }
       ]
     }

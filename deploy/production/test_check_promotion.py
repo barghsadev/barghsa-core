@@ -8,6 +8,7 @@ import io
 import json
 from pathlib import Path
 import runpy
+import subprocess
 import sys
 import tempfile
 from threading import Thread
@@ -22,6 +23,68 @@ spec = importlib.util.spec_from_file_location(
 promotion = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(promotion)
 SHA = 'a' * 40
+
+
+class CandidateSelectionTest(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.repo = Path(directory.name)
+        self.git('init', '-b', 'main')
+        self.git('config', 'user.name', 'Promotion fixture')
+        self.git('config', 'user.email', 'promotion@example.test')
+        (self.repo / 'kanban').mkdir()
+        (self.repo / 'package.json').write_text('{"version":"0.9.0"}')
+        self.release = {'version': '0.9.0', 'status': 'accepted',
+                        'acceptance': {'gates': {'check': 'verified'}}}
+        self.candidate = self.commit_release()
+        self.release.update(status='released', published_commit=self.candidate,
+                            staging_receipt={'version': '0.9.0', 'commit': self.candidate},
+                            telegram_receipt={'summary': {'message_id': 42}})
+        self.main = self.commit_release()
+
+    def git(self, *args):
+        return subprocess.check_output(['git', '-C', str(self.repo), *args], text=True,
+                                       stderr=subprocess.PIPE).strip()
+
+    def commit_release(self):
+        ledger = self.repo / 'kanban/board.json'
+        ledger.write_text(json.dumps({'schema_version': 1, 'releases': [self.release]}))
+        self.git('add', '.')
+        self.git('commit', '-m', 'Record release')
+        return self.git('rev-parse', 'HEAD')
+
+    def select(self, candidate, main):
+        script = Path(__file__).with_name('select-staged-candidate.py')
+        return subprocess.run([sys.executable, str(script), candidate, main], cwd=self.repo,
+                              text=True, capture_output=True, check=False)
+
+    def test_selects_the_staged_sha_after_main_records_the_receipts(self):
+        self.assertNotEqual(self.candidate, self.main)
+        result = self.select(self.candidate, self.main)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.git('rev-parse', 'HEAD'), self.main)
+
+    def test_refuses_wrong_ref_incomplete_delivery_or_unreleased_candidate(self):
+        for candidate, main in ((self.main, self.main), (self.candidate, self.candidate),
+                                ('HEAD', self.main), (self.candidate, 'HEAD')):
+            with self.subTest(candidate=candidate, main=main):
+                self.assertEqual(self.select(candidate, main).returncode, 1)
+        self.release['telegram_receipt'] = None
+        self.assertEqual(self.select(self.candidate, self.commit_release()).returncode, 1)
+
+    def test_refuses_a_matching_board_entry_for_a_commit_outside_main(self):
+        self.git('checkout', '--detach', self.candidate)
+        (self.repo / 'separate.txt').write_text('Different branch')
+        self.git('add', 'separate.txt')
+        self.git('commit', '-m', 'Not on main')
+        off_main = self.git('rev-parse', 'HEAD')
+        self.git('checkout', 'main')
+        self.release['published_commit'] = off_main
+        self.release['staging_receipt']['commit'] = off_main
+        result = self.select(off_main, self.commit_release())
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('ancestor', result.stderr)
 
 
 class PromotionEvidenceTest(unittest.TestCase):

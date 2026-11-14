@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   rollout:
-    if: github.repository == 'barghsadev/barghsa-core' && github.ref == 'refs/heads/main' && inputs.candidate_sha == github.sha
+    if: github.repository == 'barghsadev/barghsa-core' && github.ref == 'refs/heads/main'
     runs-on:
       group: barghsa-production
     environment: production
@@ -26,17 +26,27 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 0
           persist-credentials: false
+      - name: Select the exact staged release recorded on main
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          python3 deploy/production/select-staged-candidate.py "$CANDIDATE_SHA" "$GITHUB_SHA"
+          git checkout --detach "$CANDIDATE_SHA"
       - name: Locate the protected evidence for this revision
         id: evidence
         shell: bash
         env:
           EVIDENCE_ROOT: ${{ vars.PRODUCTION_RELEASE_EVIDENCE_DIR }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
           [[ "$EVIDENCE_ROOT" = /* && "$EVIDENCE_ROOT" != *$'\r'* && "$EVIDENCE_ROOT" != *$'\n'* ]]
-          directory="${EVIDENCE_ROOT%/}/$GITHUB_SHA"
+          directory="${EVIDENCE_ROOT%/}/$CANDIDATE_SHA"
           test -d "$directory"
           printf 'directory=%s\n' "$directory" >> "$GITHUB_OUTPUT"
       - name: Verify the Sentry project commit associations
@@ -50,8 +60,9 @@ jobs:
         env:
           EVIDENCE_DIR: ${{ steps.evidence.outputs.directory }}
           EVIDENCE_ROOT: ${{ vars.PRODUCTION_RELEASE_EVIDENCE_DIR }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
         run: |
-          exec python3 deploy/production/guarded-rollout.py --production-commit "$GITHUB_SHA" \
+          exec python3 deploy/production/guarded-rollout.py --production-commit "$CANDIDATE_SHA" \
             --plan "$EVIDENCE_ROOT/rollout-plan.json" --receipt "$EVIDENCE_DIR/rollout-receipt.jsonl" \
             --promotion-report "$EVIDENCE_DIR/promotion-report.json" --owner-approval "$EVIDENCE_DIR/owner-approval.json"
       - name: Publish and verify the Grafana marker

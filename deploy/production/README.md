@@ -233,8 +233,12 @@ before invoking any adapter and checks that the verified backup is still under
 The rollout receipt records both hashes without including the approval text.
 
 The [manual production workflow](../../.github/workflows/production-promotion.yml)
-requires an exact candidate SHA on protected `main`. Provision the `production`
-GitHub environment and the `barghsa-production` runner group before dispatch.
+dispatches on protected `main` after the board records the staging deployment
+and Telegram receipts. Pass the exact staged `candidate_sha` recorded in the
+release entry. The workflow verifies that this SHA is an accepted ancestor of
+the dispatching main commit and runs the promotion tools from that candidate.
+Provision the `production` GitHub environment and the `barghsa-production`
+runner group before dispatch.
 Restrict the group to the approved workflow on `refs/heads/main` and use a
 dedicated ingress runner. The repository is public. Keep production credentials
 off runners that can execute fork or other repository workflows.
