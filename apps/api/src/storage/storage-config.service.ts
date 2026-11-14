@@ -208,7 +208,8 @@ export class StorageConfigService {
     }
     const key = `_storage_probes/${randomUUID()}`;
     const expected = Buffer.from(`Barghsa storage probe ${randomUUID()}`);
-    let attemptedUpload = false;
+    let versioned: boolean | undefined;
+    let uploaded: Awaited<ReturnType<typeof providers.internal.putConnectionProbe>> | undefined;
     let failure: unknown;
     try {
       for (const provider of [providers.internal, providers.browser]) {
@@ -216,8 +217,10 @@ export class StorageConfigService {
         await provider.listObjects('', 1);
       }
       await this.authorize(session);
-      attemptedUpload = true;
-      await providers.internal.putObject(key, expected, 'application/octet-stream');
+      const bucketVersioned = await providers.internal.probeBucketVersioned();
+      await this.authorize(session);
+      versioned = bucketVersioned;
+      uploaded = await providers.internal.putConnectionProbe(key, expected);
       await this.authorize(session);
       const url = await providers.browser.presignedGetUrl(key, 60);
       const response = await fetch(url, { signal: AbortSignal.timeout(5000), redirect: 'error' });
@@ -235,7 +238,8 @@ export class StorageConfigService {
       try {
         // Trusted cleanup is limited to this server-generated disposable key,
         // including when a send or the final authority check was uncertain.
-        if (attemptedUpload) await providers.internal.deleteObject(key);
+        if (versioned !== undefined)
+          await providers.internal.removeConnectionProbe(key, versioned, uploaded);
       } catch {
         failure ??= new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
       } finally {

@@ -12,9 +12,20 @@ let endpoint: string;
 let rejectProbe = false;
 let onProbe: (() => Promise<void>) | undefined;
 const authorizations: string[] = [];
-const probeObjects = new Map<string, Buffer>();
-const probeRequests: { method: string; key: string; signed: boolean; expiry: string | null }[] = [];
-let probeFault: 'none' | 'upload' | 'download' | 'corrupt' | 'oversize' | 'cleanup' = 'none';
+const probeObjects = new Map<string, { bytes: Buffer; nonce: string }>();
+const probeRequests: {
+  method: string;
+  key: string;
+  signed: boolean;
+  expiry: string | null;
+  version: string | null;
+}[] = [];
+const probeVersion = 'fixture-version';
+let versioning: 'Enabled' | 'Suspended' | undefined;
+let omitPutVersion = false;
+let probeFault:
+  'none' | 'upload' | 'download' | 'corrupt' | 'oversize' | 'cleanup' | 'lost-put' | 'ownership' =
+  'none';
 beforeAll(async () => {
   server = createServer(async (req, res) => {
     authorizations.push(req.headers.authorization ?? '');
@@ -25,12 +36,20 @@ beforeAll(async () => {
       return;
     }
     const url = new URL(req.url!, 'http://localhost');
+    if (url.searchParams.has('versioning')) {
+      res.setHeader('Content-Type', 'application/xml');
+      res.end(
+        `<VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">${versioning ? `<Status>${versioning}</Status>` : ''}</VersioningConfiguration>`
+      );
+      return;
+    }
     if (url.pathname.includes('/_storage_probes/')) {
       probeRequests.push({
         method: req.method!,
         key: url.pathname,
         signed: url.searchParams.has('X-Amz-Signature'),
         expiry: url.searchParams.get('X-Amz-Expires'),
+        version: url.searchParams.get('versionId'),
       });
       if (
         (req.method === 'PUT' && probeFault === 'upload') ||
@@ -43,25 +62,52 @@ beforeAll(async () => {
       }
       if (req.method === 'PUT') {
         expect(req.headers['content-type']).toBe('application/octet-stream');
+        expect(req.headers['if-none-match']).toBe('*');
+        const nonce = String(req.headers['x-amz-meta-barghsa-probe']);
+        expect(url.pathname.endsWith(`/${nonce}`)).toBe(true);
         const chunks: Buffer[] = [];
         for await (const chunk of req) chunks.push(Buffer.from(chunk));
-        probeObjects.set(url.pathname, Buffer.concat(chunks));
+        probeObjects.set(url.pathname, { bytes: Buffer.concat(chunks), nonce });
+        if (probeFault === 'lost-put') {
+          req.socket.destroy();
+          return;
+        }
+        if (versioning && !omitPutVersion) res.setHeader('x-amz-version-id', probeVersion);
         res.setHeader('ETag', '"probe-etag"');
         res.end();
         return;
       }
       if (req.method === 'DELETE') {
+        if (versioning) {
+          if (url.searchParams.get('versionId') !== probeVersion) {
+            res.setHeader('x-amz-delete-marker', 'true');
+            res.writeHead(204).end();
+            return;
+          }
+          res.setHeader('x-amz-version-id', probeVersion);
+        }
         probeObjects.delete(url.pathname);
         res.writeHead(204);
         res.end();
         return;
       }
-      const bytes = probeObjects.get(url.pathname);
-      if (!bytes) {
+      const object = probeObjects.get(url.pathname);
+      if (!object) {
         res.writeHead(404);
         res.end();
         return;
       }
+      if (req.method === 'HEAD') {
+        if (versioning) res.setHeader('x-amz-version-id', probeVersion);
+        res.setHeader(
+          'x-amz-meta-barghsa-probe',
+          probeFault === 'ownership' ? 'unrelated' : object.nonce
+        );
+        res.setHeader('ETag', '"probe-etag"');
+        res.end();
+        return;
+      }
+      const { bytes } = object;
       res.setHeader('Content-Type', 'application/octet-stream');
       res.end(
         probeFault === 'corrupt'
@@ -537,13 +583,65 @@ it('proves a disposable upload and signed browser download, then removes only it
   const before = await current();
   probeRequests.length = 0;
   expect((await request('/test-connection', 'POST', candidate)).status).toBe(200);
-  expect(probeRequests.map((r) => r.method)).toEqual(['PUT', 'GET', 'DELETE']);
+  expect(probeRequests.map((r) => r.method)).toEqual(['PUT', 'GET', 'HEAD', 'DELETE']);
   expect(new Set(probeRequests.map((r) => r.key)).size).toBe(1);
   expect(probeRequests[0]?.key).toMatch(/\/_storage_probes\/[0-9a-f-]{36}$/);
   expect(probeRequests[1]).toMatchObject({ signed: true, expiry: '60' });
   expect(probeObjects.size).toBe(0);
   expect(await current()).toEqual(before);
 });
+
+it.each(['Enabled', 'Suspended'] as const)(
+  'cleans the exact version in a %s bucket even when PUT omits it',
+  async (status) => {
+    const before = await current();
+    versioning = status;
+    omitPutVersion = status === 'Suspended';
+    probeRequests.length = 0;
+    try {
+      const result = await request('/test-connection', 'POST', await update());
+      expect(result.status, http.logs()).toBe(200);
+      expect(probeRequests.map(({ method }) => method)).toEqual(
+        omitPutVersion ? ['PUT', 'GET', 'HEAD', 'DELETE'] : ['PUT', 'GET', 'DELETE']
+      );
+      expect(probeRequests.at(-1)?.version).toBe(probeVersion);
+      expect(new Set(probeRequests.map(({ key }) => key)).size).toBe(1);
+      expect(probeObjects.size).toBe(0);
+      expect(await current()).toEqual(before);
+    } finally {
+      versioning = undefined;
+      omitPutVersion = false;
+      probeObjects.clear();
+    }
+  }
+);
+
+it.each(['lost-put', 'ownership'] as const)(
+  'refuses activation and safely reconciles probe cleanup after %s',
+  async (fault) => {
+    const before = await current();
+    versioning = 'Enabled';
+    omitPutVersion = true;
+    probeFault = fault;
+    probeRequests.length = 0;
+    try {
+      const result = await request('/config', 'PUT', await update());
+      expect(result.status, http.logs()).toBe(503);
+      expect(probeRequests.map(({ method }) => method)).toEqual(
+        fault === 'lost-put' ? ['PUT', 'HEAD', 'DELETE'] : ['PUT', 'GET', 'HEAD']
+      );
+      expect(probeObjects.size).toBe(fault === 'lost-put' ? 0 : 1);
+      if (fault === 'lost-put') expect(probeRequests.at(-1)?.version).toBe(probeVersion);
+      expect(await current()).toEqual(before);
+    } finally {
+      versioning = undefined;
+      omitPutVersion = false;
+      probeFault = 'none';
+      probeObjects.clear();
+    }
+  }
+);
+
 for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as const) {
   it(`refuses an unproved ${fault} probe without changing configuration or echoing secrets`, async () => {
     const before = await current();
@@ -559,7 +657,7 @@ for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as 
       expect(JSON.stringify(body)).not.toContain('new-secret-never-return');
       expect(JSON.stringify(body)).not.toContain('new-access-key');
       expect(await current()).toEqual(before);
-      expect(probeRequests.at(-1)?.method).toBe('DELETE');
+      expect(probeRequests.at(-1)?.method).toBe(fault === 'upload' ? 'HEAD' : 'DELETE');
       if (fault !== 'cleanup') expect(probeObjects.size).toBe(0);
     } finally {
       probeFault = 'none';

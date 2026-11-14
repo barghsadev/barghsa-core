@@ -11,6 +11,7 @@ import {
   ListObjectsV2Command,
   ListObjectsV2CommandInput,
   HeadBucketCommand,
+  GetBucketVersioningCommand,
   ListObjectVersionsCommand,
   GetObjectTaggingCommand,
   PutObjectTaggingCommand,
@@ -82,6 +83,8 @@ function signedUrlExpiry(value = DEFAULT_EXPIRES_IN): number {
 }
 const DEFAULT_MAX_KEYS = 100;
 const MAX_METADATA_RESPONSE_BYTES = 10 * 1024 * 1024;
+const connectionProbeKey = /^_storage_probes\/([0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12})$/;
+type ProbeIdentity = { versionId?: string | undefined; etag?: string | undefined };
 
 // ---------------------------------------------------------------------------
 // Implementation
@@ -467,6 +470,74 @@ export class S3StorageProvider implements IFileStorageProvider {
 
   async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {
     await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }), { abortSignal: signal });
+  }
+
+  async probeBucketVersioned(): Promise<boolean> {
+    const { Status } = await this.client.send(
+      new GetBucketVersioningCommand({ Bucket: this.bucket })
+    );
+    if (Status === undefined) return false;
+    if (Status === 'Enabled' || Status === 'Suspended') return true;
+    throw new StorageProviderError('Storage probe could not identify bucket versioning');
+  }
+
+  async putConnectionProbe(key: string, body: Uint8Array): Promise<ProbeIdentity> {
+    const nonce = connectionProbeKey.exec(key)?.[1];
+    if (!nonce) throw new StorageProviderError('Invalid disposable storage probe key');
+    const { VersionId, ETag } = await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: this.resolveKey(key),
+        Body: body,
+        ContentLength: body.byteLength,
+        ContentType: 'application/octet-stream',
+        Metadata: { 'barghsa-probe': nonce },
+        IfNoneMatch: '*',
+      })
+    );
+    return { versionId: VersionId, etag: ETag };
+  }
+
+  async removeConnectionProbe(
+    key: string,
+    versioned: boolean,
+    uploaded?: ProbeIdentity
+  ): Promise<void> {
+    const nonce = connectionProbeKey.exec(key)?.[1];
+    if (!nonce) throw new StorageProviderError('Invalid disposable storage probe key');
+    const object = { Bucket: this.bucket, Key: this.resolveKey(key) };
+    let versionId = uploaded?.versionId;
+    if (!versionId) {
+      let metadata;
+      try {
+        metadata = await this.client.send(new HeadObjectCommand(object));
+      } catch (error) {
+        if (
+          !uploaded &&
+          ['NoSuchKey', 'NotFound'].includes((error as { name?: string }).name ?? '')
+        )
+          return;
+        throw error;
+      }
+      if (
+        metadata.Metadata?.['barghsa-probe'] !== nonce ||
+        (uploaded?.etag && metadata.ETag !== uploaded.etag)
+      )
+        throw new StorageProviderError('Storage probe could not prove object ownership');
+      versionId = metadata.VersionId;
+    }
+    if (versioned && !versionId)
+      throw new StorageProviderError('Storage probe could not identify the object version');
+    const removed = await this.client.send(
+      new DeleteObjectCommand({ ...object, VersionId: versionId })
+    );
+    if (
+      removed.DeleteMarker ||
+      (removed.VersionId !== undefined && removed.VersionId !== versionId)
+    )
+      throw new StorageProviderError(
+        'Storage probe cleanup receipt did not match the object version'
+      );
   }
 
   async scheduleExpiration(

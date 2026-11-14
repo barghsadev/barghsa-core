@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T01:21:12+00:00",
+  "updated": "2026-11-14T01:29:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14820,7 +14820,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -14951,6 +14951,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -18423,11 +18431,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -18566,6 +18574,15 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -18760,11 +18777,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -18996,6 +19013,15 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -19018,7 +19044,8 @@
       "remaining": [
         "Authenticated staging v0.5.1 readback confirmed enabled versioning and all five expected policy rules on the running object-store image. All four expiration rules require legal-hold=false and retain the five newest noncurrent versions. The seven-day bucket abort fallback remains enabled alongside the default 24-hour application worker. Verify the selected production storage policy, propagated rules, actual expiry and safe ownership of preview and superseded-file classification.",
         "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
-        "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open."
+        "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open.",
+        "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -19111,7 +19138,8 @@
         ],
         "batches": [
           "release-0.6-storage-sdk-endpoint-policy",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-admin-probe-cleanup"
         ],
         "current_acceptance": null
       }
@@ -19202,11 +19230,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
@@ -19254,11 +19282,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -19416,6 +19444,17 @@
                 "apps/web/src/pages/storage-policy-forms.test.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -19750,7 +19789,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -19828,6 +19867,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -32639,7 +32686,8 @@
       "launch_required": true,
       "remaining": [
         "Reconcile validation coverage for the remaining configuration keys and confirm persisted, sanitized validation diagnostics for draft-backed settings. The existing email and SMS provider tests already store and invalidate their test results. The multipart cleanup age now fails closed and supports an authorized repair.",
-        "The wizard draft retention and preliminary electricity template recovery drafts use validated stored values. Template availability and supported placeholders are rechecked within the activation transaction. Deployed proof and other configuration families remain in scope."
+        "The wizard draft retention and preliminary electricity template recovery drafts use validated stored values. Template availability and supported placeholders are rechecked within the activation transaction. Deployed proof and other configuration families remain in scope.",
+        "The admin storage save and recovery activation require a successful signed byte probe and confirmed object cleanup. Mounted tests cover enabled and suspended buckets, exact-version cleanup, lost upload acknowledgment and refusal when ownership cannot be established. Staged evidence remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -32695,7 +32743,8 @@
         ],
         "batches": [
           "release-0.6-multipart-policy-validation",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-admin-probe-cleanup"
         ],
         "current_acceptance": null
       }
@@ -32715,7 +32764,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Email, SMS, capability maintenance, mandatory green-electricity rules and regular security rate limits have tested recovery drafts and separate activation. Branding uses versioned restore and activation. Profile verification requirements now restore audited activations as reviewed drafts with separate step-up activation. Verification mode also restores audited activations into new drafts and refuses the unavailable API mode. Expanded workflow targets and routing can now restore a reviewed audited policy as a new activation. Contract electricity limits now restore a reviewed audit revision as a separate, step-up-guarded activation. Wizard draft retention and preliminary electricity contract template selections now have separate audited draft and activation steps. Verify the electricity settings recovery on the exact staged candidate. Legacy service response targets and escalation policies now restore audited revisions through a separate recovery draft and step-up activation. Storage connection settings now recover from an audited superseded revision through a separate version-bound draft and a fresh connection probe using current credentials. History starts with subsequent revisions and excludes both credentials. Verify this and the service-settings recovery on the exact staged candidate. Reconcile the remaining security and multipart-cleanup recovery criteria."
+        "Email, SMS, capability maintenance, mandatory green-electricity rules and regular security rate limits have tested recovery drafts and separate activation. Branding uses versioned restore and activation. Profile verification requirements now restore audited activations as reviewed drafts with separate step-up activation. Verification mode also restores audited activations into new drafts and refuses the unavailable API mode. Expanded workflow targets and routing can now restore a reviewed audited policy as a new activation. Contract electricity limits now restore a reviewed audit revision as a separate, step-up-guarded activation. Wizard draft retention and preliminary electricity contract template selections now have separate audited draft and activation steps. Verify the electricity settings recovery on the exact staged candidate. Legacy service response targets and escalation policies now restore audited revisions through a separate recovery draft and step-up activation. Storage connection settings now recover from an audited superseded revision through a separate version-bound draft and a fresh connection probe using current credentials. History starts with subsequent revisions and excludes both credentials. Verify this and the service-settings recovery on the exact staged candidate. Reconcile the remaining security and multipart-cleanup recovery criteria.",
+        "Storage recovery activation shares the version-aware probe and fails closed when ownership or cleanup is unconfirmed. Current credentials and existing location and version guards remain in effect."
       ],
       "owner": null,
       "depends_on": [],
@@ -32812,7 +32862,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-service-settings-recovery",
-          "release-0.6-storage-settings-recovery"
+          "release-0.6-storage-settings-recovery",
+          "release-0.6-admin-probe-cleanup"
         ],
         "current_acceptance": {
           "kind": "source-bound-provider-restore-scope",
@@ -33307,11 +33358,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -33621,6 +33672,15 @@
                 "apps/web/src/pages/AdminStorageConfig.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -52981,11 +53041,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
@@ -54706,6 +54766,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -100113,11 +100182,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
@@ -101668,6 +101737,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -609163,11 +609241,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -609191,7 +609269,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -609471,6 +609549,16 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts",
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -609554,11 +609642,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -609582,7 +609670,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -609862,6 +609950,16 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts",
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -609955,11 +610053,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -609975,7 +610073,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -610432,6 +610530,16 @@
                 "apps/web/e2e/storage-policy-forms.spec.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -610539,11 +610647,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -610559,7 +610667,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -610987,6 +611095,16 @@
                 "apps/web/e2e/storage-policy-forms.spec.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -623573,7 +623691,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -623597,7 +623715,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -624136,6 +624254,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -624306,7 +624433,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -624330,7 +624457,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -624869,6 +624996,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -625041,7 +625177,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -625065,7 +625201,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -625625,6 +625761,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -625830,7 +625975,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -625854,7 +625999,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -626552,6 +626697,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -626734,7 +626888,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -626758,7 +626912,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -627297,6 +627451,15 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -678274,7 +678437,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -678511,6 +678674,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -678577,7 +678748,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -678743,6 +678914,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -679323,7 +679502,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -679885,6 +680064,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -680012,7 +680199,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -680248,6 +680435,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -680401,7 +680596,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
@@ -680879,6 +681074,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -682143,7 +682346,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -682310,6 +682513,14 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -706247,7 +706458,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/read-capped-bytes.ts",
@@ -706588,6 +706799,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -789259,7 +789478,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/ui/package.json",
@@ -789812,6 +790031,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -790139,7 +790366,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/ui/package.json",
@@ -790633,6 +790860,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -792400,7 +792635,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/ui/package.json",
@@ -792894,6 +793129,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -795891,7 +796134,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/ui/package.json",
@@ -796385,6 +796628,14 @@
                 "apps/web/src/pages/WalletPage.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ]
         }
@@ -1072838,11 +1073089,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -1074790,7 +1075041,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -1074798,7 +1075049,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -1077323,6 +1077574,17 @@
                 "packages/shared/src/errors/domain-error-codes.ts"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "presentation_renewals": [
@@ -1078711,11 +1078973,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a330098b259303b89feb711308d61b742b74cd3bd10aa733ccb38096fc6c0b03"
+              "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "b7a05682afd6e4a4a34da5685d8816e921bee432751cb7e5b4d9cbddcd2fd8ad"
+              "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -1080639,7 +1080901,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "14597b65a446ae761748fd113f8fa29ebb194e71dc74a7f2e78733b2ad1cd139"
+              "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -1080647,7 +1080909,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
-              "sha256": "ccb3f15331f001e46984c3cc9e9d9cba72a3d87893b2d01e9da6f8b53b09668f"
+              "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -1083077,6 +1083339,17 @@
                 "apps/web/src/pages/storage-policy-forms.test.tsx"
               ],
               "scope": "Three additive storage recovery routes preserve the existing API definitions. Normal storage saves, object and credential controls, and the shared recovery command receipts passed affected API and browser cases. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-admin-probe-cleanup",
+              "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage-factory.ts"
+              ],
+              "scope": "Storage configuration probes now use an isolated, exact-version cleanup path. General object put, delete, expiration and legal-hold behavior is unchanged. Affected API, storage and bucket suites passed. Unrelated acceptance retains existing evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1268080,6 +1268353,121 @@
         {
           "file": "wallet-unit.log",
           "sha256": "2ad2335e0224c335242b7cb98026eeab52f6873df63766d3b369e66ceaa13666"
+        }
+      ]
+    },
+    "release-0.6-admin-probe-cleanup": {
+      "batch": "release-0.6-admin-probe-cleanup",
+      "base_commit": "51b16e1f3414129cb80019343f0b39d084f772d0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-07.02.02",
+        "01-platform-infrastructure.md#T-07.02.03",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/storage/storage-config-http.integration.test.ts",
+        "apps/api/src/storage/storage-config.service.ts",
+        "docs/operations/storage-configuration.md",
+        "packages/shared/src/storage/s3-storage-provider.ts",
+        "packages/shared/src/storage/storage-factory.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "d8a6d821561a48453026b7431e6f07ae322c7612f8629a8f248a30aa95ed2763"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "fd35dd1f670b56cde71670452cc69e2da5b45ffb56f67bf38b59b51f064fa05f"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "c4c3b1a5e9068f5d9444d8bbd3f28842eeb1641212ff6b0672e89adb42ee199b"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "c23b10dbbdfa37adc3348d6354887acadfaa1c83bb7f67d582330229c8ab84f5"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "9611600ba72ab43666fd88284fa29d1c644b70dae2f173e17e8cc9a1ab80a915"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "3865efe085e466ecc05f702cd381c6c852ca291e2baf483b84f36db69f4b285a"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-factory.ts",
+          "sha256": "fc1987b22e2a0fde673a5c5ab314f41a9b26b616218f7a8b7a6d299438bbd145"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+        }
+      ],
+      "checks": [
+        "34 HTTP and PostgreSQL cases passed. They cover plain, enabled and suspended versioning, missing PUT version, lost PUT acknowledgment, refused ownership, current permission and step-up, exact signed bytes and unchanged configuration when the proof fails.",
+        "55 storage unit cases and all 20 bucket setup checks passed. API, worker and shared typechecks plus changed-file lint and formatting passed.",
+        "Compiled provider methods ran against the exact Linux amd64 SeaweedFS image ce9e796f1fe6f06968f4c04bdaf8f678dad9c8acdfef3d244133d71bfa6bf882 on isolated disposable volumes. Three signed uploads and cleanup paths passed in each bucket mode. The probe prefix had no remaining versions or delete markers in the versioned bucket, and the unrelated synthetic object survived."
+      ],
+      "limitations": [
+        "Evidence is local and source-bound. The actual staging configuration, operator probe, provider policy and production lifecycle evidence remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-admin-probe-cleanup",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "6adf52f18c660ee05ab1da759abb94cf827712ccfdacc7da748e7fdf82c3a7a3"
+        },
+        {
+          "file": "storage-unit.log",
+          "sha256": "5aa46b9d3589645ccdd2da921a9a87d011e72bb16fd98f41e2d918b3e81ba933"
+        },
+        {
+          "file": "setup-bucket.log",
+          "sha256": "beecc25df6a70e40af6288654392399914c95d55a98cb6626fd55dae8686aaff"
+        },
+        {
+          "file": "seaweedfs.log",
+          "sha256": "6d6d872b888df8d8e46832279ba3b6969468aaa290c75d3c144b87661aae85bc"
+        },
+        {
+          "file": "shared-build.log",
+          "sha256": "51a2f8401dcf5c114c518dcc7b719cde97f01b0c09e578328b343dab4fb64a4b"
         }
       ]
     }
