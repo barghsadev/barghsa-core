@@ -12180,7 +12180,8 @@
         "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery.",
         "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -12377,7 +12378,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-promotion-migration-receipt",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -17122,7 +17124,8 @@
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
         "At 02:36 UTC on November 14, the active staging PostgreSQL volume had 107,408,958 apparent bytes and no external tablespace links. Docker and /tmp shared 6,257,455,104 free bytes. Use the cutover runbook to measure backup and restore scratch, image transfer and retained volume space. The protected off-server configuration and key remain absent.",
         "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -17226,7 +17229,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-cutover-capacity-and-image-readback",
           "release-0.6-measured-cutover-scratch",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17252,7 +17256,8 @@
         "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open.",
         "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints.",
         "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -17326,7 +17331,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-measured-cutover-scratch",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -688965,7 +688971,8 @@
       "remaining": [
         "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible.",
         "The private retained daemon returned ClamAV 1.5.4 with daily signatures 28182 at 23:26 UTC on November 13. The release probe accepted the actual read-only response. Verify fresh signatures and clean and quarantined uploads on the deployed candidate.",
-        "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys."
+        "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys.",
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack."
       ],
       "owner": null,
       "depends_on": [],
@@ -688992,7 +688999,8 @@
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-image-and-scanner-receipt-readback"
+          "release-0.6-image-and-scanner-receipt-readback",
+          "release-0.6-clamav-mirror-recurring"
         ],
         "current_acceptance": null
       }
@@ -695712,7 +695720,8 @@
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
-        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change."
+        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -695784,7 +695793,8 @@
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -695945,7 +695955,8 @@
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
-        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change."
+        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -696010,7 +696021,8 @@
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -717141,7 +717153,8 @@
         "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open.",
         "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate.",
         "The exact SeaweedFS rehearsal recovered probe cleanup after an unacknowledged PUT, preserved unrelated data and still failed the staging gate. Rehearse the complete smoke on the accepted immutable images and retain the live receipt.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -717199,7 +717212,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-probe-uncertain-write",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -731597,7 +731611,8 @@
         "Confirm P2 routing and firing and recovery evidence for the existing circuit-breaker and queue-age rules. Classify existing provider alerts by their stable names when required to preserve already persisted alert and dedup identities.",
         "Verify the ClamAV signature-age series and P2 firing and recovery on the exact deployed worker, Prometheus and operations receiver. The loaded-database probe, rule timing and private receiver are covered by native checks. On November 13 the retained v0.5.1 scanner was current, but the live Prometheus had neither this metric nor its alert rule. The rule now also covers a healthy expected worker that omits the scanner series. Apply the candidate rules with the candidate worker and operations receiver, then verify the exact live series and receipts.",
         "Verify live P2 firing and resolved PostgreSQL cache, connection, transaction, lock and slow-query receipts from the deployed candidate.",
-        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover."
+        "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack."
       ],
       "owner": null,
       "depends_on": [],
@@ -731624,7 +731639,8 @@
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-clamav-missing-metric",
           "release-0.6-postgres-alert-wiring",
-          "release-0.6-postgres-disk-capacity"
+          "release-0.6-postgres-disk-capacity",
+          "release-0.6-clamav-mirror-recurring"
         ],
         "current_acceptance": null
       }
@@ -1109544,7 +1109560,9 @@
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "Address deletion, primary address selection, invitation withdrawal, and agent removal reject unknown JSON. The migrated HTTP cases cover invalid input, unchanged state and audit, and accepted empty or omitted bodies. Complete the remaining command inventory and final candidate evidence.",
         "Profile completion, automatic verification and canonical terms acceptance now validate their request bodies before service execution. The optional legacy terms UUID field remains accepted and the URL controls the recorded version. The remaining application-wide schema inventory and exact staged release evidence are open.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1109884,7 +1109902,9 @@
           "release-0.6-cumulative-image-receipts",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-clamav-mirror-recurring",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1110169,7 +1110189,9 @@
         "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1110242,7 +1110264,9 @@
           "release-0.6-measured-cutover-scratch",
           "release-0.6-migration-manifest-binding",
           "release-0.6-staging-storage-policy-readback",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-clamav-mirror-recurring",
+          "release-0.6-packaged-backup-manifest-rehearsal"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1293864,6 +1293888,182 @@
         {
           "path": "packages/db/scripts/backup/test_physical_backup.py",
           "sha256": "b8e56f5a26b07c45f400d7c49941ede106007505d8347109e0d7125927a75cc5"
+        }
+      ]
+    },
+    "release-0.6-clamav-mirror-recurring": {
+      "batch": "release-0.6-clamav-mirror-recurring",
+      "base_commit": "365285d502b879996a0a13ac92370d291ade66fa",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "checks": [
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack."
+      ],
+      "limitations": [
+        "The live scanner serves staging v0.5.1. Final deployment and actual P2 alert receipt remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-clamav-mirror-recurring",
+      "execution_receipts": [
+        {
+          "file": "eu-updater.log",
+          "sha256": "e8a5ebfdc550cede0e05122ce1fd81d01b63e4f094bbb0de10415a0cb100f35c"
+        },
+        {
+          "file": "verified-update.log",
+          "sha256": "e20aed8c3cfc5bedec7e420af47c2c2cfb638f85817398a95bc203a15e46f53d"
+        },
+        {
+          "file": "staging-updater.log",
+          "sha256": "f08f23306388bd5b55c9f0170dcba60afb6c37ab72b9197305b88bd8a5f703bc"
+        },
+        {
+          "file": "live-scanner.log",
+          "sha256": "ab4d7171813b40bb2f7ca9b44f30715316f2253f2363788540432c2dfd4e1964"
+        },
+        {
+          "file": "api-worker-build.log",
+          "sha256": "8ea8543974b5bf4b7f03a9cb23f0bbcb97e9b986e8dddcd16ecf0c223e592587"
+        },
+        {
+          "file": "sealed-current-scanner.log",
+          "sha256": "177a0fa492230b4c6380e5ad0de89572cc923102ec80ca47d3ae5bb5073b5ae0"
+        },
+        {
+          "file": "staging-scanner-28183.json",
+          "sha256": "eee05f574ba1fdefd2be79c2d6cfae1cddee98cb7e3510e08c62b27b51010c80"
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "7d816002de7640ee1e3bfe05f32f4d2b4a408d5293610f82a2921aad59386506"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "91f433e18f68256c55739e14282ae258a5d35da8f8bc1d2bc56444ed7fc2d4b5"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "3fb6daf0d4b88b8e28a6d96297cb1eb6622b00370bc885995671d8a179bd398b"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "94a4d1c004d8a0220527f7a3400e8bb90e751d0dea21f7dcfbf601383d10dc59"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        }
+      ]
+    },
+    "release-0.6-packaged-backup-manifest-rehearsal": {
+      "batch": "release-0.6-packaged-backup-manifest-rehearsal",
+      "base_commit": "365285d502b879996a0a13ac92370d291ade66fa",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "checks": [
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
+      ],
+      "limitations": [
+        "The packaged image was built and tested locally. The live database and its volumes were read only."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-manifest-readback",
+      "execution_receipts": [
+        {
+          "file": "staging-postgres-build.log",
+          "sha256": "6ebe2eba0e5c424ec8fe9ddf51aa5642f4f95272007d4f37e8ec49426726e174"
+        },
+        {
+          "file": "packaged-source.sha256",
+          "sha256": "6de2fa996b09f6a312461513c86e6af4ca724b9bbcc38e1b4dd6adda6dd6e216"
+        },
+        {
+          "file": "replacement-image-scan/1-image.json",
+          "sha256": "3be5f0a294a57d707f8b75d1805c543e2bc2c85f8207628decfe3f6bd38e4425"
+        },
+        {
+          "file": "replacement-image-scan/1-vulnerabilities.json",
+          "sha256": "3acdf6b74b242e551794348ce0fe992c03e0d28db8b273dd301393e382099b2e"
+        },
+        {
+          "file": "replacement-image-scan/1-sbom.cdx.json",
+          "sha256": "542900301600f4aaf26c67e15c10c082eb77435101e785b1f9f0ef851d2aafb8"
+        },
+        {
+          "file": "native-exact-image/run-final.log",
+          "sha256": "83b3aa48c8724c7bfb1e8c0d50948dc6c9b1f0800fdb0b75c3d04591e30819c0"
+        },
+        {
+          "file": "native-exact-image/native-full-backup.json",
+          "sha256": "fcfc2b7abefa47b8365387b77e40c53465446238647370dd72df5a0e0195644f"
+        },
+        {
+          "file": "native-exact-image/native-wal-upload.json",
+          "sha256": "0c87b25303e267bd41f2e3810a37508675b18e3438ccc6b40a21d329fc7ffb87"
+        },
+        {
+          "file": "native-exact-image/native-restore.log",
+          "sha256": "3498392cf934dd8376cbfc143a52e9c85bcb93b926f402d50f018a30034fa5cd"
+        },
+        {
+          "file": "replacement-retained-license-report.json",
+          "sha256": "21e0d1ac123b696ee0a1d5ef461b49071f131ecdc1f9f835b7d5c74cece26b81"
+        },
+        {
+          "file": "replacement-postgres-rehearsal.json",
+          "sha256": "3b0183f2fe50c72f81ba96fcd7104331b58523bc00612a71a34efb40ab02239b"
+        },
+        {
+          "file": "staging-db-cutover-readiness.json",
+          "sha256": "3fe9eb78d5a5ede3361c68539dcc680f3e86d3c1d6812e9b30159be19b234209"
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
+        },
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "2ee9bd18c788b9c70123ad452ab177b598eb6eeb3b6d59018634d8ddf648b834"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "c335c88fd64fdd5fd3783530674aac3442de5c39a2daecbfb00b6db611499827"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
         }
       ]
     }
