@@ -151,3 +151,6 @@ f00ba1620572f8b1ce0f85ec2dc9d097d891ea8f:kanban/board.json:generic-api-key:976
 c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:18
 c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:27
 c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:35
+
+# Invoice referential-integrity evidence in the historical board compaction.
+2e2cb35d691a4b05d8bff2686c8fa6a28abfb21b:kanban/board.json:generic-api-key:760656

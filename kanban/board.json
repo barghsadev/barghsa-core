@@ -14734,6 +14734,12 @@
           "review_csv_sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129",
           "mode": "report-only",
           "strict_inventory_match_run": 42902282297
+        },
+        "board_secret_scan_triage": {
+          "run": 43642392974,
+          "artifact_id": 14132294117,
+          "fingerprint": "2e2cb35d691a4b05d8bff2686c8fa6a28abfb21b:kanban/board.json:generic-api-key:760656",
+          "disposition": "The matched text describes invoice and product referential integrity. The compacted evidence entry and its ID were verified against the historical source. The historical exclusion is limited to this exact finding."
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -105121,7 +105127,7 @@
             4023805536895071
           ],
           "checks": [
-            4434131975443349,
+            981553753713507,
             4300190319237493,
             1711361193232562,
             2071609547157536,
@@ -387325,7 +387331,7 @@
             4363839482195469,
             3832607923924757,
             1433764773782006,
-            3100529029137852,
+            1449692057873620,
             81943344094645,
             3830507931348172,
             3108623938713492,
@@ -387382,7 +387388,8 @@
             1923789840765052,
             3239468737812509,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            3483760255929483
           ]
         }
       }
@@ -387446,7 +387453,7 @@
             4363839482195469,
             3832607923924757,
             1433764773782006,
-            3100529029137852,
+            1449692057873620,
             1087251982870955,
             701437996869518
           ],
@@ -387489,7 +387496,8 @@
             4325171081399478,
             1923789840765052,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            3483760255929483
           ]
         },
         "ci_checkpoint": {
@@ -387971,7 +387979,7 @@
             4363839482195469,
             3832607923924757,
             1433764773782006,
-            3100529029137852,
+            1449692057873620,
             1087251982870955,
             701437996869518
           ],
@@ -388014,7 +388022,8 @@
             4325171081399478,
             1923789840765052,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            3483760255929483
           ]
         },
         "current_scan_checkpoint": {
@@ -761608,7 +761617,7 @@
       "3361075056294568": "Drizzle and migrated PostgreSQL enforce paid_amount<=total_amount and refunded_amount<=paid_amount plus nonnegative int8 money. Current schema/source and actual insertion/transition tests reject overshoot and invalid amounts while preserving valid exact values beyond JavaScript safe integer.",
       "3616680745428012": "InvoiceAuditRepository writes canonical invoice.<transition> append-only events with invoice ID,from/to,actor,reason,correlation,IP and time on the caller transaction. Every legal transition has an audit; prohibited/failed transitions have none. Due-date overrides retain customer-visible reason. Immutable audit protection remains enabled.",
       "4046604596997331": "Current full state model,service,audit and33 PostgreSQL state-machine cases cover all legal pairs, every structural forbidden pair through nested state loops, persisted money guards, unknown/current-state conflicts, concurrent winners, timestamps and audit rollback. Test count is distinct cases, not the number of embedded pair assertions.",
-      "4434131975443349": "invoice_lines and invoice_items retain invoice/product foreign keys, amount/quantity/VAT constraints, ordered custom line fields and frozen product title/price/rate composition. Current schema71 and core calculation/persistence tests pass.",
+      "981553753713507": "invoice_lines and invoice_items retain referential integrity for invoices and products, amount/quantity/VAT constraints, ordered custom line fields and frozen product title/price/rate composition. Current schema71 and core calculation/persistence tests pass.",
       "2071609547157536": "Scoped renewal only: erased contract fixture return type recovers prior file byte-for-byte and API typecheck passes. Reminder-toggle audit expectation binds current session/user exact proof fields; original rollback/permission/input assertions remain.125 retained API cases plus final audit case and current scoped UI/browser checks pass. All other accepted criterion/source evidence retained. /Users/majid/.local/state/barghsa-manual-batches/invoice-lifecycle",
       "2258390799697878": "Current Finance workflow selects an active profile, reviews N custom quantity/unit-price/taxable/rate lines, snapshots exact totals and issues Draft->Unpaid atomically. Optional contract references now have a validated real FK; ordinary manual issue needs no order.",
       "1630327949473979": "Current permission/profile locks, recent proof, captured review hash, exact idempotency fingerprint, concurrent replay, read-back and audit rollback remain. UI retains raw input/captured target through invalid data, validation/proof/uncertain acknowledgement and retry.25 source and8 FA/EN light/dark desktop/mobile browser cases pass with unchanged UI artifacts.",
@@ -775649,9 +775658,9 @@
         "path": "deploy/production/test_compose_with_credentials.py",
         "sha256": "eadc1b271cea07266f41b8d33c0c3691291989b91d23ff0fec473ba561f37e34"
       },
-      "3100529029137852": {
+      "1449692057873620": {
         "path": ".gitleaksignore",
-        "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
+        "sha256": "f778bc42b8aed3f94e33152cf2f06bcfc8c2ce0865fda686ce241d00a75d5f3f"
       },
       "1087251982870955": {
         "path": "scripts/check-secrets.py",
@@ -800461,6 +800470,14 @@
           "scripts/test_check_secrets.py"
         ],
         "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
+      },
+      "3483760255929483": {
+        "batch": "release-0.6-board-secret-scan-triage",
+        "base_commit": "8b9b2deae573ee2d63d17fc6e3fdceec36a0f387",
+        "paths": [
+          ".gitleaksignore"
+        ],
+        "scope": "One exact historical match for invoice referential-integrity prose. The checksum-pinned scanner, full-history scope, synthetic detection and redaction checks, and default rules are unchanged."
       },
       "910698679678021": {
         "batch": "release-0.6-sentry-build-release-envelope",
