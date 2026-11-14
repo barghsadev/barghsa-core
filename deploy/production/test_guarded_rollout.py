@@ -167,6 +167,37 @@ class ObservationsTest(unittest.TestCase):
         self.assertEqual([(args[1], args[2]) for args, _ in route.call_args_list],
                          [('read', 0), ('set', 5), ('set', 0)])
 
+    def test_route_drift_during_the_final_observation_restores_previous_traffic(self):
+        reads = []
+        current_weight = 0
+
+        def route(_plan, action, weight, **kwargs):
+            nonlocal current_weight
+            if action == 'set':
+                current_weight = weight
+            else:
+                reads.append(weight)
+                rollout.require(current_weight == weight, 'route_weight_mismatch')
+
+        def observe(_plan, weight, _since, **kwargs):
+            nonlocal current_weight
+            if weight == 100:
+                current_weight = 85
+            return True, {}
+
+        events = []
+        with patch.object(rollout, 'route', side_effect=route), \
+                patch.object(rollout, 'observe', side_effect=observe):
+            status = rollout.roll_out(plan(), lambda event, **fields: events.append((event, fields)))
+        self.assertEqual(status, 2)
+        self.assertEqual(current_weight, 0)
+        self.assertEqual(reads[-1], 100)
+        self.assertEqual(events[-2:], [
+            ('halted', {'reason': 'route_weight_mismatch'}),
+            ('rolled_back', {'weight': 0}),
+        ])
+        self.assertFalse(any(event == 'completed' for event, _ in events))
+
     def test_timed_out_hook_does_not_leave_a_child_running(self):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / 'detached-effect'

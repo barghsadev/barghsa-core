@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T16:51:07+00:00",
+  "updated": "2026-11-14T16:55:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13678,7 +13678,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13691,7 +13692,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13846,6 +13847,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -13939,7 +13948,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13951,7 +13961,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14392,6 +14402,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -22293,7 +22311,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22305,7 +22324,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22597,6 +22616,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -22671,7 +22698,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22683,7 +22711,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22975,6 +23003,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -25334,7 +25370,8 @@
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
-        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -25390,7 +25427,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-promotion-checkpoint-parity",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": null
       }
@@ -25548,7 +25586,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25580,11 +25619,11 @@
             },
             {
               "path": "deploy/production/guarded-rollout.py",
-              "sha256": "5378d727e196ca6ab0b0163f39300623a11c67fff9376df825061d46cba335a4"
+              "sha256": "4bbafaff7be2f5570e9556c264fdd121d174fa9f7fbdd54ba9d0d988e2f73a14"
             },
             {
               "path": "deploy/production/test_guarded_rollout.py",
-              "sha256": "d030334b1f7363a3ff85eaedbf77ed8496f127ed322a72e682b03d1040b1fe99"
+              "sha256": "fe939013cb593efa4b43483947ad406c236155ed25820ac65854dd480879cc98"
             },
             {
               "path": "docs/runbooks/database-restore.md",
@@ -25878,6 +25917,15 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/guarded-rollout.py",
+                "deploy/production/test_guarded_rollout.py"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -37683,7 +37731,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-wal-upload-readback",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37706,7 +37755,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -38485,6 +38534,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -41029,7 +41086,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41057,7 +41115,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             }
           ],
           "checks": [
@@ -41361,6 +41419,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -713870,7 +713936,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -713882,7 +713949,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -714066,6 +714133,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -740315,7 +740390,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -740337,7 +740413,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -740944,6 +741020,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -741004,7 +741088,8 @@
         "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback.",
-        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -741041,7 +741126,8 @@
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-rollout-api-revision",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": null
       }
@@ -741096,7 +741182,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -741107,7 +741194,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -741524,6 +741611,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -741547,7 +741642,8 @@
         "Configure the approved topology with the exact pinned candidate and previous pools, route and image readbacks, dedicated customer fixtures and complete scoped API, journey, wallet and security monitoring.",
         "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment. The observer and protected rollout receipt now record scoped p99 upper bounds when the sample window supports them.",
         "The local guarded observer verifies each service fixture through its detail endpoint with the exact record and profile IDs. The actual staged comparison and rollback receipts remain required.",
-        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback.",
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -741570,7 +741666,8 @@
           "release-0.6-native-rollout-browser",
           "release-0.6-rollout-p99-evidence",
           "release-0.6-synthetic-exact-fixture-read",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": null
       }
@@ -750323,7 +750420,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -750347,7 +750445,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -750695,6 +750793,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -762858,7 +762964,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -762906,7 +763013,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -763271,6 +763378,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -763603,7 +763718,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -763651,7 +763767,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -764020,6 +764136,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-rollout-final-ingress-readback",
+              "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
             }
           ]
         }
@@ -1144165,7 +1144289,8 @@
         "Both new consultation catalogue and staff team-read expiry regressions rejected the previous compiled baseline. The two fixes passed 25 compiled consultation, workflow and assignment tests and the selected wallet-funded payment and completion journey. Exact staged evidence remains open.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open.",
-        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144563,7 +1144688,8 @@
           "release-0.6-consultation-read-authority",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-operator-archive-restore-identity",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-rollout-final-ingress-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1337267,6 +1337393,78 @@
         {
           "file": "shellcheck.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-rollout-final-ingress-readback": {
+      "batch": "release-0.6-rollout-final-ingress-readback",
+      "base_commit": "62ac1ed080c29c0e4831044b622b679ee7c5515b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/test_guarded_rollout.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "4bbafaff7be2f5570e9556c264fdd121d174fa9f7fbdd54ba9d0d988e2f73a14"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "fe939013cb593efa4b43483947ad406c236155ed25820ac65854dd480879cc98"
+        }
+      ],
+      "checks": [
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
+        "The prior guard reported status 0 after final route drift. The corrected guard reports status 2 with verified previous traffic in the fixture. Python syntax, formatting and git diff checks passed."
+      ],
+      "limitations": [
+        "Test hooks and isolated CLI subprocesses provide fixture evidence. Exact approved topology and real guarded rollout receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollout-final-ingress-readback",
+      "execution_receipts": [
+        {
+          "file": "regression-before.log",
+          "sha256": "a2d8ae6c4ac9cea9a7c4ffd9923872b1daf58a555b31610a4fbd5f168d2709f1"
+        },
+        {
+          "file": "guarded-rollout.log",
+          "sha256": "a1b4b814957a46bc1cc7cf8ba21ccc420c19bad5a34e240c04e4dc9887892574"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

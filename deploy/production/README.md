@@ -258,7 +258,7 @@ operation-specific performance checks use their own [service budgets](../../docs
   `previous_ready` from the compatible pool's current readiness check. On restoration, verify that the ingress
   sends all traffic to that pool and its running images match the prior release.
   The guard reads the route and running image identities before every
-  observation.
+  observation and rechecks them before accepting each passing window.
 - The observation request includes `candidate_weight` and `window_start`
   in UTC epoch seconds. Return the actual `window_start`, `observed_at`,
   `smoke`, `api`, `journeys`, `critical_wallet_drift` and `security_alerts`.

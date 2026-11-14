@@ -330,6 +330,8 @@ def roll_out(plan, record):
             while True:
                 route(plan, 'read', weight, timeout=deadline - time.monotonic())
                 ready, evidence = observe(plan, weight, since, timeout=deadline - time.monotonic())
+                if ready:
+                    route(plan, 'read', weight, timeout=deadline - time.monotonic())
                 record('observation', weight=weight, ready=ready, **evidence)
                 require(time.monotonic() <= deadline, 'observation_deadline')
                 if ready:
