@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T19:56:24+00:00",
+  "updated": "2026-11-14T20:07:51+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -697224,7 +697224,8 @@
         "The November 14 readback verified the exact 3,415-byte published same-origin PNG and private no-store response. The login remained report-only on v0.5.1. The accepted candidate, representative window and enforcement journeys are still required.",
         "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks.",
         "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only.",
-        "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate."
+        "The published v0.5.1 icon matched the exact same-origin PNG. The retained API window from 12:03 to 17:55 UTC on November 14 held two style-element reports and zero image reports, and login retained Report-Only. All 16 Chromium and WebKit checks passed on the compiled a1264d2d5 build, including registration feedback in both languages and themes, native browser reports, untrusted style blocking and the compiled validator. Complete the representative observation and staff and customer enforcement journeys on the deployed candidate.",
+        "On November 14 at 20:04 UTC, live staging v0.5.1 served the reactivated 3,415-byte same-origin PNG with private no-store caching. Chromium and WebKit previously verified the same file. The same API container recorded zero CSP reports from 14:08:53 through 20:04 UTC and login still served Report-Only. Complete the representative full-week report-only observation, verify the candidate Sonner fix, and exercise the customer and staff enforcement journeys."
       ],
       "owner": null,
       "depends_on": [],
@@ -697250,7 +697251,8 @@
           "release-0.6-staging-edge-smoke",
           "release-0.6-scheduled-browser-43576703292",
           "release-0.6-staging-favicon-owner-reactivation-readback",
-          "release-0.6-csp-enforced-feedback"
+          "release-0.6-csp-enforced-feedback",
+          "release-0.6-staging-favicon-csp-live-readback"
         ],
         "current_acceptance": null
       }
@@ -745658,7 +745660,8 @@
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open.",
-        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open."
+        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
+        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -745685,7 +745688,8 @@
           "apps/api/src/solar/solar-postal.controller.ts",
           "apps/api/src/solar/solar-postal.service.ts",
           "packages/eslint-config/reviewed-postgres-sql.json",
-          "apps/web/src/routes/onboarding-forms.test.tsx"
+          "apps/web/src/routes/onboarding-forms.test.tsx",
+          "packages/i18n/src/operations-copy.test.ts"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -745716,7 +745720,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-onboarding-address-native"
+          "release-0.6-onboarding-address-native",
+          "release-0.6-operations-copy-native"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1155282,7 +1155287,8 @@
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "Profile-export job retry now rejects undeclared JSON before queue or audit changes. The compiled PostgreSQL fixture reproduced a 202 on the old endpoint. The corrected endpoint returns the standard 400 for an unexpected object or array and preserves the full job row and audit log. Empty objects and omitted request bodies still return 202 and retain the normal owner-only retry contract. The generated specification and client document both outcomes. Complete the wider request inventory and verify the staged candidate.",
         "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required.",
-        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open."
+        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
+        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1155698,7 +1155704,8 @@
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
           "release-0.6-solar-postal-utc-day",
-          "release-0.6-onboarding-address-native"
+          "release-0.6-onboarding-address-native",
+          "release-0.6-operations-copy-native"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1155954,7 +1155961,8 @@
           "apps/api/src/jobs/jobs.controller.ts",
           "packages/api-client/src/openapi.generated.d.ts",
           "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-          "apps/web/src/routes/onboarding-forms.test.tsx"
+          "apps/web/src/routes/onboarding-forms.test.tsx",
+          "packages/i18n/src/operations-copy.test.ts"
         ]
       }
     },
@@ -1351591,6 +1351599,124 @@
         {
           "file": "static.log",
           "sha256": "9f73d2d70635626dffd7b13fe367e3e568773150051ca98e7e43decc5d393db8"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-csp-live-readback": {
+      "batch": "release-0.6-staging-favicon-csp-live-readback",
+      "base_commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "d20b8da63f2b8b3c7990098421ae964b2d6c81e43efec167c858dd3390a1ac8f"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        }
+      ],
+      "checks": [
+        "On November 14 at 20:04 UTC, live staging v0.5.1 served the reactivated 3,415-byte same-origin PNG with private no-store caching. Chromium and WebKit previously verified the same file. The same API container recorded zero CSP reports from 14:08:53 through 20:04 UTC and login still served Report-Only. Complete the representative full-week report-only observation, verify the candidate Sonner fix, and exercise the customer and staff enforcement journeys."
+      ],
+      "limitations": [
+        "The verified observation is a partial window on deployed v0.5.1."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
+      "execution_receipts": [
+        {
+          "file": "staging-favicon-confirmed-live-20261114T2004.json",
+          "sha256": "33e885ab6cb7bf6a767da54daf144b9c722ec17571d05b773d62a8f577151081"
+        },
+        {
+          "file": "staging-favicon-owner-confirmation-browser.json",
+          "sha256": "2e2d29f5c61864f27d5320b0a4eaeb8c406e23357dc5dfdf2c27b183b2b4bf3d"
+        },
+        {
+          "file": "staging-favicon-confirmed-csp-20261114T2004.json",
+          "sha256": "aa11538ad8fd9e608277878ddd97edbdface1167ecd9c29b1d1af279ab2aedf4"
+        },
+        {
+          "file": "staging-favicon-confirmed-login-policy-20261114.json",
+          "sha256": "f74a844b02f06aab593deda5788253708e640aabc98a7836a4f71ce68c5db68e"
+        }
+      ]
+    },
+    "release-0.6-operations-copy-native": {
+      "batch": "release-0.6-operations-copy-native",
+      "base_commit": "86b3d50eaaa2b62dac0fe4e435a3ee680f9a61d0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/i18n/src/operations-copy.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/i18n/src/operations-copy.test.ts",
+          "sha256": "bc81ca08c9c49ed04c173d4524d5d132eaaa8c38075014e275f0bfd16ad8dc83"
+        },
+        {
+          "path": "packages/i18n/src/maintenance-public.ts",
+          "sha256": "67e608f9ba2efe00b1d5f1aaafc66ff3248a3b685faa9d7f21456a98f321b170"
+        },
+        {
+          "path": "packages/i18n/src/operational-retention.ts",
+          "sha256": "34952945005bb8da95d244a565ae5f45bc7665572f4a3b574c4af95c7918ac42"
+        },
+        {
+          "path": "packages/i18n/src/storage-policy-forms.ts",
+          "sha256": "d02bb121baa9bdb4802c267b0a20273c2ef768d223b1343a8834e1a086515d89"
+        },
+        {
+          "path": "packages/i18n/src/verification-config.ts",
+          "sha256": "f9aac8c48ab1fe004afd4ed2dc1769352eda87cc13cac4c6a4418a91a0a7e7b0"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
+        "The i18n package typecheck, scoped ESLint, Prettier and Git diff checks passed."
+      ],
+      "limitations": [
+        "The scoped coverage readback used the complete local i18n native report. The archived hosted baseline lacks the web report and supplies no merged browser evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-operations-copy-native",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "017b3fc34c6f7077fc0993fbd460825a27751e1ce1460faa227a730790210f2d"
+        },
+        {
+          "file": "static.log",
+          "sha256": "cfc997facfa7458dd131c3199a97753f168bc96df7d4aa1640500dbb7d21ef58"
+        },
+        {
+          "file": "changed-coverage-normalized.json",
+          "sha256": "1a0fcebd00370df84a50babae5db1a5740250c4f20eb7a4b6f7589693438302a"
+        },
+        {
+          "file": "packages/i18n/coverage/coverage-final.json",
+          "sha256": "814b285ad45e030fedf8c18b0167b6dff66e4a1f825d0e998a05666a7199d29e"
         }
       ]
     }
