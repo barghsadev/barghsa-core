@@ -78,6 +78,25 @@ def verified_checkpoint_fields(backup, commit):
                     for field, pattern in migration_checkpoint_fields(commit).items()))
 
 
+def verified_manifest_details(backup):
+    try:
+        started = datetime.datetime.fromisoformat(backup["started_at"])
+        completed = datetime.datetime.fromisoformat(backup["completed_at"])
+    except (KeyError, TypeError, ValueError):
+        return False
+    ranges = backup.get("wal_ranges")
+    tablespaces = backup.get("tablespaces")
+    return (started.utcoffset() is not None and completed.utcoffset() is not None
+            and started <= completed and isinstance(ranges, list) and bool(ranges)
+            and all(isinstance(row, dict) and type(row.get("Timeline")) is int and row["Timeline"] > 0
+                    and all(isinstance(row.get(key), str)
+                            and re.fullmatch(r"[0-9A-F]{1,8}/[0-9A-F]{1,8}", row[key])
+                            for key in ("Start-LSN", "End-LSN")) for row in ranges)
+            and isinstance(tablespaces, list)
+            and all(isinstance(oid, str) and re.fullmatch(r"[1-9][0-9]{0,9}", oid)
+                    for oid in tablespaces))
+
+
 def require_migration_checkpoint(version, checkpoint, commit):
     if not isinstance(version, str) or not re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version):
         raise ValueError("Release must have a standard MAJOR.MINOR.PATCH version")
@@ -102,7 +121,8 @@ def verify_migration_backup(log, commit):
         return {"status": "disposable"}
     if (type(backup.get("version")) is not int or backup["version"] != 1
             or backup.get("upload_verified") is not True
-            or not verified_checkpoint_fields(backup, commit)):
+            or not verified_checkpoint_fields(backup, commit)
+            or not verified_manifest_details(backup)):
         raise ValueError("Invalid verified staging migration backup receipt")
     # Verification flags belong to the command receipt, outside the off-site manifest.
     manifest = {key: value for key, value in backup.items()

@@ -375,6 +375,8 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             'version':1,'label':'release-'+'a'*12+'-20261113T230000Z-123',
             'system_id':'123456','blob':'blobs/'+'d'*32+'.tar.gpg','size':42000,
             'sha256':'f'*64,'upload_verified':True,'manifest_readback_verified':True,
+            'started_at':'2026-11-13T23:00:00+00:00','completed_at':'2026-11-13T23:00:30+00:00',
+            'wal_ranges':[{'Timeline':1,'Start-LSN':'0/5000028','End-LSN':'0/5000100'}],'tablespaces':[],
         }
         print('BARGHSA_STAGING_MIGRATION_BACKUP_V1',json.dumps(backup))
     if not os.environ.get('MISSING_IMAGES'):
@@ -465,6 +467,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                             "version": 1, "label": "release-" + "a" * 12 + "-20261113T230000Z-123",
                             "system_id": "123456", "blob": "blobs/" + "d" * 32 + ".tar.gpg",
                             "size": 42000, "sha256": "f" * 64,
+                            "started_at": "2026-11-13T23:00:00+00:00",
+                            "completed_at": "2026-11-13T23:00:30+00:00",
+                            "wal_ranges": [{"Timeline": 1, "Start-LSN": "0/5000028", "End-LSN": "0/5000100"}],
+                            "tablespaces": [],
                         }
                         self.assertEqual(evidence["schema_version"], 1)
                         self.assertEqual(evidence["commit"], "a" * 40)

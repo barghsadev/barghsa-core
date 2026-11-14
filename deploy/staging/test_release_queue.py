@@ -67,7 +67,8 @@ class RuntimeImageReceiptTests(unittest.TestCase):
                   "size": 42000, "sha256": "c" * 64, "upload_verified": True,
                   "manifest_readback_verified": True,
                   "started_at": "2026-11-13T23:00:00+00:00", "completed_at": "2026-11-13T23:00:30+00:00",
-                  "wal_ranges": [], "tablespaces": {}}
+                  "wal_ranges": [{"Timeline": 1, "Start-LSN": "0/5000028", "End-LSN": "0/5000100"}],
+                  "tablespaces": ["16391"]}
 
         def line(value):
             return marker + json.dumps(value)
@@ -100,7 +101,13 @@ class RuntimeImageReceiptTests(unittest.TestCase):
         for value in ({"disposable": 1}, {**backup, "upload_verified": False},
                       {**manifest, "upload_verified": True}, {**backup, "manifest_readback_verified": False},
                       {**backup, "label": backup["label"].replace(commit[:12], "d" * 12)},
-                      {**backup, "blob": "unknown"}, {**backup, "size": True}):
+                      {**backup, "blob": "unknown"}, {**backup, "size": True},
+                      {**backup, "started_at": "2026-11-13T23:01:00+00:00"},
+                      {**backup, "started_at": "2026-11-13T23:00:00"},
+                      {**backup, "wal_ranges": []},
+                      {**backup, "wal_ranges": [{"Timeline": True, "Start-LSN": "0/5000028", "End-LSN": "0/5000100"}]},
+                      {**backup, "wal_ranges": [{"Timeline": 1, "Start-LSN": "invalid", "End-LSN": "0/5000100"}]},
+                      {**backup, "tablespaces": {}}, {**backup, "tablespaces": ["/tmp/tablespace"]}):
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, "Invalid verified"):
                 queue.verify_migration_backup(line(value), commit)
 

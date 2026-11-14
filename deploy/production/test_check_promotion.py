@@ -374,7 +374,8 @@ class StructuredReceiptTest(unittest.TestCase):
     def test_migration_checkpoint_matches_the_deployed_release_and_separate_rehearsal(self):
         manifest = {**self.backup()['backup_manifest'],
                     'label': f'release-{SHA[:12]}-20261112T065800Z-123',
-                    'wal_ranges': [{'Timeline': 1}], 'tablespaces': {}}
+                    'wal_ranges': [{'Timeline': 1, 'Start-LSN': '0/5000028', 'End-LSN': '0/5000100'}],
+                    'tablespaces': []}
         queue = runpy.run_path(str(promotion.ROOT / 'deploy/staging/release-queue.py'))
         marker = 'BARGHSA_STAGING_MIGRATION_BACKUP_V1 '
         checkpoint = queue['verify_migration_backup'](

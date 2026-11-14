@@ -12338,7 +12338,8 @@
         "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -12536,7 +12537,8 @@
           "release-0.6-promotion-migration-receipt",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-packaged-backup-manifest-rehearsal"
+          "release-0.6-packaged-backup-manifest-rehearsal",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "current_acceptance": null
       }
@@ -24875,7 +24877,8 @@
         "The official v0.6.0 worker checks protected backup configuration before image work and repeats the check under the release lock. Fixtures verify zero image or configuration changes after an early refusal and no announcement if runtime becomes disposable before rollout. Exact staged backup and delivery receipts remain required.",
         "The v0.6.0 worker now refuses an absent, disposable or mismatched migration checkpoint before a Telegram send, including on notification retry. The actual protected staging backup and announcement are still required.",
         "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required.",
-        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -24954,7 +24957,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-bound-staging-worker-readbacks"
+          "release-0.6-bound-staging-worker-readbacks",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "current_acceptance": null
       }
@@ -24981,7 +24985,8 @@
         "The promotion checker validates the original authenticated DAST receipt against the staged candidate, pinned scanner and eight expected probe outcomes. A stale or incomplete report and high findings block approval. Use the exact deployed candidate and retain finding dispositions with the security review.",
         "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate.",
         "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal.",
-        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -25034,7 +25039,8 @@
           "release-0.6-promotion-dast-receipt",
           "release-0.6-promotion-load-receipt",
           "release-0.6-promotion-migration-receipt",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "current_acceptance": null
       }
@@ -25209,7 +25215,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/README.md",
@@ -25217,7 +25223,7 @@
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "5fe2b2ac660eed58c90ccb7663aa6d828da03ec7796a348e42341e1d36abba5b"
+              "sha256": "5ff22bc983439b46b09c3017a3fd45fabe427f93e39adcb836c50cc5fd143824"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -25473,6 +25479,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ]
         }
@@ -104978,7 +104993,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -106588,6 +106603,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -172120,7 +172143,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -173529,6 +173552,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -635676,7 +635707,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -636380,6 +636411,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -657479,7 +657518,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -658063,6 +658102,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -658436,7 +658483,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -659020,6 +659067,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -659391,7 +659446,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -659975,6 +660030,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -660346,7 +660409,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -660954,6 +661017,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -661819,7 +661890,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -662403,6 +662474,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -662994,7 +663073,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -664427,6 +664506,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -664953,7 +665040,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -665537,6 +665624,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -665907,7 +666002,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -666491,6 +666586,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -666862,7 +666965,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -667446,6 +667549,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -667818,7 +667929,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -668426,6 +668537,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -668796,7 +668915,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -669380,6 +669499,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -669750,7 +669877,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -670334,6 +670461,14 @@
                 "apps/api/src/ai-agents/ai-agents.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -729171,7 +729306,8 @@
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The staged migration rehearsal now has an explicit official release boundary for protected storage and encrypted WAL. Verify the actual archive settings, off-server checkpoint and readback during the accepted candidate rollout.",
-        "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout."
+        "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -729232,7 +729368,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-protected-staging-migration",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "current_acceptance": null
       }
@@ -729306,7 +729443,7 @@
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
+              "sha256": "dd2a0cebaeecfa981bf262cb92d653ebfb4757257b0faa2006fd25ff91e46287"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -729732,6 +729869,14 @@
                 "kanban/scripts/test_board.py"
               ],
               "scope": "The board reuses each source file digest within one validation. Every task still compares its own expected hash. Subsequent validations reread the source files."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ]
         }
@@ -730281,7 +730426,7 @@
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
+              "sha256": "dd2a0cebaeecfa981bf262cb92d653ebfb4757257b0faa2006fd25ff91e46287"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -730833,6 +730978,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ]
         }
@@ -749861,7 +750014,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "90587d96f1424a8d04e19c8ce633002115c7f903a354012910a88d56c0c4c830"
+              "sha256": "73d7f08b03740fdc08f7b711c104c9f54abde4d7160b3392e329aaf610243d1d"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -750710,6 +750863,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ]
         }
@@ -1101273,15 +1101434,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
+              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "90587d96f1424a8d04e19c8ce633002115c7f903a354012910a88d56c0c4c830"
+              "sha256": "73d7f08b03740fdc08f7b711c104c9f54abde4d7160b3392e329aaf610243d1d"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "0b4a9bd7297a0204a5e473427ea9a544015f781edfd24d597a69c8834d119146"
+              "sha256": "a5544ac915edcd9f65ec84d780a29ee4e5c982285360528a5259ed3778eb0df1"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1101524,6 +1101685,16 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The staging queue now reads the same fixed HTTPS paths with a bounded response reader and refuses redirects. The normal notes, image checks and recovery assertions passed in staging fixtures. The v0.5.1 live smoke covers transport only. It does not establish a v0.6.0 deployment or notification."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ]
         },
@@ -1115049,11 +1115220,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
+              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1118569,6 +1118740,15 @@
                 "apps/api/src/ai-policies/ai-policies.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "presentation_renewals": [
@@ -1121204,11 +1121384,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "219a103488da66caba357ebed235939059eda7eea55d04ef2fc189b4c0e2d1f7"
+              "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "23f34e6eb04719dd3cf29bac82da4d2685089ea78ea2ece6752528ebf5f76c36"
+              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1124634,6 +1124814,15 @@
                 "apps/api/src/ai-policies/ai-policies.controller.ts"
               ],
               "scope": "Added the established empty-command validator to eight destructive or test commands. The existing method, path, permission, step-up, status and service logic are unchanged. Prior accepted request bodies and durable mutation checks passed. Existing staged provider receipts keep their original revision."
+            },
+            {
+              "batch": "release-0.6-complete-staging-checkpoint-receipt",
+              "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1130444,7 +1130633,8 @@
         "Protected main returned 9bfba918c after Verify monorepo integrity passed. Native affected-test evidence and the original log confirm 8,151 API passes and one skip across 483 files. The push-triggered main test job reused the exact preflight receipt and skipped the duplicate build and test steps.",
         "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
-        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification."
+        "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1130799,7 +1130989,8 @@
           "release-0.6-protected-main-9bfba918c",
           "release-0.6-password-import-format-inventory",
           "release-0.6-hosted-image-scan-8436b628a",
-          "release-0.6-ai-admin-command-validation"
+          "release-0.6-ai-admin-command-validation",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1131092,7 +1131283,8 @@
         "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The read-only official release preflight refused live v0.5.1 because the runtime lacks non-disposable mode and encrypted WAL archiving. No deploy or notification was attempted. The approved backup destination, key recovery, backup and restore receipts, and cutover remain required.",
-        "The deployment worker now independently validates the commit-bound encrypted migration checkpoint before accepting a protected release receipt or resuming its notice. The approved off-server destination and recovery-key custody, live cutover, and exact backup/restore and release receipts remain required."
+        "The deployment worker now independently validates the commit-bound encrypted migration checkpoint before accepting a protected release receipt or resuming its notice. The approved off-server destination and recovery-key custody, live cutover, and exact backup/restore and release receipts remain required.",
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131170,7 +1131362,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-complete-staging-checkpoint-receipt"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1318372,6 +1318565,90 @@
         {
           "file": "openapi-contract.log",
           "sha256": "7976029a1f2308c12d59d3ac7b9431279cb2bf50fe7b245806dad75a513ce462"
+        }
+      ]
+    },
+    "release-0.6-complete-staging-checkpoint-receipt": {
+      "batch": "release-0.6-complete-staging-checkpoint-receipt",
+      "base_commit": "72eff0dfa33efa73d482a3a4f7ce474730ac9338",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/release.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_rollback.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "5ff22bc983439b46b09c3017a3fd45fabe427f93e39adcb836c50cc5fd143824"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "a5544ac915edcd9f65ec84d780a29ee4e5c982285360528a5259ed3778eb0df1"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "73d7f08b03740fdc08f7b711c104c9f54abde4d7160b3392e329aaf610243d1d"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "dd2a0cebaeecfa981bf262cb92d653ebfb4757257b0faa2006fd25ff91e46287"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "5262dc6ee56bb3bacd806bc8ce6e63cddfe27c0bc673e2db2fce1665113fd476"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "c335c88fd64fdd5fd3783530674aac3442de5c39a2daecbfb00b6db611499827"
+        }
+      ],
+      "checks": [
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest.",
+        "All 73 staging tests and 17 promotion verifier tests passed. Malformed timing, missing or malformed WAL ranges and invalid tablespace values were refused. The rollback fixture verified that invalid manifests stop before migrations. The retained native PostgreSQL manifest passed the new shape check."
+      ],
+      "limitations": [
+        "The accepted manifest shape matched the retained disposable native PostgreSQL rehearsal. Actual staging WAL archiving, the off-server checkpoint and restore, migration and release receipts remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-complete-checkpoint-receipt",
+      "execution_receipts": [
+        {
+          "file": "staging-tests.log",
+          "sha256": "e08c341b57976cfaf637c211f759b2808e8032162a3a490352b7fbfda5321e34"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "8ee2eaa99287c36dc689e4b6ed24c83870534335234afa19c5c0de3182c5522a"
+        },
+        {
+          "file": "native-manifest-compatibility.json",
+          "sha256": "b6daa1f60963d8421227b83df36cf08e8daa4010a23ddca3215cbe04fabbaaf7"
+        },
+        {
+          "file": "static-checks.log",
+          "sha256": "10f2239ee0007b2e6ce8c2e6f3b6faa1f1eb594d253881c465cd2964ac026f27"
         }
       ]
     }

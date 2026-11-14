@@ -300,9 +300,15 @@ else
     --entrypoint /opt/backup/backup-pg.sh "$postgres_id" --label "$backup_label")
   printf '%s\n' "$backup_manifest" | python3 -c '
 import json, re, sys
+from datetime import datetime
 
 label, system_id = sys.argv[1:]
 manifest = json.load(sys.stdin)
+try:
+    started, completed = (datetime.fromisoformat(manifest[key]) for key in ("started_at", "completed_at"))
+    timing_ok = started.utcoffset() is not None and completed.utcoffset() is not None and started <= completed
+except (KeyError, TypeError, ValueError):
+    timing_ok = False
 if (not isinstance(manifest, dict) or not re.fullmatch(r"[0-9]+", system_id)
         or type(manifest.get("version")) is not int or manifest["version"] != 1
         or manifest.get("label") != label or manifest.get("system_id") != system_id
@@ -312,7 +318,15 @@ if (not isinstance(manifest, dict) or not re.fullmatch(r"[0-9]+", system_id)
         or not re.fullmatch(r"blobs/[a-f0-9]{32}\.tar\.gpg", manifest["blob"])
         or not isinstance(manifest.get("sha256"), str)
         or not re.fullmatch(r"[a-f0-9]{64}", manifest["sha256"])
-        or type(manifest.get("size")) is not int or manifest["size"] <= 0):
+        or type(manifest.get("size")) is not int or manifest["size"] <= 0
+        or not timing_ok
+        or not isinstance(manifest.get("wal_ranges"), list) or not manifest["wal_ranges"]
+        or any(not isinstance(row, dict) or type(row.get("Timeline")) is not int or row["Timeline"] <= 0
+               or any(not isinstance(row.get(key), str) or not re.fullmatch(r"[0-9A-F]{1,8}/[0-9A-F]{1,8}", row[key])
+                      for key in ("Start-LSN", "End-LSN")) for row in manifest["wal_ranges"])
+        or not isinstance(manifest.get("tablespaces"), list)
+        or any(not isinstance(oid, str) or not re.fullmatch(r"[1-9][0-9]{0,9}", oid)
+               for oid in manifest["tablespaces"])):
     sys.exit("Verified encrypted backup receipt is missing or does not match the running staging database")
 print("BARGHSA_STAGING_MIGRATION_BACKUP_V1", json.dumps(manifest, separators=(",", ":")))
 ' "$backup_label" "$database_system_id"
