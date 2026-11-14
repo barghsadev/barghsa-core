@@ -105,7 +105,11 @@ milestone and gate evidence from the exact pushed commit. The subsequent
 `main` CI run and staging deployment are independent;
 neither blocks work on the next authorized batch.
 The worker runs `./deploy/staging/deploy.sh` from an isolated checkout of the exact
-pushed commit, then attaches the captured screenshots. The main Persian announcement
+pushed commit, then attaches the captured screenshots. From v0.6.0 onward, the
+deploy command saves the runtime receipt and independently reads back live API
+readiness and all six running service images before the first Telegram summary.
+If that check fails, the saved runtime receipt lets an explicit queue retry
+repeat the live checks without rerunning migrations. The main Persian announcement
 and exact live release are required. An optional screenshot failure records a
 `screenshot_warning` and rechecks the main announcement without retrying images;
 it cannot block later deployments after those required confirmations pass. Unknown

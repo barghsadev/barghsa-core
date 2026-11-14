@@ -468,6 +468,16 @@ if __name__ == '__main__':
         receipt_path = self.state / "jobs" / self.commit / "runtime-images.json"
         self.assertEqual(json.loads(receipt_path.read_text()), receipt)
 
+    def test_protected_deployment_cannot_complete_without_runtime_receipt(self):
+        commit = self.publish("0.6.0")
+        job = queue.enqueue(self.repo, self.state, commit, [])
+        live = {"commit": commit, "version": job["version"]}
+        with patch.object(queue, "read_staging_json", return_value=live):
+            self.assertEqual(queue.work(self.state), 1)
+        saved = queue.jobs(self.state)[0]
+        self.assertEqual(saved["phase"], "failed")
+        self.assertIn("runtime receipt", saved["error"])
+
     def test_protected_retry_refuses_disposable_checkpoint_before_notification(self):
         commit = self.publish("0.6.0")
         queue.enqueue(self.repo, self.state, commit, [])

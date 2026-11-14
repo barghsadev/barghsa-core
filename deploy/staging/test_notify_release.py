@@ -385,6 +385,11 @@ elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-rel
     print('0.6.0')
 elif name=='python3' and args==['kanban/scripts/board.py','ready','--release','0.6.0']:
     sys.exit(int(os.environ.get('FAIL_READINESS','0')))
+elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','verify-live-runtime']:
+    receipt=json.loads(pathlib.Path(args[args.index('--receipt')+1]).read_text())
+    assert args[2:6]==['--commit','a'*40,'--version','0.6.0']
+    assert receipt['commit']=='a'*40 and receipt['migration_backup']['status']=='verified'
+    sys.exit(int(os.environ.get('FAIL_LIVE_RUNTIME','0')))
 elif name=='python3' and args[1] in ('verify-images','verify-image-bundle','verify-retained-scans'):
     if args[1]=='verify-images' and os.environ.get('CHANGE_RETAINED_AFTER_TRANSFER'):
         path=pathlib.Path(args[args.index('--retained-scans')+1])/'2-sbom.cdx.json'
@@ -514,6 +519,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
             "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
             "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE", "DISPOSABLE_RECEIPT", "FAIL_NGINX_INSTALL",
+            "FAIL_LIVE_RUNTIME",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True), ("FAIL_RETAINED_LICENSE", False, True)]:
@@ -549,13 +555,17 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 self.assertIn(acceptance, calls)
                 self.assertEqual(len(sends), 0 if failure else 1, result.stderr)
                 self.assertEqual(result.returncode, 1 if failure else 0, result.stderr)
-                self.assertEqual(receipt.exists(), not failure and not fresh)
+                self.assertEqual(receipt.exists(), failure in (None, "FAIL_LIVE_RUNTIME") and not fresh)
+                if failure == "FAIL_LIVE_RUNTIME":
+                    self.assertTrue(any('release-queue.py verify-live-runtime' in line for line in calls))
                 if not failure:
                     proxy_install = next(line for line in calls if line.endswith('bash -s -- /tmp/barghsa-staging-nginx.Fixture1'))
                     app_rollout = next(line for line in calls if '/usr/local/sbin/barghsa-staging-release /etc/barghsa/staging/candidate-' in line)
                     self.assertLess(calls.index(proxy_install), calls.index(app_rollout))
                     verification = next(line for line in calls if 'release-queue.py verify-images' in line)
-                    self.assertLess(calls.index(verification), calls.index(sends[0]))
+                    live_runtime = next(line for line in calls if 'release-queue.py verify-live-runtime' in line)
+                    self.assertLess(calls.index(verification), calls.index(live_runtime))
+                    self.assertLess(calls.index(live_runtime), calls.index(sends[0]))
                     if not fresh:
                         retained_check = next(line for line in calls if '--staging-retained' in line)
                         transfer = next(line for line in calls if line.startswith(('docker save ', 'docker load ')))

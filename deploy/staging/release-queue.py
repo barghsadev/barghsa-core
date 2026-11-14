@@ -453,6 +453,32 @@ docker container inspect --format '{{index .Config.Labels "com.docker.compose.se
         raise ValueError(f"Missing running staging services: {', '.join(sorted(missing))}")
 
 
+def verified_runtime_receipt(path, job):
+    if not path.is_file() or path.stat().st_size > RELEASE_RESPONSE_LIMIT:
+        raise ValueError("Missing or invalid staging runtime receipt")
+    runtime = json.loads(path.read_bytes())
+    images = runtime.get("image_ids") if isinstance(runtime, dict) else None
+    if (not isinstance(images, dict) or set(images) != {"app", "web", "postgres", "clamav"}
+            or any(not isinstance(value, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", value)
+                   for value in images.values())
+            or runtime.get("schema_version") != 1 or runtime.get("commit") != job["commit"]):
+        raise ValueError("Saved staging runtime receipt does not match the queued release")
+    require_migration_checkpoint(job["version"], runtime.get("migration_backup"), job["commit"])
+    return runtime
+
+
+def verify_live_runtime(checkout, job, images):
+    verify_live_release(job)
+    readiness = read_staging_json("/api/health/ready")
+    checks = readiness.get("checks") if isinstance(readiness, dict) else None
+    if (not isinstance(checks, dict) or readiness.get("status") != "ok"
+            or readiness.get("commit") != job["commit"] or readiness.get("warnings", []) != []
+            or any(not isinstance(checks.get(name), dict) or checks[name].get("status") != "ok"
+                   for name in ("postgresql", "redis", "objectStorage"))):
+        raise ValueError("Live staging API is not healthy for the queued release")
+    verify_running_images(checkout, images)
+
+
 def deploy(job, state):
     repo = Path(job["repo"])
     directory = state / "jobs" / job["commit"]
@@ -473,27 +499,8 @@ def deploy(job, state):
     receipt = directory / "runtime-images.json"
     notification_receipt = directory / "telegram.json"
     resume_notification = receipt.exists()
-    if resume_notification:
-        runtime = json.loads(receipt.read_text())
-        images = runtime.get("image_ids") if isinstance(runtime, dict) else None
-        if (not isinstance(images, dict) or set(images) != {"app", "web", "postgres", "clamav"}
-                or any(not isinstance(value, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", value)
-                       for value in images.values())
-                or runtime.get("schema_version") != 1 or runtime.get("commit") != job["commit"]):
-            raise ValueError("Saved staging runtime receipt does not match the queued release")
-        require_migration_checkpoint(job["version"], runtime.get("migration_backup"), job["commit"])
-        if not re.match(r"^0\.[0-5]\.", job["version"]):
-            verify_saved_image_evidence(job, runtime)
-        verify_live_release(job)
-        readiness = read_staging_json("/api/health/ready")
-        checks = readiness.get("checks") if isinstance(readiness, dict) else None
-        if (not isinstance(checks, dict) or readiness.get("status") != "ok"
-                or readiness.get("commit") != job["commit"] or readiness.get("warnings", []) != []
-                or any(not isinstance(checks.get(name), dict) or checks[name].get("status") != "ok"
-                       for name in ("postgresql", "redis", "objectStorage"))):
-            raise ValueError("Live staging API is not healthy for the queued release")
-        verify_running_images(checkout, images)
-    else:
+    protected = not re.match(r"^0\.[0-5]\.", job["version"])
+    if not resume_notification:
         deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
         if bundle := job.get("image_bundle"):
             deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
@@ -502,9 +509,16 @@ def deploy(job, state):
                 deploy_args.extend(["", ""])
             deploy_args.extend([retained["directory"], retained["sha256"]])
         command(checkout, *deploy_args)
-    # Older immutable releases predate the receipt argument.
-    if receipt.exists():
-        job["runtime_images"] = runtime if resume_notification else json.loads(receipt.read_text())
+    if resume_notification or protected:
+        runtime = verified_runtime_receipt(receipt, job)
+        if resume_notification:
+            if protected:
+                verify_saved_image_evidence(job, runtime)
+            verify_live_runtime(checkout, job, runtime["image_ids"])
+        job["runtime_images"] = runtime
+    elif receipt.exists():
+        # Older immutable release scripts may already have announced their summary.
+        job["runtime_images"] = json.loads(receipt.read_text())
     if resume_notification or job["screenshots"]:
         notify = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"],
                   "--receipt", str(notification_receipt)]
@@ -607,6 +621,10 @@ def main():
     verify.add_argument("--retained-license-report", type=Path)
     verify.add_argument("--retained-license-sha")
     verify.add_argument("--receipt", type=Path)
+    live_runtime = actions.add_parser("verify-live-runtime")
+    live_runtime.add_argument("--commit", required=True)
+    live_runtime.add_argument("--version", required=True)
+    live_runtime.add_argument("--receipt", required=True, type=Path)
     retained = actions.add_parser("verify-retained-scans")
     retained.add_argument("directory", type=Path)
     retained.add_argument("postgres_id")
@@ -634,6 +652,11 @@ def main():
         return 0
     if args.action == "verify-retained-scans":
         verify_retained_scans(args.directory, {"postgres": args.postgres_id, "clamav": args.clamav_id}, args.sha)
+        return 0
+    if args.action == "verify-live-runtime":
+        job = {"commit": args.commit, "version": args.version}
+        runtime = verified_runtime_receipt(args.receipt, job)
+        verify_live_runtime(Path.cwd(), job, runtime["image_ids"])
         return 0
     if args.action == "verify-images":
         release_log = args.release_log.read_text(errors="replace")

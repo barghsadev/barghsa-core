@@ -209,10 +209,13 @@ else
   verify+=(--retained-scans "$retained_scans" --retained-sha "$retained_sha"
     --retained-license-report "$retained_license_report" --retained-license-sha "$retained_license_sha")
 fi
-if [[ -n "$receipt" ]]; then
-  verify+=(--receipt "$receipt")
-fi
+runtime_receipt=${receipt:-"$release_tmp/runtime-images.json"}
+verify+=(--receipt "$runtime_receipt")
 python3 deploy/staging/release-queue.py "${verify[@]}"
+if [[ -n "$release_flag" ]]; then
+  python3 deploy/staging/release-queue.py verify-live-runtime --commit "$commit" \
+    --version "$version" --receipt "$runtime_receipt"
+fi
 notify=(--commit "$commit")
 if [[ -n "$receipt" ]]; then
   notify+=(--receipt "$(dirname -- "$receipt")/telegram.json")

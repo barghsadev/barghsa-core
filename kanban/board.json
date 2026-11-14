@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T19:04:12+00:00",
+  "updated": "2026-11-14T19:11:50+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21482,7 +21482,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21502,7 +21503,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21860,6 +21861,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -25829,7 +25838,8 @@
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25918,7 +25928,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-linux-recovery-readback",
           "release-0.6-receiver-version-backup",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": null
       }
@@ -26177,7 +26188,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -26201,7 +26213,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -26563,6 +26575,14 @@
                 "deploy/production/test_guarded_rollout.py"
               ],
               "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -34883,7 +34903,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34939,7 +34960,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35412,6 +35433,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -38549,7 +38578,8 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38580,7 +38610,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -39416,6 +39446,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -174841,7 +174879,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -175213,7 +175252,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -176729,6 +176768,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -674935,7 +674982,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -675307,7 +675355,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -676847,6 +676895,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -710978,7 +711034,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -710990,7 +711047,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -711357,6 +711414,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -744070,7 +744135,8 @@
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -744141,7 +744207,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-linux-recovery-readback",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": null
       }
@@ -756022,7 +756089,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-journey-source-pairing"
+          "release-0.6-journey-source-pairing",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -756066,7 +756134,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+              "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -756485,6 +756553,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -765638,7 +765714,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -765654,11 +765731,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+              "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
+              "sha256": "73b94b01858adc9d37c31a486b364d34a4fb39e5a1b3fba9bb912b919aaf5450"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -766589,6 +766666,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -770308,7 +770394,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -770340,7 +770427,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+              "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -770715,6 +770802,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         }
@@ -1122382,15 +1122477,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
+              "sha256": "73b94b01858adc9d37c31a486b364d34a4fb39e5a1b3fba9bb912b919aaf5450"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "726519e4aef61ab0d633375a44efe6a2568b0d88258f24ab434e2b553afb9be3"
+              "sha256": "562dac724a2778f5a5cfdf6cef97197d2ecae429c846223a44bce3efafc316b0"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1122679,6 +1122774,16 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ]
         },
@@ -1122704,7 +1122809,8 @@
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-release-notification-durability",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-first-announcement-runtime"
         ]
       }
     },
@@ -1136472,7 +1136578,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1136480,7 +1136586,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+              "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1136492,7 +1136598,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1140220,6 +1140326,16 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ],
           "presentation_renewals": [
@@ -1140684,7 +1140800,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-first-announcement-runtime"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1142853,7 +1142970,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1240bc0729257dea5a199b9244f6980a49d8469200c173e29acaf32aee8d600c"
+              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1142861,7 +1142978,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+              "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1142873,7 +1142990,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1146529,6 +1146646,16 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-first-announcement-runtime",
+              "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1147010,7 +1147137,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-receiver-version-backup",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-first-announcement-runtime"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1152477,7 +1152605,8 @@
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "Solar administrative guidance now uses the live catalogue authority, and all four reads stop if the session expires during a database wait. All six compiled HTTP regressions, 93 related API cases and 86 web caller cases passed. The older full Chromium rehearsal passed all 2,976 cases. Its combined job failed on the missing web report from native timeouts. Exact deployed candidate evidence remains open.",
-        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1152889,7 +1153018,8 @@
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1153209,7 +1153339,8 @@
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
-        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1153302,7 +1153433,8 @@
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-promotion-review-evidence"
+          "release-0.6-promotion-review-evidence",
+          "release-0.6-first-announcement-runtime"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1153359,7 +1153491,8 @@
           "deploy/production/test_guarded_rollout.py",
           ".github/workflows/ci.yml",
           "docs/development/ci.md",
-          "deploy/production/release_evidence.py"
+          "deploy/production/release_evidence.py",
+          "deploy/staging/deploy.sh"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1348038,6 +1348171,100 @@
         {
           "file": "strict-license-readback.json",
           "sha256": "7a540e7d2da324bde41bcb1155de026ae4834b2258bd9f2ded7f47ffaad93a65"
+        }
+      ]
+    },
+    "release-0.6-first-announcement-runtime": {
+      "batch": "release-0.6-first-announcement-runtime",
+      "base_commit": "5016f86e392843ecaf308ddf5d2f21a2595be6d5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "0e7eb36b4ff8d72bd6d49f0927bee5aa6ffbac54208996610a565214868b3762"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "45b61ff2e809ea2a4415a053dc526d5709fae865f80c87dc14d5cde95c9d1689"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "73b94b01858adc9d37c31a486b364d34a4fb39e5a1b3fba9bb912b919aaf5450"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "562dac724a2778f5a5cfdf6cef97197d2ecae429c846223a44bce3efafc316b0"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "fceec8a920af93072e48b541ffbbbca9b66ee3f1abfa06583ce268c4334f5611"
+        }
+      ],
+      "checks": [
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
+        "Bash and Python syntax, ShellCheck, Prettier and Git diff validation passed."
+      ],
+      "limitations": [
+        "The subprocess fixtures used fake SSH, images, health and Telegram. The release worker has yet to run on an accepted v0.6.0 candidate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-first-announcement-runtime",
+      "execution_receipts": [
+        {
+          "file": "end-to-end-before.log",
+          "sha256": "643ec6706e588c8a7935406931c8025b82101456607ecd9cddbf3a0b2ce5b552"
+        },
+        {
+          "file": "queue-final.log",
+          "sha256": "650b98e1c3a2abb15e51a8b19255f054a5283e99f1e4810ced970f635f6357a4"
+        },
+        {
+          "file": "staging-final.log",
+          "sha256": "b877d94dce4748cf788f687a23466bbeff45d5c84297c7dfdc06339d7fb71a85"
+        },
+        {
+          "file": "notify-final.log",
+          "sha256": "63f3ea0902dde821337921efdc007491658c45942968e683f0c4bc346f39dc77"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1d5f1ab96cf677aae79d1480334ec088043706ab9011bfa475be3f4b9ef6a503"
         }
       ]
     }
