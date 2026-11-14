@@ -68,15 +68,16 @@ def verify_migration_backup(log, commit):
     }
     if (type(backup.get("version")) is not int or backup["version"] != 1
             or backup.get("upload_verified") is not True
+            or backup.get("manifest_readback_verified") is not True
             or type(backup.get("size")) is not int or backup["size"] <= 0
             or any(not isinstance(backup.get(field), str) or not re.fullmatch(pattern, backup[field])
                    for field, pattern in checks.items())):
         raise ValueError("Invalid verified staging migration backup receipt")
-    # The upload verifier adds this flag to stdout. The off-site manifest has
-    # the same data without the flag.
-    manifest = {key: value for key, value in backup.items() if key != "upload_verified"}
+    # Verification flags belong to the command receipt, outside the off-site manifest.
+    manifest = {key: value for key, value in backup.items()
+                if key not in ("upload_verified", "manifest_readback_verified")}
     manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
-    return {"status": "verified", "manifest_sha256": manifest_digest,
+    return {"status": "verified", "manifest_sha256": manifest_digest, "manifest_readback_verified": True,
             **{field: backup[field] for field in (*checks, "size")}}
 
 

@@ -378,7 +378,7 @@ class StructuredReceiptTest(unittest.TestCase):
         queue = runpy.run_path(str(promotion.ROOT / 'deploy/staging/release-queue.py'))
         marker = 'BARGHSA_STAGING_MIGRATION_BACKUP_V1 '
         checkpoint = queue['verify_migration_backup'](
-            marker + json.dumps({**manifest, 'upload_verified': True}), SHA)
+            marker + json.dumps({**manifest, 'upload_verified': True, 'manifest_readback_verified': True}), SHA)
         job = {'completed_at': '2026-11-12T08:00:00Z',
                'runtime_images': {'commit': SHA, 'migration_backup': checkpoint}}
         evidence = self.root / 'rehearsal.log'
@@ -396,8 +396,10 @@ class StructuredReceiptTest(unittest.TestCase):
         self.assertEqual(verified['strategy'], 'rollback')
         self.assertEqual(verified['sha256']['rehearsal_evidence'], promotion.file_digest(evidence))
         missing_digest = {key: value for key, value in checkpoint.items() if key != 'manifest_sha256'}
+        previous_receipt = {key: value for key, value in checkpoint.items() if key != 'manifest_readback_verified'}
         for runtime in ({}, {'commit': 'd' * 40, 'migration_backup': checkpoint},
                         {'commit': SHA, 'migration_backup': {'status': 'disposable'}},
+                        {'commit': SHA, 'migration_backup': previous_receipt},
                         {'commit': SHA, 'migration_backup': missing_digest},
                         {'commit': SHA, 'migration_backup': {**checkpoint, 'system_id': '123'}}):
             with self.subTest(runtime=runtime), self.assertRaisesRegex(ValueError, 'off-server manifest'):

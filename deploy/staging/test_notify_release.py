@@ -312,7 +312,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
         backup = {'disposable': True} if os.environ['FRESH_STAGING']=='1' else {
             'version':1,'label':'release-'+'a'*12+'-20261113T230000Z-123',
             'system_id':'123456','blob':'blobs/'+'d'*32+'.tar.gpg','size':42000,
-            'sha256':'f'*64,'upload_verified':True,
+            'sha256':'f'*64,'upload_verified':True,'manifest_readback_verified':True,
         }
         print('BARGHSA_STAGING_MIGRATION_BACKUP_V1',json.dumps(backup))
     if not os.environ.get('MISSING_IMAGES'):
@@ -410,6 +410,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                             "system_id": "123456", "blob": "blobs/" + "d" * 32 + ".tar.gpg",
                             "size": 42000, "sha256": "f" * 64,
                             "manifest_sha256": hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest(),
+                            "manifest_readback_verified": True,
                         })
                         self.assertEqual(evidence["scanner"], {
                             "engine_version": "1.5.4", "signature_version": 28182,

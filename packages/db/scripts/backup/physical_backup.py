@@ -230,8 +230,15 @@ def backup(store, label):
             response["Body"].close()
         if size != meta["size"] or received.hexdigest() != meta["sha256"]:
             raise BackupError("Uploaded backup checksum mismatch")
-        store.put(key, json.dumps(meta).encode(), ContentType="application/json")
-        print(json.dumps({**meta, "upload_verified": True}))
+        manifest_bytes = json.dumps(meta).encode()
+        store.put(key, manifest_bytes, ContentType="application/json")
+        manifest_body = store.get(key)["Body"]
+        try:
+            if manifest_body.read(len(manifest_bytes) + 1) != manifest_bytes:
+                raise BackupError("Uploaded backup manifest differs from readback")
+        finally:
+            manifest_body.close()
+        print(json.dumps({**meta, "upload_verified": True, "manifest_readback_verified": True}))
 
 
 def wal_name(value):

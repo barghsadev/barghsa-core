@@ -8829,7 +8829,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8849,7 +8850,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9200,6 +9201,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -12170,7 +12179,8 @@
         "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. The matching rollback pair was verified on isolated copies on the staging host. Verify the actual logical cutover on staging and repeat on the designated production-equivalent topology.",
         "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery.",
         "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal.",
-        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -12332,9 +12342,12 @@
           "deploy/staging/test_release_queue.py",
           "deploy/staging/test_release_rollback.py",
           "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/operations/backup/postgresql-restore-runbook.md",
           "docs/security/release-license-review.md",
           "packages/db/drizzle/production/meta/_journal.json",
           "packages/db/package.json",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py",
           "packages/db/src/database-foundations.integration.test.ts",
           "packages/db/src/index.ts",
           "packages/db/src/migrate.baseline.test.ts",
@@ -12363,7 +12376,8 @@
           "release-0.6-queue-schema-rehearsal",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-promotion-migration-receipt",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null
       }
@@ -17107,7 +17121,8 @@
         "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result.",
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
         "At 02:36 UTC on November 14, the active staging PostgreSQL volume had 107,408,958 apparent bytes and no external tablespace links. Docker and /tmp shared 6,257,455,104 free bytes. Use the cutover runbook to measure backup and restore scratch, image transfer and retained volume space. The protected off-server configuration and key remain absent.",
-        "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore."
+        "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -17182,7 +17197,19 @@
           ],
           "historically_skipped": false
         },
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "deploy/staging/README.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py"
+        ],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
           "release-0.6-postgres-backup-alerts",
@@ -17198,7 +17225,8 @@
           "release-0.6-backup-target-monitoring",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-cutover-capacity-and-image-readback",
-          "release-0.6-measured-cutover-scratch"
+          "release-0.6-measured-cutover-scratch",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17223,7 +17251,8 @@
         "The exact staging PostgreSQL candidate restored the physical backup and encrypted archive to the selected point using the staged Compose archiver. The production-equivalent backup, configuration and object recovery, timed business recovery and alert receipts remain open.",
         "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open.",
         "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints.",
-        "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open."
+        "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -17278,7 +17307,15 @@
           "deploy/production/README.md",
           "deploy/production/check-promotion.py",
           "deploy/production/test_check_promotion.py",
+          "deploy/staging/README.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
           "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py",
           "packages/db/scripts/backup/test_verify_restore.py",
           "packages/db/scripts/backup/verify_restore.py"
         ],
@@ -17288,7 +17325,8 @@
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-measured-cutover-scratch"
+          "release-0.6-measured-cutover-scratch",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -20542,7 +20580,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20562,7 +20601,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20832,6 +20871,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -21429,7 +21476,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-bill-provider-circuits",
           "release-0.6-process-error-reporting",
-          "release-0.6-backup-object-readback"
+          "release-0.6-backup-object-readback",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -21465,7 +21513,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "a02805cea7c9f5fce4fc37b5e6383ac53b1ddbbef55ebcf193b3a888da6787b2"
+              "sha256": "c335c88fd64fdd5fd3783530674aac3442de5c39a2daecbfb00b6db611499827"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -21539,6 +21587,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "Adds encrypted backup readback and verification before migrations on protected staging. Refreshes Ubuntu package-install stages in the staging builder. The release, rollback and notifier suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -24695,7 +24751,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24715,15 +24772,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "e57eacab47b4445bd1b4b381e5e837beffbb269e30ecf3b272af4bdd09bf7609"
+              "sha256": "e00cf012de4e03c3d72939091a1003daacf0a6ffe7948269e389e2cbaffee4cc"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -24924,6 +24981,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -32849,7 +32916,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -32905,7 +32973,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -33290,6 +33358,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -36237,7 +36313,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36268,7 +36345,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -36284,7 +36361,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "8770c27934ce1b2e78ecff01c182d81f533873c16775bf80e5fb51abae0417e5"
+              "sha256": "b061c59f73ff8ebe0c038632613cb74c5de63bfb0d0687838c479d01beec28f0"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -36917,6 +36994,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -102701,7 +102787,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -102849,7 +102936,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -104403,6 +104490,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -168011,7 +168106,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -168383,7 +168479,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -168395,7 +168491,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -169710,6 +169806,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -625987,7 +626092,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -626159,7 +626265,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -626823,6 +626929,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Multipart part authorization, completion and abort and staff record removal now reject undeclared JSON before invoking the existing storage and record services. Omitted and empty request bodies still invoke the normal commands. Prior access, exact-byte, idempotency, retention and audit assertions passed. The contract retains each success response and adds HTTP 400 for the four changed operations. The existing concurrent notification delivery fixture now uses its shared transport type by name and retains all assertions. Unchanged criteria retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -647252,7 +647366,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -647492,7 +647607,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -648027,6 +648142,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -648158,7 +648281,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -648398,7 +648522,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -648933,6 +649057,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -649062,7 +649194,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -649302,7 +649435,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -649837,6 +649970,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -649966,7 +650107,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -650206,7 +650348,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -650765,6 +650907,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -651388,7 +651538,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -651628,7 +651779,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -652163,6 +652314,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -652364,7 +652523,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -652736,7 +652896,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -652748,7 +652908,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -654087,6 +654247,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -654371,7 +654540,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -654611,7 +654781,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -655146,6 +655316,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -655274,7 +655452,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -655514,7 +655693,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -656049,6 +656228,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -656178,7 +656365,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -656418,7 +656606,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -656953,6 +657141,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -657083,7 +657279,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -657323,7 +657520,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -657882,6 +658079,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -658010,7 +658215,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -658250,7 +658456,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -658785,6 +658991,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -658913,7 +659127,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -659153,7 +659368,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -659688,6 +659903,14 @@
                 "apps/api/src/admin/staff-mutation-permission.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -686080,7 +686303,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -686092,7 +686316,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -686371,6 +686595,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -695479,7 +695711,8 @@
         "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
+        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change."
       ],
       "owner": null,
       "depends_on": [],
@@ -695550,7 +695783,8 @@
           "release-0.6-hosted-alpine-inventory-readback",
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-browser-43561500300",
-          "release-0.6-cumulative-image-receipts"
+          "release-0.6-cumulative-image-receipts",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -695710,7 +695944,8 @@
         "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
+        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change."
       ],
       "owner": null,
       "depends_on": [],
@@ -695774,7 +696009,8 @@
           "release-0.6-hosted-alpine-inventory-readback",
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-browser-43561500300",
-          "release-0.6-cumulative-image-receipts"
+          "release-0.6-cumulative-image-receipts",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -716904,7 +717140,8 @@
         "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open.",
         "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open.",
         "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate.",
-        "The exact SeaweedFS rehearsal recovered probe cleanup after an unacknowledged PUT, preserved unrelated data and still failed the staging gate. Rehearse the complete smoke on the accepted immutable images and retain the live receipt."
+        "The exact SeaweedFS rehearsal recovered probe cleanup after an unacknowledged PUT, preserved unrelated data and still failed the staging gate. Rehearse the complete smoke on the accepted immutable images and retain the live receipt.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -716912,6 +717149,8 @@
         "historical_acceptance": null,
         "changed_paths": [
           ".github/workflows/ci.yml",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
           "deploy/staging/Dockerfile.postgres",
           "deploy/staging/README.md",
           "deploy/staging/build-postgres-image.sh",
@@ -716922,10 +717161,13 @@
           "deploy/staging/test_release_queue.py",
           "deploy/staging/test_release_rollback.py",
           "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/operations/backup/postgresql-restore-runbook.md",
           "docs/security/release-license-review.md",
           "kanban/WORKFLOW.md",
           "kanban/scripts/board.py",
           "kanban/scripts/test_board.py",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py",
           "scripts/check-release-licenses.py",
           "scripts/test_check_release_licenses.py"
         ],
@@ -716956,7 +717198,8 @@
           "release-0.6-protected-stage-migration-backup",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-prepromotion-version",
-          "release-0.6-staging-probe-uncertain-write"
+          "release-0.6-staging-probe-uncertain-write",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null
       }
@@ -717003,7 +717246,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -717025,11 +717269,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "7d02d8b247838f7197d84fff286ede02f553875698ac819c097f683b9a60b050"
+              "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -717437,6 +717681,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -717943,7 +718196,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -717969,11 +718223,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "7d02d8b247838f7197d84fff286ede02f553875698ac819c097f683b9a60b050"
+              "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -718492,6 +718746,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -718551,7 +718814,8 @@
         "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology. The observer now requires the authentication alert and checks both API pools carry the rule selector. Verify the scoped authentication hold during the authorized topology rehearsal.",
         "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology. The pilot launcher now restarts the previous slot on a failed post-retirement smoke. Verify that boundary with the approved live topology and immutable images.",
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
-        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback."
+        "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -718562,14 +718826,22 @@
           "deploy/monitoring/api-pressure-alerts.yml",
           "deploy/monitoring/staging-prometheus.yml",
           "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
           "deploy/production/guarded-rollout.py",
           "deploy/production/rollout-observer.py",
+          "deploy/production/test_check_promotion.py",
           "deploy/production/test_guarded_rollout.py",
           "deploy/production/test_rollout_observer.py",
           "deploy/staging/README.md",
+          "deploy/staging/release-queue.py",
           "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
           "deploy/staging/test_release_rollback.py",
-          "docs/runbooks/bad-deployment.md"
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "docs/runbooks/bad-deployment.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py"
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
@@ -718579,7 +718851,8 @@
           "release-0.6-rollout-authentication-alert",
           "release-0.6-staging-rollback-image-identity",
           "release-0.6-local-staging-runner-rehearsal",
-          "release-0.6-rollout-api-revision"
+          "release-0.6-rollout-api-revision",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": null
       }
@@ -719585,7 +719858,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -719606,7 +719880,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -719962,6 +720236,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -720014,7 +720296,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -720035,7 +720318,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -720391,6 +720674,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -731989,7 +732280,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-backup-object-readback",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-backup-target-monitoring"
+          "release-0.6-backup-target-monitoring",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -732005,7 +732297,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "8770c27934ce1b2e78ecff01c182d81f533873c16775bf80e5fb51abae0417e5"
+              "sha256": "b061c59f73ff8ebe0c038632613cb74c5de63bfb0d0687838c479d01beec28f0"
             }
           ],
           "checks": [
@@ -732148,6 +732440,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The runbook adds protected discovery and expected-target P1 setup. The existing measured restore, connection, data-integrity and SLA procedure retain their instructions and source evidence."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -737172,7 +737472,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-migration-manifest-binding",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -737192,7 +737493,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "5af34b33cfa887eac5edd0de3ceb299cef0be09b9898f941c1d9396c6c1d5faa"
+              "sha256": "fa889dfcd7d7777c827a27adf19c97ecb600de18daad7c4401d27af539b3a542"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -737972,6 +738273,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -741920,7 +742229,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -741940,7 +742250,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -742200,6 +742510,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -742313,7 +742631,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -742333,7 +742652,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -742593,6 +742912,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -742644,7 +742971,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -742664,7 +742992,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+              "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -742924,6 +743252,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         }
@@ -1080609,15 +1080945,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
+              "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "5af34b33cfa887eac5edd0de3ceb299cef0be09b9898f941c1d9396c6c1d5faa"
+              "sha256": "fa889dfcd7d7777c827a27adf19c97ecb600de18daad7c4401d27af539b3a542"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "a6db318303ed94f1c8674a429d191e0de0e1f8d90a7d6f6991a88ca240675308"
+              "sha256": "131101628728ecfbfc822fa378dc5a41b597d6de8dfb6256a54c9d3f93cbb1c2"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1080797,6 +1081133,16 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ]
         },
@@ -1080814,7 +1081160,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-backup-manifest-readback"
         ]
       }
     },
@@ -1094163,7 +1094510,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1094183,11 +1094530,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
+              "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1097553,6 +1097900,16 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "presentation_renewals": [
@@ -1097989,7 +1098346,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1100158,7 +1100516,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+              "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1100178,11 +1100536,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
+              "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+              "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1103449,6 +1103807,16 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Profile completion and the automatic verification command now accept an omitted body or an empty object. Canonical terms acceptance also keeps the optional legacy UUID field while recording the URL version. HTTP cases verify unchanged profile and audit, no automatic approval, and no consent or account gate change for malformed commands. The generated contract diff is limited to the three affected routes."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-readback",
+              "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1103902,7 +1104270,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1109174,7 +1109543,8 @@
         "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "Address deletion, primary address selection, invitation withdrawal, and agent removal reject unknown JSON. The migrated HTTP cases cover invalid input, unchanged state and audit, and accepted empty or omitted bodies. Complete the remaining command inventory and final candidate evidence.",
-        "Profile completion, automatic verification and canonical terms acceptance now validate their request bodies before service execution. The optional legacy terms UUID field remains accepted and the URL controls the recorded version. The remaining application-wide schema inventory and exact staged release evidence are open."
+        "Profile completion, automatic verification and canonical terms acceptance now validate their request bodies before service execution. The optional legacy terms UUID field remains accepted and the URL controls the recorded version. The remaining application-wide schema inventory and exact staged release evidence are open.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1109513,7 +1109883,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
           "release-0.6-profile-address-access-command-validation",
-          "release-0.6-profile-completion-terms-validation"
+          "release-0.6-profile-completion-terms-validation",
+          "release-0.6-backup-manifest-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1109684,6 +1110055,7 @@
           "docs/design/design-system.md",
           "docs/development/ci.md",
           "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/operations/backup/postgresql-restore-runbook.md",
           "docs/operations/clamav-signatures.md",
           "docs/operations/notification-monitoring.md",
           "docs/operations/postgresql-monitoring.md",
@@ -1109706,7 +1110078,9 @@
           "package.json",
           "packages/api-client/src/openapi.generated.ts",
           "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
+          "packages/db/scripts/backup/physical_backup.py",
           "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "packages/db/scripts/backup/test_physical_backup.py",
           "packages/db/src/index.test.ts",
           "packages/db/src/index.ts",
           "packages/db/src/quarterly-access-review.migrated.test.ts",
@@ -1109794,7 +1110168,8 @@
         "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover.",
         "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
-        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open."
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
+        "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1109866,7 +1110241,8 @@
           "release-0.6-cutover-capacity-and-image-readback",
           "release-0.6-measured-cutover-scratch",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-staging-storage-policy-readback"
+          "release-0.6-staging-storage-policy-readback",
+          "release-0.6-backup-manifest-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1109909,10 +1110285,14 @@
           "deploy/production/test_check_promotion.py",
           "deploy/staging/README.md",
           "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
           "deploy/staging/test_notify_release.py",
           "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
           "docs/operations/backup/postgresql-restore-runbook.md",
           "docs/operations/clamav-signatures.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_physical_backup.py",
           "packages/db/scripts/backup/test_verify_restore.py",
           "packages/db/scripts/backup/verify_restore.py"
         ],
@@ -1293328,6 +1293708,162 @@
         {
           "path": "packages/api-client/src/openapi.generated.ts",
           "sha256": "0d664154f0d6cc5154fa8396a33a11a512f4c854b08e299387a00c0ec77f13bc"
+        }
+      ]
+    },
+    "release-0.6-backup-manifest-readback": {
+      "batch": "release-0.6-backup-manifest-readback",
+      "base_commit": "77dcf1136fe441f40332ba52bf8b6cca35cd1bd7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/test_physical_backup.py"
+      ],
+      "checks": [
+        "All 50 cases passed with disposable Linux PostgreSQL and S3, including exact manifest readback, a stored manifest mismatch, ciphertext corruption, PITR, table fingerprints, and existing backup and restore checks.",
+        "All 37 staging queue and rollback, 16 notification and deployment, and 17 promotion cases passed. A missing manifest-readback flag prevents migration or acceptance. ShellCheck, Bash syntax and Markdown formatting passed.",
+        "GitHub confirmed protected main at 0a58af598 after the exact required check passed. The subsequent profile run has separate report-only image proof.",
+        "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change."
+      ],
+      "limitations": [
+        "The local native rehearsal uses the compatible PostgreSQL image with the final source mounted. The newly packaged immutable image and approved staging backup and restore are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-manifest-readback",
+      "execution_receipts": [
+        {
+          "file": "native-backup-final.log",
+          "sha256": "380a842da1075914b4487ce192b9884d915a5d005df883422858a6b193a1561a"
+        },
+        {
+          "file": "staging-final.log",
+          "sha256": "dd2edb18e9ae077bd9fff97e44864bba41fe74e309dbff458c5131983af4d1bf"
+        },
+        {
+          "file": "notification-final.log",
+          "sha256": "d6d28bfc0e8db66e8ee4ea9d776c5a4b8b6cfb23b96a2f69d6d3607a0366e2fa"
+        },
+        {
+          "file": "promotion-final.log",
+          "sha256": "9f63af233d01e9c3aeb62b09b87ab40707178819be00cfdc1dec96c00ad1ba7a"
+        },
+        {
+          "file": "quality.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "shellcheck.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "protected-main-0a58af598.json",
+          "sha256": "35a26ef229f0b7ed085a8dcdac965c6825121fe0c0d66b44c1ce5263e9d968b5"
+        },
+        {
+          "file": "successor-image-readback.json",
+          "sha256": "2095a5107561cba3d04221c13d9241abb861a3236af007472c75ea5c0aae726a"
+        },
+        {
+          "file": "successor-image-scan.zip",
+          "sha256": "d80181c46584b4ad931f4df3afd9d09b31999f48898df50f7e5dcb06e51ada9a"
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "90f97560abd3e6795b7dca7520700fd4842dc9c744b654c91c8eda4244fc0e3a"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "4bac422c436788a26c6213645794d8bdef97f667d567bc000fa25cac33d10ccc"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "fa889dfcd7d7777c827a27adf19c97ecb600de18daad7c4401d27af539b3a542"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "131101628728ecfbfc822fa378dc5a41b597d6de8dfb6256a54c9d3f93cbb1c2"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "e00cf012de4e03c3d72939091a1003daacf0a6ffe7948269e389e2cbaffee4cc"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "b061c59f73ff8ebe0c038632613cb74c5de63bfb0d0687838c479d01beec28f0"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "c335c88fd64fdd5fd3783530674aac3442de5c39a2daecbfb00b6db611499827"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "b8e56f5a26b07c45f400d7c49941ede106007505d8347109e0d7125927a75cc5"
         }
       ]
     }

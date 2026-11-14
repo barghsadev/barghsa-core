@@ -286,6 +286,7 @@ if (not isinstance(manifest, dict) or not re.fullmatch(r"[0-9]+", system_id)
         or type(manifest.get("version")) is not int or manifest["version"] != 1
         or manifest.get("label") != label or manifest.get("system_id") != system_id
         or manifest.get("upload_verified") is not True
+        or manifest.get("manifest_readback_verified") is not True
         or not isinstance(manifest.get("blob"), str)
         or not re.fullmatch(r"blobs/[a-f0-9]{32}\.tar\.gpg", manifest["blob"])
         or not isinstance(manifest.get("sha256"), str)

@@ -54,13 +54,16 @@ Run `/opt/backup/backup-pg.sh` daily as the backup service user. `--label <uniqu
 is optional. `--dry-run` makes no changes and prints no credentials. `BACKUP_DIR`,
 if set, is an existing temporary-parent directory; only the command's private child
 is removed. Provide space for native tar files, extracted verification files and
-encrypted output. Backup errors are fatal; they never create a completion marker.
+encrypted output. A backup error prevents a successful job receipt.
 
 The command uses native tar output to isolate all tablespaces, including ones
 created during backup. It extracts them into private paths, runs `pg_verifybackup`,
 encrypts with GPG AES256 and uploads a unique payload. It streams that encrypted
 object back from storage to verify its size and SHA-256 before it publishes
-`postgres/<cluster>/full/<label>/manifest.json` last. A duplicate label is rejected.
+`postgres/<cluster>/full/<label>/manifest.json` last. The command reads back the
+exact manifest bytes before it reports a verified upload. If final verification
+fails, inspect the stored manifest and encrypted object before attempting
+recovery or cleanup. A subsequent backup requires a new label.
 The manifest includes the ciphertext digest, size, cluster ID, times and WAL ranges;
 the encrypted metadata must match it during restore. Legacy plaintext `full/` and
 `wal/` objects are not accepted or deleted by these commands.

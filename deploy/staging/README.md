@@ -350,10 +350,10 @@ outside the checkout.
 For non-disposable installations, the worker stops the preceding writers and
 uses the retained PostgreSQL image's encrypted backup tool against the direct
 database URL. It requires HTTPS, verifies the backup using PostgreSQL's native
-manifest, reads back the encrypted object, and records
-`BARGHSA_STAGING_MIGRATION_BACKUP_V1` for the running database system before
-invoking migrations. A failed upload, readback or mismatched receipt enters
-rollback. The retained PostgreSQL image must provide the readback receipt.
+manifest, and reads back the encrypted object and exact off-server manifest.
+It records `BARGHSA_STAGING_MIGRATION_BACKUP_V1` for the running database system
+before invoking migrations. A failed upload, readback or mismatched receipt
+enters rollback. The retained PostgreSQL image must confirm both readbacks.
 The release worker copies the backup label, database system ID, encrypted
 object name, length, ciphertext SHA-256 and canonical manifest SHA-256 into
 `runtime_images.migration_backup` in

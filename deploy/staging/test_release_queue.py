@@ -23,6 +23,7 @@ class RuntimeImageReceiptTests(unittest.TestCase):
         backup = {"version": 1, "label": f"release-{commit[:12]}-20261113T230000Z-4321",
                   "system_id": "123456", "blob": f"blobs/{'b' * 32}.tar.gpg",
                   "size": 42000, "sha256": "c" * 64, "upload_verified": True,
+                  "manifest_readback_verified": True,
                   "started_at": "2026-11-13T23:00:00+00:00", "completed_at": "2026-11-13T23:00:30+00:00",
                   "wal_ranges": [], "tablespaces": {}}
 
@@ -30,10 +31,12 @@ class RuntimeImageReceiptTests(unittest.TestCase):
             return marker + json.dumps(value)
 
         accepted = line(backup)
-        manifest = {key: value for key, value in backup.items() if key != "upload_verified"}
+        manifest = {key: value for key, value in backup.items()
+                    if key not in ("upload_verified", "manifest_readback_verified")}
         self.assertEqual(queue.verify_migration_backup(accepted, commit), {
             "status": "verified",
             "manifest_sha256": hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest(),
+            "manifest_readback_verified": True,
             **{field: backup[field] for field in
                                      ("label", "system_id", "blob", "size", "sha256")},
         })
@@ -43,6 +46,7 @@ class RuntimeImageReceiptTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "exactly one"):
                 queue.verify_migration_backup(output, commit)
         for value in ({"disposable": 1}, {**backup, "upload_verified": False},
+                      {**manifest, "upload_verified": True}, {**backup, "manifest_readback_verified": False},
                       {**backup, "label": backup["label"].replace(commit[:12], "d" * 12)},
                       {**backup, "blob": "unknown"}, {**backup, "size": True}):
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, "Invalid verified"):

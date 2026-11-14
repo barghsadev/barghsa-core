@@ -337,7 +337,9 @@ docker() {{
   fi
   local blob="blobs/{'d' * 32}.tar.gpg"
   if [[ "$mode" == invalid-backup-object ]]; then blob=invalid; fi
-  printf '{{"version":1,"label":"%s","system_id":"%s","blob":"%s","sha256":"{'c' * 64}","size":42000,"upload_verified":true}}\\n' "${{@: -1}}" "$system" "$blob"
+  local manifest_result=',"manifest_readback_verified":true'
+  if [[ "$mode" == missing-manifest-readback ]]; then manifest_result=''; fi
+  printf '{{"version":1,"label":"%s","system_id":"%s","blob":"%s","sha256":"{'c' * 64}","size":42000,"upload_verified":true%s}}\\n' "${{@: -1}}" "$system" "$blob" "$manifest_result"
 }}
 trap 'status=$?; echo rollback; exit "$status"' ERR
 {text[start:end]}
@@ -349,6 +351,7 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
             ('wrong-database', ['stop worker api ai-inference', 'rollback'], 1),
             ('prior-backup-image', ['stop worker api ai-inference', 'rollback'], 1),
             ('invalid-backup-object', ['stop worker api ai-inference', 'rollback'], 1),
+            ('missing-manifest-readback', ['stop worker api ai-inference', 'rollback'], 1),
             ('protected', ['stop worker api ai-inference', 'verified backup', 'run --rm --no-deps api node run-packaged-migrations.cjs'], 0),
         ):
             with self.subTest(mode=mode):
@@ -365,6 +368,7 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
                 if mode == 'protected':
                     self.assertEqual(json.loads(receipt)['system_id'], '123456')
                     self.assertIs(json.loads(receipt)['upload_verified'], True)
+                    self.assertIs(json.loads(receipt)['manifest_readback_verified'], True)
                     observed[1] = 'verified backup'
                 self.assertEqual(observed, expected)
 

@@ -459,6 +459,7 @@ def verify_migration_receipts(index_path, path, fingerprint, job, sha):
     manifest = data['checkpoint_manifest']
     manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
     if (not isinstance(checkpoint, dict) or checkpoint.get('status') != 'verified'
+            or checkpoint.get('manifest_readback_verified') is not True
             or runtime.get('commit') != sha or type(manifest.get('version')) is not int
             or manifest['version'] != 1 or type(manifest.get('size')) is not int
             or manifest['size'] <= 0 or type(checkpoint.get('size')) is not int

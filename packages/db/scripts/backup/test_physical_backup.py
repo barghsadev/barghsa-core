@@ -135,6 +135,8 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
         receipt = json.loads(outcome.getvalue())
         if receipt.pop('upload_verified', None) is not True:
             raise AssertionError('Backup receipt did not verify the upload')
+        if receipt.pop('manifest_readback_verified', None) is not True:
+            raise AssertionError('Backup receipt did not verify the stored manifest')
         cls.base = cls.store.manifests()[0][1]
         if receipt != cls.base:
             raise AssertionError('Backup receipt differs from its stored manifest')
@@ -238,6 +240,26 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
             with self.assertRaisesRegex(backup.BackupError, 'Uploaded backup checksum mismatch'):
                 backup.backup(self.store, 'corrupt-upload')
         self.assertNotIn('corrupt-upload', [manifest['label'] for _, manifest in self.store.manifests()])
+
+    def test_changed_manifest_after_put_never_reports_verified_upload(self):
+        label = 'changed-manifest'
+        key = f'full/{label}/manifest.json'
+        put = self.store.put
+
+        def write_changed_manifest(name, body, **kwargs):
+            self.assertEqual(name, key)
+            changed = json.loads(body)
+            changed['wal_ranges'] = []
+            return put(name, json.dumps(changed).encode(), **kwargs)
+
+        with patch.object(self.store, 'put', side_effect=write_changed_manifest):
+            with contextlib.redirect_stdout(io.StringIO()) as outcome:
+                with self.assertRaisesRegex(backup.BackupError, 'manifest differs from readback'):
+                    backup.backup(self.store, label)
+        self.assertEqual(outcome.getvalue(), '')
+        self.assertIn(label, [manifest['label'] for _, manifest in self.store.manifests()])
+        with self.assertRaisesRegex(backup.BackupError, 'already exists'):
+            backup.backup(self.store, label)
 
     def test_manifest_digest_detects_payload_corruption(self):
         altered = dict(self.base, label='corrupt', sha256='0' * 64)
