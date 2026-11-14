@@ -99,3 +99,48 @@ tests:
       - eval_time: 1h
         alertname: JourneyErrorBudgetFastBurn
         exp_alerts: []
+  - name: Outcomes must come from the same scrape source and revision
+    interval: 1m
+    input_series:
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",instance="one",revision="a",outcome="failure"}'
+        values: '0+100x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",instance="two",revision="a",outcome="success"}'
+        values: '0+0x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="solar",instance="one",revision="a",outcome="failure"}'
+        values: '0+100x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="solar",instance="one",revision="b",outcome="success"}'
+        values: '0+0x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="saving",instance="one",revision="a",outcome="failure"}'
+        values: '0+20x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="saving",instance="one",revision="a",outcome="success"}'
+        values: '0+80x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="saving",instance="two",revision="b",outcome="failure"}'
+        values: '0+10x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="saving",instance="two",revision="b",outcome="success"}'
+        values: '0+40x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="saving",instance="three",revision="c",outcome="success"}'
+        values: '0+900x61'
+    alert_rule_test:
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              availability_tier: pilot
+              service: saving
+              window: 1h
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: saving is consuming its availability budget quickly
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+    promql_expr_test:
+      - expr: barghsa:journey_attempts:rate{window="1h"}
+        eval_time: 1h
+        exp_samples:
+          - labels: 'barghsa:journey_attempts:rate{environment="staging",database="core",availability_tier="pilot",service="saving",outcome="failure",window="1h"}'
+            value: 0.5
+          - labels: 'barghsa:journey_attempts:rate{environment="staging",database="core",availability_tier="pilot",service="saving",outcome="success",window="1h"}'
+            value: 2

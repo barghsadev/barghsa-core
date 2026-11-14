@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:16:17+00:00",
+  "updated": "2026-11-14T18:21:09+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -39171,7 +39171,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-rollback-runbook-acceptance",
           "release-0.6-contract-limit-recovery",
-          "release-0.6-quarterly-scheduled-fixtures"
+          "release-0.6-quarterly-scheduled-fixtures",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -39183,7 +39184,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -39440,6 +39441,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Six scoped recovery routes are additive. Existing API definitions are identical, existing settings writes retain their validators, permission, session, versioning and audit behavior, and existing service and wallet journeys passed targeted tests. Wallet copy lookups reuse the same strings and formatting. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -737133,7 +737142,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -737154,7 +737164,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -737321,6 +737331,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -737364,7 +737382,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-authentication-failure-alert",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -737424,7 +737443,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             }
           ],
           "checks": [
@@ -737670,6 +737689,14 @@
                 "apps/api/src/crm/crm.controller.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -744717,7 +744744,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -744736,7 +744764,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -745177,6 +745205,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -745489,7 +745525,8 @@
         "batches": [
           "release-0.6-weekly-mutation-and-dependencies",
           "release-0.6-weekly-dependency-advisory",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "batch": "release-0.6-weekly-mutation-and-dependencies",
@@ -745501,7 +745538,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "package.json",
@@ -745590,6 +745627,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -754018,7 +754063,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -754050,7 +754096,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             }
           ],
           "checks": [
@@ -754422,6 +754468,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -754474,7 +754528,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -754526,7 +754581,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             }
           ],
           "checks": [
@@ -754929,6 +754984,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -757556,7 +757619,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-synthetic-target-loss",
           "release-0.6-clamav-missing-metric",
-          "release-0.6-synthetic-result-completeness"
+          "release-0.6-synthetic-result-completeness",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -757564,7 +757628,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -757825,6 +757889,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The monitoring guide documents the opt-in Alertmanager priority destinations. Existing provider, inbox, watchdog, retention and alert behavior retains source evidence. Native HTTPS fixtures verified routing, resolution and redirect refusal."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -758596,7 +758668,8 @@
           "release-0.6-backup-target-monitoring",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-wal-upload-readback"
+          "release-0.6-wal-upload-readback",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -758604,7 +758677,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "b0df2c4a6aa65e7b9d4bd453ebba3673f025a9329fc4bb863e8727f13880fddf"
+              "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
             },
             {
               "path": "architecture.md",
@@ -758779,6 +758852,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
+            },
+            {
+              "batch": "release-0.6-journey-source-pairing",
+              "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
             }
           ]
         }
@@ -758804,7 +758885,8 @@
         "The fast and slow SLO burn-rate rule fixtures are now included in the protected CI check. Local workflow-step execution passed. The deployed counters, rule firing and approved paging receipts remain open.",
         "The affected native test job 132178297496 at d19812d0a passed 46 operations alert tests. Staged evaluation and real P1 and P2 destination receipts remain open.",
         "Isolated actual Alertmanager delivered P1 fast and P2 slow burn firing and recovery to different TLS fixtures and retained the protected operations route. Deployed scrape, alerts, approved page and team/task receipts remain open.",
-        "The running v0.5.1 monitoring stack had healthy API and worker targets but no fast or slow burn-rate rule. Apply the current rule and receiver on the accepted staging candidate and verify protected receipts."
+        "The running v0.5.1 monitoring stack had healthy API and worker targets but no fast or slow burn-rate rule. Apply the current rule and receiver on the accepted staging candidate and verify protected receipts.",
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -758836,7 +758918,8 @@
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-priority-routing",
           "release-0.6-published-d19812d0a",
-          "release-0.6-live-operational-gate-readback"
+          "release-0.6-live-operational-gate-readback",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": null
       }
@@ -758893,7 +758976,8 @@
       "launch_required": true,
       "remaining": [
         "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
-        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
+        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts.",
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -758919,7 +759003,8 @@
         ],
         "batches": [
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": null
       }
@@ -758940,7 +759025,8 @@
       "launch_required": true,
       "remaining": [
         "On the exact immutable candidate, verify live same-scope one-hour and 24-hour journey budget context on representative outbox, overdue refund or reconciliation, and provider firing and recovery receipts. Verify staff budget links on the approved dashboard. Preserve the original alert priorities, P1/P2 delivery requirements and financial integrity response.",
-        "Retain separate measured durable-job, refund and provider evidence. Queue age, outstanding refunds and circuit state alone do not attribute customer journey misses or prove a separate operation-specific budget."
+        "Retain separate measured durable-job, refund and provider evidence. Queue age, outstanding refunds and circuit state alone do not attribute customer journey misses or prove a separate operation-specific budget.",
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -758954,10 +759040,13 @@
           "packages/shared/src/notifications/operations-alert-links.ts",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
           "apps/worker/src/operations/alerts.integration.test.ts",
-          "apps/web/src/pages/notification-inbox-navigation.test.tsx"
+          "apps/web/src/pages/notification-inbox-navigation.test.tsx",
+          "deploy/monitoring/journey-slo-alerts.test.yml",
+          "deploy/monitoring/journey-slo-alerts.yml"
         ],
         "batches": [
-          "release-0.6-operational-budget-context"
+          "release-0.6-operational-budget-context",
+          "release-0.6-journey-source-pairing"
         ],
         "current_acceptance": null
       }
@@ -1150539,7 +1150628,8 @@
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
         "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1150946,7 +1151036,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-csp-enforced-feedback",
           "release-0.6-receiver-version-backup",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-journey-source-pairing"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1151187,7 +1151278,9 @@
           "scripts/test_email_nightly_browser_report.py",
           "scripts/test_report_nightly_browser.py",
           "deploy/production/guarded-rollout.py",
-          "deploy/production/test_guarded_rollout.py"
+          "deploy/production/test_guarded_rollout.py",
+          "deploy/monitoring/journey-slo-alerts.test.yml",
+          "deploy/monitoring/journey-slo-alerts.yml"
         ]
       }
     },
@@ -1345416,6 +1345509,90 @@
         {
           "file": "after.log",
           "sha256": "87e7d80f12b9093b5eaa8850cb5bbb9fdb764523c0541bc1b93928554ae5c894"
+        },
+        {
+          "file": "static.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-journey-source-pairing": {
+      "batch": "release-0.6-journey-source-pairing",
+      "base_commit": "2df058e2d123e3607c6c75b4e166358857421888",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.02",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.15.02.04",
+        "06-security-testing-observability.md#T-06.15.02.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/journey-slo-alerts.test.yml",
+        "deploy/monitoring/journey-slo-alerts.yml",
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+        },
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "3bc02c487af889ad7fac17e9d4e0bfb029fa641f8a22f489bc5af656d85fbef1"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "df7ac72deab714d42544a2878452fd201d3b08ffd573864f431e5d6126d5a261"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "d8f873f865dbceffcb75875adc968693025a19470ee772ba13f8543e4dfbcba4"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "69d77dc84138dc479df6132134c4c60d309917438e4f848a1e4fee2342c3ce7f"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "e63cfe57d2597756bf9d1c4560aa283b945cb171d5e776cf2d52c206a307ebd1"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "808e46a01e36b57f38f97b29fa296e7148becff41773a745100841b53565d961"
+        }
+      ],
+      "checks": [
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open.",
+        "Promtool parsed all ten journey rules, and Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The staged Prometheus image was used for an offline test container with fixture data and no published ports. The staging monitor and alert receivers were not changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-journey-source-pairing",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "0cab459d7b8e6f14284dd31aa39eada7b7fe95d05354903600a90714262081e7"
+        },
+        {
+          "file": "promtool.log",
+          "sha256": "0a39ea6779b75c4589164580d2b28b1c1571b5ea7c9e359a348a60cbfab16434"
+        },
+        {
+          "file": "staging-rule-matrix.log",
+          "sha256": "647defc0e93dfbc9943700256d003881c88569fe77a4ecba9dd2aabc9f6a2cc5"
+        },
+        {
+          "file": "staging-promtool.log",
+          "sha256": "26b65417a80860e2c38ef9596cf195e194f6daf93df67a2b5fc77736c680d8be"
         },
         {
           "file": "static.log",

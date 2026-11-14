@@ -1,29 +1,27 @@
 groups:
   - name: barghsa-journey-slo
     rules:
-      - record: barghsa:journey_attempts:rate
+      - record: barghsa:journey_source_attempts:rate
         labels: { window: 5m }
         expr: |
-          sum by (environment, database, availability_tier, service, outcome) (
-            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[5m])
-          )
-      - record: barghsa:journey_attempts:rate
+          rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[5m])
+      - record: barghsa:journey_source_attempts:rate
         labels: { window: 1h }
         expr: |
-          sum by (environment, database, availability_tier, service, outcome) (
-            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[1h])
-          )
-      - record: barghsa:journey_attempts:rate
+          rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[1h])
+      - record: barghsa:journey_source_attempts:rate
         labels: { window: 2h }
         expr: |
-          sum by (environment, database, availability_tier, service, outcome) (
-            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[2h])
-          )
-      - record: barghsa:journey_attempts:rate
+          rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[2h])
+      - record: barghsa:journey_source_attempts:rate
         labels: { window: 24h }
         expr: |
-          sum by (environment, database, availability_tier, service, outcome) (
-            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[24h])
+          rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[24h])
+      - record: barghsa:journey_attempts:rate
+        expr: |
+          sum by (environment, database, availability_tier, service, outcome, window) (
+            barghsa:journey_source_attempts:rate
+            and ignoring (outcome) (count without (outcome) (barghsa:journey_source_attempts:rate) == 2)
           )
       - record: barghsa:journey_budget:error_ratio
         labels: { availability_tier: pilot }

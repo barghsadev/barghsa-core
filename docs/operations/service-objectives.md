@@ -41,7 +41,7 @@ Confirm a successful archive scrape and current scoped API, worker and recording
 
 ### Journey burn alerts
 
-Give the protected collector target one `availability_tier` label per environment and database. Use `pilot` for the 99.5% objective or `commercial` for 99.9%. The rules compare the failure fraction with that tier's budget for each service. They require both outcome series and measured attempts. Check collector health separately when those measurements are missing.
+Give the protected collector target one `availability_tier` label per environment and database. Use `pilot` for the 99.5% objective or `commercial` for 99.9%. The rules compare the failure fraction with that tier's budget for each service. Each contributing scrape target and release revision needs both outcomes in the measured window. The rules aggregate eligible sources and require measured attempts. Check collector health separately when those measurements are missing.
 
 The P1 rule requires 5% of the current UTC month's budget per hour over both the one-hour and five-minute windows. The P2 rule requires 2% per day over both the 24-hour and two-hour windows. A firing P1 suppresses the P2 for the same service and scope. The private inbox preserves the alert priority and the affected service. Verify collector ingestion, firing and resolved receipts, and approved pager and team routing in the target environment. [Prometheus rules](../../deploy/monitoring/journey-slo-alerts.yml) · [Journey runbook](../runbooks/journey-availability.md) · [Multi-window alerting](https://sre.google/workbook/alerting-on-slos/).
 
