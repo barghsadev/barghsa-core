@@ -2,6 +2,7 @@ from contextlib import redirect_stderr
 from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import importlib.util
 import io
 import json
@@ -9,8 +10,10 @@ from pathlib import Path
 import runpy
 import sys
 import tempfile
+from threading import Thread
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 
 spec = importlib.util.spec_from_file_location(
@@ -195,6 +198,43 @@ class PromotionEvidenceTest(unittest.TestCase):
                     promotion.verify_browser_rollup(1, directory, SHA, 2)
             with self.assertRaisesRegex(ValueError, 'attempt is missing or invalid'):
                 promotion.verify_browser_rollup(1, directory, SHA, None)
+
+    def test_staging_readback_rejects_redirects_before_contacting_target(self):
+        requests = []
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                requests.append((self.path, self.headers.get('Cache-Control')))
+                if self.path == '/redirect':
+                    self.send_response(307)
+                    self.send_header('Location', '/direct')
+                    self.end_headers()
+                    return
+                body = b'{"status":"ok"}'.ljust(65536 + int(self.path == '/oversized'))
+                self.send_response(200)
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *_):
+                pass
+
+        with ThreadingHTTPServer(('127.0.0.1', 0), Handler) as server:
+            thread = Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                with patch.object(promotion, 'STAGING', f'http://127.0.0.1:{server.server_port}'):
+                    with self.assertRaises(HTTPError) as error:
+                        promotion.staging_response('/redirect')
+                    with error.exception as response:
+                        self.assertEqual(response.code, 307)
+                    self.assertEqual(requests, [('/redirect', 'no-cache')])
+                    self.assertEqual(promotion.staging_response('/direct'), {'status': 'ok'})
+                    with self.assertRaisesRegex(ValueError, 'exceeded its response limit'):
+                        promotion.staging_response('/oversized')
+            finally:
+                server.shutdown()
+                thread.join()
 
     def test_requires_exact_healthy_staging_readback(self):
         live = {'version': '0.9.0', 'commit': SHA}

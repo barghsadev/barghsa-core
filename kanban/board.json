@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T12:24:46+00:00",
+  "updated": "2026-11-14T12:32:21+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8985,7 +8985,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9360,6 +9360,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -696569,7 +696577,8 @@
       "remaining": [
         "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints.",
         "The release notification client rejects every tested HTTP redirect status on staging reads and Telegram requests. The loopback fixture verified that no redirected endpoint received a request. Continue the remaining outbound transport inventory.",
-        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection."
+        "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
+        "The protected promotion checker now refuses redirects before contacting a target and requests fresh staging metadata and readiness. The loopback assertions and live v0.5.1 readback passed. Verify the final accepted candidate with its exact API commit."
       ],
       "owner": null,
       "depends_on": [],
@@ -696601,7 +696610,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-s3-response-limits",
           "release-0.6-telegram-receipt-transport",
-          "release-0.6-bound-staging-worker-readbacks"
+          "release-0.6-bound-staging-worker-readbacks",
+          "release-0.6-promotion-readback-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -729589,11 +729599,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "e4d5088e2e9cece0fbf552eee19282c20e7780a950efde74308c442f94205775"
+              "sha256": "0e3d3583fc3c75687a118dfe3a14610892c131f6811955c2ccccbca8718e9ffd"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -730036,6 +730046,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -730581,11 +730600,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "e4d5088e2e9cece0fbf552eee19282c20e7780a950efde74308c442f94205775"
+              "sha256": "0e3d3583fc3c75687a118dfe3a14610892c131f6811955c2ccccbca8718e9ffd"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -731155,6 +731174,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -732341,7 +732369,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -732713,6 +732741,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -732787,7 +732823,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -733159,6 +733195,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -755204,7 +755248,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -755489,6 +755533,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -755623,7 +755675,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -755908,6 +755960,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -755980,7 +756040,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "c3b3936502169cf15cd80e223d84c1886104324bd6ed637e4ad1d6c93559998d"
+              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -756265,6 +756325,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-promotion-readback-boundary",
+              "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
             }
           ]
         }
@@ -1319208,6 +1319276,58 @@
         {
           "file": "free-provider-public-guide-readback.json",
           "sha256": "f17ed8914f28de6ae37a8fb9d4e5ec394f0c09ea1790cd8328288b38c1b62116"
+        }
+      ]
+    },
+    "release-0.6-promotion-readback-boundary": {
+      "batch": "release-0.6-promotion-readback-boundary",
+      "base_commit": "432b887a3f40ab06038a8576a5b2588a674b573b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06"
+      ],
+      "changed_paths": [
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "0e3d3583fc3c75687a118dfe3a14610892c131f6811955c2ccccbca8718e9ffd"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        }
+      ],
+      "checks": [
+        "All 18 promotion verifier tests passed. The direct read accepted exactly 64 KiB, refused one byte over, sent a no-cache request and refused an HTTP redirect without calling its target.",
+        "The complete production operations unit suite reported 74 passes and four integration cases skipped.",
+        "The protected verifier read the public staging release and readiness successfully. v0.5.1 reported healthy PostgreSQL, Redis and object storage, and did not emit an API runtime commit."
+      ],
+      "limitations": [
+        "This is release guard evidence. Candidate acceptance and the v0.6.0 staging deployment and Telegram receipt remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-readback-boundary",
+      "execution_receipts": [
+        {
+          "file": "promotion-tests.log",
+          "sha256": "9a3a06d215d1138db1721db8e348448fe7e01c7cd821d9adbc32cec54b828a75"
+        },
+        {
+          "file": "live-readback.json",
+          "sha256": "11bc0228cb1d40c54345ac725d96969ce64033874fc2d70e59317f020253a932"
         }
       ]
     }

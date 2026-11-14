@@ -12,7 +12,9 @@ import subprocess
 import sys
 import tempfile
 import time
-from urllib.request import urlopen
+from urllib.request import Request, build_opener
+
+from release_evidence import NoRedirect
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -117,7 +119,8 @@ def verify_browser_rollup(run_id, directory, sha, attempt):
 
 def staging_response(path):
     url = f'{STAGING}{path}'
-    with urlopen(url, timeout=15) as response:
+    request = Request(url, headers={'Cache-Control': 'no-cache'})
+    with build_opener(NoRedirect()).open(request, timeout=15) as response:
         if response.geturl() != url:
             raise ValueError('Staging readback must use the designated HTTPS endpoint')
         body = response.read(65537)
