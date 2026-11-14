@@ -122,6 +122,24 @@ app image. The prior Alpine probe loaded a compatible replacement file.
 Verify a replacement built from modified source and submit the package and
 distribution conditions for reviewer sign-off. [Exact POSIX build recipe](https://github.com/lovell/sharp-libvips/blob/ebb95f8add54eee8bed840e3fb587e4cbec857d7/build/posix.sh).
 
+The review packet also includes the publisher's glibc, musl and npm publish
+logs for the signed tag. `npm audit signatures` verified the registry
+signatures and provenance attestations for both locked archives. The
+attestation subjects match the downloaded archives and identify that exact
+build and source commit. A non-root readback of a prior isolated amd64 app
+image verified both installed binaries and both notices by checksum.
+[Publisher build and publish run](https://github.com/lovell/sharp-libvips/actions/runs/36315646015).
+
+The packet retains all 28 source archives and five patches downloaded directly
+by the POSIX build recipe. It also includes all 105 library build crate archives
+logged for both x64 platforms. Each archive matches its checksum in the
+librsvg source release lockfile. The publisher's lock update logged four
+removals and zero additions. Its rewritten lockfile was not published. The
+build logs identify the static archives listed in the linker visibility flags.
+Use those flags as evidence of build inputs alongside the exact recipe and
+crate records. Complete the compatible modified rebuild and final image
+readback before accepting the package conditions.
+
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
 The combined app image SBOM identified three third-party packages without a normalized license field: `busboy@1.6.0`, `png-js@2.0.0`, and `streamsearch@1.1.0`. Their original MIT license files were read from the isolated app image and matched the pinned package copies byte for byte. Internal Barghsa workspace entries without a third-party license field are first-party code.
