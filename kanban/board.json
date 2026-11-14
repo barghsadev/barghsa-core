@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:18:29+00:00",
+  "updated": "2026-11-14T13:30:44+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22886,7 +22886,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "In the launch rehearsal, activate a capability pause and verify normal authenticated login, support/ticketing, contract list, invoice and refund journeys and at least one unrelated new capability. Restore the pause and retain live receipts for the exact deployed candidate."
+        "In the launch rehearsal, activate a capability pause and verify normal authenticated login, support/ticketing, contract list, invoice and refund journeys and at least one unrelated new capability. Restore the pause and retain live receipts for the exact deployed candidate.",
+        "Local production-browser cases verified the pause UI, customer support links and available unrelated intake. The exact deployed pause, continuous protected journeys and restored status still require the planned launch rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -22936,7 +22937,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-maintenance-recovery"
+          "release-0.6-maintenance-recovery",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -700964,7 +700966,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-security-rate-limits",
@@ -701147,7 +701150,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-security-rate-limits",
@@ -701332,7 +701336,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-verification-policy-recovery",
           "release-0.6-verification-mode-recovery",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-action-rate-limit-native-cases",
@@ -753560,7 +753565,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -755525,7 +755531,8 @@
       "remaining": [
         "The Persian and English admin page saves and exports a versioned, audited operational policy. Current staff access, step-up, CSRF, strict legal-field exclusion and concurrent update checks passed with migrated PostgreSQL. The documented infrastructure apply workflow renders the selected revision for Loki, the Prometheus archive and Tempo. Apply and read back one authorized change on the exact staged monitoring stack before closure.",
         "The mobile settings selector exposes the new Operational Retention route once and retains 12 sections. Sixteen production-browser settings cases passed across widths, locales and themes. The exact deployed retention change and monitoring readback remain open.",
-        "Monitoring retention has editor-only history and two-step rollback. Persian and English Chromium and mobile Safari cases passed staff confirmation and Axe in the local production build, with migrated HTTP evidence for audit, concurrent activation and policy export. Apply and read back an authorized staged revision on the actual monitoring stack."
+        "Monitoring retention has editor-only history and two-step rollback. Persian and English Chromium and mobile Safari cases passed staff confirmation and Axe in the local production build, with migrated HTTP evidence for audit, concurrent activation and policy export. Apply and read back an authorized staged revision on the actual monitoring stack.",
+        "The retention route now uses one automatic router split. EN/FA Chromium and mobile Safari settings writes passed on the final local production build. The authorized monitoring-stack apply and readback remain pending."
       ],
       "owner": null,
       "depends_on": [],
@@ -755563,7 +755570,8 @@
         "batches": [
           "release-0.6-operational-retention",
           "release-0.6-retention-settings-browser",
-          "release-0.6-operational-retention-recovery"
+          "release-0.6-operational-retention-recovery",
+          "release-0.6-web-admin-coverage"
         ],
         "current_acceptance": null
       }
@@ -1132131,7 +1132139,8 @@
         "The shared critical coverage batch closes six specific previously reported file gaps in its scoped check. The full rehearsal still has other coverage failures, plus the strict license and exact operational release checks.",
         "The scoped release coverage check resolved the three recorded worker file deficits for OTP notices and invoice reminders. Ninety-three affected cases passed, including native migrated PostgreSQL. The final combined and license checks still need exact release evidence.",
         "The scoped release coverage check resolved five named admin and staff read authority file deficits. The affected 55 cases passed, including PostgreSQL integrations. The exact combined release and license gates remain open.",
-        "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open."
+        "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open.",
+        "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132496,7 +1132505,8 @@
           "release-0.6-shared-critical-coverage",
           "release-0.6-worker-notification-coverage",
           "release-0.6-staff-control-coverage",
-          "release-0.6-provider-coverage"
+          "release-0.6-provider-coverage",
+          "release-0.6-web-admin-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1321191,6 +1321201,127 @@
         {
           "file": "affected-api.log",
           "sha256": "580db3a79fca284e7c10458ebbc58aa3f723ff5a917d486a65c7a573a5e73eb4"
+        }
+      ]
+    },
+    "release-0.6-web-admin-coverage": {
+      "batch": "release-0.6-web-admin-coverage",
+      "base_commit": "f5efcbaced4196137c0560fde9d59a9e4399fefd",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.04",
+        "06-security-testing-observability.md#T-06.05.02.09",
+        "06-security-testing-observability.md#T-06.05.02.10",
+        "06-security-testing-observability.md#T-06.05.02.11",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.18.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/security-rate-limit-controls.test.tsx",
+        "apps/web/src/pages/maintenance-admin-controls.test.tsx",
+        "apps/web/src/routes/admin/operational-retention.test.tsx",
+        "apps/web/src/routes/admin/operational-retention.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/security-rate-limit-controls.test.tsx",
+          "sha256": "f9e7bea2043136e1aa6ddef1df8a701bdca00ad11fa4acfa00e1a896a739e725"
+        },
+        {
+          "path": "apps/web/src/pages/maintenance-admin-controls.test.tsx",
+          "sha256": "983dc51feaac6b957929f8980e5448b5f56dc13c70c9cd3667712922e8b4f903"
+        },
+        {
+          "path": "apps/web/src/routes/admin/operational-retention.test.tsx",
+          "sha256": "0bd608d47968beef8a071cfeeb13dce5943beac4cca404be0a5293607fda5e64"
+        },
+        {
+          "path": "apps/web/src/routes/admin/operational-retention.tsx",
+          "sha256": "767d512ddc02848a4fa7d5f39b70d7d9dfda59515114cf17cf83048fe5307017"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRateLimitPanel.tsx",
+          "sha256": "406092492214ce28e0534ae556983d67bd012fa04474ad3a7d89adfee93467bd"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRateLimitRecovery.tsx",
+          "sha256": "25f2f2c39c01fab46e84c074af6ffc9ee32ca9f75c5bdfba663f0cdd684a3474"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "8058cbcbbe8775e5e2e7ef3adde17c31e5635ea352af7bd849f68f4dfbdc0e87"
+        },
+        {
+          "path": "apps/web/src/pages/AdminOperationalRetentionPage.tsx",
+          "sha256": "83a1953fb128295d2098278247ee67c969de83989d02b20c4be2d0243ea0f706"
+        },
+        {
+          "path": "apps/web/e2e/otp-config.spec.ts",
+          "sha256": "7c9cc49fbd010d2b8c954cd5e117ccc47c518997a4faaa2325022f56055b0d3f"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "d1f0a580de220cf74775f7b767594e780cd78b3e102753a6c51aa1e4734a8cee"
+        },
+        {
+          "path": "apps/web/e2e/maintenance.spec.ts",
+          "sha256": "f2bf29003f68ad900df93f72549201c33ccf89d8fb098f0a95a216bfa8fedf69"
+        },
+        {
+          "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+          "sha256": "1134b7050f9e3f526974eb029707e88a8eda73f5f64ca2772a2d12be56a61078"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Focused Vitest run passed 50 cases across four files. Rate-limit tests cover bounded temporary restrictions, denied reads, invalid revision history, exact rollback acknowledgements and explicit reconciliation. Maintenance tests cover private rationale, account-zone deadlines, stale and denied drafts, uncertain writes and version-bound recovery.",
+        "Unchanged critical per-file coverage thresholds passed for the four previously reported web files, with 291/304 lines and 451/483 branches in the scoped combined report. Browser hits from 81d4381e9 were retained only for three byte-identical source files. A fresh two-case Chromium run supplied source-mapped execution for the changed retention route.",
+        "Existing bilingual Chromium and mobile Safari browser tests passed 90 cases before simplifying the retention route. All four affected browser cases passed again after rebuilding the production bundles. The built retention component remains in the lazy route chunk. Type checking, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "This is scoped coverage and production-browser evidence for the stated source files. The final full exact-candidate coverage and hosted browser gates remain open.",
+        "No live maintenance pause or monitoring retention change was applied. The required live service-isolation and monitoring readbacks remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-web-admin-coverage",
+      "execution_receipts": [
+        {
+          "file": "vitest.log",
+          "sha256": "4ed0072ea6cf4e1b9de78aa04441365bce09bb561b27301302f18fe9a39c31f9"
+        },
+        {
+          "file": "static.log",
+          "sha256": "6972a2056384bef8dfdf5ddac55a5afda83db256b8ee929d094ea7c86595d300"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "8e181d161b3ca6d93b3f21924075dd6724fdcd775555eab65f0a0cc1f0403c07"
+        },
+        {
+          "file": "final-retention-browser.log",
+          "sha256": "607394c99114cb37ef26429e69a1d3c96e6abf720674528ce284eee5bf49d1a3"
+        },
+        {
+          "file": "retention-coverage-browser.log",
+          "sha256": "cbb76554a295a25a77e94090c3c156ae539693ece245a6f38387d51187313923"
+        },
+        {
+          "file": "retention-split-build.json",
+          "sha256": "8e30ab20cc44fb59dd61973f2697671233934bd9f1c93dbe2b7fc2324c46257d"
+        },
+        {
+          "file": "merged-web-admin-coverage-gate.json",
+          "sha256": "2b1c90616cf133dcc8624c49fbe2757ea1f1fa64100503334e928b77dd368c38"
         }
       ]
     }
