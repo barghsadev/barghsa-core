@@ -86455,7 +86455,8 @@
           "release-0.6-invoice-approval-recovery",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -86512,7 +86513,7 @@
             2868270893019815,
             1040252434930882,
             2886022136509559,
-            3965726034151685,
+            856423358066312,
             4262119068098458,
             2327962958249977,
             1182892520973485,
@@ -87301,7 +87302,8 @@
             4134633858599471,
             3019710123762774,
             2792713972043175,
-            1365207518239831
+            1365207518239831,
+            1205928618875115
           ],
           "presentation_renewals": [
             {
@@ -87566,7 +87568,8 @@
           "release-0.6-invoice-approval-recovery",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -87623,7 +87626,7 @@
             2868270893019815,
             1040252434930882,
             2886022136509559,
-            3965726034151685,
+            856423358066312,
             4262119068098458,
             2327962958249977,
             1182892520973485,
@@ -88412,7 +88415,8 @@
             4134633858599471,
             3019710123762774,
             2792713972043175,
-            1365207518239831
+            1365207518239831,
+            1205928618875115
           ],
           "presentation_renewals": [
             {
@@ -90843,7 +90847,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -90946,7 +90951,7 @@
             3398354502599041,
             3667832021046696,
             3873059870633616,
-            2760369642775132,
+            110836620235511,
             2897586480101125,
             621811018103608,
             715607100152686,
@@ -91192,7 +91197,8 @@
             4178486621140627,
             3892749074705326,
             3210573056662043,
-            1774011102101374
+            1774011102101374,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -93016,7 +93022,8 @@
           "release-0.6-invoice-approval-recovery",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -93073,7 +93080,7 @@
             2868270893019815,
             1040252434930882,
             2886022136509559,
-            3965726034151685,
+            856423358066312,
             4262119068098458,
             2327962958249977,
             1182892520973485,
@@ -93862,7 +93869,8 @@
             4134633858599471,
             3019710123762774,
             2792713972043175,
-            1365207518239831
+            1365207518239831,
+            1205928618875115
           ],
           "presentation_renewals": [
             {
@@ -99332,7 +99340,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -99415,7 +99424,7 @@
             3398354502599041,
             3667832021046696,
             3873059870633616,
-            2760369642775132,
+            110836620235511,
             2897586480101125,
             621811018103608,
             715607100152686,
@@ -99823,7 +99832,8 @@
             4178486621140627,
             3892749074705326,
             3210573056662043,
-            1774011102101374
+            1774011102101374,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -396293,7 +396303,8 @@
         "Read back the exact strict release license, coverage, browser and required domain review gates.",
         "The consolidated CI gate now requires the existing six Prometheus rule suites on the pinned Prometheus image. The exact workflow step passed locally. Hosted readback and the final strict release gates remain open.",
         "Preflight 43579302081 ran the pinned Prometheus rule step successfully and passed 5,550 web and 8,147 API tests across 904 files, with one API skip. GitHub served the tested a18c8a3d3 SHA on protected main. The strict coverage, license and operational gates remain separate.",
-        "Hosted full rehearsal 43583704822 verified 2,976 Chromium passes and mapped 2,976 records to 996 files. Enforced changed and critical coverage failed with 63 file errors, and strict license enforcement failed. The new telemetry coverage task closes its two missing reports locally. Recheck the remaining file errors and both strict gates on the exact candidate."
+        "Hosted full rehearsal 43583704822 verified 2,976 Chromium passes and mapped 2,976 records to 996 files. Enforced changed and critical coverage failed with 63 file errors, and strict license enforcement failed. The new telemetry coverage task closes its two missing reports locally. Recheck the remaining file errors and both strict gates on the exact candidate.",
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -396314,7 +396325,8 @@
           "release-0.6-deterministic-secret-scan-fixture",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-strict-license-and-grafana-proof",
-          "release-0.6-telemetry-source-coverage"
+          "release-0.6-telemetry-source-coverage",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": null
       }
@@ -396736,7 +396748,8 @@
         "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
         "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
         "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
-        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor."
+        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -396798,7 +396811,8 @@
           "release-0.6-onboarding-address-native",
           "release-0.6-operations-copy-native",
           "release-0.6-web-coverage-evidence-reuse",
-          "release-0.6-team-expiry-fixture"
+          "release-0.6-team-expiry-fixture",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -419198,7 +419212,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-registration-request-observation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -419282,7 +419297,7 @@
             534486197898567,
             2449791340271927,
             2283659523476750,
-            2760369642775132,
+            110836620235511,
             621811018103608,
             715607100152686,
             2949324934115131,
@@ -419801,7 +419816,8 @@
             3288945720525475,
             3239468737812509,
             941346798338012,
-            842218650528331
+            842218650528331,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -421821,7 +421837,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -421862,7 +421879,7 @@
             2064038117188366,
             963873356507493,
             657416691112754,
-            2760369642775132,
+            110836620235511,
             304017716762453,
             2897586480101125,
             621811018103608,
@@ -422196,7 +422213,8 @@
             3407644592663993,
             3832438558280028,
             2351614566371985,
-            3668001306544450
+            3668001306544450,
+            1934240793389591
           ]
         }
       }
@@ -422400,7 +422418,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-registration-request-observation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -422484,7 +422503,7 @@
             534486197898567,
             2449791340271927,
             2283659523476750,
-            2760369642775132,
+            110836620235511,
             621811018103608,
             715607100152686,
             2949324934115131,
@@ -423003,7 +423022,8 @@
             3288945720525475,
             3239468737812509,
             941346798338012,
-            842218650528331
+            842218650528331,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -456872,7 +456892,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -457073,7 +457094,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -457616,7 +457637,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -457819,7 +457841,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -458020,7 +458043,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -458563,7 +458586,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -458767,7 +458791,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -458968,7 +458993,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -459511,7 +459536,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -459684,7 +459710,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -459885,7 +459912,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -460428,7 +460455,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -460627,7 +460655,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -460828,7 +460857,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -461371,7 +461400,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -461579,7 +461609,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -461780,7 +461811,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -462323,7 +462354,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -462504,7 +462536,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -462705,7 +462738,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -463248,7 +463281,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -463393,7 +463427,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -463594,7 +463629,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -464137,7 +464172,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -464282,7 +464318,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -464483,7 +464520,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -465026,7 +465063,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -465172,7 +465210,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -465373,7 +465412,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -465916,7 +465955,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -466061,7 +466101,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -466262,7 +466303,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -466805,7 +466846,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -466960,7 +467002,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -467177,7 +467220,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -467757,7 +467800,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -467906,7 +467950,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -468123,7 +468168,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -468703,7 +468748,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -468896,7 +468942,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -469205,7 +469252,7 @@
             2643806372921654,
             1864522118777058,
             1245567859207157,
-            2760369642775132,
+            110836620235511,
             4036927274084548,
             304017716762453,
             2897586480101125,
@@ -469521,7 +469568,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -469695,7 +469742,8 @@
             3832438558280028,
             928144003199502,
             2203697469564682,
-            1666341313318083
+            1666341313318083,
+            2222173171812634
           ]
         }
       }
@@ -469844,7 +469892,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -470066,7 +470115,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -470645,7 +470694,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -470794,7 +470844,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -471011,7 +471062,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -471591,7 +471642,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -471740,7 +471792,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -471957,7 +472010,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -472537,7 +472590,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -472686,7 +472740,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -472903,7 +472958,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -473483,7 +473538,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -473632,7 +473688,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -473849,7 +473906,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -474429,7 +474486,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -474578,7 +474636,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -474795,7 +474854,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -475375,7 +475434,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -475524,7 +475584,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -475741,7 +475802,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -476321,7 +476382,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -476470,7 +476532,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -476687,7 +476750,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -477267,7 +477330,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -477416,7 +477480,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -477633,7 +477698,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -478213,7 +478278,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -478362,7 +478428,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478579,7 +478646,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -479159,7 +479226,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -479308,7 +479376,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -479525,7 +479594,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -480105,7 +480174,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -480199,7 +480269,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480240,7 +480311,7 @@
             2064038117188366,
             963873356507493,
             657416691112754,
-            2760369642775132,
+            110836620235511,
             304017716762453,
             2897586480101125,
             621811018103608,
@@ -480574,7 +480645,8 @@
             3407644592663993,
             3832438558280028,
             2351614566371985,
-            3668001306544450
+            3668001306544450,
+            1934240793389591
           ]
         }
       }
@@ -480723,7 +480795,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480940,7 +481013,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -481520,7 +481593,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -481669,7 +481743,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -481886,7 +481961,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             3765420267330102,
             3782905627349433,
@@ -482466,7 +482541,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            842218650528331
+            842218650528331,
+            1205928618875115
           ]
         }
       }
@@ -483234,7 +483310,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483435,7 +483512,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -483978,7 +484055,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -484119,7 +484197,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484320,7 +484399,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -484863,7 +484942,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -485004,7 +485084,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485205,7 +485286,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -485748,7 +485829,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -485889,7 +485971,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -486090,7 +486173,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -486633,7 +486716,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -486774,7 +486858,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -486975,7 +487060,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -487518,7 +487603,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -487659,7 +487745,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487860,7 +487947,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -488403,7 +488490,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -488544,7 +488632,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488745,7 +488834,7 @@
             3960271502854375,
             96526619095995,
             269885046712338,
-            3965726034151685,
+            856423358066312,
             1739632835721993,
             849557320422633,
             2469271831320170,
@@ -489288,7 +489377,8 @@
             446919204610362,
             928144003199502,
             2351614566371985,
-            1666341313318083
+            1666341313318083,
+            1205928618875115
           ]
         },
         "acceptance_history": [
@@ -512384,7 +512474,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -512456,7 +512547,7 @@
             4059134051384818,
             3540410790127996,
             1548950213246839,
-            2760369642775132,
+            110836620235511,
             3374147318275605,
             4124225700950065,
             4131619651280800,
@@ -512597,7 +512688,8 @@
             3288945720525475,
             2927939502738672,
             2930532957739074,
-            181967370062232
+            181967370062232,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -512843,7 +512935,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -512915,7 +513008,7 @@
             4059134051384818,
             3540410790127996,
             1548950213246839,
-            2760369642775132,
+            110836620235511,
             3374147318275605,
             4124225700950065,
             4131619651280800,
@@ -513056,7 +513149,8 @@
             3288945720525475,
             2927939502738672,
             2930532957739074,
-            181967370062232
+            181967370062232,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -513310,7 +513404,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -513382,7 +513477,7 @@
             4059134051384818,
             3540410790127996,
             1548950213246839,
-            2760369642775132,
+            110836620235511,
             3374147318275605,
             4124225700950065,
             4131619651280800,
@@ -513523,7 +513618,8 @@
             3288945720525475,
             2927939502738672,
             2930532957739074,
-            181967370062232
+            181967370062232,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -513761,7 +513857,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -513833,7 +513930,7 @@
             4059134051384818,
             3540410790127996,
             1548950213246839,
-            2760369642775132,
+            110836620235511,
             3374147318275605,
             4124225700950065,
             4131619651280800,
@@ -513974,7 +514071,8 @@
             3288945720525475,
             2927939502738672,
             2930532957739074,
-            181967370062232
+            181967370062232,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -514211,7 +514309,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -514283,7 +514382,7 @@
             4059134051384818,
             3540410790127996,
             1548950213246839,
-            2760369642775132,
+            110836620235511,
             3374147318275605,
             4124225700950065,
             4131619651280800,
@@ -514424,7 +514523,8 @@
             3288945720525475,
             2927939502738672,
             2930532957739074,
-            181967370062232
+            181967370062232,
+            1934240793389591
           ],
           "presentation_renewals": [
             {
@@ -545769,7 +545869,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -545795,7 +545896,7 @@
             683610205892955,
             1423038282525126,
             3226800387536713,
-            3965726034151685,
+            856423358066312,
             1541576526665983,
             2387050658107757,
             4482800025648022,
@@ -545846,7 +545947,8 @@
             3288945720525475,
             3239468737812509,
             2203697469564682,
-            3088882135764686
+            3088882135764686,
+            1205928618875115
           ],
           "presentation_renewals": [
             {
@@ -560534,7 +560636,7 @@
             2643806372921654,
             1864522118777058,
             1644531956784830,
-            2760369642775132,
+            110836620235511,
             304017716762453,
             621811018103608,
             715607100152686,
@@ -561158,7 +561260,8 @@
             4134633858599471,
             3019710123762774,
             3546536557142608,
-            1666341313318083
+            1666341313318083,
+            1934240793389591
           ]
         },
         "batches": [
@@ -561337,7 +561440,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
           "release-0.6-wallet-limit-recovery",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ]
       }
     },
@@ -561572,7 +561676,8 @@
         "Wallet creation, gift-code archival and staff-team deletion now validate optional empty JSON. The original compiled API accepted undeclared objects and performed the commands. Migrated PostgreSQL cases verify standard 400 replies for extra fields and arrays, no wallet creation on rejection, preserved gift status, redemption ledger and audit, and preserved team membership and audit. Bodyless commands and empty objects remain supported. All 110 affected API cases and 19 staff-team web caller cases passed. Complete the wider command inventory and exact staging checks.",
         "Wallet top-up limits now support a version-bound recovery draft and separate verified activation with an audit receipt. The restored limit affects new submissions and a zero limit requires typed UI confirmation. The exact deployed journey and remaining configuration families are open.",
         "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
-        "The cumulative hosted check at 4207c06c8 measured the wallet receipts route at 508.38 KB against the existing 500 KB limit. The isolated production build now measures 463.27 KB and independently bounds the deferred recovery panel at 54.29 KB against its 60 KB interaction budget. All 105 gzip budgets, 12 browser cases, 91 web native cases and 138 translation tests passed. The exact hosted successor acceptance remains open."
+        "The cumulative hosted check at 4207c06c8 measured the wallet receipts route at 508.38 KB against the existing 500 KB limit. The isolated production build now measures 463.27 KB and independently bounds the deferred recovery panel at 54.29 KB against its 60 KB interaction budget. All 105 gzip budgets, 12 browser cases, 91 web native cases and 138 translation tests passed. The exact hosted successor acceptance remains open.",
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -561996,7 +562101,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-team-expiry-fixture",
           "release-0.6-board-evidence-compaction",
-          "release-0.6-wallet-recovery-bundle"
+          "release-0.6-wallet-recovery-bundle",
+          "release-0.6-wallet-history-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -760033,6 +760139,150 @@
           "sha256": "90e332339503528130946b97a7d81825b3575bcb7ce12f3281b2dc51272cccc6"
         }
       ]
+    },
+    "release-0.6-wallet-history-coverage": {
+      "batch": "release-0.6-wallet-history-coverage",
+      "base_commit": "729e901fdc046e34f1f39af0ab4c8c62186d6a7b",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.12.03",
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "07-ui-ux-design.md#T-07.30.02.09",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
+        "apps/web/src/pages/limit-settings-forms.test.tsx",
+        "packages/i18n/src/operations-copy.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+          "sha256": "c84b05f046c8931448fb69d1efd71272ce766f8d39ea722108a337287f0c2953"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+        },
+        {
+          "path": "apps/web/src/components/WalletLimitRecovery.tsx",
+          "sha256": "03e0efe2776ecd53d67b16be37a60fea0b7ae1bcc4dfb6a8d597a2dd54fa027a"
+        },
+        {
+          "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
+          "sha256": "ded301b0c6e56c94e63670eacb8608df968679e8bb6c8942a679e70082931a5f"
+        },
+        {
+          "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
+          "sha256": "fac502c1c93f626040a63c2228e7ded35262285a6e9b4615d8712bf2890ebc12"
+        },
+        {
+          "path": "packages/i18n/src/operations-copy.test.ts",
+          "sha256": "4bcc9f46ebf6011d7f949cdc6e276c9532b3a70ad8c1dfe2dc784128b37c3fe1"
+        },
+        {
+          "path": "packages/i18n/src/wallet-limit.ts",
+          "sha256": "a21c890a1d57541ecf4ad540d44860c5205809892ec21a6d028f12d3cd0fd341"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "The exact earlier hosted combined coverage job failed at merge because native web coverage was absent. Fresh local native web coverage on 729e901fd completed with 5,581 passes. Twelve focused wallet Chromium cases mapped to 357 sources. A mixed-revision diagnostic found three below-threshold wallet sources; it does not certify the hosted gate.",
+        "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required."
+      ],
+      "limitations": [
+        "The three-file wallet coverage diagnostic combines source-matched reports. The customer receipt browser case was measured on the reviewed worktree patch before commit. The pre-fix mixed-revision report records failures and is diagnostic only. No staging release receipts were produced."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-current-native-web-coverage",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "4c001cd1d61e7740d6f97d332fc64847199392fc2410220a41add5a9c1bbf4fd"
+        },
+        {
+          "file": "wallet-browser-coverage.json",
+          "sha256": "45074150fb3e3cde1da072569c497eeb39fb0f307a9fd5079ce531ef6611d924"
+        },
+        {
+          "file": "web-coverage-diagnostic.json",
+          "sha256": "c537a1cd6a680ddb9ae33be67eb869dc501746f9f54c807524d38f2bee29a794"
+        },
+        {
+          "file": "wallet-regression-unit.log",
+          "sha256": "9891eee888d6e56c0bf39aae187c12ba90cf62dafcd77359c76e5ba4fcad6b24"
+        },
+        {
+          "file": "i18n-final.log",
+          "sha256": "14f9b99c1c3ec5e7cf3a165d0c0424e07efc60e41295e3a8492acbe9d3913e77"
+        },
+        {
+          "file": "receipt-history-browser.log",
+          "sha256": "004e04e84ac6d7b1bbe2ab0c2a09615d4f65e09e11f70ebda991470de74e4b81"
+        },
+        {
+          "file": "receipt-history-build.log",
+          "sha256": "d2445e6b360fec4c34d74a2e050e07d8b35d7680f6f8a223f530ffa092458b1d"
+        },
+        {
+          "file": "focused-wallet-coverage-readback.json",
+          "sha256": "fa2d12e1898f1ef99b673fe0df75ed5221117431fe1797581e4c304cf9021347"
+        },
+        {
+          "file": "receipt-history-coverage.json",
+          "sha256": "198aca16b1a44e3928311833b32baf3bd63ef21264d92ba4b7901ffbd77c14a7"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -769919,9 +770169,9 @@
         "path": "apps/web/src/pages/AdminApprovalRequestsPage.test.tsx",
         "sha256": "28161e084a126f0a26e46d2b5361becfc50a5eaca417a91a85cc41d588cf85bc"
       },
-      "3965726034151685": {
+      "856423358066312": {
         "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
-        "sha256": "367271c6af9886f212c602deed4c6a5e2174318e826ca27da8b6f1b6d8856d3f"
+        "sha256": "fac502c1c93f626040a63c2228e7ded35262285a6e9b4615d8712bf2890ebc12"
       },
       "710172096056038": {
         "path": "packages/i18n/src/wallet-limit.ts",
@@ -770203,9 +770453,9 @@
         "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
         "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
       },
-      "2760369642775132": {
+      "110836620235511": {
         "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-        "sha256": "0a2e3ff1ad67a2114a2181eec91639eab7652c5e55de4e7f607b1a3e5d7fa0b2"
+        "sha256": "ded301b0c6e56c94e63670eacb8608df968679e8bb6c8942a679e70082931a5f"
       },
       "2897586480101125": {
         "path": "apps/web/src/components/WalletTransactionList.test.tsx",
@@ -791588,6 +791838,14 @@
         ],
         "scope": "The wallet limit history is lazy-loaded and has its own interaction budget. The staff wallet receipts route uses its existing scoped dictionary for the one bank-name label. The complete route budget gate and the affected receipt and history journeys passed."
       },
+      "1205928618875115": {
+        "batch": "release-0.6-wallet-history-coverage",
+        "paths": [
+          "apps/web/src/pages/limit-settings-forms.test.tsx"
+        ],
+        "base_commit": "729e901fdc046e34f1f39af0ab4c8c62186d6a7b",
+        "scope": "The customer receipt history now declares its mandatory controlled disclosure props. The only caller already supplies both. The affected wallet tests and source-bound coverage diagnostic passed."
+      },
       "871653119268602": {
         "batch": "release-0.5-expanded-service-targets-escalation",
         "base_commit": "d5cf532b1cd12233d990ae3c3479ac15b1e50212",
@@ -791896,6 +792154,14 @@
           "apps/api/src/admin/gift-code.controller.ts"
         ],
         "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
+      },
+      "1934240793389591": {
+        "batch": "release-0.6-wallet-history-coverage",
+        "paths": [
+          "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
+        ],
+        "base_commit": "729e901fdc046e34f1f39af0ab4c8c62186d6a7b",
+        "scope": "The customer receipt history now declares its mandatory controlled disclosure props. The only caller already supplies both. The affected wallet tests and source-bound coverage diagnostic passed."
       },
       "2053825756006455": {
         "batch": "release-0.6-operator-log-pseudonyms",
@@ -806819,6 +807085,15 @@
           "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx"
         ],
         "scope": "Renewed the affected source bindings after reviewing the isolated financial recovery commands and optional confirmation behavior. Existing routes and other recovery panels retain their behavior. The changed API paths, affected native payment and staff callers, browser flow and generated contract passed."
+      },
+      "2222173171812634": {
+        "batch": "release-0.6-wallet-history-coverage",
+        "paths": [
+          "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
+          "apps/web/src/pages/limit-settings-forms.test.tsx"
+        ],
+        "base_commit": "729e901fdc046e34f1f39af0ab4c8c62186d6a7b",
+        "scope": "The customer receipt history now declares its mandatory controlled disclosure props. The only caller already supplies both. The affected wallet tests and source-bound coverage diagnostic passed."
       },
       "1768542645387891": {
         "batch": "release-0.6-provider-restore-as-draft",

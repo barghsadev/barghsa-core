@@ -27,15 +27,15 @@ export function WalletReceiptHistoryDetails({
   receipt: WalletBankReceiptHistory;
   locale: Locale;
   formatTime: ReturnType<typeof useAccountTime>['format'];
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
   const word = (key: string) => t(`wallet.receipt.${key}`, locale);
   return (
     <details
       data-slot="wallet-receipt-details"
       open={open}
-      onToggle={(event) => onOpenChange?.(event.currentTarget.open)}
+      onToggle={(event) => onOpenChange(event.currentTarget.open)}
       className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
     >
       <summary className="min-h-11 min-w-11 cursor-pointer content-center rounded font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">

@@ -7,6 +7,7 @@ import {
 import { retentionText } from './operational-retention.js';
 import { storageRecoveryText } from './storage-policy-forms.js';
 import { verificationConfigText } from './verification-config.js';
+import { tWalletLimit } from './wallet-limit.js';
 
 it('recognizes a standard public maintenance notice only when both messages match', () => {
   expect(tPublicMaintenance('description', 'en')).toBe(standardMaintenanceNotice.en);
@@ -58,4 +59,11 @@ it('uses cleanup-specific recovery copy and shares the revision label', () => {
   expect(storageRecoveryText('recoveryRevision', 'en', 'cleanup')).toBe('Version {version}');
   expect(storageRecoveryText('recoveryRevision', 'fa', 'cleanup')).toBe('نسخهٔ {version}');
   expect(storageRecoveryText('unknown', 'en', 'cleanup')).toBeUndefined();
+});
+
+it('describes wallet limit recovery without implying an in-flight transaction will change', () => {
+  const key = 'admin.walletLimit.recoveryActivateConfirm';
+  expect(tWalletLimit(key, 'en')).toContain('In-flight transactions keep their original limit.');
+  expect(tWalletLimit(key, 'fa')).toContain('سقف تراکنش‌های در جریان حفظ می‌شود.');
+  expect(tWalletLimit('admin.walletLimit.unknown', 'en')).toBe('admin.walletLimit.unknown');
 });

@@ -202,6 +202,75 @@ it.each([
   }
 );
 
+it('rejects malformed wallet limit history and reviews a valid nonzero recovery draft', async () => {
+  const sourceId = '73c785ad-6059-4055-9a19-5ad1d4b534c3';
+  const draftId = '03899b68-02b2-4ff9-a52f-420ae91d5df0';
+  let history: unknown;
+  const draft = {
+    id: draftId,
+    baseVersion: 3,
+    sourceId,
+    sourceVersion: 2,
+    config: { limitIrR: 125_000 },
+  };
+  const setHistory = (config: unknown) => {
+    history = { baseVersion: 3, items: [], draft: { ...draft, config }, nextBeforeVersion: null };
+  };
+  readValue = { limitIrR: 250_000, version: 3 };
+  vi.mocked(fetch).mockImplementation(async (path) =>
+    Response.json(String(path).endsWith('/rollback-history') ? history : readValue)
+  );
+  const click = async (name: string, scope?: string) => {
+    const button = await vi.waitFor(() => {
+      const container = scope ? host.querySelector(scope) : host;
+      const candidate = Array.from(
+        container?.querySelectorAll<HTMLButtonElement>('button') ?? []
+      ).find((item) => item.textContent?.trim() === name);
+      expect(candidate).toBeDefined();
+      return candidate!;
+    });
+    await act(async () => button.click());
+  };
+  setHistory(null);
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Wallet />
+      </QueryProvider>
+    )
+  );
+  await click('Restore a previous top-up limit');
+  await act(async () => vi.dynamicImportSettled());
+  await vi.waitFor(() =>
+    expect(host.textContent).toContain('Recovery history could not be loaded.')
+  );
+  for (const invalid of [{ limitIrR: '125000' }, { limitIrR: -1 }]) {
+    setHistory(invalid);
+    await click('Reload current value', '#wallet-limit-recovery');
+    await vi.waitFor(() =>
+      expect(host.textContent).toContain('Recovery history could not be loaded.')
+    );
+  }
+  setHistory(draft.config);
+  await click('Reload current value', '#wallet-limit-recovery');
+  await click('Activate recovery draft');
+  expect(harness.confirmation?.action).toMatchObject({
+    body: { draftId, expectedVersion: 3 },
+    successStatus: 200,
+  });
+  expect(harness.confirmation?.action.risk).toBeUndefined();
+  expect(host.textContent).not.toContain('All online top-ups will be blocked.');
+  await act(async () => harness.confirmation!.onClose());
+  expect(field('#online-top-up-limit').value).toBe('250000');
+
+  setHistory({ limitIrR: 0 });
+  await click('Reload history', '#wallet-limit-recovery');
+  await vi.waitFor(() => expect(host.textContent).toContain('All online top-ups will be blocked.'));
+  await click('Activate recovery draft');
+  expect(harness.confirmation?.action.risk).toBe('destructive');
+  expect(harness.confirmation?.action.body).toEqual({ draftId, expectedVersion: 3 });
+});
+
 for (const item of cases) {
   it.each(['en', 'fa'] as const)(
     `${item.name}: raw validation and owned API errors focus the retained draft (%s)`,
