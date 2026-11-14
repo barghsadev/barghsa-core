@@ -23751,7 +23751,8 @@
         "Initialized staging now applies the strict policy to the exact retained PostgreSQL and ClamAV images before transfer and binds the result to the deployed receipt. Native execution found the existing 244 retained-image dispositions in the 387-entry packet. Named approval and the final strict candidate gates remain open.",
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "Confirmed the local Alpine runtime SBOM differs from hosted 43552412387 by two removed glibc Sharp rows and no additions. One pending exception falls outside this runtime. Reconcile the 386 remaining rows with the final hosted images and obtain the required approvals."
+        "Confirmed the local Alpine runtime SBOM differs from hosted 43552412387 by two removed glibc Sharp rows and no additions. One pending exception falls outside this runtime. Reconcile the 386 remaining rows with the final hosted images and obtain the required approvals.",
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23817,7 +23818,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-sharp-runtime-platform"
+          "release-0.6-sharp-runtime-platform",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -51040,7 +51042,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-web-license-delta",
           "release-0.6-amd64-license-readback",
-          "release-0.6-operational-retention"
+          "release-0.6-operational-retention",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -51196,7 +51199,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "dfc13f487b5ba07a81600736e7f0a65b015ff7144c3ed7422f468832eadfcf3e"
+              "sha256": "d6a66d5190e24eb86f80443e9782d8f34fbe943df02b08b215050727a5da4607"
             }
           ],
           "checks": [
@@ -51760,6 +51763,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "The updated Sharp distribution note preserves the GeoLite2 decision and session location evidence."
+            },
+            {
+              "batch": "release-0.6-image-and-scanner-receipt-readback",
+              "base_commit": "b20dc0dcfd12f9d7100f087e13b6ea816f3348a3",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Adds a source- and artifact-bound inventory comparison to historical license review documentation. Existing approvals, code behavior and applicable controls retain their previous evidence."
             }
           ],
           "presentation_renewals": [
@@ -683458,7 +683469,8 @@
       "launch_required": true,
       "remaining": [
         "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible.",
-        "The private retained daemon returned ClamAV 1.5.4 with daily signatures 28182 at 23:26 UTC on November 13. The release probe accepted the actual read-only response. Verify fresh signatures and clean and quarantined uploads on the deployed candidate."
+        "The private retained daemon returned ClamAV 1.5.4 with daily signatures 28182 at 23:26 UTC on November 13. The release probe accepted the actual read-only response. Verify fresh signatures and clean and quarantined uploads on the deployed candidate.",
+        "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys."
       ],
       "owner": null,
       "depends_on": [],
@@ -683484,7 +683496,8 @@
           "release-0.6-sealed-clamav-lifecycle",
           "release-0.6-clamav-freshness-alert",
           "release-0.6-staging-scanner-current-signatures",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "current_acceptance": null
       }
@@ -690127,7 +690140,8 @@
         "Read back all 217 package-specific notices in retained PostgreSQL image dbb54d6c8c53. The supplement maps 216 installed Debian packages to full source versions and identifies both common-license path mismatches. Obtain reviewer dispositions and verify the final immutable image.",
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
         "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review.",
-        "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate."
+        "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate.",
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -690195,7 +690209,8 @@
           "release-0.6-postgres-notice-readback",
           "release-0.6-sharp-modified-musl-proof",
           "release-0.6-sharp-runtime-platform",
-          "release-0.6-hosted-alpine-inventory-readback"
+          "release-0.6-hosted-alpine-inventory-readback",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -690352,7 +690367,8 @@
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts.",
-        "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs."
+        "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs.",
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -690413,7 +690429,8 @@
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-sharp-runtime-platform",
-          "release-0.6-hosted-alpine-inventory-readback"
+          "release-0.6-hosted-alpine-inventory-readback",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1099061,7 +1099078,9 @@
         "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts.",
         "Hosted diagnostic 43555617831 WebKit shard 1 recorded a combobox trigger flake while the preceding popup was still closing. Scoped test synchronization passed 50 executions across five browser projects with zero retries. Recheck the hosted candidate rollup.",
         "Hosted Mobile Safari shard 6 hit the combined customer comment deadline. Split electricity and saving while preserving the original assertions. A targeted saving detail run also found the 44 px back link could render fractionally short. The pointer-coarse 45 px minimum, 20 browser executions without retries, and all 103 gzip budgets passed. Complete the next exact hosted rollup.",
-        "Hosted run 43555617831 exposed geography server field feedback being cleared and a separate Firefox recovery request-observation timeout. The shared blur binding now preserves unchanged server rejections and ignores blur during submission. The recovery test now uses the persisted locale selected before boot. Complete the clean hosted rollup on the exact successor."
+        "Hosted run 43555617831 exposed geography server field feedback being cleared and a separate Firefox recovery request-observation timeout. The shared blur binding now preserves unchanged server rejections and ignores blur during submission. The recovery test now uses the persisted locale selected before boot. Complete the clean hosted rollup on the exact successor.",
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
+        "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys."
       ],
       "owner": null,
       "depends_on": [],
@@ -1099393,7 +1099412,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-combobox-popup-transition",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-image-and-scanner-receipt-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1281465,6 +1281485,53 @@
         {
           "file": "native-changed.log",
           "sha256": "1d6b29bb8e1bbe9887c0bd8281bcc4813abc30c69c1df0b46b452fd5fca05e19"
+        }
+      ]
+    },
+    "release-0.6-image-and-scanner-receipt-readback": {
+      "batch": "release-0.6-image-and-scanner-receipt-readback",
+      "base_commit": "b20dc0dcfd12f9d7100f087e13b6ea816f3348a3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "d6a66d5190e24eb86f80443e9782d8f34fbe943df02b08b215050727a5da4607"
+        }
+      ],
+      "checks": [
+        "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
+        "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys."
+      ],
+      "limitations": [
+        "The image license policy ran in report-only mode. The scanner receipt is from the live v0.5.1 deployment. No v0.6.0 gate changed to accepted."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staff-queue-command-validation",
+      "execution_receipts": [
+        {
+          "file": "hosted-image-43558923098.zip",
+          "sha256": "f0718a52d2c1cb86299c9a9eb49693d1d861a87198d770d253e0e6a6768c3223"
+        },
+        {
+          "file": "hosted-image-readback.json",
+          "sha256": "12bd8ed93fa330a0cb8014cbe716d65060087742c0b4e27a769b7dabfe1e707f"
+        },
+        {
+          "file": "staging-scanner-current.log",
+          "sha256": "b0224fb51dad2793f85ccc592fb24bff434fc93c3c639f0285df28710037f629"
+        },
+        {
+          "file": "staging-scanner-current.json",
+          "sha256": "efa7181088350fb60e3bd9931503f79186a63b23ab38e2de2d34072a8fa9e013"
         }
       ]
     }

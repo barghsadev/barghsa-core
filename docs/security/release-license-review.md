@@ -182,6 +182,14 @@ On 2026-11-09 the owner approved removing the bundled data and using the existin
 
 ## Acceptance evidence
 
+The five-image scan for `69be928c` matches all 857 entries in the `7b62b875c`
+review packet by exact package URL, scope, license set, installation location
+and disposition. Each image ID, vulnerability report and CycloneDX SBOM was
+verified. There were zero high or critical image findings. The same 386
+entries require named dispositions. The existing workbook can be used for
+review. Apply the recorded dispositions and verify the final immutable images
+with the strict gate before release. [Exact image scan and inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43558923098).
+
 The `e47415d3` scan reproduced the same 170 review entries. The accompanying `release-license-review-candidate-e47415d3-apk-evidence.json` packet matches all 161 Alpine entries to installed package metadata by exact package digest, version and architecture. It records the original license expression, upstream URL, and Alpine packaging origin and commit for 159 entries. Six entries have zero installed bytes and zero packaged files. These are the generated `.postgis-rundeps` and `.postgresql-rundeps` records and the upstream `ncurses-libs`, `gnupg`, `pyc` and `python3-pyc` records. Their dependencies are inventoried separately. Review their disposition with the package list. [Exact CI inventory and image receipts](https://github.com/barghsadev/barghsa-core/actions/runs/42647680762).
 
 The `42d2c407` preflight inventory contains 594 entries. All 170 review entries match the prepared packet by distribution scope, exact package URL and observed licenses. The other 424 entries pass the existing allowlist, and the inventory contains no GeoLite2 dataset package. The CI artifact records the four built image IDs and their scan receipts. Package-specific approval and verification against the final release images remain pending. [Current inventory and image receipts](https://github.com/barghsadev/barghsa-core/actions/runs/42701427330).
