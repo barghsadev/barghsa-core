@@ -224,6 +224,61 @@ it('restricts staff permission history to current authorized viewers', async () 
   expect((await fetch(url, { headers })).status).toBe(403);
 });
 
+it.each([
+  { path: 'staff', table: 'profiles' },
+  { path: 'staff/audit', table: 'audit_log' },
+])('withholds $path after its viewer grant is revoked during the read', async ({ path, table }) => {
+  const userId = randomUUID();
+  const roleId = `staff-reader-${randomUUID()}`;
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'fixture-only',true)",
+    [userId, `${userId}@example.test`]
+  );
+  await http.pool.query(
+    'INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$2,$3,$4)',
+    [roleId, `Staff reader for ${path}`, 'Fixture', '["admin:staff:view"]']
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
+  const headers = await session(userId);
+  const url = `${http.base}/api/admin/${path}`;
+  const allowed = await fetch(url, { headers });
+  expect(allowed.status).toBe(200);
+  expect(await allowed.json()).toMatchObject({ items: expect.any(Array) });
+
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+    const pid = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid')).rows[0]!
+      .pid;
+    pending = fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
+    await expect
+      .poll(async () => {
+        const result = await http.pool.query<{ waiting: boolean }>(
+          'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid)) AND query LIKE $2) AS waiting',
+          [pid, `%${table}%`]
+        );
+        return result.rows[0]!.waiting;
+      })
+      .toBe(true);
+    await http.pool.query('DELETE FROM user_roles WHERE user_id=$1 AND role_id=$2', [
+      userId,
+      roleId,
+    ]);
+    await blocker.query('ROLLBACK');
+    const denied = await pending;
+    expect(denied.status).toBe(403);
+    const body = await denied.json();
+    expect(body).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+    expect(body).not.toHaveProperty('items');
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending?.catch(() => undefined);
+  }
+});
+
 it('lets current role administrators read the catalogue and effective permissions under one grant', async () => {
   const userId = randomUUID(),
     roleId = `role-catalogue-${randomUUID()}`,

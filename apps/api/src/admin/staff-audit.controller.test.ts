@@ -4,6 +4,11 @@ import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
+vi.mock('./staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (_actor: unknown, _permission: unknown, read: () => unknown) =>
+    read(),
+}));
+
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {

@@ -796,7 +796,9 @@ export class AdminController {
     const listQuery: StaffListQuery = {};
     if (Number.isFinite(parsedLimit)) listQuery.limit = parsedLimit;
     if (Number.isFinite(parsedOffset)) listQuery.offset = parsedOffset;
-    return this.adminService.listStaff(listQuery);
+    return recheckStaffAuthorityAfter(req.session, 'admin:staff:view', () =>
+      this.adminService.listStaff(listQuery)
+    );
   }
 
   /**
@@ -929,7 +931,9 @@ export class AdminController {
     if (Number.isFinite(parsedLimit)) auditQuery.limit = parsedLimit;
     if (Number.isFinite(parsedOffset)) auditQuery.offset = parsedOffset;
 
-    return this.adminService.listStaffAudit(auditQuery);
+    return recheckStaffAuthorityAfter(req.session, 'admin:staff:view', () =>
+      this.adminService.listStaffAudit(auditQuery)
+    );
   }
 
   /**
