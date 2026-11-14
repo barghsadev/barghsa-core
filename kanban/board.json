@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T09:09:26+00:00",
+  "updated": "2026-11-14T09:16:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -170434,7 +170434,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -170638,11 +170639,11 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
-              "sha256": "21717ef3400f715fcd2df452755ec1a56db10c769ce6b5177937445c234b1544"
+              "sha256": "4211c71b300c068bcf656874d0417dc998dd51450e20eacfdbe4389e04826bf7"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
@@ -172192,6 +172193,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-links.controller.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -657747,7 +657757,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -657951,11 +657962,11 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
-              "sha256": "21717ef3400f715fcd2df452755ec1a56db10c769ce6b5177937445c234b1544"
+              "sha256": "4211c71b300c068bcf656874d0417dc998dd51450e20eacfdbe4389e04826bf7"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.service.ts",
@@ -659529,6 +659540,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+                "apps/api/src/telegram/telegram-links.controller.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -687670,7 +687690,8 @@
         "Profile completion, automatic verification and canonical terms acceptance now validate their request bodies before service execution. The optional legacy terms UUID field remains accepted and the URL controls the recorded version. The remaining application-wide schema inventory and exact staged release evidence are open.",
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
-        "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks."
+        "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
+        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -687744,7 +687765,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-content-command-validation"
+          "release-0.6-staff-content-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": null
       }
@@ -687778,7 +687800,8 @@
         "Profile completion, automatic verification and canonical terms acceptance now validate their request bodies before service execution. The optional legacy terms UUID field remains accepted and the URL controls the recorded version. The remaining application-wide schema inventory and exact staged release evidence are open.",
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
-        "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks."
+        "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
+        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -687888,7 +687911,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-content-command-validation"
+          "release-0.6-staff-content-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -694784,7 +694808,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-verification-policy-recovery",
-          "release-0.6-verification-mode-recovery"
+          "release-0.6-verification-mode-recovery",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "verified-action-rate-limit-native-cases",
@@ -694860,7 +694885,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             }
           ],
           "checks": [
@@ -694917,6 +694942,14 @@
                 "packages/i18n/src/verification-config.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ]
         }
@@ -745686,7 +745719,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -745734,7 +745768,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -745899,6 +745933,14 @@
                 "apps/api/src/electricity/electricity-order.controller.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ]
         }
@@ -745935,7 +745977,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -745983,7 +746026,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -746148,6 +746191,14 @@
                 "apps/api/src/electricity/electricity-order.controller.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ]
         }
@@ -746185,7 +746236,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -746233,7 +746285,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -746398,6 +746450,14 @@
                 "apps/api/src/electricity/electricity-order.controller.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ]
         }
@@ -746865,7 +746925,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-maintenance-health",
           "release-0.6-inference-http-tracing",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -746913,7 +746974,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
@@ -747078,6 +747139,14 @@
                 "apps/api/src/electricity/electricity-order.controller.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ]
         }
@@ -1113255,7 +1113324,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+              "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
             },
             {
               "path": "package.json",
@@ -1115770,6 +1115839,14 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-telegram-unlink-validation",
+              "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+              "paths": [
+                "apps/api/src/telegram/telegram-links-http.integration.test.ts"
+              ],
+              "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1116228,7 +1116305,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-telegram-unlink-validation"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1308317,6 +1308395,74 @@
         {
           "file": "theme-outcomes.json",
           "sha256": "8430d3a9e3f369ad1f63ebabc4c4d2e7f1ebb57f666a0920001d984bbf7344e4"
+        }
+      ]
+    },
+    "release-0.6-telegram-unlink-validation": {
+      "batch": "release-0.6-telegram-unlink-validation",
+      "base_commit": "a18c8a3d31342f7e47db992eddfa6fb4507fb857",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.04.01.01",
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "06-security-testing-observability.md#T-06.05.02.11",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+        "apps/api/src/telegram/telegram-links.controller.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/empty-command-body.ts",
+          "sha256": "95f24304a521b2e7491e63a5f8c75f66a75b74f718106506e49c39e2e29cb339"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.controller.ts",
+          "sha256": "4211c71b300c068bcf656874d0417dc998dd51450e20eacfdbe4389e04826bf7"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links.service.ts",
+          "sha256": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "021a78bee9b10fb2a9c054a8ae5462a2e0dd50d06d3ec8bc93cf6165577907fc"
+        }
+      ],
+      "checks": [
+        "The Telegram link DELETE refuses an unsupported profile field with HTTP 400 and the canonical input-invalid code. The native fixture confirmed the pending intent and absence of a revocation audit row before successful bodyless and empty-object requests. An exact retry adds no duplicate audit event.",
+        "The initial Telegram HTTP and protocol run passed 45 of 46 cases. The new assertion used the wrong error-code punctuation. Correcting it and rerunning that case against the same compiled API passed. Changed-file lint, format and API typecheck passed."
+      ],
+      "limitations": [
+        "This local batch covers command validation. The full request inventory and final staging candidate evidence remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-telegram-unlink-validation",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "f19cdd3011a6f991931f9bfe3375123425b85e5aa25d1147219945a64ebdaedd"
+        },
+        {
+          "file": "focused-final.log",
+          "sha256": "b724d20413e85a6bc2a6b9caacf7865fa61a7a5a04cb892a1b8713af3ef75957"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "a131fe6494f052e385f312e881a53c2181a6621313d9578e76f5d30da62f5482"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

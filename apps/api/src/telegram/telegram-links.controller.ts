@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { TelegramLinksService } from './telegram-links.service.js';
 import { rejectContentFields } from '../admin/content-input-fields.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 const confirmation = z
   .object({ id: z.string().uuid(), code: z.string().regex(/^\d{6}$/) })
@@ -52,7 +53,8 @@ export class TelegramLinksController {
 
   @Delete()
   @Header('Cache-Control', 'private, no-store')
-  revoke(@Req() req: AuthenticatedRequest) {
+  revoke(@Req() req: AuthenticatedRequest, @Body() raw: unknown) {
+    assertEmptyCommandBody(raw);
     return this.service.revoke(req.session);
   }
 }

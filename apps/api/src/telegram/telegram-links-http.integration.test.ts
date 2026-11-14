@@ -269,8 +269,23 @@ async function linkWithKnowledge() {
 it('audits cancellation of an unconfirmed intent once and retains its immutable history', async () => {
   const f = await owner(),
     intent = await create(f);
+  const invalid = await send(f, '', 'DELETE', { profileId: f.profile });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(
+    (await http.pool.query('SELECT status FROM telegram_link_intents WHERE id=$1', [intent.id]))
+      .rows[0].status
+  ).toBe('pending');
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM audit_log WHERE user_id=$1 AND event='telegram_link_revoked'",
+        [f.user]
+      )
+    ).rows[0].count
+  ).toBe(0);
   expect((await send(f, '', 'DELETE')).status).toBe(200);
-  expect((await send(f, '', 'DELETE')).status).toBe(200);
+  expect((await send(f, '', 'DELETE', {})).status).toBe(200);
   expect(
     (await http.pool.query('SELECT status FROM telegram_link_intents WHERE id=$1', [intent.id]))
       .rows[0].status
