@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:29:32+00:00",
+  "updated": "2026-11-14T17:34:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17612,7 +17612,8 @@
         "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover.",
         "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open.",
         "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning.",
-        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
+        "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -17722,7 +17723,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-backup-manifest-binding",
           "release-0.6-wal-upload-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-staging-scanner-gate-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -711207,7 +711209,8 @@
         "Rehearse the sealed document path on the exact v0.6.0 staging deployment. On November 13 the live v0.5.1 ClamD loaded daily 28182 via the EU mirror. Official DNS and all three verified detached signatures matched. The compiled local candidate used this live scanner through SSH with disposable PostgreSQL and object storage. It released the exact clean bytes after a retry and kept the quarantined file inaccessible.",
         "The private retained daemon returned ClamAV 1.5.4 with daily signatures 28182 at 23:26 UTC on November 13. The release probe accepted the actual read-only response. Verify fresh signatures and clean and quarantined uploads on the deployed candidate.",
         "Live staging v0.5.1 readback at 05:38 UTC on November 14 loaded daily 28182 at 83,667 seconds old. Main 63, daily 28182 and bytecode 339 all verified with vendor detached signatures and the private mirror tunnel was active. Verify the deployed v0.6.0 scanner and live upload journeys.",
-        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack."
+        "On live v0.5.1, ClamD 1.5.4 loaded daily 28183 from the private EU mirror. Main 63, daily 28183 and bytecode 339 passed detached vendor-signature verification. The focused sealed-upload integration passed using compiled 365285d50, disposable PostgreSQL and S3, and the live scanner. Verify uploads and signature-age alerting with the accepted v0.6.0 application and monitoring stack.",
+        "At 17:31 UTC on November 14, live v0.5.1 reported healthy ClamAV 1.5.4 and daily 28183 at 40,054 seconds old against the existing 48-hour limit. The staging archives, private mirror and retained vendor-signed bytes matched by SHA-256. The mirror recorded a routine official-feed check at 17:26 UTC. Final candidate upload and monitoring checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -711235,7 +711238,8 @@
           "release-0.6-staging-scanner-current-signatures",
           "release-0.6-staging-scanner-gate",
           "release-0.6-image-and-scanner-receipt-readback",
-          "release-0.6-clamav-mirror-recurring"
+          "release-0.6-clamav-mirror-recurring",
+          "release-0.6-staging-scanner-gate-readback"
         ],
         "current_acceptance": null
       }
@@ -718239,7 +718243,8 @@
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
-        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
+        "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -718316,7 +718321,8 @@
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-hosted-image-scan-8436b628a",
-          "release-0.6-license-review-refresh-f7fc00b88"
+          "release-0.6-license-review-refresh-f7fc00b88",
+          "release-0.6-staging-scanner-gate-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1341237,6 +1341243,69 @@
         {
           "file": "sql-review-lint-tests.log",
           "sha256": "f3c4e44c693171d558e935118c803baa209d33cfc8abb6d0abe3a671dbd0cc3b"
+        }
+      ]
+    },
+    "release-0.6-staging-scanner-gate-readback": {
+      "batch": "release-0.6-staging-scanner-gate-readback",
+      "base_commit": "a25796a4bf296d2d7f5c332983df8bba3a8fa379",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.07.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "94a4d1c004d8a0220527f7a3400e8bb90e751d0dea21f7dcfbf601383d10dc59"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        }
+      ],
+      "checks": [
+        "At 17:31 UTC on November 14, live v0.5.1 reported healthy ClamAV 1.5.4 and daily 28183 at 40,054 seconds old against the existing 48-hour limit. The staging archives, private mirror and retained vendor-signed bytes matched by SHA-256. The mirror recorded a routine official-feed check at 17:26 UTC. Final candidate upload and monitoring checks remain open.",
+        "At 17:32 UTC on November 14, live staging still reported archive_mode=off. The protected backup.env, backup-key and wal-archive.env were absent. The Docker filesystem was 93% used with 6,262,157,312 bytes available. Provision the approved off-server destination and key and retain actual backup, restore and staged cutover receipts.",
+        "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open."
+      ],
+      "limitations": [
+        "Read-only checks on the running v0.5.1 predecessor and on a development image preflight. The hosted ClamAV image ID differs from the retained staging image. These receipts do not establish strict licensing or an accepted candidate deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-scanner-gate-readback",
+      "execution_receipts": [
+        {
+          "file": "readback.json",
+          "sha256": "b2b3ada6f111da0f760a96566aef82bc06a71f904f527bdb5ce42423b5562ee5"
+        },
+        {
+          "file": "staging-scanner.log",
+          "sha256": "7fc02a8d8042abf75e5636835d3699d122772b99f8422a2e7278d3d9123ff678"
+        },
+        {
+          "file": "eu-mirror.log",
+          "sha256": "e740abd264a9da9cf67816c9cfc78b93ce4e148315c70502e96db0d4c81e8b5f"
+        },
+        {
+          "file": "staging-backup.log",
+          "sha256": "80eda7d3594e03afef23fd555df43160a9434094498351f4a23f7626e8f90946"
+        },
+        {
+          "file": "staging-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
         }
       ]
     }
