@@ -341,19 +341,17 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     error: OnlineTopUpActionError;
     enforcedLimit: { onlineTopUpLimit: number; configVersion: number } | null;
   }) {
-    if (['limit-exceeded', 'invalid-amount', 'conflict'].includes(result.error)) {
+    if (
+      result.error === 'limit-exceeded' ||
+      result.error === 'invalid-amount' ||
+      result.error === 'conflict'
+    ) {
       setIdempotencyKey(crypto.randomUUID());
     }
-    if (result.enforcedLimit) {
-      setWallet((prev) =>
-        prev
-          ? {
-              ...prev,
-              onlineTopUpLimit: result.enforcedLimit!.onlineTopUpLimit,
-              configVersion: result.enforcedLimit!.configVersion,
-            }
-          : prev
-      );
+    const limit = result.enforcedLimit;
+    if (limit) {
+      const { onlineTopUpLimit, configVersion } = limit;
+      setWallet((prev) => (prev ? { ...prev, onlineTopUpLimit, configVersion } : prev));
     }
     setOnlineReview(null);
     if (result.error === 'invalid-amount') {

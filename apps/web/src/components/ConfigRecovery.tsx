@@ -77,6 +77,7 @@ export default function ConfigRecovery<T>({
   onBusyChange,
   onDenied,
   onActivated,
+  errorMessages,
 }: {
   path: string;
   valid: Validator<T>;
@@ -87,6 +88,7 @@ export default function ConfigRecovery<T>({
   onBusyChange: (busy: boolean) => void;
   onDenied: () => void;
   onActivated: () => void;
+  errorMessages?: TeamAction['errorMessages'];
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -147,6 +149,7 @@ export default function ConfigRecovery<T>({
                   body: { draftId: draft.id, expectedVersion: draft.baseVersion },
                   forbiddenMessage: label('forbidden'),
                   conflictMessage: label('recoveryConflict'),
+                  ...(errorMessages && { errorMessages }),
                 },
               })
             }
@@ -180,6 +183,7 @@ export default function ConfigRecovery<T>({
                     body: { sourceId: revision.id, expectedVersion: baseVersion },
                     forbiddenMessage: label('forbidden'),
                     conflictMessage: label('recoveryConflict'),
+                    ...(errorMessages && { errorMessages }),
                   },
                 })
               }

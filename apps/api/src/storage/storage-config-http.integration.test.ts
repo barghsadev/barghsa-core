@@ -567,3 +567,126 @@ for (const fault of ['upload', 'download', 'corrupt', 'oversize', 'cleanup'] as 
     }
   });
 }
+
+it('restores reviewed settings without retaining or reusing historical credentials', async () => {
+  const previous = await update('retired-credential-for-fixture');
+  const old = await request('/config', 'PUT', {
+    ...previous,
+    accessKeyId: 'retired-key',
+    forcePathStyle: true,
+  });
+  expect(old.status, http.logs()).toBe(200);
+  const live = await request('/config', 'PUT', {
+    ...(await update('active-credential-for-fixture')),
+    accessKeyId: 'active-key',
+    forcePathStyle: false,
+  });
+  expect(live.status, http.logs()).toBe(200);
+  const baseVersion = (previous.version as number) + 2;
+  const history = '/config/rollback-history';
+  expect((await request(history, 'GET', undefined, {})).status).toBe(401);
+  expect((await request(`${history}?beforeVersion=0`)).status).toBe(400);
+  const response = await request(history);
+  expect(response.status, http.logs()).toBe(200);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  const historyText = await response.text();
+  expect(historyText).not.toMatch(/retired|active-key|encryptedSecret|accessKeyId/);
+  const body = JSON.parse(historyText);
+  expect(body.baseVersion).toBe(baseVersion);
+  const source = body.items.find((row: { version: number }) => row.version === baseVersion - 1);
+  expect(source.config).toEqual({
+    endpoint: previous.endpoint,
+    privateEndpointUrl: previous.privateEndpointUrl,
+    publicEndpointUrl: previous.publicEndpointUrl,
+    region: previous.region,
+    bucket: previous.bucket,
+    forcePathStyle: true,
+  });
+  const draftRoute = '/config/rollback-draft';
+  const input = { sourceId: source.id, expectedVersion: baseVersion };
+  expect((await request(draftRoute, 'POST', input, { Cookie: headers.Cookie! })).status).toBe(403);
+  const unavailableSource = randomUUID();
+  await http.pool.query(
+    `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,'storage-editor','storage.config.updated',$2)`,
+    [
+      unavailableSource,
+      JSON.stringify({
+        previousVersion: baseVersion - 1,
+        previousSettings: {
+          ...source.config,
+          privateEndpointUrl: 'https://retired-origin.example.test',
+        },
+      }),
+    ]
+  );
+  const unapproved = await request(draftRoute, 'POST', { ...input, sourceId: unavailableSource });
+  expect(unapproved.status).toBe(400);
+  expect(await unapproved.json()).toMatchObject({ error: { code: 'STORAGE:ENDPOINT_UNAPPROVED' } });
+  expect((await request(draftRoute, 'POST', { ...input, sourceId: randomUUID() })).status).toBe(
+    404
+  );
+  expect(
+    (await request(draftRoute, 'POST', { ...input, expectedVersion: baseVersion - 1 })).status
+  ).toBe(409);
+  const staged = await request(draftRoute, 'POST', input);
+  expect(staged.status, http.logs()).toBe(201);
+  const draft = JSON.parse(await staged.text());
+  expect(draft).toMatchObject({ baseVersion, sourceId: source.id, config: source.config });
+  expect(await (await request(draftRoute, 'POST', input)).json()).toEqual(draft);
+  expect((await current()).version).toBe(baseVersion);
+  const activate = '/config/rollback-activate';
+  const activation = { draftId: draft.id, expectedVersion: baseVersion };
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='storage-editor'"
+  );
+  try {
+    expect((await request(activate, 'POST', activation)).status).toBe(403);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='storage-editor'"
+    );
+  }
+  expect((await current()).forcePathStyle).toBe(false);
+  const beforeProbe = authorizations.length;
+  probeFault = 'corrupt';
+  try {
+    expect((await request(activate, 'POST', activation)).status).toBe(503);
+  } finally {
+    probeFault = 'none';
+  }
+  expect((await current()).version).toBe(baseVersion);
+  expect(await (await request(history)).json()).toMatchObject({ draft });
+  const outcomes = await Promise.all([
+    request(activate, 'POST', activation),
+    request(activate, 'POST', activation),
+  ]);
+  expect(outcomes.map((result) => result.status).sort()).toEqual([200, 409]);
+  expect(await outcomes.find((result) => result.ok)!.json()).toEqual({
+    config: source.config,
+    version: baseVersion + 1,
+    draftId: draft.id,
+  });
+  expect(await current()).toMatchObject({
+    accessKeyId: 'active-key',
+    hasSecretKey: true,
+    forcePathStyle: true,
+  });
+  expect(authorizations.slice(beforeProbe).some((header) => header.includes('active-key'))).toBe(
+    true
+  );
+  expect(authorizations.slice(beforeProbe).some((header) => header.includes('retired-key'))).toBe(
+    false
+  );
+  const { rows } = await http.pool.query(
+    "SELECT metadata FROM audit_log WHERE event = 'storage.config.updated' AND metadata::jsonb->>'draftId'=$1",
+    [draft.id]
+  );
+  expect(rows).toHaveLength(1);
+  expect(JSON.parse(rows[0].metadata)).toMatchObject({
+    sourceId: source.id,
+    version: baseVersion + 1,
+  });
+  expect(rows[0].metadata).not.toMatch(/retired|active-key|encryptedSecret|accessKeyId/);
+  expect(http.logs()).not.toContain('retired-credential-for-fixture');
+  expect(http.logs()).not.toContain('active-credential-for-fixture');
+});

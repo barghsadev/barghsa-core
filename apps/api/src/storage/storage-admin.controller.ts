@@ -1,4 +1,23 @@
-import { Body, Controller, Get, HttpCode, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import {
+  activateRecoveryDraft,
+  activationHistoryQuery,
+  stageRecoveryDraft,
+} from '../admin/config-activation-history.js';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { StorageAdminGuard } from './storage-admin.guard.js';
@@ -33,6 +52,41 @@ export class StorageAdminController {
   @HttpCode(200)
   updateConfig(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     return this.config.save(body, req.session);
+  }
+
+  @Get('config/rollback-history')
+  @ApiOperation({ summary: 'Read previous storage connection settings' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  recoveryHistory(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    const parsed = activationHistoryQuery.safeParse(query);
+    if (!parsed.success)
+      throw new BadRequestException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
+    return this.config.history(req.session, parsed.data.beforeVersion);
+  }
+
+  @Post('config/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a storage recovery draft without historical credentials' })
+  @ApiZodBody(stageRecoveryDraft)
+  prepareRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    const parsed = stageRecoveryDraft.safeParse(body);
+    if (!parsed.success)
+      throw new BadRequestException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
+    return this.config.prepareRecovery(parsed.data, req.session);
+  }
+
+  @Post('config/rollback-activate')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Probe and activate a reviewed storage recovery draft' })
+  @ApiZodBody(activateRecoveryDraft)
+  activateRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    const parsed = activateRecoveryDraft.safeParse(body);
+    if (!parsed.success)
+      throw new BadRequestException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
+    return this.config.activateRecovery(parsed.data, req.session);
   }
 
   @Post('test-connection')

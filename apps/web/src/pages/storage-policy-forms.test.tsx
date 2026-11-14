@@ -78,7 +78,7 @@ let config: StorageConfigView,
   limits: (typeof policyLimit)[],
   failRead: boolean,
   denied: boolean;
-let host: HTMLDivElement, root: Root, requests: ReturnType<typeof vi.fn>;
+let host: HTMLDivElement, root: Root, requests: ReturnType<typeof vi.fn<typeof fetch>>;
 beforeEach(() => {
   document.documentElement.lang = 'en';
   config = { ...saved };
@@ -163,6 +163,61 @@ async function proposal() {
 async function settle() {
   await act(async () => {});
 }
+
+it('reviews a storage recovery draft, then fetches the separately activated version', async () => {
+  const sourceId = '0199f2eb-de42-78d9-8ba7-1afedd591be1';
+  const draftId = '0199f2eb-de42-78d9-8ba7-1afedd591be2';
+  const restored = {
+    endpoint: saved.endpoint,
+    privateEndpointUrl: '',
+    publicEndpointUrl: '',
+    region: saved.region,
+    bucket: saved.bucket,
+    forcePathStyle: false,
+  };
+  const revision = { id: sourceId, version: 6, config: restored };
+  const draft = { id: draftId, sourceId, baseVersion: 7, sourceVersion: 6, config: restored };
+  let storedDraft: typeof draft | null = null;
+  const fallback = requests.getMockImplementation()!;
+  requests.mockImplementation(async (path: RequestInfo | URL) =>
+    String(path).endsWith('/config/rollback-history')
+      ? Response.json({
+          baseVersion: config.version,
+          items: [revision],
+          nextBeforeVersion: null,
+          draft: storedDraft,
+        })
+      : fallback(path)
+  );
+  await mount('storage');
+  await click('Restore storage settings');
+  await vi.waitFor(() => expect(host.textContent).toContain('Review version 6'));
+  await click('Review version 6');
+  expect((await proposal()).body).toEqual({ sourceId, expectedVersion: 7 });
+  storedDraft = draft;
+  await act(async () => {
+    await harness.success?.(draft);
+  });
+  expect(field('storage-path-style').checked).toBe(true);
+  expect(host.querySelector('#storage-recovery')!.textContent).not.toContain(saved.accessKeyId);
+  await click('Activate recovery draft');
+  expect((await proposal()).body).toEqual({ draftId, expectedVersion: 7 });
+  await act(async () => harness.pending?.(true));
+  expect(field('storage-bucket').matches(':disabled')).toBe(true);
+  expect(field('storage-cleanup-hours').matches(':disabled')).toBe(true);
+  await submit('storage');
+  expect((await proposal()).body).toEqual({ draftId, expectedVersion: 7 });
+  config = { ...config, ...restored, version: 8 };
+  storedDraft = null;
+  await act(async () => {
+    await harness.success?.({ config: restored, version: 8, draftId });
+  });
+  await vi.waitFor(() => expect(host.textContent).toContain('Reset to saved settings'));
+  await click('Reset to saved settings');
+  expect(field('storage-path-style').checked).toBe(false);
+  expect(field('storage-accessKeyId').value).toBe(saved.accessKeyId);
+  expect(field('storage-secret').value).toBe('');
+});
 it('storage validates origins and retains its secret and companion fields', async () => {
   await mount('storage');
   await fill('storage-secret', 'local-secret');

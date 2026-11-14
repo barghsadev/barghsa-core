@@ -5,6 +5,7 @@ import {
   HttpException,
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
   ServiceUnavailableException,
 } from '@nestjs/common';
@@ -26,10 +27,37 @@ import {
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { rejectContentFields } from '../admin/content-input-fields.js';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import {
+  currentStorageDraft,
+  storageRevisions,
+  type StorageRecoveryDraft,
+  type StorageRecoverySettings,
+} from './storage-config-recovery.js';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+type StorageSettings = ReturnType<typeof environmentStorageConfig>;
+const storageLocationFields = [
+  'endpoint',
+  'privateEndpointUrl',
+  'publicEndpointUrl',
+  'bucket',
+  'region',
+] as const;
+const withoutCredentials = (config: StorageSettings): StorageRecoverySettings => ({
+  endpoint: config.endpoint,
+  privateEndpointUrl: config.privateEndpointUrl,
+  publicEndpointUrl: config.publicEndpointUrl,
+  region: config.region,
+  bucket: config.bucket,
+  forcePathStyle: config.forcePathStyle,
+});
+const changedLocation = (next: StorageRecoverySettings, current: StorageSettings) =>
+  storageLocationFields.some((key) => next[key] !== current[key]);
+const changedConfig = () => new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });
 
 @Injectable()
 export class StorageConfigService {
@@ -142,14 +170,7 @@ export class StorageConfigService {
     const input = parsed.data;
     const unapproved = unapprovedStorageEndpointFields(input);
     if (unapproved.length) throw new InputFieldException(unapproved);
-    const locations = [
-      'endpoint',
-      'privateEndpointUrl',
-      'publicEndpointUrl',
-      'bucket',
-      'region',
-    ] as const;
-    const locationChanged = locations.some((key) => input[key] !== current.config[key]);
+    const locationChanged = changedLocation(input, current.config);
     if (locationChanged && input.secretAccessKey === undefined && current.config.secretAccessKey)
       throw new BadRequestException({ error: 'STORAGE:SECRET_REENTRY_REQUIRED' });
     const config = {
@@ -233,8 +254,114 @@ export class StorageConfigService {
   }
   async save(raw: unknown, session: MutationSession) {
     await this.authorize(session);
-    const actor = session.userId;
     const { config, current, locationChanged } = await this.candidate(raw);
+    return this.activate(config, current, locationChanged, session);
+  }
+
+  history(session: MutationSession, before?: number) {
+    return withStaffReadAuthority(session, 'admin:storage:edit', async (client) => {
+      await client.query("SELECT pg_advisory_xact_lock_shared(hashtext('storage.active'))");
+      const baseVersion =
+        (
+          await client.query<{ version: number }>('SELECT version FROM app_config WHERE key=$1', [
+            STORAGE_CONFIG_KEY,
+          ])
+        ).rows[0]?.version ?? 0;
+      return {
+        baseVersion,
+        ...(await storageRevisions(client, Math.min(baseVersion, before ?? baseVersion))),
+        draft: await currentStorageDraft(client, baseVersion),
+      };
+    });
+  }
+
+  async prepareRecovery(
+    input: { sourceId: string; expectedVersion: number },
+    session: MutationSession
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
+      await requireSessionStepUp(client, session);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('storage.active'))");
+      const baseVersion =
+        (
+          await client.query<{ version: number }>('SELECT version FROM app_config WHERE key=$1', [
+            STORAGE_CONFIG_KEY,
+          ])
+        ).rows[0]?.version ?? 0;
+      if (baseVersion !== input.expectedVersion) throw changedConfig();
+      const {
+        items: [source],
+      } = await storageRevisions(client, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException({ error: 'NOT_FOUND' });
+      if (unapprovedStorageEndpointFields({ ...source.config, accessKeyId: '' }).length)
+        throw new BadRequestException({ error: 'STORAGE:ENDPOINT_UNAPPROVED' });
+      let draft = await currentStorageDraft(client, baseVersion);
+      if (draft?.sourceId !== input.sourceId) {
+        draft = {
+          id: randomUUID(),
+          baseVersion,
+          sourceId: source.id,
+          sourceVersion: source.version,
+          config: source.config,
+        };
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+           VALUES($1,$2,'storage.config.rollback_draft',$3,$4,clock_timestamp())`,
+          [
+            draft.id,
+            session.userId,
+            JSON.stringify(draft),
+            correlationIdStorage.getStore() ?? randomUUID(),
+          ]
+        );
+      }
+      await requireSessionStepUp(client, session);
+      await client.query('COMMIT');
+      return draft;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async activateRecovery(
+    input: { draftId: string; expectedVersion: number },
+    session: MutationSession
+  ) {
+    await this.authorize(session);
+    const current = await this.read();
+    if (input.expectedVersion !== current.version) throw changedConfig();
+    const client = await getDbPool().connect();
+    let draft: StorageRecoveryDraft | null;
+    try {
+      draft = await currentStorageDraft(client, current.version);
+    } finally {
+      client.release();
+    }
+    if (draft?.id !== input.draftId) throw changedConfig();
+    const config = { ...current.config, ...draft.config };
+    const locationChanged = changedLocation(config, current.config);
+    if (locationChanged && config.secretAccessKey)
+      throw new BadRequestException({ error: 'STORAGE:SECRET_REENTRY_REQUIRED' });
+    if (!!config.accessKeyId !== !!config.secretAccessKey)
+      throw new BadRequestException({ error: 'STORAGE:CREDENTIAL_PAIR_REQUIRED' });
+    const active = await this.activate(config, current, locationChanged, session, draft);
+    return { config: draft.config, version: active.version, draftId: draft.id };
+  }
+
+  private async activate(
+    config: StorageSettings,
+    current: Awaited<ReturnType<StorageConfigService['read']>>,
+    locationChanged: boolean,
+    session: MutationSession,
+    draft?: StorageRecoveryDraft
+  ) {
+    const actor = session.userId;
     let encryptedSecret: string | null;
     try {
       encryptedSecret = encryptStorageSecret(config.secretAccessKey);
@@ -254,15 +381,16 @@ export class StorageConfigService {
           [STORAGE_CONFIG_KEY]
         )
       ).rows[0];
-      if ((row?.version ?? 0) !== current.version)
-        throw new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });
+      if ((row?.version ?? 0) !== current.version) throw changedConfig();
+      if (draft && (await currentStorageDraft(client, current.version))?.id !== draft.id)
+        throw changedConfig();
       if (locationChanged) {
         // Serialize with upload reservations before changing where keys resolve.
         await client.query('LOCK TABLE storage_records IN SHARE ROW EXCLUSIVE MODE');
         if ((await client.query('SELECT 1 FROM storage_records LIMIT 1')).rows.length)
           throw new ConflictException({ error: 'STORAGE:LOCATION_IN_USE' });
       }
-      const { secretAccessKey: _secret, version: _version, ...fields } = config;
+      const fields = { ...withoutCredentials(config), accessKeyId: config.accessKeyId };
       await client.query(
         `INSERT INTO app_config(key,value,version) VALUES ($1,$2::jsonb,1)
         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1,updated_at=NOW()`,
@@ -277,6 +405,12 @@ export class StorageConfigService {
           JSON.stringify({
             version,
             previousVersion: current.version,
+            ...(current.version > 0 && { previousSettings: withoutCredentials(current.config) }),
+            ...(draft && {
+              draftId: draft.id,
+              sourceId: draft.sourceId,
+              sourceVersion: draft.sourceVersion,
+            }),
             stepUpVerified: true,
             stepUpVerifiedAt: verifiedAt.toISOString(),
           }),

@@ -30754,6 +30754,114 @@
         ]
       }
     },
+    "/api/admin/storage/config/rollback-activate": {
+      "post": {
+        "operationId": "StorageAdminController_activateRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Probe and activate a reviewed storage recovery draft",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
+    "/api/admin/storage/config/rollback-draft": {
+      "post": {
+        "operationId": "StorageAdminController_prepareRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a storage recovery draft without historical credentials",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
+    "/api/admin/storage/config/rollback-history": {
+      "get": {
+        "operationId": "StorageAdminController_recoveryHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous storage connection settings",
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
     "/api/admin/storage/multipart-cleanup-policy": {
       "get": {
         "operationId": "StorageAdminController_getMultipartCleanupPolicy",

@@ -1,7 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
-import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
+import { storagePolicyFormText, storageRecoveryText } from '@barghsa/i18n/storage-policy-forms';
 import { policyLimit, uploadPolicy } from '../src/test/policy-catalogue-fixtures';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
@@ -16,6 +16,82 @@ const initial = {
   publicEndpointUrl: '',
   version: 7,
 };
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`storage recovery separates draft review from activation (${locale})`, async ({ page }) => {
+    await setupCatalogueForms(page, locale, false);
+    const text = (key: string) => storageRecoveryText(key, locale)!;
+    const { accessKeyId, hasSecretKey, version, ...settings } = initial;
+    const source = {
+      id: '0199f2eb-de42-78d9-8ba7-1afedd591be1',
+      version: 6,
+      config: { ...settings, forcePathStyle: false },
+    };
+    const draft = {
+      id: '0199f2eb-de42-78d9-8ba7-1afedd591be2',
+      sourceId: source.id,
+      sourceVersion: source.version,
+      baseVersion: version,
+      config: source.config,
+    };
+    const path = '**/api/admin/storage/config';
+    let active = initial;
+    let staged = false;
+    await page.route(path, (route) => route.fulfill({ json: active }));
+    await page.route('**/api/admin/storage/multipart-cleanup-policy', (route) =>
+      route.fulfill({ json: { hours: 24, version: 3 } })
+    );
+    await page.route(path + '/rollback-history', (route) =>
+      route.fulfill({
+        json: {
+          baseVersion: active.version,
+          items: [source],
+          nextBeforeVersion: null,
+          draft: staged && active.version === version ? draft : null,
+        },
+      })
+    );
+    await page.route(path + '/rollback-draft', (route) => {
+      expect(route.request().postDataJSON()).toEqual({
+        sourceId: source.id,
+        expectedVersion: version,
+      });
+      staged = true;
+      return route.fulfill({ status: 201, json: draft });
+    });
+    await page.route(path + '/rollback-activate', (route) => {
+      expect(route.request().postDataJSON()).toEqual({
+        draftId: draft.id,
+        expectedVersion: version,
+      });
+      active = { ...source.config, accessKeyId, hasSecretKey, version: version + 1 };
+      return route.fulfill({
+        json: { draftId: draft.id, config: source.config, version: active.version },
+      });
+    });
+    await page.goto('/admin/storage');
+    const pathStyle = page.locator('#storage-path-style');
+    await expect(pathStyle).toBeChecked();
+    await page.getByRole('button', { name: text('recoveryTitle'), exact: true }).click();
+    const recovery = page.getByRole('region', { name: text('recoveryTitle') });
+    await recovery
+      .getByRole('button', { name: new RegExp(text('recoveryStage').split('{version}')[0]!) })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).not.toContainText(accessKeyId);
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(pathStyle).toBeChecked();
+    await recovery.getByRole('button', { name: text('recoveryActivate') }).click();
+    await dialog.locator('button[type=submit]').click();
+    await page
+      .getByRole('button', { name: storagePolicyFormText('reset', locale), exact: true })
+      .click();
+    await expect(pathStyle).not.toBeChecked();
+    await expect(page.locator('#storage-accessKeyId')).toHaveValue(accessKeyId);
+    await expect(page.locator('#storage-secret')).toHaveValue('');
+  });
+}
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`storage and policy forms retain owned feedback (${locale}, ${dark ? 'dark' : 'light'})`, async ({

@@ -50,3 +50,54 @@ const fa: Record<keyof typeof en, string> = {
 };
 export const storagePolicyFormText = (key: keyof typeof en, locale: 'fa' | 'en') =>
   (locale === 'fa' ? fa : en)[key];
+
+const recoveryEn = {
+  recoveryTitle: 'Restore storage settings',
+  recoveryLoading: 'Loading previous storage versions…',
+  recoveryReadError: 'Storage recovery history could not be loaded.',
+  recoveryEmpty: 'No earlier storage settings are available to restore.',
+  recoveryRevision: 'Version {version}',
+  recoveryDraft: 'Recovery draft from version {version}',
+  recoveryStage: 'Review version {version}',
+  recoveryStageConfirm:
+    'Prepare a draft of these connection settings. Live storage and credentials stay as they are.',
+  recoveryActivate: 'Activate recovery draft',
+  recoveryActivateConfirm:
+    'Test the connection with the current credentials and activate these settings as a new version.',
+  recoveryConflict: 'The active version or draft changed. Reload the recovery history.',
+  recoveryLatest: 'Newer versions',
+  recoveryOlder: 'Older versions',
+  recoveryEndpoint: 'This revision uses an endpoint that is no longer approved.',
+  recoveryReentry:
+    'To change these locations, enter the settings and re-enter the secret in the storage form. Existing objects can prevent a location change.',
+  recoveryLocationInUse: 'Existing storage objects prevent a location change.',
+  recoveryOn: 'On',
+  recoveryOff: 'Off',
+};
+const recoveryFa: Record<keyof typeof recoveryEn, string> = {
+  recoveryTitle: 'بازیابی تنظیمات ذخیره‌سازی',
+  recoveryLoading: 'در حال دریافت نسخه‌های پیشین ذخیره‌سازی…',
+  recoveryReadError: 'دریافت سابقهٔ بازیابی ذخیره‌سازی انجام نشد.',
+  recoveryEmpty: 'تنظیمات پیشینی برای بازیابی در دسترس نیست.',
+  recoveryRevision: 'نسخهٔ {version}',
+  recoveryDraft: 'پیش‌نویس بازیابی نسخهٔ {version}',
+  recoveryStage: 'بررسی نسخهٔ {version}',
+  recoveryStageConfirm:
+    'از این تنظیمات اتصال پیش‌نویس بسازید. تنظیمات فعال و اطلاعات ورود فعلاً برقرار می‌مانند.',
+  recoveryActivate: 'فعال‌سازی پیش‌نویس بازیابی',
+  recoveryActivateConfirm:
+    'اتصال با اطلاعات ورود فعلی آزموده می‌شود و این تنظیمات به‌عنوان نسخهٔ جدید فعال می‌شوند.',
+  recoveryConflict: 'نسخهٔ فعال یا پیش‌نویس تغییر کرده است. سابقه را دوباره دریافت کنید.',
+  recoveryLatest: 'نسخه‌های جدیدتر',
+  recoveryOlder: 'نسخه‌های قدیمی‌تر',
+  recoveryEndpoint: 'مبدأ اتصال این نسخه دیگر مجاز نیست.',
+  recoveryReentry:
+    'برای تغییر این محل‌ها، تنظیمات و کلید محرمانه را در فرم ذخیره‌سازی دوباره وارد کنید. وجود فایل می‌تواند مانع تغییر محل شود.',
+  recoveryLocationInUse: 'وجود فایل‌های ذخیره‌شده مانع تغییر محل می‌شود.',
+  recoveryOn: 'روشن',
+  recoveryOff: 'خاموش',
+};
+export function storageRecoveryText(key: string, locale: 'fa' | 'en'): string | undefined {
+  if (!Object.hasOwn(recoveryEn, key)) return undefined;
+  return (locale === 'fa' ? recoveryFa : recoveryEn)[key as keyof typeof recoveryEn];
+}

@@ -14,6 +14,17 @@ export type StorageConfigView = Record<(typeof storageTextFields)[number], strin
   hasSecretKey: boolean;
   version: number;
 };
+export type StorageConnectionSettings = Omit<
+  StorageConfigView,
+  'accessKeyId' | 'hasSecretKey' | 'version'
+>;
+export const storageConnectionFields = [
+  'endpoint',
+  'region',
+  'bucket',
+  'privateEndpointUrl',
+  'publicEndpointUrl',
+] as const;
 export type StorageDraft = Omit<StorageConfigView, 'hasSecretKey' | 'version'> & {
   secretAccessKey: string;
   clearSecret: boolean;
@@ -75,6 +86,16 @@ function validOrigin(value: string) {
     return false;
   }
 }
+export function validStorageConnection(value: unknown): value is StorageConnectionSettings {
+  return (
+    record(value) &&
+    Object.keys(value).length === storageConnectionFields.length + 1 &&
+    storageConnectionFields.every((field) => typeof value[field] === 'string') &&
+    typeof value.forcePathStyle === 'boolean'
+  );
+}
+export const storageConnectionBasis = (value: StorageConnectionSettings) =>
+  JSON.stringify([...storageConnectionFields.map((field) => value[field]), value.forcePathStyle]);
 export function storageInvalidFields(
   draft: StorageDraft,
   saved: StorageConfigView | null

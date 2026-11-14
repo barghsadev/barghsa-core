@@ -1,7 +1,7 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
+import { storagePolicyFormText, storageRecoveryText } from '@barghsa/i18n/storage-policy-forms';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -21,15 +21,23 @@ import {
   storageInvalidFields,
   storageCommand,
   matchesStorageReceipt,
+  validStorageConnection,
+  storageConnectionFields,
+  storageConnectionBasis,
   validStorageConfig,
   validCleanupPolicy,
   cleanupInvalidFields,
   type StorageConfigView,
+  type StorageConnectionSettings,
   type StorageDraft,
   type CleanupDraft,
   type CleanupPolicyView,
 } from '../lib/storage-policy-form.js';
 
+const StorageRecovery = lazy(async () => {
+  const { default: Recovery } = await import('../components/ConfigRecovery.js');
+  return { default: Recovery<StorageConnectionSettings> };
+});
 type Owner = 'config' | 'cleanup';
 const basis = (value: StorageConfigView | CleanupPolicyView) =>
   JSON.stringify(
@@ -48,8 +56,18 @@ export default function AdminStorageConfig() {
   const label = (key: string) => t(`admin.storage.${key}`, locale);
   const text = (key: Parameters<typeof storagePolicyFormText>[0]) =>
     storagePolicyFormText(key, locale);
+  const recoveryLabel = (key: string) =>
+    storageRecoveryText(key, locale) ??
+    (key === 'retry' ? label('reload') : key === 'unverified' ? text('unverified') : label(key));
   const acceptedConfig = useRef<StorageConfigView | null>(null),
     acceptedCleanup = useRef<CleanupPolicyView | null>(null);
+  const [showStorageRecovery, setShowStorageRecovery] = useState(false);
+  const [storageRecoveryBusy, setStorageRecoveryBusy] = useState(false);
+  const recoveryBusy = useRef(false);
+  const setRecoveryBusy = useCallback((busy: boolean) => {
+    recoveryBusy.current = busy;
+    setStorageRecoveryBusy(busy);
+  }, []);
   const messages = Object.fromEntries(
     Object.keys(emptyStorageDraft()).map((key) => [key, text(key as keyof StorageDraft)])
   ) as Record<keyof StorageDraft, string>;
@@ -110,11 +128,13 @@ export default function AdminStorageConfig() {
     acceptedCleanup.current = null;
     resetConfig(emptyStorageDraft());
     resetCleanup({ hours: '' });
+    setShowStorageRecovery(false);
+    setRecoveryBusy(false);
     setChanged({ config: false, cleanup: false });
     setUncertain({ config: false, cleanup: false });
     setRecovered({ config: false, cleanup: false });
     setNotice(null);
-  }, [closeAction, resetConfig, resetCleanup]);
+  }, [closeAction, resetConfig, resetCleanup, setRecoveryBusy]);
   const scope = useCatalogueScope(clearPrivate);
   const config = useCatalogueResource(scope, '/api/admin/storage/config', validStorageConfig);
   const cleanup = useCatalogueResource(
@@ -171,7 +191,7 @@ export default function AdminStorageConfig() {
       setRecovered((value) => ({ ...value, cleanup: true }));
   }, [cleanup.data, cleanup.loading, cleanup.error, uncertain.cleanup, closeAction, resetCleanup]);
   function refresh(owner?: Owner) {
-    if (dialogBusy.current) return;
+    if (dialogBusy.current || recoveryBusy.current) return;
     if (validationBusy.current || uncertain.config || uncertain.cleanup) closeAction();
     setNotice(null);
     if (scope.denied) scope.recover();
@@ -183,6 +203,7 @@ export default function AdminStorageConfig() {
   function resetSaved(owner: Owner) {
     if (
       dialogBusy.current ||
+      recoveryBusy.current ||
       validationBusy.current ||
       actionRef.current ||
       (owner === 'config' ? !configReady : !cleanupReady) ||
@@ -210,6 +231,7 @@ export default function AdminStorageConfig() {
     const owner: Owner = kind === 'cleanup' ? 'cleanup' : 'config';
     if (
       validationBusy.current ||
+      recoveryBusy.current ||
       actionRef.current ||
       scope.denied ||
       changed[owner] ||
@@ -273,14 +295,16 @@ export default function AdminStorageConfig() {
   const owner = actionOwner.current;
   const draft = configForm.values,
     hours = cleanupForm.values.hours;
-  const configDisabled = busy || !configReady || changed.config || uncertain.config;
-  const cleanupDisabled = busy || !cleanupReady || changed.cleanup || uncertain.cleanup;
+  const configDisabled =
+    busy || storageRecoveryBusy || !configReady || changed.config || uncertain.config;
+  const cleanupDisabled =
+    busy || storageRecoveryBusy || !cleanupReady || changed.cleanup || uncertain.cleanup;
   const recovery = (section?: Owner) => (
     <div className="space-y-2">
       <Button
         type="button"
         variant="outline"
-        disabled={dialogPending || config.loading || cleanup.loading}
+        disabled={dialogPending || storageRecoveryBusy || config.loading || cleanup.loading}
         onClick={() => refresh(section)}
       >
         {label('refresh')}
@@ -474,6 +498,57 @@ export default function AdminStorageConfig() {
             </Button>
           </div>
         </form>
+      )}
+      {!scope.denied && config.data && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-expanded={showStorageRecovery}
+          aria-controls={showStorageRecovery ? 'storage-recovery' : undefined}
+          disabled={busy || storageRecoveryBusy || !configReady}
+          onClick={() => setShowStorageRecovery((visible) => !visible)}
+        >
+          {recoveryLabel('recoveryTitle')}
+        </Button>
+      )}
+      {showStorageRecovery && !scope.denied && config.data && (
+        <div id="storage-recovery">
+          <Suspense fallback={<LoadingStatus>{recoveryLabel('recoveryLoading')}</LoadingStatus>}>
+            <StorageRecovery
+              key={config.data.version}
+              path="/api/admin/storage/config"
+              valid={validStorageConnection}
+              basis={storageConnectionBasis}
+              label={recoveryLabel}
+              disabled={busy || !configReady || uncertain.config}
+              onBusyChange={setRecoveryBusy}
+              onDenied={scope.deny}
+              onActivated={config.retry}
+              errorMessages={{
+                'STORAGE:ENDPOINT_UNAPPROVED': recoveryLabel('recoveryEndpoint'),
+                'STORAGE:SECRET_REENTRY_REQUIRED': recoveryLabel('recoveryReentry'),
+                'STORAGE:LOCATION_IN_USE': recoveryLabel('recoveryLocationInUse'),
+                'STORAGE:CONNECTION_FAILED': label('connectionFailed'),
+              }}
+              renderValues={(value) => (
+                <dl className="space-y-2">
+                  {storageConnectionFields.map((field) => (
+                    <div key={field} className="flex flex-wrap gap-x-2">
+                      <dt className="font-medium">{label(field)}</dt>
+                      <dd>
+                        <bdi className="break-all">{value[field] || '—'}</bdi>
+                      </dd>
+                    </div>
+                  ))}
+                  <div className="flex flex-wrap gap-x-2">
+                    <dt className="font-medium">{label('forcePathStyle')}</dt>
+                    <dd>{recoveryLabel(value.forcePathStyle ? 'recoveryOn' : 'recoveryOff')}</dd>
+                  </div>
+                </dl>
+              )}
+            />
+          </Suspense>
+        </div>
       )}
       {cleanup.loading && <LoadingStatus>{text('cleanupLoading')}</LoadingStatus>}
       {cleanup.error && (
