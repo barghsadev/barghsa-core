@@ -310,6 +310,15 @@ def verified_notifications(checkout, path, job):
     return {"summary": summary, **({"album": album} if album is not None else {})}
 
 
+def verify_live_release(job):
+    with urllib.request.urlopen("https://stg.barghsa.com/release.json", timeout=30) as response:
+        live = json.load(response)
+    if (not isinstance(live, dict) or live.get("commit") != job["commit"]
+            or live.get("version") != job["version"]):
+        raise ValueError("Live release does not match the queued version and commit")
+    return live
+
+
 def deploy(job, state):
     repo = Path(job["repo"])
     directory = state / "jobs" / job["commit"]
@@ -329,18 +338,37 @@ def deploy(job, state):
         raise ValueError("Release checkout has uncommitted files")
     receipt = directory / "runtime-images.json"
     notification_receipt = directory / "telegram.json"
-    deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
-    if bundle := job.get("image_bundle"):
-        deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
-    if retained := job.get("retained_scans"):
-        if bundle is None:
-            deploy_args.extend(["", ""])
-        deploy_args.extend([retained["directory"], retained["sha256"]])
-    command(checkout, *deploy_args)
+    resume_notification = receipt.exists()
+    if resume_notification:
+        runtime = json.loads(receipt.read_text())
+        images = runtime.get("image_ids") if isinstance(runtime, dict) else None
+        if (not isinstance(images, dict) or set(images) != {"app", "web", "postgres", "clamav"}
+                or any(not isinstance(value, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", value)
+                       for value in images.values())
+                or runtime.get("schema_version") != 1 or runtime.get("commit") != job["commit"]):
+            raise ValueError("Saved staging runtime receipt does not match the queued release")
+        verify_live_release(job)
+        with urllib.request.urlopen("https://stg.barghsa.com/api/health/ready", timeout=30) as response:
+            readiness = json.load(response)
+        checks = readiness.get("checks") if isinstance(readiness, dict) else None
+        if (not isinstance(checks, dict) or readiness.get("status") != "ok"
+                or readiness.get("commit") != job["commit"] or readiness.get("warnings", []) != []
+                or any(not isinstance(checks.get(name), dict) or checks[name].get("status") != "ok"
+                       for name in ("postgresql", "redis", "objectStorage"))):
+            raise ValueError("Live staging API is not healthy for the queued release")
+    else:
+        deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
+        if bundle := job.get("image_bundle"):
+            deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
+        if retained := job.get("retained_scans"):
+            if bundle is None:
+                deploy_args.extend(["", ""])
+            deploy_args.extend([retained["directory"], retained["sha256"]])
+        command(checkout, *deploy_args)
     # Older immutable releases predate the receipt argument.
     if receipt.exists():
-        job["runtime_images"] = json.loads(receipt.read_text())
-    if job["screenshots"]:
+        job["runtime_images"] = runtime if resume_notification else json.loads(receipt.read_text())
+    if resume_notification or job["screenshots"]:
         notify = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"],
                   "--receipt", str(notification_receipt)]
         args = list(notify)
@@ -350,6 +378,8 @@ def deploy(job, state):
         try:
             command(checkout, *args)
         except subprocess.CalledProcessError as error:
+            if not job["screenshots"]:
+                raise
             # Images are optional; the exact deployed release and main note are required.
             # Recheck without images, preserving unknown-send receipts and their retry guard.
             command(checkout, *notify)
@@ -358,10 +388,7 @@ def deploy(job, state):
                 "message": "Optional screenshots could not all be confirmed; inspect notification receipts and the channel before retrying unknown images.",
             }
     # Read deployed identity back; command exit status alone never completes a job.
-    with urllib.request.urlopen("https://stg.barghsa.com/release.json", timeout=30) as response:
-        live = json.load(response)
-    if live.get("commit") != job["commit"] or live.get("version") != job["version"]:
-        raise ValueError("Live release does not match the queued version and commit")
+    live = verify_live_release(job)
     job["telegram"] = verified_notifications(checkout, notification_receipt, job)
     if secret.is_symlink():
         secret.unlink()

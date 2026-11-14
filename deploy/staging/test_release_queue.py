@@ -132,6 +132,9 @@ fi
 if [ "${QUEUE_TEST_WRITE_IMAGES:-}" = 1 ]; then
     printf '%s\\n' "$QUEUE_TEST_IMAGES" > "$1"
 fi
+if [ "${QUEUE_TEST_FAIL_AFTER_DEPLOY:-}" = 1 ]; then
+    exit 1
+fi
 python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)" --receipt "$(dirname "$1")/telegram.json"
 ''')
         deploy.chmod(0o755)
@@ -392,6 +395,63 @@ if __name__ == '__main__':
         self.assertEqual(queue.jobs(self.state)[0]["runtime_images"], receipt)
         receipt_path = self.state / "jobs" / self.commit / "runtime-images.json"
         self.assertEqual(json.loads(receipt_path.read_text()), receipt)
+
+    def test_retry_after_verified_deployment_rechecks_live_health_and_only_notifies(self):
+        receipt = {"schema_version": 1, "commit": self.commit, "image_ids": {
+            name: "sha256:" + character * 64 for name, character in
+            zip(("app", "web", "postgres", "clamav"), "bcde")
+        }}
+        queue.enqueue(self.repo, self.state, self.commit, [])
+        job_path = self.state / "jobs" / self.commit / "job.json"
+        with patch.dict(os.environ, {
+            "QUEUE_TEST_WRITE_IMAGES": "1", "QUEUE_TEST_IMAGES": json.dumps(receipt),
+            "QUEUE_TEST_FAIL_AFTER_DEPLOY": "1",
+        }):
+            self.assertEqual(queue.work(self.state), 1)
+        self.assertEqual(queue.jobs(self.state)[0]["phase"], "failed")
+        self.assertFalse((self.capture / "notifications").exists())
+
+        live = {"version": "0.1.3", "commit": self.commit}
+        readiness = {"status": "ok", "commit": self.commit, "checks": {
+            name: {"status": "ok"} for name in ("postgresql", "redis", "objectStorage")
+        }}
+        original_command = queue.command
+        cases = (
+            (live, readiness, "Saved staging runtime receipt"),
+            (dict(live, commit="a" * 40), readiness, "Live release"),
+            (live, dict(readiness, commit="a" * 40), "staging API"),
+            (live, dict(readiness, checks={}), "staging API"),
+            (live, dict(readiness, warnings=["degraded"]), "staging API"),
+            (live, readiness, None),
+        )
+        for live_body, ready_body, error in cases:
+            with self.subTest(error=error, live=live_body, readiness=ready_body):
+                queue.save(job_path.parent / "runtime-images.json", {
+                    **receipt, "commit": "a" * 40 if error == "Saved staging runtime receipt" else self.commit,
+                })
+                argv = ["release-queue.py", "--state-dir", str(self.state), "retry", "--commit", self.commit]
+                with patch.object(sys, "argv", argv), patch.object(queue, "start_worker", return_value=1):
+                    self.assertEqual(queue.main(), 0)
+
+                def fetch(url, **kwargs):
+                    body = ready_body if url.endswith("/api/health/ready") else live_body
+                    return io.BytesIO(json.dumps(body).encode())
+
+                with patch.object(queue.urllib.request, "urlopen", side_effect=fetch), \
+                        patch.object(queue, "command", wraps=original_command) as command:
+                    self.assertEqual(queue.work(self.state), int(error is not None))
+                commands = [call.args[1:] for call in command.call_args_list]
+                self.assertFalse(any(args[0] == "./deploy/staging/deploy.sh" for args in commands))
+                updated = queue.jobs(self.state)[0]
+                if error:
+                    self.assertIn(error, updated["error"])
+                    self.assertFalse((self.capture / "notifications").exists())
+                else:
+                    self.assertEqual(updated["phase"], "completed")
+                    self.assertEqual(updated["runtime_images"], receipt)
+                    self.assertEqual(updated["telegram"]["summary"]["message_id"], 100)
+                    self.assertEqual(len((self.capture / "notifications").read_text().splitlines()), 1)
+                self.assertFalse(any("--retry-unknown" in args for args in commands))
 
     def test_optional_screenshot_failure_keeps_required_confirmation_and_advances_queue(self):
         queue.enqueue(self.repo, self.state, self.commit, [self.image])

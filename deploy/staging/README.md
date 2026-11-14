@@ -112,7 +112,10 @@ Queue jobs, frozen screenshots, worker code and logs live outside the checkout i
 `~/.local/state/barghsa-staging-queue`. Run `python3 deploy/staging/release-queue.py status`
 to inspect them. A failed or interrupted job stops the deployment queue while building
 can continue. Inspect that job's `deploy.log`, resolve the failure and explicitly run
-`python3 deploy/staging/release-queue.py retry --commit <full-sha>`. Unknown results for the main Telegram message still require channel inspection and
+`python3 deploy/staging/release-queue.py retry --commit <full-sha>`. If the
+verified runtime image receipt is already on disk, the worker confirms the
+exact live web and API revision and dependency health before resuming the
+Telegram step. Unknown results for the main Telegram message still require channel inspection and
 the notifier's explicit recovery
 before retrying; the queue never bypasses that guard. An optional image warning never
 claims that every screenshot was delivered; inspect the channel before recovering an

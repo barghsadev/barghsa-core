@@ -20429,7 +20429,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20449,7 +20450,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20462,7 +20463,8 @@
           ],
           "checks": [
             "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_renewals": [
             {
@@ -24191,7 +24193,8 @@
         "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open.",
         "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open.",
         "The VPS now checks both the expected release version and exact commit before accepting the candidate manifest. Matching, stale and absent version fixtures exercised the rollback boundary. A live accepted release receipt remains open.",
-        "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release."
+        "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release.",
+        "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -24256,7 +24259,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-prepromotion-version",
-          "release-0.6-staging-telegram-receipt"
+          "release-0.6-staging-telegram-receipt",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": null
       }
@@ -24476,7 +24480,8 @@
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-probe-object-cleanup",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24500,7 +24505,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -24523,7 +24528,8 @@
             "The runbook defines severity, responsible roles, steps and verification for application, configuration, data and feature recovery.",
             "The criterion follows the existing expand/migrate/contract convention. Previous images require a current schema check. An incompatible schema keeps writers stopped and requires a verified roll-forward or authorized, reconciled recovery.",
             "Nine staging rollback tests and 17 guarded rollout tests passed. The existing isolated staging rehearsal independently demonstrated rejection of an incompatible app/schema pair and readiness of the preserved pair.",
-            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_renewals": [
             {
@@ -32441,7 +32447,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -32451,7 +32458,8 @@
             "The static server uses the same allowlist and renders the badge in lower-environment HTML. Vite dev returned the development header and badge through the real login entry. The stylesheet uses the existing per-response nonce. Chromium tested built login in Persian and English under enforced CSP, with the badge visible on staging and absent in production. No client bundle import was added.",
             "Thirty-eight web server and shutdown tests, both application builds and typechecks, lint, formatting, API contract, both CSP modes and all 102 bundle budgets passed. All three Compose configurations resolved the expected labels. Seven staging runtime tests passed, and the alternate Liara staging web archive contains the exact standalone runtime files.",
             "The live staging rollout and its receipts remain separate release gates.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_evidence": [
             {
@@ -32496,7 +32504,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35757,7 +35765,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-probe-object-cleanup",
           "release-0.6-backup-target-monitoring",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35766,7 +35775,8 @@
             "The guide covers prerequisites, environment references, isolated pilot and staging deployment, commercial topology, upgrades, rollback, service configuration and monitoring.",
             "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_evidence": [
             {
@@ -35787,7 +35797,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -165495,7 +165505,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -165867,7 +165878,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -166120,7 +166131,8 @@
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -645829,7 +645841,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -646201,7 +646214,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -646470,7 +646483,8 @@
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -678882,7 +678896,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -678894,7 +678909,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -678916,7 +678931,8 @@
           "checks": [
             "Reused the source-bound edge implementation evidence from 01-platform-infrastructure.md#T-04.04.03.",
             "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt.",
-            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed."
+            "Renewed the staging guide binding after reviewing the image identity paragraph. Existing edge, deployment, environment and service instructions retain their text. Formatting passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_renewals": [
             {
@@ -1067108,7 +1067124,8 @@
             "python3 -m unittest discover -s deploy/staging -p test_*.py: 27 tests pass, including album bytes/API-array binding, two/ten-image grouping, immutable selection, unknown outcomes, legacy receipt preservation and queue album cap.",
             "Diff review: no new live send; exact deployment/channel guards, main-note confirmation, immutable runner, detached execution and unknown-send policy retain their ownership.",
             "Telegram sendMediaGroup primary API confirms one album accepts 2–10 items. One photo uses sendPhoto; multiple captures use one album and one durable release-level receipt.",
-            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings."
+            "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "source_evidence": [
             {
@@ -1067117,7 +1067134,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
+              "sha256": "1d9c2d808c22357e155e66bbb7e5d5cd23830de6cad08747d5fb558b7609fa17"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -1067125,7 +1067142,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "7b67abbcd430dfe5d2a86683b2ecb069905c8e0993b8a756231c7963a6105c93"
+              "sha256": "f1f59de746638944fe8359ccddcc0879f5fd015df16ac70e5ab09e774395c6a9"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1067300,7 +1067317,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ]
       }
     },
@@ -1080536,7 +1080554,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1080556,7 +1080574,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
+              "sha256": "1d9c2d808c22357e155e66bbb7e5d5cd23830de6cad08747d5fb558b7609fa17"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1081508,7 +1081526,8 @@
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
             "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
-            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "limitations": [],
           "operational_limits": [
@@ -1084279,7 +1084298,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-probe-object-cleanup",
           "release-0.6-empty-command-validation",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1086448,7 +1086468,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "0f9a1e72a82fe079c483bff5dcfa8656086c8af0388ff12383477b4d3ee6fcf5"
+              "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1086468,7 +1086488,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
+              "sha256": "1d9c2d808c22357e155e66bbb7e5d5cd23830de6cad08747d5fb558b7609fa17"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1087437,7 +1087457,8 @@
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
             "Renewed the staging tool bindings after both retained image IDs were pinned. All 60 staging tests passed, including bootstrap, current stateful volumes, rollback, strict scan checks, mismatch rejection and Telegram ordering. The existing role and provider code retains its prior source bindings.",
-            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed."
+            "The only runtime delta disables ambient SDK endpoint selection. Existing configuration, credentials, signing, retries, timeouts and retention paths keep their behavior with approved endpoints. The 55 shared storage, 26 compiled API storage and 23 worker storage cases passed.",
+            "Renewed only the staging worker and runbook bindings. The runbook adds the explicit post-deploy retry behavior. All other runbook sections and the deployment and notifier implementations remain unchanged. Existing acceptance continues to rely on its original evidence for all other behavior."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -1090109,7 +1090130,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-probe-object-cleanup",
           "release-0.6-empty-command-validation",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-staging-notification-resume"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1095335,7 +1095357,8 @@
         "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open.",
         "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open.",
         "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open.",
-        "Hosted report-only 43555538867 verified five exact image identities, SBOMs and scans for 7b62b875c. Package review comprises 386 entries. Final strict acceptance and deployed receipts remain open."
+        "Hosted report-only 43555538867 verified five exact image identities, SBOMs and scans for 7b62b875c. Package review comprises 386 entries. Final strict acceptance and deployed receipts remain open.",
+        "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095662,7 +1095685,8 @@
           "release-0.6-promotion-load-receipt",
           "release-0.6-recovery-apply-command",
           "release-0.6-promotion-migration-receipt",
-          "release-0.6-hosted-alpine-inventory-readback"
+          "release-0.6-hosted-alpine-inventory-readback",
+          "release-0.6-staging-notification-resume"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276902,6 +1276926,61 @@
         {
           "file": "staging-favicon-and-csp-readback.json",
           "sha256": "38c8bded5595ac7d5249cc034d0ca0e8867580fb2278c74170035b7fb3dc571e"
+        }
+      ]
+    },
+    "release-0.6-staging-notification-resume": {
+      "batch": "release-0.6-staging-notification-resume",
+      "base_commit": "94fce431d96914546dc05a2e07fb498b205884af",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "9c22bd22b5093e19993c7093d05791599f42d830320a55e5d0406d1a91d20999"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "1d9c2d808c22357e155e66bbb7e5d5cd23830de6cad08747d5fb558b7609fa17"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "f1f59de746638944fe8359ccddcc0879f5fd015df16ac70e5ab09e774395c6a9"
+        }
+      ],
+      "checks": [
+        "An explicit queue retry with a saved exact runtime receipt checks the current web release, API revision and all three readiness dependencies before resuming notification. The queue rejects a wrong receipt, wrong revision or unhealthy API without invoking deploy or contacting Telegram.",
+        "Twenty-four queue tests and sixteen notifier tests passed. The native retry fixture completed a verified release using the saved runtime receipt and one summary, with no second deployment and no forced resend. Existing grouping, unknown-send preservation, admission and immutable checkout assertions passed."
+      ],
+      "limitations": [
+        "Isolated verification. Accepted staging deployment and actual Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-hosted-alpine-inventory-readback",
+      "execution_receipts": [
+        {
+          "file": "queue-tests.log",
+          "sha256": "3d7a5fa8911e5fb2f703e1338db763c6ff9fa72ffe3c8634eea41fef9a416fd1"
+        },
+        {
+          "file": "notifier-tests.log",
+          "sha256": "aaed38ce7ac00ec78fb23210035296a296d2ef888a663d89c8cc28651eb98e3a"
         }
       ]
     }
