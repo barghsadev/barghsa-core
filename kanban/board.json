@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:47:01+00:00",
+  "updated": "2026-11-14T14:49:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -1138141,7 +1138141,8 @@
         "The bank receipt top-up service passed the original critical file thresholds. Retry tests preserved the reviewed terms, rejected foreign-wallet key reuse and refused inconsistent stored snapshots. The final exact hosted release coverage remains open.",
         "The two previously flagged provider callback services pass the original scoped critical thresholds. Focused cases cover exact stored payment context, fail-closed claim recovery and chargeback reversal provenance. Enforced full candidate coverage and actual provider receipts remain open.",
         "The four flagged staff finance controllers for wallet and invoice receipt decisions, dual approval and wallet refunds pass the scoped critical gate. The full combined coverage and final staged financial journeys remain open.",
-        "Storage administration, verification policy and verification provider configuration passed the native scoped critical thresholds. Verify the final hosted coverage and deployed provider and configuration receipts."
+        "Storage administration, verification policy and verification provider configuration passed the native scoped critical thresholds. Verify the final hosted coverage and deployed provider and configuration receipts.",
+        "The security rate-limit configuration controller passed the scoped critical checker at 31/32 lines and 9/10 branches. This verifies actor provenance for regular changes and staged recovery when no request address is available. Retain native recovery tests in the final full run."
       ],
       "owner": null,
       "depends_on": [],
@@ -1138522,7 +1138523,8 @@
           "release-0.6-bank-receipt-review-binding",
           "release-0.6-wallet-provider-verification",
           "release-0.6-staff-financial-command-boundaries",
-          "release-0.6-config-authority-readback"
+          "release-0.6-config-authority-readback",
+          "release-0.6-rate-limit-audit-provenance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1329255,6 +1329257,43 @@
         {
           "file": "initial-error-code.log",
           "sha256": "3e4a4b175c44d2e7a0847aa6b2c3292d44da039e0654fd3b78ffc1e240ad3b06"
+        }
+      ]
+    },
+    "release-0.6-rate-limit-audit-provenance": {
+      "batch": "release-0.6-rate-limit-audit-provenance",
+      "base_commit": "9fc42608eae44371c20e345c58668220516d8058",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/rate-limit/security-rate-limit-config.controller.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/rate-limit/security-rate-limit-config.controller.ts",
+          "sha256": "0bbab3cf2224df73097cd81ad87e5f5b805f1c26bee6b75ea408e2d3fd805da2"
+        },
+        {
+          "path": "apps/api/src/rate-limit/security-rate-limit-config.controller.test.ts",
+          "sha256": "2df14d0f712b62e811b89c1a85099e82e05281cffb330f5e2815912466d2ef57"
+        }
+      ],
+      "checks": [
+        "The targeted controller test passed. It verifies the original authenticated actor and fallback request address for normal update, recovery stage and activation. The unchanged critical gate passed using checksum-verified native evidence on byte-identical source. Type checks and ESLint passed."
+      ],
+      "limitations": [
+        "The one-test instrumented selection fell below the package line and statement floors. The final complete release gate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rate-limit-audit-provenance",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "c065110fe50e5e56e56646654d3a2312a04655638427df806d1893c866b13865"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "6119859091e0a5d61d0a0af159aaeff7782c5abe82856faa3d23a6e9772d11f5"
         }
       ]
     }
