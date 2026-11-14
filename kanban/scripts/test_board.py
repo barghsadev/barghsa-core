@@ -4,7 +4,7 @@ from io import StringIO
 import unittest
 from unittest.mock import patch
 
-from board import blocking_defects, main, read, render, validate
+from board import ROOT, blocking_defects, main, read, render, sha, validate
 from test_definition_of_done import record
 
 
@@ -43,6 +43,20 @@ class BoardIntegrityTests(unittest.TestCase):
         task = next(t for t in self.board['tasks'] if t['status'] == 'done')
         task['evidence']['current_acceptance']['source_evidence'][0]['sha256'] = '0' * 64
         self.rejects('Done evidence changed')
+
+    def test_shared_source_is_read_once_and_all_task_hashes_are_compared(self):
+        matches = [
+            (task['key'], source)
+            for task in self.board['tasks'] if task['status'] == 'done'
+            for source in task['evidence']['current_acceptance']['source_evidence']
+            if source['path'] == 'pnpm-lock.yaml'
+        ]
+        self.assertGreater(len(matches), 1)
+        last_task, last_source = matches[-1]
+        last_source['sha256'] = '0' * 64
+        with patch('board.sha', wraps=sha) as hash_file:
+            self.rejects(f'Done evidence changed.*{last_task}')
+        self.assertEqual(sum(call.args == (ROOT / 'pnpm-lock.yaml',) for call in hash_file.call_args_list), 1)
 
     def test_missing_release_and_cycle_block_selection(self):
         self.board['tasks'][-1]['release'] = '9.9.9'

@@ -85,8 +85,15 @@ def validate(board, root=ROOT, *, now=None):
     expected = board['migration']
     if len(original) != expected['original_tasks'] or hashlib.sha256('\n'.join(original_keys).encode()).hexdigest() != expected['original_keys_sha256']:
         raise ValueError('Original task inventory changed or lost')
+    source_hashes = {}
+
+    def source_hash(name):
+        if name not in source_hashes:
+            source_hashes[name] = sha(root / name)
+        return source_hashes[name]
+
     for name, expected_sha in {**board['specification_sources'], **board['requirement_sources']}.items():
-        if sha(root / name) != expected_sha:
+        if source_hash(name) != expected_sha:
             raise ValueError(f'Specification changed without reconciliation: {name}')
     canonical = []
     for path in sorted((root / 'kanban/epics').glob('*.md')):
@@ -133,7 +140,7 @@ def validate(board, root=ROOT, *, now=None):
             if not accepted or not accepted.get('checks') or not accepted.get('source_evidence'):
                 raise ValueError(f'Done task lacks acceptance evidence: {key}')
             for source in accepted['source_evidence']:
-                if sha(root / source['path']) != source['sha256']:
+                if source_hash(source['path']) != source['sha256']:
                     raise ValueError(f'Done evidence changed; return task to verify: {key}')
             if task['remaining']:
                 raise ValueError(f'Done task still has remaining requirements: {key}')
