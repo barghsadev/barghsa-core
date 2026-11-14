@@ -19256,7 +19256,8 @@
         "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
         "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open.",
         "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open.",
-        "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts."
+        "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts.",
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -19351,7 +19352,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-probe-object-cleanup",
           "release-0.6-admin-probe-cleanup",
-          "release-0.6-staging-probe-uncertain-write"
+          "release-0.6-staging-probe-uncertain-write",
+          "release-0.6-staging-storage-policy-readback"
         ],
         "current_acceptance": null
       }
@@ -23879,7 +23881,8 @@
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "Confirmed the local Alpine runtime SBOM differs from hosted 43552412387 by two removed glibc Sharp rows and no additions. One pending exception falls outside this runtime. Reconcile the 386 remaining rows with the final hosted images and obtain the required approvals.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
-        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23947,7 +23950,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-sharp-runtime-platform",
           "release-0.6-image-and-scanner-receipt-readback",
-          "release-0.6-browser-43561500300"
+          "release-0.6-browser-43561500300",
+          "release-0.6-cumulative-image-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -24344,7 +24348,8 @@
         "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release.",
         "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts.",
         "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts.",
-        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -24415,7 +24420,8 @@
           "release-0.6-staging-telegram-receipt",
           "release-0.6-staging-notification-resume",
           "release-0.6-notification-image-readback",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-staging-storage-policy-readback"
         ],
         "current_acceptance": null
       }
@@ -693328,7 +693334,8 @@
         "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review.",
         "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
-        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -693398,7 +693405,8 @@
           "release-0.6-sharp-runtime-platform",
           "release-0.6-hosted-alpine-inventory-readback",
           "release-0.6-image-and-scanner-receipt-readback",
-          "release-0.6-browser-43561500300"
+          "release-0.6-browser-43561500300",
+          "release-0.6-cumulative-image-receipts"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -693557,7 +693565,8 @@
         "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts.",
         "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
-        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open."
+        "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -693620,7 +693629,8 @@
           "release-0.6-sharp-runtime-platform",
           "release-0.6-hosted-alpine-inventory-readback",
           "release-0.6-image-and-scanner-receipt-readback",
-          "release-0.6-browser-43561500300"
+          "release-0.6-browser-43561500300",
+          "release-0.6-cumulative-image-receipts"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1104550,7 +1104560,8 @@
         "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts.",
         "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required."
+        "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1104886,7 +1104897,8 @@
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-profile-session-command-validation",
           "release-0.6-notification-image-readback",
-          "release-0.6-browser-43561500300"
+          "release-0.6-browser-43561500300",
+          "release-0.6-cumulative-image-receipts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1105164,7 +1105176,8 @@
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
         "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover.",
         "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover.",
-        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1105235,7 +1105248,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-cutover-capacity-and-image-readback",
           "release-0.6-measured-cutover-scratch",
-          "release-0.6-migration-manifest-binding"
+          "release-0.6-migration-manifest-binding",
+          "release-0.6-staging-storage-policy-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1287965,6 +1287979,80 @@
         {
           "file": "promotion.log",
           "sha256": "713cc9d18ef0c3bdd2c7e9f9d5ef529fad6f863fa2810c1eb879aa994ca6be38"
+        }
+      ]
+    },
+    "release-0.6-staging-storage-policy-readback": {
+      "batch": "release-0.6-staging-storage-policy-readback",
+      "base_commit": "0a58af598d3575eab17c607644e37ce14c9393e6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/check-s3.py",
+          "sha256": "0741086ad5f50a701d09df6b79f69281e262d4ffd7d2ac51f90c41ae85528cc6"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+        }
+      ],
+      "checks": [
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
+        "The protected database check returned only the active config revision and equality results for bucket and origins. Operator network checks and the standard probe recorded no credentials, signed URLs or object content."
+      ],
+      "limitations": [
+        "Current staging v0.5.1 only. The probe uses one synthetic object and does not change lifecycle or existing objects."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-cumulative-0a58af598",
+      "execution_receipts": [
+        {
+          "file": "live-storage-active-config.json",
+          "sha256": "9ab05f65f635f96a9d9412d12906f94f2325a6dcc7ec33173d8d43057a937810"
+        },
+        {
+          "file": "live-storage-policy.json",
+          "sha256": "4ce40c66ccd6d7d871774ec24d13f2730217a40338dbf7ec1ea9fa537744aae0"
+        },
+        {
+          "file": "live-storage-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "live-storage-signed-probe.log",
+          "sha256": "bbcddeececafab84290bcb2f892e8b8fddc6e6cc5561c11fb1dc078bc40bdc9c"
+        }
+      ]
+    },
+    "release-0.6-cumulative-image-receipts": {
+      "batch": "release-0.6-cumulative-image-receipts",
+      "base_commit": "0a58af598d3575eab17c607644e37ce14c9393e6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "checks": [
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
+      ],
+      "limitations": [
+        "Report-only CI inventory of a development SHA. No production license disposition or staging release receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-cumulative-0a58af598",
+      "execution_receipts": [
+        {
+          "file": "hosted-cumulative-image-readback.json",
+          "sha256": "7d179259a5e48f1aa72643e7ec996f45fa9f07cb16a83ae800a6a4af102d7160"
+        },
+        {
+          "file": "hosted-cumulative-image-scan.zip",
+          "sha256": "ebd914faf6b324f2aebb64064845bd5c9a0b517863b239a13b36887a18d78d44"
         }
       ]
     }
