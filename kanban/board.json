@@ -9007,7 +9007,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9027,7 +9028,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9418,6 +9419,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -13668,7 +13677,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13681,7 +13691,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13828,6 +13838,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -13920,7 +13938,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13932,7 +13951,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14365,6 +14384,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -17647,7 +17674,8 @@
         "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test."
+        "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test.",
+        "The restoration probe emits a structured exact-candidate result for login, dashboard, wallet and electricity, saving, solar and consultation with session revocation. The promotion verifier requires that original result and checks the chronology after data recovery. Verify it on the actual production-equivalent restored deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -17723,7 +17751,8 @@
           "release-0.6-measured-cutover-scratch",
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -22205,7 +22234,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22217,7 +22247,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22501,6 +22531,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -22574,7 +22612,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22586,7 +22625,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22870,6 +22909,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -26099,7 +26146,8 @@
         "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
         "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files.",
         "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews.",
-        "The approval check now recomputes RPO using the retained source baseline and replay time and enforces matching fingerprints. Repeat the complete measured recovery on the approved deployment."
+        "The approval check now recomputes RPO using the retained source baseline and replay time and enforces matching fingerprints. Repeat the complete measured recovery on the approved deployment.",
+        "The application check for the quarterly exercise now produces exact-revision, timestamped evidence for all core journeys and logout. Execute it on the restored target and retain the approved off-server receipts, measured recovery and alert readback."
       ],
       "owner": null,
       "depends_on": [],
@@ -26148,7 +26196,8 @@
           "release-0.6-core-recovery-receipt",
           "release-0.6-quarterly-scheduled-fixtures",
           "release-0.6-hosted-quarterly-exercise-readback",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": null
       }
@@ -37487,7 +37536,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-coverage-browser-selection",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37510,7 +37560,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -38249,6 +38299,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -40792,7 +40850,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -40820,7 +40879,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             }
           ],
           "checks": [
@@ -41116,6 +41175,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -711313,7 +711380,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -711325,7 +711393,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -711501,6 +711569,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -736669,7 +736745,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -736691,11 +736768,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "772b00a287972f078b1bbf31262ec037484f9d3c6a1004f2d642470b3e22a756"
+              "sha256": "ca8767a9e9ea84602910b5c7bf8af4288f13fd59f8a2d8fe55d8c83d881aad0f"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -737156,6 +737233,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -737676,7 +737762,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -737698,15 +737785,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "772b00a287972f078b1bbf31262ec037484f9d3c6a1004f2d642470b3e22a756"
+              "sha256": "ca8767a9e9ea84602910b5c7bf8af4288f13fd59f8a2d8fe55d8c83d881aad0f"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -738295,6 +738382,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -738446,7 +738543,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -738457,7 +738555,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -738866,6 +738964,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -739470,7 +739576,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -739491,7 +739598,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -739879,6 +739986,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -739933,7 +740048,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -739954,7 +740070,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -740342,6 +740458,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -747583,7 +747707,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -747607,11 +747732,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "12dce1ecec6721a5824d03297dbf040013eb56bc6a71328f3c49784e2a643130"
+              "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -747946,6 +748071,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -760081,7 +760215,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -760129,11 +760264,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "12dce1ecec6721a5824d03297dbf040013eb56bc6a71328f3c49784e2a643130"
+              "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
@@ -760485,6 +760620,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -760816,7 +760960,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -760864,7 +761009,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+              "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -761225,6 +761370,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -762565,7 +762718,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762585,7 +762739,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -762894,6 +763048,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -763019,7 +763181,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -763039,7 +763202,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -763348,6 +763511,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -763402,7 +763573,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -763422,7 +763594,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -763731,6 +763903,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-restored-application-probe",
+              "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
             }
           ]
         }
@@ -1140789,7 +1140969,8 @@
         "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open.",
         "The private Telegram queue now requires matching HTTP and integer Bot API rejection status. All 21 compiled PostgreSQL cases and 33 focused protocol/runtime cases passed. A relay 502 with a 429 body stays unknown and does not replay. Rehearse the selected relay on the immutable staging release.",
         "The release notifier now atomically syncs the unknown and confirmed summary and album receipts. All 20 notifier and 27 queue checks passed, including blocked send when the unknown receipt cannot sync and persisted unknown after confirmed receipt replacement fails. Actual staged worker and Telegram receipts remain required.",
-        "Daily backup and isolated restore reports now identify the exact off-server manifests by canonical SHA-256. The promotion verifier rejects a substituted manifest under the same label. All 19 promotion and 18 backup unit checks passed, as did the isolated native restore on the retained staging PostgreSQL and SeaweedFS images. The actual approved off-server deployment and production-equivalent recovery remain open."
+        "Daily backup and isolated restore reports now identify the exact off-server manifests by canonical SHA-256. The promotion verifier rejects a substituted manifest under the same label. All 19 promotion and 18 backup unit checks passed, as did the isolated native restore on the retained staging PostgreSQL and SeaweedFS images. The actual approved off-server deployment and production-equivalent recovery remain open.",
+        "The restored-application recovery probe now verifies the exact API and web revision before sign-in, then requires the owned dashboard, wallet, all four service reads and logout. The promotion verifier binds one original probe report to the recovery timeline. Forty-seven focused checks passed. Run the probe during the approved, measured restore."
       ],
       "owner": null,
       "depends_on": [],
@@ -1141179,7 +1141360,8 @@
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-release-notification-durability",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1141477,7 +1141659,8 @@
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
-        "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report."
+        "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report.",
+        "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1141560,7 +1141743,8 @@
           "release-0.6-promotion-checkpoint-parity",
           "release-0.6-staging-telegram-relay-recovery",
           "release-0.6-staging-knowledge-preview-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-restored-application-probe"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1332682,6 +1332866,89 @@
         {
           "file": "staging-fixture.sh",
           "sha256": "701af8813615ddcc44a2065d6fa682629b05dbd102ad4e89989fd28965aa1e0f"
+        }
+      ]
+    },
+    "release-0.6-restored-application-probe": {
+      "batch": "release-0.6-restored-application-probe",
+      "base_commit": "27b65e60d247b8897abb7033c898a33c9f94b084",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/production/test_synthetic_probe.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "a2f94e5c8d3987e15ee7857ee50ce525fae6aeacf85f08f445e27a422d5929e5"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "ca8767a9e9ea84602910b5c7bf8af4288f13fd59f8a2d8fe55d8c83d881aad0f"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "85000da318618bcd5aa332f89d49971a59170d6560eff98a345de68721b32fc8"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "e46ba100cb493ece7dec2101c472cc1ec8f51ab8fa9a1a871935fda5bdbf061a"
+        }
+      ],
+      "checks": [
+        "All 21 promotion, 13 synthetic-probe and 13 rollout-observer checks passed. The restored app rejects stale API or web revisions before sign-in. A successful fixture proves the owned dashboard, exact IRR balance representation and all four scoped service reads before revoking the session. The promotion verifier rejects swapped reports and mismatched recovery timestamps. Markdown formatting and Git diff validation passed."
+      ],
+      "limitations": [
+        "The recovery probe used loopback test data. The actual production-equivalent restored deployment, recovery timing and end-to-end operational evidence still require the approved target, fixture and backup destination."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-restored-application-probe",
+      "execution_receipts": [
+        {
+          "file": "promotion-tests.log",
+          "sha256": "939cd1229173f9fdf2355bd98aeb881812950d672c89d7977407d197523d8c1a"
+        },
+        {
+          "file": "synthetic-tests.log",
+          "sha256": "fe73d91586cdbe8fb328fcddd53eb72cbe73b2607588692a5ea3c945bb617cd0"
+        },
+        {
+          "file": "rollout-tests.log",
+          "sha256": "327e2883d524a1353793ecfaac17ec02c7bdcee56fcfeb7468de018aeff0c56e"
         }
       ]
     }

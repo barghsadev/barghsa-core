@@ -362,11 +362,19 @@ class StructuredReceiptTest(unittest.TestCase):
                     'captured_at': '2026-11-09T02:06:00Z', 'tables': deepcopy(report['tables'])}
         report['baseline_sha256'] = hashlib.sha256(json.dumps(baseline).encode()).hexdigest()
         checks = {}
-        for name in promotion.CORE_RECOVERY_CHECKS:
+        for name in ('configuration_restore', 'object_restore'):
             path = self.root / f'{name}.log'
             path.write_text(f'Controlled {name} recovery evidence\n')
             checks[name] = {'status': 'passed', 'verified_at': '2026-11-09T03:59:00Z',
                             'evidence': path.name, 'evidence_sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+        probe = self.root / 'restored-application.json'
+        probe_checks = {name: {'status': 'passed', 'verified_at': '2026-11-09T03:59:00Z'}
+                        for name in promotion.RESTORED_APP_CHECKS | {'liveness', 'account', 'logout'}}
+        probe.write_text(json.dumps({'scope': 'restored_application', 'status': 'passed',
+                                     'candidate_sha': SHA, 'checks': probe_checks}))
+        for name in promotion.RESTORED_APP_CHECKS:
+            checks[name] = {**probe_checks[name], 'evidence': probe.name,
+                            'evidence_sha256': promotion.file_digest(probe)}
         return {
             'backup_job': {'status': 'passed', 'phase': 'retention', 'backup': label,
                            'started_at': at(self.completed - 121),
@@ -513,6 +521,57 @@ class StructuredReceiptTest(unittest.TestCase):
                 fingerprint = self.write_bundle(bad)
                 with self.assertRaisesRegex(ValueError, message):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_restored_application_evidence_must_prove_revision_completion_and_chronology(self):
+        for scenario, expected in (
+            ('different-candidate', 'exact candidate and journeys'),
+            ('missing-logout', 'exact candidate and journeys'),
+            ('failed-wallet', 'probe check failed'),
+            ('invented-time', 'inconsistent timing'),
+            ('logout-before-journey', 'before service journeys and logout'),
+            ('different-file', 'one exact probe report'),
+        ):
+            with self.subTest(scenario=scenario):
+                entries = self.backup()
+                checks = entries['core_service_report']['checks']
+                path = self.root / checks['wallet']['evidence']
+                probe = json.loads(path.read_text())
+                if scenario == 'different-candidate':
+                    probe['candidate_sha'] = 'd' * 40
+                elif scenario == 'missing-logout':
+                    del probe['checks']['logout']
+                elif scenario == 'failed-wallet':
+                    probe['checks']['wallet']['status'] = 'failed'
+                elif scenario == 'invented-time':
+                    probe['checks']['saving']['verified_at'] = '2026-11-09T03:59:30Z'
+                elif scenario == 'logout-before-journey':
+                    probe['checks']['logout']['verified_at'] = '2026-11-09T03:58:30Z'
+                else:
+                    other = self.root / 'second-run.json'
+                    other.write_bytes(path.read_bytes())
+                    checks['login']['evidence'] = other.name
+                path.write_text(json.dumps(probe))
+                for name in promotion.RESTORED_APP_CHECKS:
+                    checks[name]['evidence_sha256'] = promotion.file_digest(self.root / checks[name]['evidence'])
+                fingerprint = self.write_bundle(entries)
+                with self.assertRaisesRegex(ValueError, expected):
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_recovery_rejects_probe_changed_between_hashing_and_parsing(self):
+        entries = self.backup()
+        path = self.root / 'restored-application.json'
+        original = promotion.file_digest
+
+        def replace_after_read(value):
+            digest = original(value)
+            if value == path:
+                path.write_bytes(path.read_bytes() + b' ')
+            return digest
+
+        fingerprint = self.write_bundle(entries)
+        with patch.object(promotion, 'file_digest', side_effect=replace_after_read), \
+                self.assertRaisesRegex(ValueError, 'evidence file changed'):
+            promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
     def test_requires_exact_source_baseline_and_recomputes_measured_rpo(self):
         scenarios = (

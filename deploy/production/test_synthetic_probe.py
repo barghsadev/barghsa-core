@@ -19,6 +19,7 @@ PASSWORD = 'synthetic-only-password'
 BEARER = 'synthetic-session-bearer'
 DEVICE = 'd' * 64
 CSRF = 'f' * 64
+REVISION = 'a' * 40
 JOURNEYS = {
     'electricity': ('/api/electricity/orders', None, 'orderId', 'profileId'),
     'saving': ('/api/saving/orders', None, 'id', 'profile_id'),
@@ -64,11 +65,14 @@ class SyntheticProbeTests(unittest.TestCase):
                 path = parsed.path
                 fixture.calls.append(('GET', path))
                 cookie = self.headers.get('Cookie', '')
+                if path == '/release.json':
+                    return self.response({'commit': 'b' * 40 if fixture.fault == 'stale-web' else REVISION})
                 if path in ('/api/health/live', '/api/health/ready'):
                     if cookie:
                         return self.response({}, 403)
                     payload = {'status': 'ok'}
                     if path == '/api/health/ready':
+                        payload['commit'] = 'b' * 40 if fixture.fault == 'stale-api' else REVISION
                         payload['checks'] = {
                             name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')
                         }
@@ -102,6 +106,11 @@ class SyntheticProbeTests(unittest.TestCase):
                     if fixture.fault == 'additional_profile':
                         profiles.append({'id': USER, 'isDefault': False})
                     return self.response({'activeProfileId': PROFILE, 'profiles': profiles})
+                if path == '/api/dashboard/context':
+                    return self.response({'profile': {'id': PROFILE}, 'access': {'wallet': True}})
+                if path == '/api/wallet/' + PROFILE:
+                    return self.response({'balance': '2000' if fixture.fault != 'invalid-wallet' else 2000,
+                                          'currency': 'IRR'})
                 for name, (route, envelope, record_key, profile_key) in JOURNEYS.items():
                     if path == f'{route}/{FIXTURES[name]}' and not parsed.query:
                         if name == 'solar' and fixture.fault == 'missing_fixture':
@@ -185,7 +194,7 @@ class SyntheticProbeTests(unittest.TestCase):
         self.config['origin'] = self.origin
         return cert
 
-    def probe(self, mode=0o600, *, trust=None):
+    def probe(self, mode=0o600, *, trust=None, recovery=False):
         if self.thread is None:
             self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
             self.thread.start()
@@ -210,9 +219,9 @@ def load_fixture_ca(context, purpose=ssl.Purpose.SERVER_AUTH):
 ssl.SSLContext.load_default_certs = load_fixture_ca
 runpy.run_path(sys.argv.pop(1), run_name='__main__')
 ''', str(trust)])
+        options = ['--recovery-commit', REVISION] if recovery else ['--synthetic', '--metrics-file', str(self.metrics)]
         return subprocess.run(
-            [*command, str(OBSERVER), '--synthetic', '--config', str(config),
-             '--metrics-file', str(self.metrics)],
+            [*command, str(OBSERVER), '--config', str(config), *options],
             text=True, capture_output=True, timeout=12,
         )
 
@@ -240,6 +249,42 @@ runpy.run_path(sys.argv.pop(1), run_name='__main__')
         self.assertTrue(self.logout_readback_used_session)
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
         self.assertNotIn('certificate_expiry', self.metrics.read_text())
+
+    def test_recovery_verifies_scoped_financial_and_service_reads_on_the_exact_revision(self):
+        result = self.probe(recovery=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual((report['scope'], report['status'], report['candidate_sha']),
+                         ('restored_application', 'passed', REVISION))
+        self.assertEqual(set(report['checks']),
+                         {'liveness', 'readiness', 'login', 'account', 'dashboard', 'wallet', *JOURNEYS, 'logout'})
+        self.assertTrue(all(row['status'] == 'passed' and row['verified_at'].endswith('+00:00')
+                            for row in report['checks'].values()))
+        self.assertIn(('GET', '/api/wallet/' + PROFILE), self.calls)
+        self.assertTrue(self.logout_readback_used_session)
+        for protected in (USER, PROFILE, *FIXTURES.values(), PASSWORD, BEARER, DEVICE, CSRF):
+            self.assertNotIn(protected, result.stdout)
+
+    def test_recovery_refuses_a_stale_api_or_web_before_sign_in(self):
+        for fault in ('stale-api', 'stale-web'):
+            with self.subTest(fault=fault):
+                self.fault = fault
+                result = self.probe(recovery=True)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                checks = json.loads(result.stdout)['checks']
+                self.assertEqual(checks['readiness']['reason'], 'recovery_revision_mismatch')
+                self.assertEqual(checks['login']['status'], 'skipped')
+                self.assertNotIn(('POST', '/api/auth/login'), self.calls)
+
+    def test_recovery_rejects_a_non_decimal_wallet_without_leaving_a_session(self):
+        self.fault = 'invalid-wallet'
+        result = self.probe(recovery=True)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report['status'], 'failed')
+        self.assertEqual(report['checks']['wallet']['reason'], 'recovery_wallet_failed')
+        self.assertEqual(report['checks']['logout']['status'], 'passed')
+        self.assertTrue(self.logout_readback_used_session)
 
     def test_redis_fallback_stops_probe_before_authentication(self):
         self.fault = 'redis-fallback'

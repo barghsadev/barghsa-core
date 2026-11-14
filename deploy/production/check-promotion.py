@@ -37,6 +37,7 @@ CORE_RECOVERY_CHECKS = frozenset({
     'configuration_restore', 'object_restore', 'readiness', 'login', 'dashboard', 'wallet',
     'electricity', 'saving', 'solar', 'consultation',
 })
+RESTORED_APP_CHECKS = CORE_RECOVERY_CHECKS - {'configuration_restore', 'object_restore'}
 DAST_PROBES = {
     'anonymous_session': 401,
     'authenticated_session': 200,
@@ -326,7 +327,7 @@ def verify_core_recovery(core, database, database_digest, directory, sha, now):
     checks = core.get('checks')
     if not isinstance(checks, dict) or set(checks) != CORE_RECOVERY_CHECKS:
         raise ValueError('Core-service recovery must record every required check')
-    times, evidence = {}, {}
+    times, evidence, app_evidence = {}, {}, set()
     for name, check in checks.items():
         if not isinstance(check, dict) or check.get('status') != 'passed':
             raise ValueError('A required core-service recovery check did not pass')
@@ -338,12 +339,40 @@ def verify_core_recovery(core, database, database_digest, directory, sha, now):
             evidence[path] = file_digest(path)
         if evidence[path] != check.get('evidence_sha256'):
             raise ValueError('A core-service recovery evidence file changed')
+        if name in RESTORED_APP_CHECKS:
+            app_evidence.add(path)
     if (times['readiness'] < max(database_ready, times['configuration_restore'], times['object_restore'])
             or times['login'] < times['readiness']
             or any(times[name] < times['login'] for name in CORE_RECOVERY_CHECKS - {
                 'configuration_restore', 'object_restore', 'readiness', 'login',
             })):
         raise ValueError('Core-service recovery must verify the restored application before service journeys')
+    if len(app_evidence) != 1:
+        raise ValueError('Restored application checks must reference one exact probe report')
+    probe_path = next(iter(app_evidence))
+    with probe_path.open('rb') as source:
+        contents = source.read(65537)
+    if len(contents) > 65536:
+        raise ValueError('Restored application probe report exceeds its size limit')
+    if hashlib.sha256(contents).hexdigest() != evidence[probe_path]:
+        raise ValueError('A core-service recovery evidence file changed')
+    probe = json.loads(contents)
+    expected = RESTORED_APP_CHECKS | {'liveness', 'account', 'logout'}
+    if (not isinstance(probe, dict) or probe.get('scope') != 'restored_application'
+            or probe.get('candidate_sha') != sha or probe.get('status') != 'passed'
+            or not isinstance(probe.get('checks'), dict) or set(probe['checks']) != expected):
+        raise ValueError('Restored application probe does not identify the exact candidate and journeys')
+    observed = {}
+    for name, check in probe['checks'].items():
+        if not isinstance(check, dict) or check.get('status') != 'passed':
+            raise ValueError('A restored application probe check failed')
+        verified = observed[name] = epoch(check.get('verified_at'))
+        if not started <= verified <= completed or (name in times and times[name] != verified):
+            raise ValueError('A restored application probe check has inconsistent timing')
+    if (not observed['liveness'] <= observed['readiness'] <= observed['login'] <= observed['account']
+            or any(not observed['account'] <= observed[name] <= observed['logout']
+                   for name in RESTORED_APP_CHECKS - {'readiness', 'login'})):
+        raise ValueError('Restored application probe did not verify the account before service journeys and logout')
     return round(completed - started, 3)
 
 

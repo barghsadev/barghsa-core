@@ -2,7 +2,7 @@
 """Read candidate smoke and production monitoring for guarded-rollout.py."""
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 from http.cookiejar import Cookie, CookieJar
 import ipaddress
 import json
@@ -156,6 +156,19 @@ def read_fixture(get, name, config):
             and record.get(profile_key) == config['profile_id'])
 
 
+def dashboard_matches(get, profile_id):
+    dashboard = get('/api/dashboard/context')
+    return (dashboard.get('profile', {}).get('id') == profile_id
+            and dashboard.get('access', {}).get('wallet') is True)
+
+
+def wallet_matches(get, profile_id):
+    wallet = get('/api/wallet/' + profile_id)
+    balance = wallet.get('balance')
+    return (wallet.get('currency') == 'IRR' and isinstance(balance, str)
+            and bool(re.fullmatch(r'0|[1-9][0-9]{0,18}', balance)))
+
+
 def smoke(reader, previous, config):
     results = dict.fromkeys(('health', 'dashboard', 'wallet', *JOURNEYS), False)
     results['health'] = (release_ready(reader, config['candidate']['revision']['commit'])
@@ -168,14 +181,9 @@ def smoke(reader, previous, config):
     if (not customer_matches(get('/api/auth/user'), config)
             or not fixture_profile_matches(get('/api/profiles'), config['profile_id'])):
         return results
-    dashboard = get('/api/dashboard/context')
-    results['dashboard'] = (dashboard.get('profile', {}).get('id') == config['profile_id']
-                            and dashboard.get('access', {}).get('wallet') is True)
+    results['dashboard'] = dashboard_matches(get, config['profile_id'])
     if results['dashboard']:
-        wallet = get('/api/wallet/' + config['profile_id'])
-        balance = wallet.get('balance')
-        results['wallet'] = (wallet.get('currency') == 'IRR' and isinstance(balance, str)
-                             and bool(re.fullmatch(r'0|[1-9][0-9]{0,18}', balance)))
+        results['wallet'] = wallet_matches(get, config['profile_id'])
     for name in JOURNEYS:
         try:
             results[name] = read_fixture(get, name, config)
@@ -326,11 +334,12 @@ def verify_synthetic_account(browser, config):
             'fixture_profile_not_isolated')
 
 
-def synthetic(config):
+def synthetic(config, recovery_commit=None):
     validate_synthetic(config)
     public = SyntheticBrowser(config['origin'], None)
     browser = SyntheticBrowser(config['origin'], config.get('device_token'))
-    results = {name: {'status': 'skipped'} for name in SYNTHETIC_CHECKS}
+    names = SYNTHETIC_CHECKS if recovery_commit is None else (*SYNTHETIC_CHECKS, 'dashboard', 'wallet')
+    results = {name: {'status': 'skipped'} for name in names}
 
     def check(name, client, operation):
         started = time.monotonic()
@@ -350,18 +359,30 @@ def synthetic(config):
             **outcome, 'duration_ms': round((time.monotonic() - started) * 1000),
             'correlation_id': client.correlation_id,
         }
+        if recovery_commit is not None:
+            results[name]['verified_at'] = datetime.now(timezone.utc).isoformat()
         return outcome['status'] == 'passed'
+
+    def verify_readiness():
+        ready = public.request('/api/health/ready')
+        require(dependencies_ready(ready), 'readiness_failed')
+        if recovery_commit is not None:
+            require(ready.get('commit') == recovery_commit
+                    and public.request('/release.json').get('commit') == recovery_commit,
+                    'recovery_revision_mismatch')
 
     live = check('liveness', public, lambda: require(
         public.request('/api/health/live').get('status') == 'ok', 'liveness_failed',
     ))
-    ready = check('readiness', public, lambda: require(
-        dependencies_ready(public.request('/api/health/ready')), 'readiness_failed',
-    ))
+    ready = check('readiness', public, verify_readiness)
     if live and ready:
         try:
             login = check('login', browser, lambda: browser.login(config))
             if login and check('account', browser, lambda: verify_synthetic_account(browser, config)):
+                if recovery_commit is not None and check('dashboard', browser, lambda: require(
+                        dashboard_matches(browser.request, config['profile_id']), 'recovery_dashboard_failed')):
+                    check('wallet', browser, lambda: require(
+                        wallet_matches(browser.request, config['profile_id']), 'recovery_wallet_failed'))
                 for name in JOURNEYS:
                     check(name, browser, lambda: require(
                         read_fixture(browser.request, name, config), 'fixture_unavailable',
@@ -369,8 +390,11 @@ def synthetic(config):
         finally:
             if browser.has_session():
                 check('logout', browser, browser.logout)
-    expiry = certificate_expiry(config['origin'])
     report = {'observed_at': int(time.time()), 'checks': results}
+    if recovery_commit is not None:
+        return {**report, 'scope': 'restored_application', 'candidate_sha': recovery_commit,
+                'status': 'passed' if all(row['status'] == 'passed' for row in results.values()) else 'failed'}
+    expiry = certificate_expiry(config['origin'])
     if expiry is not None:
         report['tls_certificate_expiry_timestamp_seconds'] = expiry
     return report
@@ -657,14 +681,17 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--baseline-seconds', type=int)
     mode.add_argument('--synthetic', action='store_true')
+    mode.add_argument('--recovery-commit')
     parser.add_argument('--metrics-file', type=Path)
     options = parser.parse_args()
     if options.metrics_file and not options.synthetic:
         parser.error('--metrics-file requires --synthetic')
     try:
         config = protected_config(options.config)
-        if options.synthetic:
-            result = synthetic(config)
+        if options.synthetic or options.recovery_commit is not None:
+            require(options.recovery_commit is None or re.fullmatch(r'[a-f0-9]{40}', options.recovery_commit),
+                    'invalid_recovery_commit')
+            result = synthetic(config, options.recovery_commit)
             if options.metrics_file:
                 synthetic_metrics(options.metrics_file, result)
             print(json.dumps(result, allow_nan=False))

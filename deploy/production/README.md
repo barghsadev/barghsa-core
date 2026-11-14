@@ -165,11 +165,23 @@ these timestamps and enforces the 60-minute core-service limit.
 The `checks` object must contain `configuration_restore`, `object_restore`,
 `readiness`, `login`, `dashboard`, `wallet`, `electricity`, `saving`, `solar`,
 and `consultation`. Record `status`, `verified_at`, `evidence` and
-`evidence_sha256` for each check. Use the relative path and hash of the actual
-operator output from the [isolated exercise](../../docs/operations/quarterly-recovery-exercise.md).
-Verify readiness after the database, configuration and object restores. Verify
-login before the owned customer journeys. Keep the independent baseline evidence
-with the package for owner review.
+`evidence_sha256` for each check. For configuration and object recovery, use the
+relative path and hash of the actual operator output from the
+[isolated exercise](../../docs/operations/quarterly-recovery-exercise.md). After
+those restores and database recovery, collect one application probe report.
+
+```sh
+python3 deploy/production/rollout-observer.py --recovery-commit "$CANDIDATE_SHA" \\
+  --config /protected/restored-synthetic.json > /protected/release-evidence/restored-application.json
+```
+
+Use the dedicated customer fixture configuration described under synthetic
+checks, pointing its origin at the isolated restored deployment. The probe
+checks both release revisions and healthy dependencies before login. It reads
+the owned dashboard, wallet and four existing service records, then verifies
+session revocation. For each application check in `core_service_report`, use
+its timestamp and the relative path and SHA-256 of that same original probe
+report. Keep the independent baseline with the package for owner review.
 
 ```sh
 python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \
