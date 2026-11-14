@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:21:09+00:00",
+  "updated": "2026-11-14T18:35:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9100,7 +9100,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9120,7 +9121,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9535,6 +9536,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -13801,7 +13810,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13814,7 +13824,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14001,6 +14011,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -14098,7 +14116,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -14110,7 +14129,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14583,6 +14602,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -17875,7 +17902,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test.",
         "The restoration probe emits a structured exact-candidate result for login, dashboard, wallet and electricity, saving, solar and consultation with session revocation. The promotion verifier requires that original result and checks the chronology after data recovery. Verify it on the actual production-equivalent restored deployment.",
-        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -17953,7 +17981,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -18089,7 +18118,8 @@
       "remaining": [
         "No quarterly schedule is installed or activated. Each exercise requires a coordinated fresh source baseline/confirmed commit and archived production results; live RPO/RTO and delivered alerts remain external.",
         "Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover.",
-        "The restore report now identifies the exact independently captured source baseline. Keep both original artifacts from the first deployed quarterly exercise with the observed alert delivery."
+        "The restore report now identifies the exact independently captured source baseline. Keep both original artifacts from the first deployed quarterly exercise with the observed alert delivery.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -18154,11 +18184,13 @@
           "deploy/production/test_check_promotion.py",
           "docs/operations/backup/postgresql-restore-runbook.md",
           "packages/db/scripts/backup/test_verify_restore.py",
-          "packages/db/scripts/backup/verify_restore.py"
+          "packages/db/scripts/backup/verify_restore.py",
+          "packages/db/scripts/backup/physical_backup.py"
         ],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -22302,7 +22334,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-configuration-backup-readback",
-          "release-0.6-wal-upload-readback"
+          "release-0.6-wal-upload-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -22338,7 +22371,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "70d83afebb43b4482544f4556474aca16bc119569273d67e83cd55b240275431"
+              "sha256": "99ac3023fa72c6c4e045ebef65f10326d52e43293dd9baf0922eaaedc3e6267a"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -22444,6 +22477,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "Fresh WAL uploads now verify encrypted storage readback. The existing full backup uses the same checksum rule and unchanged manifest and receipt formats. Native WAL replay, PITR, corruption and retry checks passed. Restore procedures, deployment topology and RPO/RTO targets keep their existing definitions."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -22523,7 +22564,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22535,7 +22577,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22859,6 +22901,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -22937,7 +22987,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22949,7 +23000,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23273,6 +23324,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -26670,7 +26729,8 @@
         "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts. The production approval check now validates the core-service receipt and its evidence files.",
         "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews.",
         "The approval check now recomputes RPO using the retained source baseline and replay time and enforces matching fingerprints. Repeat the complete measured recovery on the approved deployment.",
-        "The application check for the quarterly exercise now produces exact-revision, timestamped evidence for all core journeys and logout. Execute it on the restored target and retain the approved off-server receipts, measured recovery and alert readback."
+        "The application check for the quarterly exercise now produces exact-revision, timestamped evidence for all core journeys and logout. Execute it on the restored target and retain the approved off-server receipts, measured recovery and alert readback.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -26708,7 +26768,8 @@
           "deploy/production/test_check_promotion.py",
           "docs/operations/backup/postgresql-restore-runbook.md",
           "packages/db/scripts/backup/test_verify_restore.py",
-          "packages/db/scripts/backup/verify_restore.py"
+          "packages/db/scripts/backup/verify_restore.py",
+          "packages/db/scripts/backup/physical_backup.py"
         ],
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
@@ -26720,7 +26781,8 @@
           "release-0.6-quarterly-scheduled-fixtures",
           "release-0.6-hosted-quarterly-exercise-readback",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null
       }
@@ -38247,7 +38309,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38270,7 +38333,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -38294,7 +38357,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "145b5d06f91059cd3a725318bc330c25c2162872468cc0041d5e28cbe3e95474"
+              "sha256": "8f490a1e9011701c7a2d0b3dc1e770516bd7cea16a4ad488c9ff8908bf52c321"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -39097,6 +39160,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -41693,7 +41765,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41721,7 +41794,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             }
           ],
           "checks": [
@@ -42057,6 +42130,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -706410,7 +706491,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-configuration-backup-readback"
+          "release-0.6-configuration-backup-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-sql-data-flow",
@@ -706447,7 +706529,7 @@
             },
             {
               "path": "packages/db/scripts/backup/verify_restore.py",
-              "sha256": "87d6730283a64759d9f02bef93c51a0b6dde5df605986680e5a35fa7881609a0"
+              "sha256": "e444e52edd022cfed20b2829b09418be99a5958ab8d73196104e5469a5446675"
             },
             {
               "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
@@ -706577,6 +706659,14 @@
                 "packages/db/scripts/backup/config_backup.py"
               ],
               "scope": "Configuration publication now shares encrypted object and manifest readback. Source review confirmed that SQL, parameters, table inventory and snapshot rehydration are unaffected. Native migrated configuration backup and rehydration passed."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "packages/db/scripts/backup/verify_restore.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -716989,7 +717079,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -717001,7 +717092,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -717217,6 +717308,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -739630,7 +739729,8 @@
       "launch_required": true,
       "remaining": [
         "Read back the installed timer on the approved dedicated backup host, execute its isolated restore against an authenticated off-server backup and independent baseline, and retain measured RPO/RTO and failure-alert receipts.",
-        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews."
+        "Hosted push run 43477615401 passed all four quarterly fixture and review jobs on ea3c2e76. The first actual scheduled receipt remains open. Its source-bound packet is fixture evidence. Retain the actual production-equivalent recovery, delivery and signed reviews.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -739640,13 +739740,21 @@
           ".github/workflows/storage-recovery-quarterly.yml",
           "docs/operations/quarterly-recovery-exercise.md",
           "docs/runbooks/storage-outage.md",
-          "packages/db/scripts/backup/run_physical_backup_tests.py"
+          "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
         ],
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
           "release-0.6-quarterly-manual-exercise",
           "release-0.6-quarterly-scheduled-fixtures",
-          "release-0.6-hosted-quarterly-exercise-readback"
+          "release-0.6-hosted-quarterly-exercise-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": null
       }
@@ -742865,7 +742973,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -742887,11 +742996,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "18316dede61cce403ffe7bf06f0bfe35cad37e7fb344962825e8d52620e5e1ee"
+              "sha256": "530211bdebc8cdae993281f56741f727679294c1b869d474c2c218dc8df37a2f"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -743378,6 +743487,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -743913,7 +744031,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -743935,15 +744054,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "18316dede61cce403ffe7bf06f0bfe35cad37e7fb344962825e8d52620e5e1ee"
+              "sha256": "530211bdebc8cdae993281f56741f727679294c1b869d474c2c218dc8df37a2f"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -744584,6 +744703,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -744745,7 +744874,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-journey-source-pairing"
+          "release-0.6-journey-source-pairing",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -744756,7 +744886,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -745213,6 +745343,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -745831,7 +745969,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -745852,7 +745991,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -746264,6 +746403,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -746321,7 +746468,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -746342,7 +746490,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -746754,6 +746902,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -754064,7 +754220,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-journey-source-pairing"
+          "release-0.6-journey-source-pairing",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -754088,7 +754245,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -754476,6 +754633,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -758669,7 +758834,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-wal-upload-readback",
-          "release-0.6-journey-source-pairing"
+          "release-0.6-journey-source-pairing",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -758685,7 +758851,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "145b5d06f91059cd3a725318bc330c25c2162872468cc0041d5e28cbe3e95474"
+              "sha256": "8f490a1e9011701c7a2d0b3dc1e770516bd7cea16a4ad488c9ff8908bf52c321"
             }
           ],
           "checks": [
@@ -758860,6 +759026,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The burn-rule aggregation now filters incomplete outcome pairs before summing across sources. Alert thresholds, windows, scope labels, metric names and unrelated objectives retain their criteria. All seven monitoring rule suites passed."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -766787,7 +766961,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -766835,7 +767010,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -767232,6 +767407,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -767568,7 +767751,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -767616,7 +767800,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -768017,6 +768201,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -769372,7 +769564,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -769392,7 +769585,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -769725,6 +769918,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -769853,7 +770054,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -769873,7 +770075,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -770206,6 +770408,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -770263,7 +770473,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-restore-source-identity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -770283,7 +770494,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -770616,6 +770827,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-restore-source-identity",
+              "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
             }
           ]
         }
@@ -1150629,7 +1150848,8 @@
         "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
-        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open."
+        "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151037,7 +1151257,8 @@
           "release-0.6-csp-enforced-feedback",
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-journey-source-pairing"
+          "release-0.6-journey-source-pairing",
+          "release-0.6-restore-source-identity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1151280,7 +1151501,9 @@
           "deploy/production/guarded-rollout.py",
           "deploy/production/test_guarded_rollout.py",
           "deploy/monitoring/journey-slo-alerts.test.yml",
-          "deploy/monitoring/journey-slo-alerts.yml"
+          "deploy/monitoring/journey-slo-alerts.yml",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/db/scripts/backup/verify_restore.py"
         ]
       }
     },
@@ -1151346,7 +1151569,8 @@
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151436,7 +1151660,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-receiver-version-backup",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-restore-source-identity"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1345593,6 +1345818,125 @@
         {
           "file": "staging-promtool.log",
           "sha256": "26b65417a80860e2c38ef9596cf195e194f6daf93df67a2b5fc77736c680d8be"
+        },
+        {
+          "file": "static.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-restore-source-identity": {
+      "batch": "release-0.6-restore-source-identity",
+      "base_commit": "b9342eba107b45b9d05f5b1a7f3b0a2453ec600e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.01.05",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.11.04.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/test_verify_restore.py",
+        "packages/db/scripts/backup/verify_restore.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "530211bdebc8cdae993281f56741f727679294c1b869d474c2c218dc8df37a2f"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "8f490a1e9011701c7a2d0b3dc1e770516bd7cea16a4ad488c9ff8908bf52c321"
+        },
+        {
+          "path": "packages/db/scripts/backup/archive-wal.sh",
+          "sha256": "5d9a44852eb48ee03b8777059dd54e2bd05b6d3b50fcfe775aa61f6c1cc95d9a"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "99ac3023fa72c6c4e045ebef65f10326d52e43293dd9baf0922eaaedc3e6267a"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "196c7b9be270d821feb01fdb9c1aa7172735d0a38e3a20f609bf31d8605d36eb"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "e4d757c4a1afecb19ec564b396ccd776970159881af6e130ff860568391e9df0"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "6b1ba217bec7c02acf9f271a7f908464511eba5f0b6b414db44afa51b6f05de8"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify-restore.sh",
+          "sha256": "615d8615db6e893b642eed3e5e6ec0676b1cd274bbd89cdbfefd36a706d12169"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "e444e52edd022cfed20b2829b09418be99a5958ab8d73196104e5469a5446675"
+        }
+      ],
+      "checks": [
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "Python syntax, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The native run used isolated container resources on the staging host and authenticated synthetic storage over a Docker-local network. The operational restore, measured core recovery, external alert deliveries and exact candidate staging receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-restore-source-identity",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "fd571127ef79486472c636a03e032767c908b9d95d50ccec730fe64032075a06"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "713302e156d6d335dad61f6a60e905faa7763ec832b4b65ed1f54c3f49cd4ed0"
+        },
+        {
+          "file": "native.log",
+          "sha256": "855e56c06a5e121d0fa50f2e7960551d3d4a3cc486fa3ee0107fda9dd1a76245"
+        },
+        {
+          "file": "replay.log",
+          "sha256": "2d30a02e6350b4a2335efefeb4962d86939d23e16466a1508edf311e07a289e8"
         },
         {
           "file": "static.log",

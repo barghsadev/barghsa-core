@@ -165,17 +165,21 @@ source commit, rather than a full-backup timestamp or an arbitrary wall-clock ti
   --work-dir /recovery --sql-file /secure/restore-assertions.sql
 ```
 
-The capture reads the direct URL and records one consistent snapshot of all three
-tables. Baselines contain counts and hashes, not customer rows. They cannot be
-overwritten implicitly. The exercise defaults to the latest full backup plus WAL;
-`--pitr` selects a specific time. `VERIFY_PG_USER` and `VERIFY_PG_DATABASE` default
+The capture reads the PostgreSQL system identifier and all three table
+fingerprints in one snapshot over the direct connection. Use a source review
+role with read access to the three tables and permission to execute
+`pg_catalog.pg_control_system()`. The baseline stores the cluster ID, counts
+and hashes. Capture a fresh version 2 baseline for this verifier and keep older
+baselines with their exercise records. The exercise selects the newest eligible
+full backup for that cluster and replays WAL. Use `--pitr` to select a specific
+time. `VERIFY_PG_USER` and `VERIFY_PG_DATABASE` default
 to `barghsa`. `VERIFY_BASELINE_FILE`, `VERIFY_SQL_FILE` and `WORK_DIR` may provide
 the corresponding arguments. The working directory is an existing parent, never
 a deletion target. Only owned temporary children are removed after the clone stops.
 If shutdown fails, its files remain for inspection.
 
-The JSON result records replay-based `rpo_seconds`, `database_rto_seconds`, table
-evidence, `baseline_sha256` and pass/fail. Retain the original baseline bytes with
+The JSON result records the restored `system_id`, replay-based `rpo_seconds`,
+`database_rto_seconds`, table evidence, `baseline_sha256` and pass/fail. Retain the original baseline bytes with
 the report for the production approval check. Missing source or replay evidence
 fails verification. Limits are 300 seconds and 3600 seconds. Database RTO starts before download
 and ends after readiness and data checks; `core_service_rto_seconds` remains null

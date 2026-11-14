@@ -126,9 +126,11 @@ Paths in these indexes are relative to the same protected approval package.
   to the manifest used in that exercise. The daily job and restore exercise
   each record `backup_manifest_sha256` for the exact manifest they verified,
   using SHA-256 over its JSON object serialized with sorted keys. Set
-  `source_baseline` to the original
-  independently captured baseline file used by the restore verifier. Keep that
-  file byte-for-byte so its SHA-256 matches the restore report. Add
+  `source_baseline` to the original version 2 baseline independently captured
+  from the source database. The
+  baseline, restored database report and both manifests must carry the same
+  PostgreSQL system identifier. Keep the file byte-for-byte so its SHA-256
+  matches the restore report. Add
   `core_service_report` using the format below. The check enforces backup age
   under 24 hours, native WAL range and tablespace metadata on both manifests,
   a matching database system and matching source/restored table

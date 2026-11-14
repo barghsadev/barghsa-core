@@ -175,6 +175,8 @@ class RestoreExerciseTests(unittest.TestCase):
                                     'PGSERVICE': 'must-not-be-used', 'PGSERVICEFILE': '/missing-service'}):
             result = verify.exercise(self.args())
         self.assertEqual(result['status'], 'passed', result)
+        self.assertEqual(json.loads(self.baseline.read_text())['system_id'], self.fixture.base['system_id'])
+        self.assertEqual(result['system_id'], self.fixture.base['system_id'])
         self.assertEqual(result['tables']['users']['count'], 3)
         self.assertEqual(result['baseline_sha256'], hashlib.sha256(self.baseline.read_bytes()).hexdigest())
         self.assertEqual(result['backup_manifest_sha256'], hashlib.sha256(
@@ -183,6 +185,18 @@ class RestoreExerciseTests(unittest.TestCase):
         self.assertGreater(result['database_rto_seconds'], 0)
         self.assertIsNone(result['core_service_rto_seconds'])
         self.assertEqual(list(self.fixture.root.glob('barghsa-exercise-*')), [])
+
+    def test_identical_fingerprints_cannot_verify_a_different_database_system(self):
+        value = json.loads(self.baseline.read_text())
+        value['system_id'] = '1'
+        foreign = self.fixture.root / 'foreign-baseline.json'
+        foreign.write_text(json.dumps(value))
+        with patch.dict(os.environ, {'VERIFY_PG_USER': 'postgres'}):
+            result = verify.exercise(self.args(foreign))
+        self.assertEqual(result['status'], 'failed', result)
+        self.assertIn('No completed backup matches the recovery request', result['error'])
+        self.assertNotIn('tables', result)
+        self.assertIsNone(result['rpo_seconds'])
 
     def test_limit_failure_keeps_measured_rpo(self):
         with patch.dict(os.environ, {'VERIFY_PG_USER': 'postgres'}), patch.object(verify, 'check_limits', side_effect=backup.BackupError('threshold exceeded')):

@@ -28,16 +28,18 @@ def psql(env, sql):
 
 
 def fingerprints(env):
-    # One COPY statement means one consistent snapshot across all three tables.
+    # Read the cluster identity and all three tables through the same connection.
     # Ordering, timezone and serialization settings are identical on both sides.
     selects = [f"SELECT '{table}' AS entity, row_to_json(t)::text AS payload "
                f"FROM public.{table} t" for table in TABLES]
+    selects.append("SELECT 'cluster', system_identifier::text FROM pg_catalog.pg_control_system()")
     sql = 'COPY (SELECT entity, payload FROM (' + ' UNION ALL '.join(selects) + \
           ') snapshots ORDER BY entity COLLATE "C", payload COLLATE "C") TO STDOUT'
     env = {**env, "PGOPTIONS": "-c default_transaction_read_only=on -c TimeZone=UTC "
            "-c DateStyle=ISO -c extra_float_digits=3 -c bytea_output=hex -c statement_timeout=60000"}
     hashes = {table: hashlib.sha256() for table in TABLES}
     counts = dict.fromkeys(TABLES, 0)
+    system_id = None
     # Private, bounded-memory spool; neither rows nor connection details enter logs.
     with tempfile.TemporaryFile() as output:
         result = subprocess.run(["psql", "-Xq", "--no-password", "-v", "ON_ERROR_STOP=1", "-c", sql],
@@ -48,11 +50,17 @@ def fingerprints(env):
         for line in output:
             entity, separator, payload = line.partition(b"\t")
             name = entity.decode()
+            if name == "cluster" and separator and system_id is None:
+                system_id = payload.rstrip(b"\n").decode()
+                continue
             if not separator or name not in hashes:
                 raise BackupError("Invalid fingerprint output")
             hashes[name].update(payload)
             counts[name] += 1
-    return {name: {"count": counts[name], "sha256": hashes[name].hexdigest()} for name in TABLES}
+    if not system_id or not re.fullmatch(r"[0-9]+", system_id):
+        raise BackupError("Missing or invalid PostgreSQL system identifier")
+    tables = {name: {"count": counts[name], "sha256": hashes[name].hexdigest()} for name in TABLES}
+    return system_id, tables
 
 
 def baseline(path):
@@ -60,8 +68,10 @@ def baseline(path):
         raise BackupError("VERIFY_BASELINE_FILE is required; counts alone cannot prove no data loss")
     contents = Path(path).read_bytes()
     value = json.loads(contents)
-    if type(value.get("version")) is not int or value["version"] != 1:
-        raise BackupError("Invalid baseline version")
+    if type(value.get("version")) is not int or value["version"] != 2:
+        raise BackupError("Capture a version 2 baseline from the source database")
+    if not isinstance(value.get("system_id"), str) or not re.fullmatch(r"[0-9]+", value["system_id"]):
+        raise BackupError("Source baseline has no valid PostgreSQL system identifier")
     reference, captured = timestamp(value["reference_time"]), timestamp(value["captured_at"])
     if reference > captured or captured > utcnow():
         raise BackupError("Invalid baseline reference time")
@@ -79,8 +89,9 @@ def capture(path, reference):
         raise BackupError("Provide the time of an independently confirmed source commit")
     if Path(path).exists():
         raise BackupError("Baseline destination already exists")
-    value = {"version": 1, "reference_time": timestamp(reference).isoformat(),
-             "tables": fingerprints(connection_env()), "captured_at": utcnow().isoformat()}
+    system_id, tables = fingerprints(connection_env())
+    value = {"version": 2, "system_id": system_id, "reference_time": timestamp(reference).isoformat(),
+             "tables": tables, "captured_at": utcnow().isoformat()}
     with open(path, "x") as output:
         json.dump(value, output, indent=2)
         output.write("\n")
@@ -123,7 +134,7 @@ def exercise(args):
             target = root / "candidate"
             recovery = argparse.Namespace(target_dir=str(target), backup=None, pitr=args.pitr)
             with contextlib.redirect_stdout(io.StringIO()):
-                manifest = restore(Store(), recovery)
+                manifest = restore(Store(), recovery, system_id=expected["system_id"])
             result["backup"] = manifest["label"]
             result["backup_manifest_sha256"] = hashlib.sha256(
                 json.dumps(manifest, sort_keys=True).encode()).hexdigest()
@@ -155,10 +166,13 @@ def exercise(args):
                                           capture_output=True).returncode:
                             raise BackupError("Recovery server stopped before readiness") from None
                     time.sleep(0.2)
+                system_id, actual = fingerprints(env)
+                if system_id != expected["system_id"]:
+                    raise BackupError("Restored PostgreSQL system identifier differs from source baseline")
+                result["system_id"] = system_id
                 replay = psql(env, "SELECT pg_last_xact_replay_timestamp()")
                 result["replayed_transaction_time"] = replay or None
                 result["rpo_seconds"] = measure_rpo(replay, expected["reference_time"])
-                actual = fingerprints(env)
                 result["tables"] = actual
                 if actual != expected["tables"]:
                     raise BackupError("Restored counts or row fingerprints differ from source baseline")

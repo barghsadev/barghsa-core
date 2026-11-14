@@ -403,9 +403,12 @@ def verify_backup_receipts(index_path, path, fingerprint, now, sha):
             or not epoch(job.get('started_at')) <= epoch(manifest.get('started_at')) <= completed <= now
             or now - completed >= 86400):
         raise ValueError('The latest successful verified backup must be less than 24 hours old')
+    baseline = data['source_baseline']
     if (report.get('status') != 'passed' or report.get('scope') != 'database_restore'
             or report.get('backup') != restored['label']
             or restored['system_id'] != manifest['system_id']
+            or report.get('system_id') != restored['system_id']
+            or baseline.get('system_id') != restored['system_id']
             or not epoch(restored.get('started_at')) <= epoch(restored.get('completed_at'))
             <= epoch(report.get('started_at')) <= now
             or epoch(report.get('replayed_transaction_time')) > now):
@@ -420,8 +423,7 @@ def verify_backup_receipts(index_path, path, fingerprint, now, sha):
         or not matches(r'[a-f0-9]{64}', table.get('sha256')) for table in tables.values()
     ):
         raise ValueError('Restore report is missing verified table fingerprints')
-    baseline = data['source_baseline']
-    if (type(baseline.get('version')) is not int or baseline['version'] != 1
+    if (type(baseline.get('version')) is not int or baseline['version'] != 2
             or report.get('baseline_sha256') != digests['source_baseline']
             or baseline.get('tables') != tables):
         raise ValueError('Restore report must match the independent source baseline and its fingerprints')

@@ -354,13 +354,13 @@ class StructuredReceiptTest(unittest.TestCase):
                     'completed_at': at(self.completed),
                     'wal_ranges': [{'Timeline': 1, 'Start-LSN': '0/5000028', 'End-LSN': '0/5000100'}],
                     'tablespaces': []}
-        report = {'status': 'passed', 'scope': 'database_restore', 'backup': older, 'rpo_seconds': 300,
+        report = {'status': 'passed', 'scope': 'database_restore', 'backup': older, 'system_id': '12345', 'rpo_seconds': 300,
                   'database_rto_seconds': 3300, 'core_service_rto_seconds': None,
                   'started_at': '2026-11-09T03:00:00Z', 'replayed_transaction_time': '2026-11-09T02:00:00Z',
                   'tables': {table: {'count': 2, 'sha256': 'c' * 64} for table in ('users', 'orders', 'invoices')}}
         restored = {**manifest, 'label': older, 'started_at': older, 'completed_at': '2026-11-09T01:05:00Z'}
         report['backup_manifest_sha256'] = self.manifest_digest(restored)
-        baseline = {'version': 1, 'reference_time': '2026-11-09T02:05:00Z',
+        baseline = {'version': 2, 'system_id': '12345', 'reference_time': '2026-11-09T02:05:00Z',
                     'captured_at': '2026-11-09T02:06:00Z', 'tables': deepcopy(report['tables'])}
         report['baseline_sha256'] = hashlib.sha256(json.dumps(baseline).encode()).hexdigest()
         checks = {}
@@ -442,6 +442,27 @@ class StructuredReceiptTest(unittest.TestCase):
                 entries[artifact][field] = replacement
                 fingerprint = self.write_bundle(entries)
                 with self.assertRaisesRegex(ValueError, 'exact off-server manifests'):
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_recovery_evidence_requires_one_source_database_identity(self):
+        for artifact, value in (
+            ('source_baseline', '23456'),
+            ('restore_report', '23456'),
+            ('source_baseline', None),
+            ('restore_report', None),
+        ):
+            with self.subTest(artifact=artifact, value=value):
+                entries = self.backup()
+                if value is None:
+                    del entries[artifact]['system_id']
+                else:
+                    entries[artifact]['system_id'] = value
+                entries['restore_report']['baseline_sha256'] = hashlib.sha256(
+                    json.dumps(entries['source_baseline']).encode()).hexdigest()
+                entries['core_service_report']['database_restore_sha256'] = hashlib.sha256(
+                    json.dumps(entries['restore_report']).encode()).hexdigest()
+                fingerprint = self.write_bundle(entries)
+                with self.assertRaisesRegex(ValueError, 'same database system'):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
     def test_rejects_non_native_daily_and_restore_manifests_even_with_matching_digests(self):

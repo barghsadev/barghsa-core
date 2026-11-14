@@ -380,11 +380,13 @@ def pgquote(value):
     return "'" + value.replace("\\", "\\\\").replace("'", "''") + "'"
 
 
-def restore(store, args):
+def restore(store, args, *, system_id=None):
     target = Path(args.target_dir).absolute()
     if target.exists() or target.is_symlink():
         raise BackupError("Restore target must not exist")
     records = store.manifests()
+    if system_id is not None:
+        records = [(key, manifest) for key, manifest in records if manifest["system_id"] == system_id]
     if args.backup:
         records = [(k, m) for k, m in records if m["label"] == args.backup]
     if args.pitr:
