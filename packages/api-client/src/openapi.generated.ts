@@ -25416,7 +25416,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Storage record removed from active use */
             204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid record key or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -38148,7 +38156,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Aborted multipart upload */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid upload ID or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -38167,7 +38183,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Completed multipart upload */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid upload ID or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -38188,7 +38212,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Presigned URL for the requested part */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid upload ID, part number or unexpected body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

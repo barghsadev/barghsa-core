@@ -6,6 +6,7 @@ import type { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 let http: Awaited<ReturnType<typeof startHttpFixture>>, storage: Server;
 const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
 const { cleanupStorageObjects } = requireWorker('./dist/storage/cleanup.js') as {
@@ -339,6 +340,27 @@ it('queues active deletion after commit and retains signed files with truthful r
   });
   expect((await request(signed, 'DELETE')).status).toBe(204);
   expect(objects.has(signed)).toBe(true);
+});
+it('rejects removal fields before changing the stored record, bytes or audit', async () => {
+  const key = await seed();
+  const before = await row(key);
+  const bytes = objects.get(key);
+  const rejected = await request(key, 'DELETE', { removeFile: true });
+  expect(rejected.status).toBe(400);
+  await expect(rejected.json()).resolves.toMatchObject({
+    error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+  });
+  expect(await row(key)).toEqual(before);
+  expect(objects.get(key)).toEqual(bytes);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='storage_record_removed' AND metadata::jsonb->>'storageKey'=$1",
+        [key]
+      )
+    ).rows
+  ).toHaveLength(0);
+  expect((await request(key, 'DELETE', {})).status).toBe(204);
 });
 it('rolls back signatures and removal requests when audit persistence fails', async () => {
   await http.pool.query(

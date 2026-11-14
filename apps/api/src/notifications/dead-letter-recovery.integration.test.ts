@@ -6,6 +6,7 @@ import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.
 import { deriveChannelIdempotencyKey } from '../../../worker/dist/notifications/outbox-writer.js';
 import { durableDelivery } from '../../../worker/dist/notifications/send-receipt.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import type { INotificationTransport } from '@barghsa/shared/notifications';
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }));
 vi.mock('@barghsa/db', async (original) => ({
   ...(await original<typeof import('@barghsa/db')>()),
@@ -170,6 +171,20 @@ it('delivers only once after concurrent confirmation of an exact outbox revision
     target.outbox
   );
   const send = vi.fn(async () => 'isolated-provider-accepted-once');
+  const email: INotificationTransport = {
+    channel: 'email',
+    async send(payload) {
+      expect(payload.outboxId).toBe(target.outbox);
+      expect(payload.idempotencyKey).toBe(originalKey);
+      const providerRef = await durableDelivery(
+        db.pool,
+        target.outbox,
+        'email',
+        payload.idempotencyKey
+      )(provider, send);
+      return { status: 'delivered', providerRef };
+    },
+  };
   const poll = () =>
     runOutboxPoll({
       pool: db.pool,
@@ -181,22 +196,7 @@ it('delivers only once after concurrent confirmation of an exact outbox revision
         verifiedPhone: false,
         marketingOptedIn: {},
       }),
-      transports: {
-        email: {
-          channel: 'email',
-          async send(payload) {
-            expect(payload.outboxId).toBe(target.outbox);
-            expect(payload.idempotencyKey).toBe(originalKey);
-            const providerRef = await durableDelivery(
-              db.pool,
-              target.outbox,
-              'email',
-              payload.idempotencyKey
-            )(provider, send);
-            return { status: 'delivered', providerRef };
-          },
-        },
-      },
+      transports: { email },
     });
   const polls = await Promise.all([poll(), poll()]);
   expect(polls.reduce((count, result) => count + result.delivered, 0)).toBe(1);

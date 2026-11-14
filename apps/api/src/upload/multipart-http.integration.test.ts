@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { createServer, request as forwardRequest } from 'node:http';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
@@ -182,6 +183,31 @@ it('resumes from provider-listed parts and completes only the authorized bytes',
   });
   expect(recorded.status, http.logs()).toBe(200);
   expect(await recorded.json()).toMatchObject({ status: 'recorded' });
+});
+
+it('rejects extra multipart command fields before changing the reservation', async () => {
+  const upload = await start();
+  const path = `/api/v1/files/upload/${upload.uploadId}`;
+  const read = async () =>
+    (await http.pool.query('SELECT * FROM storage_records WHERE storage_key=$1', [upload.key]))
+      .rows[0];
+  const before = await read();
+  const commands = [
+    ['PUT', 'part?partNumber=1'],
+    ['POST', 'complete'],
+    ['POST', 'abort'],
+  ] as const;
+  for (const [method, action] of commands) {
+    const response = await api(`${path}/${action}`, method, actorHeaders, { unexpected: true });
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+    });
+    expect(await read()).toEqual(before);
+  }
+  expect((await api(`${path}/part?partNumber=1`, 'PUT', actorHeaders, {})).status).toBe(200);
+  expect((await api(`${path}/complete`, 'POST', actorHeaders, {})).status).toBe(409);
+  expect((await api(`${path}/abort`, 'POST', actorHeaders, {})).status).toBe(200);
 });
 
 it('aborts an owned upload and refuses later part URLs', async () => {

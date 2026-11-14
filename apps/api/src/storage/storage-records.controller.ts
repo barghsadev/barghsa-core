@@ -12,10 +12,12 @@ import {
   UseGuards,
   BadRequestException,
 } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { StorageAdminGuard } from './storage-admin.guard.js';
 import { StorageRecordAdminService } from './storage-record-admin.service.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 @Controller('api/admin/storage/records')
 @UseGuards(SessionAuthGuard, StorageAdminGuard)
@@ -48,7 +50,14 @@ export class StorageRecordsController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteRecord(@Param('key') key: string, @Req() req: AuthenticatedRequest) {
+  @ApiResponse({ status: 204, description: 'Storage record removed from active use' })
+  @ApiResponse({ status: 400, description: 'Invalid record key or unexpected body' })
+  async deleteRecord(
+    @Param('key') key: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
+  ) {
+    assertEmptyCommandBody(body);
     const result = await this.records.mutate(key, 'remove', req.session, req.ip ?? 'unknown');
     if (result.retained && !result.alreadyRemoved)
       throw new ConflictException(

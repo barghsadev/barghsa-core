@@ -31415,7 +31415,10 @@
         ],
         "responses": {
           "204": {
-            "description": ""
+            "description": "Storage record removed from active use"
+          },
+          "400": {
+            "description": "Invalid record key or unexpected body"
           }
         },
         "tags": [
@@ -53028,7 +53031,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Aborted multipart upload"
+          },
+          "400": {
+            "description": "Invalid upload ID or unexpected body"
           }
         },
         "tags": [
@@ -53051,7 +53057,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Completed multipart upload"
+          },
+          "400": {
+            "description": "Invalid upload ID or unexpected body"
           }
         },
         "tags": [
@@ -53082,7 +53091,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Presigned URL for the requested part"
+          },
+          "400": {
+            "description": "Invalid upload ID, part number or unexpected body"
           }
         },
         "tags": [
