@@ -319,6 +319,37 @@ def verify_live_release(job):
     return live
 
 
+def verify_running_images(checkout, images):
+    host = os.environ.get("BARGHSA_VPS_HOST") or "89.42.199.13"
+    port = os.environ.get("BARGHSA_VPS_SSH_PORT") or "30222"
+    readback = r"""
+set -eu
+ids=$(docker container ls --quiet --no-trunc \
+    --filter label=com.docker.compose.project=barghsa-staging \
+    --filter label=com.docker.compose.oneoff=False)
+test -n "$ids"
+docker container inspect --format '{{index .Config.Labels "com.docker.compose.service"}} {{.State.Running}} {{.Image}}' $ids
+"""
+    lines = command(checkout, "ssh", "-p", port, "-o", "BatchMode=yes",
+                    "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=10",
+                    f"root@{host}", readback, capture=True).splitlines()
+    expected = {"api": images["app"], "worker": images["app"], "ai-inference": images["app"],
+                **{service: images[service] for service in ("web", "postgres", "clamav")}}
+    running = set()
+    for line in lines:
+        columns = line.split()
+        if len(columns) != 3:
+            raise ValueError("Invalid staging running image readback")
+        service, active, image = columns
+        if service not in expected:
+            continue
+        if service in running or active != "true" or image != expected[service]:
+            raise ValueError(f"Running staging image differs from the saved receipt: {service}")
+        running.add(service)
+    if missing := expected.keys() - running:
+        raise ValueError(f"Missing running staging services: {', '.join(sorted(missing))}")
+
+
 def deploy(job, state):
     repo = Path(job["repo"])
     directory = state / "jobs" / job["commit"]
@@ -356,6 +387,7 @@ def deploy(job, state):
                 or any(not isinstance(checks.get(name), dict) or checks[name].get("status") != "ok"
                        for name in ("postgresql", "redis", "objectStorage"))):
             raise ValueError("Live staging API is not healthy for the queued release")
+        verify_running_images(checkout, images)
     else:
         deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
         if bundle := job.get("image_bundle"):

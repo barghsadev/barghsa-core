@@ -114,7 +114,8 @@ to inspect them. A failed or interrupted job stops the deployment queue while bu
 can continue. Inspect that job's `deploy.log`, resolve the failure and explicitly run
 `python3 deploy/staging/release-queue.py retry --commit <full-sha>`. If the
 verified runtime image receipt is already on disk, the worker confirms the
-exact live web and API revision and dependency health before resuming the
+exact live web and API revision, dependency health and running image IDs for
+the web, API, worker, AI inference, PostgreSQL and ClamAV before resuming the
 Telegram step. Unknown results for the main Telegram message still require channel inspection and
 the notifier's explicit recovery
 before retrying; the queue never bypasses that guard. An optional image warning never

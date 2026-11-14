@@ -415,16 +415,32 @@ if __name__ == '__main__':
         readiness = {"status": "ok", "commit": self.commit, "checks": {
             name: {"status": "ok"} for name in ("postgresql", "redis", "objectStorage")
         }}
+        ids = receipt["image_ids"]
+        running = "\n".join([
+            *(f"{service} true {ids['app']}" for service in ("api", "worker", "ai-inference")),
+            *(f"{service} true {ids[service]}" for service in ("web", "postgres", "clamav")),
+            f"redis true sha256:{'f' * 64}",
+        ])
         original_command = queue.command
         cases = (
-            (live, readiness, "Saved staging runtime receipt"),
-            (dict(live, commit="a" * 40), readiness, "Live release"),
-            (live, dict(readiness, commit="a" * 40), "staging API"),
-            (live, dict(readiness, checks={}), "staging API"),
-            (live, dict(readiness, warnings=["degraded"]), "staging API"),
-            (live, readiness, None),
+            (live, readiness, running, "Saved staging runtime receipt"),
+            (dict(live, commit="a" * 40), readiness, running, "Live release"),
+            (live, dict(readiness, commit="a" * 40), running, "staging API"),
+            (live, dict(readiness, checks={}), running, "staging API"),
+            (live, dict(readiness, warnings=["degraded"]), running, "staging API"),
+            (live, readiness, running.replace(ids["postgres"], "sha256:" + "a" * 64),
+             "Running staging image differs from the saved receipt: postgres"),
+            (live, readiness, running.replace("\nworker true", "\nworker false"),
+             "Running staging image differs from the saved receipt: worker"),
+            (live, readiness, running + "\n" + f"clamav true {ids['clamav']}",
+             "Running staging image differs from the saved receipt: clamav"),
+            (live, readiness, "\n".join(line for line in running.splitlines()
+                                        if not line.startswith("ai-inference ")),
+             "Missing running staging services: ai-inference"),
+            (live, readiness, running + "\ninvalid", "Invalid staging running image readback"),
+            (live, readiness, running, None),
         )
-        for live_body, ready_body, error in cases:
+        for live_body, ready_body, remote_images, error in cases:
             with self.subTest(error=error, live=live_body, readiness=ready_body):
                 queue.save(job_path.parent / "runtime-images.json", {
                     **receipt, "commit": "a" * 40 if error == "Saved staging runtime receipt" else self.commit,
@@ -437,8 +453,15 @@ if __name__ == '__main__':
                     body = ready_body if url.endswith("/api/health/ready") else live_body
                     return io.BytesIO(json.dumps(body).encode())
 
+                def invoke(repo, *args, **kwargs):
+                    if args[0] == "ssh":
+                        self.assertIn("StrictHostKeyChecking=yes", args)
+                        self.assertTrue(kwargs.get("capture"))
+                        return remote_images
+                    return original_command(repo, *args, **kwargs)
+
                 with patch.object(queue.urllib.request, "urlopen", side_effect=fetch), \
-                        patch.object(queue, "command", wraps=original_command) as command:
+                        patch.object(queue, "command", side_effect=invoke) as command:
                     self.assertEqual(queue.work(self.state), int(error is not None))
                 commands = [call.args[1:] for call in command.call_args_list]
                 self.assertFalse(any(args[0] == "./deploy/staging/deploy.sh" for args in commands))
@@ -452,6 +475,10 @@ if __name__ == '__main__':
                     self.assertEqual(updated["telegram"]["summary"]["message_id"], 100)
                     self.assertEqual(len((self.capture / "notifications").read_text().splitlines()), 1)
                 self.assertFalse(any("--retry-unknown" in args for args in commands))
+                reached_readback = not error or error.startswith((
+                    "Running staging image", "Missing running staging services", "Invalid staging running image"
+                ))
+                self.assertEqual(sum(args[0] == "ssh" for args in commands), int(reached_readback))
 
     def test_optional_screenshot_failure_keeps_required_confirmation_and_advances_queue(self):
         queue.enqueue(self.repo, self.state, self.commit, [self.image])
