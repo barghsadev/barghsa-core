@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T19:45:09+00:00",
+  "updated": "2026-11-14T19:56:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -729721,7 +729721,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-onboarding-form-testing-library",
-          "release-0.6-hosted-native-timeouts"
+          "release-0.6-hosted-native-timeouts",
+          "release-0.6-onboarding-address-native"
         ],
         "current_acceptance": {
           "kind": "source-bound-onboarding-form-testing-library",
@@ -729770,7 +729771,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding-forms.test.tsx",
-              "sha256": "2a60d987309265d943b66aff4793f7b87dd5c99152525098cf759c2972d6facf"
+              "sha256": "ab05c98b3fda033fba11a8e84a44917a2cd386f548210158e2003191921f2e48"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -729801,6 +729802,14 @@
                 "apps/web/src/routes/onboarding-forms.test.tsx"
               ],
               "scope": "Gift-code dates use the same display locale, account timezone and explicit offset check with a shared formatter. English and Persian responsive table and action cases passed against the rebuilt app. The onboarding fixture retains its city reset, validation and persistence checks."
+            },
+            {
+              "batch": "release-0.6-onboarding-address-native",
+              "base_commit": "b0ebe2c0b5f8fed357c59ab1c0ad838cb65d35d4",
+              "paths": [
+                "apps/web/src/routes/onboarding-forms.test.tsx"
+              ],
+              "scope": "Only fixture synchronization and direct DOM assertions changed. Both scenarios and all existing assertions passed in the instrumented run."
             }
           ]
         }
@@ -745648,7 +745657,8 @@
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
-        "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open."
+        "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open.",
+        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -745674,7 +745684,8 @@
           "apps/api/src/solar/solar-guidance.integration.test.ts",
           "apps/api/src/solar/solar-postal.controller.ts",
           "apps/api/src/solar/solar-postal.service.ts",
-          "packages/eslint-config/reviewed-postgres-sql.json"
+          "packages/eslint-config/reviewed-postgres-sql.json",
+          "apps/web/src/routes/onboarding-forms.test.tsx"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -745704,7 +745715,8 @@
           "release-0.6-browser-coverage-mapping",
           "release-0.6-full-coverage-continuation",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-onboarding-address-native"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1155269,7 +1155281,8 @@
         "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
         "Profile-export job retry now rejects undeclared JSON before queue or audit changes. The compiled PostgreSQL fixture reproduced a 202 on the old endpoint. The corrected endpoint returns the standard 400 for an unexpected object or array and preserves the full job row and audit log. Empty objects and omitted request bodies still return 202 and retain the normal owner-only retry contract. The generated specification and client document both outcomes. Complete the wider request inventory and verify the staged candidate.",
-        "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required."
+        "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required.",
+        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1155684,7 +1155697,8 @@
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
           "release-0.6-async-retry-command-body",
-          "release-0.6-solar-postal-utc-day"
+          "release-0.6-solar-postal-utc-day",
+          "release-0.6-onboarding-address-native"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1155939,7 +1155953,8 @@
           "apps/api/src/jobs/jobs-http.integration.test.ts",
           "apps/api/src/jobs/jobs.controller.ts",
           "packages/api-client/src/openapi.generated.d.ts",
-          "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+          "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+          "apps/web/src/routes/onboarding-forms.test.tsx"
         ]
       }
     },
@@ -1351524,6 +1351539,58 @@
         {
           "file": "static.log",
           "sha256": "c66c6e1290b309208ac50e587566b537b81f17123ec64585453de2f29854cb25"
+        }
+      ]
+    },
+    "release-0.6-onboarding-address-native": {
+      "batch": "release-0.6-onboarding-address-native",
+      "base_commit": "b0ebe2c0b5f8fed357c59ab1c0ad838cb65d35d4",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/routes/onboarding-forms.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routes/onboarding-forms.test.tsx",
+          "sha256": "ab05c98b3fda033fba11a8e84a44917a2cd386f548210158e2003191921f2e48"
+        },
+        {
+          "path": "apps/web/src/test/render-workspace.tsx",
+          "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        }
+      ],
+      "checks": [
+        "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
+        "Web TypeScript, scoped ESLint, Prettier and Git diff checks passed."
+      ],
+      "limitations": [
+        "The 22 cases are a local instrumented invocation and do not certify the whole hosted suite. The active strict run uses the previous fixture source. Its browser and combined jobs remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-onboarding-address-native",
+      "execution_receipts": [
+        {
+          "file": "focused-coverage.log",
+          "sha256": "3679e688cb2cd15d0d1294709633d82cc756fff0babcc3916b7b0eb8672a157c"
+        },
+        {
+          "file": "static.log",
+          "sha256": "9f73d2d70635626dffd7b13fe367e3e568773150051ca98e7e43decc5d393db8"
         }
       ]
     }

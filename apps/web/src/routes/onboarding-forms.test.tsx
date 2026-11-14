@@ -1,5 +1,5 @@
 import { act, type ComponentType, type ReactNode } from 'react';
-import { cleanup, fireEvent, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route as IndividualRoute } from './onboarding/individual/$profileId.js';
 import { Route as LegalRoute } from './onboarding/legal/$profileId.js';
@@ -124,24 +124,29 @@ it.each(scenarios)('validates and saves the $type address through the wizard', a
   routing.step = scenario.step;
   const state = fixture(scenario.draft);
   const Page = scenario.route.options.component as ComponentType;
-  const view = renderWorkspace(<Page />, host, accountId);
-  const province = (await view.findByRole('combobox', { name: 'Province' })) as HTMLSelectElement;
-  const city = view.getByRole('combobox', { name: 'City' }) as HTMLSelectElement;
-  const cityOptions = within(city);
-  await waitFor(() => expect(city.value).toBe('rey'));
+  await act(async () => {
+    renderWorkspace(<Page />, host, accountId);
+  });
+  const form = within(host);
+  const province = form.getByRole<HTMLSelectElement>('combobox', { name: 'Province' });
+  const city = form.getByRole<HTMLSelectElement>('combobox', { name: 'City' });
+  expect(city.value).toBe('rey');
   expect(province.value).toBe('tehran');
 
-  fireEvent.change(province, { target: { value: 'fars' } });
+  await act(async () => {
+    fireEvent.change(province, { target: { value: 'fars' } });
+  });
   expect(city.value).toBe('');
-  await cityOptions.findByRole('option', { name: 'Shiraz' });
-  expect(view.queryByRole('option', { name: 'Rey' })).toBeNull();
+  const cityOptions = within(city);
+  expect(cityOptions.getByRole('option', { name: 'Shiraz' })).toBeTruthy();
+  expect(form.queryByRole('option', { name: 'Rey' })).toBeNull();
   fireEvent.change(city, { target: { value: 'shiraz' } });
 
-  const postalCode = view.getByRole('textbox', { name: 'Postal Code' });
-  const next = view.getByRole('button', { name: 'Save and continue' });
+  const postalCode = form.getByRole('textbox', { name: 'Postal Code' });
+  const next = form.getByRole('button', { name: 'Save and continue' });
   fireEvent.change(postalCode, { target: { value: '12' } });
   await act(async () => fireEvent.click(next));
-  await waitFor(() => expect(postalCode.getAttribute('aria-invalid')).toBe('true'));
+  expect(postalCode.getAttribute('aria-invalid')).toBe('true');
   const error = document.getElementById(postalCode.getAttribute('aria-describedby') ?? '');
   expect(error?.getAttribute('role')).toBe('alert');
   expect(error?.textContent).toMatch(/postal code/i);
@@ -149,13 +154,11 @@ it.each(scenarios)('validates and saves the $type address through the wizard', a
 
   fireEvent.change(postalCode, { target: { value: '1234567890' } });
   await act(async () => fireEvent.click(next));
-  await waitFor(() =>
-    expect(routing.navigate).toHaveBeenCalledExactlyOnceWith({
-      to: `/onboarding/${scenario.type}/$profileId`,
-      params: { profileId },
-      search: { step: scenario.step + 1 },
-    })
-  );
+  expect(routing.navigate).toHaveBeenCalledExactlyOnceWith({
+    to: `/onboarding/${scenario.type}/$profileId`,
+    params: { profileId },
+    search: { step: scenario.step + 1 },
+  });
   expect(state.writes.at(-1)?.data).toMatchObject({
     [scenario.province]: 'fars',
     [scenario.city]: 'shiraz',
