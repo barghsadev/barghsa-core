@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T12:08:51+00:00",
+  "updated": "2026-11-14T12:24:46+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -1130919,7 +1130919,8 @@
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
-        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
+        "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131278,7 +1131279,8 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-license-review-refresh-f7fc00b88",
           "release-0.6-promotion-checkpoint-parity",
-          "release-0.6-staging-telegram-relay-recovery"
+          "release-0.6-staging-telegram-relay-recovery",
+          "release-0.6-staging-knowledge-preview-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1131574,7 +1131576,8 @@
         "The deployment worker now independently validates the commit-bound encrypted migration checkpoint before accepting a protected release receipt or resuming its notice. The approved off-server destination and recovery-key custody, live cutover, and exact backup/restore and release receipts remain required.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
-        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
+        "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131655,7 +1131658,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-promotion-checkpoint-parity",
-          "release-0.6-staging-telegram-relay-recovery"
+          "release-0.6-staging-telegram-relay-recovery",
+          "release-0.6-staging-knowledge-preview-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1319139,6 +1319143,71 @@
         {
           "file": "lint-rule.log",
           "sha256": "b1bc5598a87b0a53cec5731196df9e2d74c85b70f0640b8a53df06d08a88f60e"
+        }
+      ]
+    },
+    "release-0.6-staging-knowledge-preview-readback": {
+      "batch": "release-0.6-staging-knowledge-preview-readback",
+      "base_commit": "674384bbe18e8f3e1a63aa4323198d30e5852eb0",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "docs/operations/knowledge-base-processing.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/knowledge-base-processing.md",
+          "sha256": "ac1f41f0f81b749a15009f8f22cd7ecd3e5b3b221e980dfa6eaefbcd34b35032"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "52f68276dcc9126545adf07430ff4ddfe97012ebb18b430775ced5dfae2f9111"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "6d28b33f7d71600cc8b0f283c1a7c8bf59f3ae0ec2089cd4ab385a3dbe588e22"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "1f5fb35e23600484d3c7c6016d2d4486c5ae264d3c61867c9d52a0b7aa5eda04"
+        },
+        {
+          "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+          "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/agent-slots.tsx",
+          "sha256": "3cc16407251878c638b131b09830d3fc0146e7e46f081a58f2e7fa286e18cc03"
+        }
+      ],
+      "checks": [
+        "The active staging preview database had no knowledge bases, no document links and no creation or deletion audit events. The distinct retained database still had one ready public base and one ready staff base with both source links and creation audits.",
+        "All five active preview assistant slots linked to a tested and enabled model but no ready knowledge. The website availability endpoint declined questions. The retained database readback preserved the former links.",
+        "The exact 1,710-byte bilingual staging guide matched its preserved digest. The current free provider returned two valid 1,536-dimensional vectors for the guide at zero reported cost. No vectors or publication status were written.",
+        "Verified the normal staff authoring routes, the pre-publication passage test and the recent staff verification requirements. Added a runbook for republishing sources after a preview database switch."
+      ],
+      "limitations": [
+        "The new evidence is a v0.5.1 live readback and provider probe. The active catalogue still requires authenticated staff publication, followed by exact candidate acceptance and delivery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-telegram-relay-recovery",
+      "execution_receipts": [
+        {
+          "file": "verified-public-guide-restoration-inputs.json",
+          "sha256": "b396cd37613f83fc4176a7a856237af6aa4f5d4218a7f65c81dfb199fb34dc2b"
+        },
+        {
+          "file": "knowledge-database-baseline-readback.json",
+          "sha256": "aedcf2e523d7bcbdc63e6cd498078f1e40754233bfe79486a9c6b250471528cc"
+        },
+        {
+          "file": "knowledge-slot-scope-readback.json",
+          "sha256": "77e0b37ece49a803940d5d96a2be84ac69612059c89923d45a9f3dbf72b1804f"
+        },
+        {
+          "file": "free-provider-public-guide-readback.json",
+          "sha256": "f17ed8914f28de6ae37a8fb9d4e5ec394f0c09ea1790cd8328288b38c1b62116"
         }
       ]
     }
