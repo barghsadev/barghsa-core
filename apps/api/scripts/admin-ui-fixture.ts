@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { startHttpFixture } from '../src/test/http-fixture';
 import { startTestPostgres } from '../../../packages/db/src/test/globalSetup';
@@ -21,6 +21,7 @@ async function main() {
   const database = await startTestPostgres();
   cleanups.push(database.close);
   const objects = new Map<string, Buffer>();
+  const probeMetadata = new Map<string, { nonce: string; etag: string }>();
   const storage = createServer(async (request, response) => {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', 'PUT, GET, HEAD, OPTIONS');
@@ -31,10 +32,32 @@ async function main() {
     }
     const url = new URL(request.url!, 'http://localhost');
     const key = decodeURIComponent(url.pathname).replace('/test-evidence/', '');
+    if (request.method === 'GET' && url.searchParams.has('versioning')) {
+      response.setHeader('Content-Type', 'application/xml');
+      response.end('<VersioningConfiguration/>');
+      return;
+    }
     if (request.method === 'PUT') {
+      const nonce = request.headers['x-amz-meta-barghsa-probe'];
+      if (key.startsWith('_storage_probes/')) {
+        if (request.headers['if-none-match'] !== '*' || nonce !== key.split('/')[1]) {
+          response.writeHead(400).end();
+          return;
+        }
+        if (objects.has(key)) {
+          response.writeHead(412).end();
+          return;
+        }
+      }
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
-      objects.set(key, Buffer.concat(chunks));
+      const bytes = Buffer.concat(chunks);
+      objects.set(key, bytes);
+      if (typeof nonce === 'string' && key.startsWith('_storage_probes/')) {
+        const etag = '"' + createHash('sha256').update(bytes).digest('hex') + '"';
+        probeMetadata.set(key, { nonce, etag });
+        response.setHeader('ETag', etag);
+      }
       response.end();
       return;
     }
@@ -46,10 +69,21 @@ async function main() {
       return;
     }
     const bytes = objects.get(key);
+    const probe = probeMetadata.get(key);
+    if (request.method === 'DELETE' && probe) {
+      objects.delete(key);
+      probeMetadata.delete(key);
+      response.writeHead(204).end();
+      return;
+    }
     if (!bytes) {
       response.statusCode = 404;
       response.end();
       return;
+    }
+    if (probe) {
+      response.setHeader('ETag', probe.etag);
+      response.setHeader('x-amz-meta-barghsa-probe', probe.nonce);
     }
     response.setHeader('Content-Type', 'image/png');
     response.setHeader('Content-Length', bytes.length);

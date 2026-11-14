@@ -774,10 +774,16 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('button', { name: fa ? 'آزمایش اتصال' : 'Test connection', exact: true })
       .click();
+    const testedResponse = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/admin/storage/test-connection' &&
+        response.request().method() === 'POST'
+    );
     await page
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
+    expect((await testedResponse).status()).toBe(200);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     const tested = adminText('admin.storage.tested', locale);
     await expect(status.filter({ hasText: tested })).toHaveText(tested);

@@ -24725,7 +24725,8 @@
         "Hosted diagnostic 43504566627 completed with all 40 attributable shards. It recorded 14,792 expected, 20 unexpected, one flaky, 27 skipped and zero runner errors. The five shard-1 failures contain only the old settings selector count. WebKit shard 7 contains the solar queue timing failure. Both targeted corrections passed locally. A clean final scheduled run and verified report delivery remain required.",
         "Hosted diagnostic 43518112352 Firefox shard 6 recorded one Persian OTP fixture flake. Both pending requests now use explicit request observation before exact-count assertions. All 30 focused Firefox, Chromium and WebKit cases passed without retries. A clean final scheduled run and its external delivery remain required.",
         "Hosted diagnostic 43518112352 ended with all 40 attributable shards, 14,812 expected, zero unexpected, 27 skipped and zero runner errors. Its only flake was the already diagnosed Firefox shard 6 OTP request observation. The focused successor passed; the final exact hosted matrix and scheduled delivery remain open.",
-        "The nightly delivery script binds the rendered email summary to the rollup checksum and the scheduled commit, run and attempt. Wrong identity or mismatched bytes are omitted from the email and cannot report success. Verify the actual approved mailbox delivery and the clean scheduled candidate run."
+        "The nightly delivery script binds the rendered email summary to the rollup checksum and the scheduled commit, run and attempt. Wrong identity or mismatched bytes are omitted from the email and cannot report success. Verify the actual approved mailbox delivery and the clean scheduled candidate run.",
+        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -24838,7 +24839,8 @@
           "release-0.6-published-d19812d0a",
           "release-0.6-registration-request-observation",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-nightly-report-identity"
+          "release-0.6-nightly-report-identity",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": null
       }
@@ -33047,7 +33049,8 @@
         "The wizard draft retention and preliminary electricity template recovery drafts use validated stored values. Template availability and supported placeholders are rechecked within the activation transaction. Deployed proof and other configuration families remain in scope.",
         "The admin storage save and recovery activation require a successful signed byte probe and confirmed object cleanup. Mounted tests cover enabled and suspended buckets, exact-version cleanup, lost upload acknowledgment and refusal when ownership cannot be established. Staged evidence remains open.",
         "The multipart cleanup recovery flow reads only a schema-valid prior age, binds the audit-backed draft to the active version and revalidates its value at activation. Verify the deployed candidate and complete remaining configuration-key coverage.",
-        "Monitoring retention now validates prior and current policies when preparing or activating a version-bound recovery draft. Limits and legal retention exclusions are enforced by the shared validator. Verify the exact staged candidate and complete the remaining configuration inventory."
+        "Monitoring retention now validates prior and current policies when preparing or activating a version-bound recovery draft. Limits and legal retention exclusions are enforced by the shared validator. Verify the exact staged candidate and complete the remaining configuration inventory.",
+        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -33106,7 +33109,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-admin-probe-cleanup",
           "release-0.6-multipart-cleanup-recovery",
-          "release-0.6-operational-retention-recovery"
+          "release-0.6-operational-retention-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": null
       }
@@ -53426,7 +53430,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -53686,7 +53691,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -54124,7 +54129,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -71749,7 +71755,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -71813,7 +71820,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -72214,7 +72221,8 @@
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -73588,7 +73596,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -73652,7 +73661,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -74053,7 +74062,8 @@
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -75435,7 +75445,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -75499,7 +75510,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -75900,7 +75911,8 @@
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
-            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+            "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -96182,7 +96194,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -96346,7 +96359,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -96716,7 +96729,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -97591,7 +97605,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -97755,7 +97770,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -98125,7 +98140,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -99000,7 +99016,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -99164,7 +99181,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -99534,7 +99551,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -101118,7 +101136,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-prepromotion-version"
+          "release-0.6-prepromotion-version",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -101214,7 +101233,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -101576,7 +101595,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -104434,7 +104454,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -104502,7 +104523,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -104510,7 +104531,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -104577,7 +104598,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -106685,7 +106707,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -106697,7 +106720,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -106801,7 +106824,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -106962,7 +106985,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -107808,7 +107832,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -107820,7 +107845,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -107924,7 +107949,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -108085,7 +108110,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -108931,7 +108957,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -108943,7 +108970,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -109047,7 +109074,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -109209,7 +109236,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -110053,7 +110081,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -110065,7 +110094,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -110169,7 +110198,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -110330,7 +110359,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -150047,7 +150077,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -150211,7 +150242,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -150581,7 +150612,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -151388,7 +151420,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -151552,7 +151585,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -151922,7 +151955,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -152735,7 +152769,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -152899,7 +152934,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -153269,7 +153304,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -154154,7 +154190,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -154514,7 +154551,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -154885,7 +154922,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "criterion_result": "Wallet/invoice/provider/refund exception producers and protected filter/detail/assignee/investigate/resolve/close/audit flows accepted with current native and production-browser recovery checks. Owner-approved refund inequality preserves legacy residuals and uses the ordinary paid original as the sole refund budget. All89 original budgets pass. Historical development-only bootstrap failure retained; no recurrence in current production-built cases and no claim to its old root cause or to the later operational launch rehearsal.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -156749,7 +156787,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-notification-contrast",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -156801,7 +156840,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -156928,7 +156967,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
@@ -157275,7 +157315,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-notification-contrast",
-          "release-0.6-postgres-query-tracing"
+          "release-0.6-postgres-query-tracing",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -157327,7 +157368,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -157454,7 +157495,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
@@ -159661,7 +159703,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -159809,7 +159852,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -160104,7 +160147,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -160875,7 +160919,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -161023,7 +161068,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -161318,7 +161363,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -167553,7 +167599,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -167561,7 +167608,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -167761,7 +167808,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -167920,7 +167967,8 @@
             "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -168510,7 +168558,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -168518,7 +168567,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -168718,7 +168767,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -168876,7 +168925,8 @@
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -169462,7 +169512,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -169742,7 +169793,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -170047,7 +170098,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "limitations": [],
           "order_submission_scoped_renewal": {
@@ -170986,7 +171038,8 @@
           "release-0.6-verification-mode-recovery",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -171134,7 +171187,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -171429,7 +171482,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -172194,7 +172248,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -172202,7 +172257,7 @@
           "source_evidence": [
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -172402,7 +172457,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -172560,7 +172615,8 @@
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -699905,7 +699961,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -699921,7 +699978,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -699929,7 +699986,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -699968,7 +700025,8 @@
             "Playwright configures five browser projects, a Persian default locale, per-test browser contexts and an explicit loopback environment. Auth helpers establish controlled sessions and public CSRF. The real API fixture owns a unique disposable PostgreSQL database with migrations and seeded test data, while pure browser cases keep per-test state in route fixtures.",
             "The scheduled run used 40 separate shard jobs. Six Persian and English Mobile Safari storage, provider and AI configuration cases passed against the migrated real API in job 129738700024. The stricter current loopback fixture was verified separately in the provider-isolation batch. The prior full run failed overall and the exact candidate matrix remains open.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "source_renewals": [
             {
@@ -701825,7 +701883,8 @@
           "release-0.6-firefox-provider-fixture",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -701841,7 +701900,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/scripts/loopback-test-network.cjs",
@@ -701853,7 +701912,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
@@ -701919,7 +701978,8 @@
             "Twenty-seven targeted browser cases and twelve primary Mobile Chrome performance cases passed across the final boundary and its unchanged passing Persian Mobile Safari payment case. Existing storage uploads, wallet gateway fixtures, auth and language handoffs retained their assertions. Focused format, lint and diff checks passed. Product application code did not change; previously accepted product behavior remains source-bound and the exact hosted release matrix remains open.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "source_renewals": [
             {
@@ -797673,7 +797733,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retention-settings-browser",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -797693,7 +797754,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -798191,7 +798252,8 @@
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
-            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -799008,7 +799070,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retention-settings-browser",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -799028,7 +799091,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -799526,7 +799589,8 @@
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
-            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -801172,7 +801236,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retention-settings-browser",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -801192,7 +801257,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -801690,7 +801755,8 @@
             "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results.",
-            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases."
+            "The mobile selector test now requires the exact 26 options and one Operational Retention route. Existing single-sidebar, single-breadcrumb, focus, verified save, Axe and overflow assertions passed in all 16 Chromium and mobile Safari cases.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -1055964,7 +1056030,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-storage-browser-probe"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -1056032,7 +1056099,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -1056040,7 +1056107,7 @@
             },
             {
               "path": "apps/api/scripts/admin-ui-fixture.ts",
-              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+              "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -1056106,7 +1056173,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -1072686,7 +1072754,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+              "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -1075600,7 +1075668,8 @@
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged.",
-            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+            "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open.",
+            "Renewed browser fixture binding after a test-only change. The isolated storage probe now models object ownership metadata, conditional writes and cleanup. Existing cases retain their assertions and the storage test now also checks HTTP 200. Bilingual storage, team and favicon caller checks passed against the API and PostgreSQL fixture. Prior source-bound evidence still covers the other unchanged test cases and product behavior."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -1078370,7 +1078439,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-storage-browser-probe"
         ]
       }
     },
@@ -1095358,7 +1095428,8 @@
         "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open.",
         "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open.",
         "Hosted report-only 43555538867 verified five exact image identities, SBOMs and scans for 7b62b875c. Package review comprises 386 entries. Final strict acceptance and deployed receipts remain open.",
-        "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts."
+        "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts.",
+        "Hosted browser run 43555617831 Chromium shard 1 found two real-API storage fixture failures. The loopback server now models unversioned bucket lookup, conditional probe writes with ownership metadata, and cleanup. Four affected storage journeys and four neighboring cases passed with zero retries. Complete the clean exact candidate rollup and obtain live receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095686,7 +1095757,8 @@
           "release-0.6-recovery-apply-command",
           "release-0.6-promotion-migration-receipt",
           "release-0.6-hosted-alpine-inventory-readback",
-          "release-0.6-staging-notification-resume"
+          "release-0.6-staging-notification-resume",
+          "release-0.6-storage-browser-probe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276981,6 +1277053,80 @@
         {
           "file": "notifier-tests.log",
           "sha256": "aaed38ce7ac00ec78fb23210035296a296d2ef888a663d89c8cc28651eb98e3a"
+        }
+      ]
+    },
+    "release-0.6-storage-browser-probe": {
+      "batch": "release-0.6-storage-browser-probe",
+      "base_commit": "bd9a2ec5f1ea538c628095a1093f02709170a28f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-07.02.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.01.01",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-09.12.05",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.30.02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/scripts/admin-ui-fixture.ts",
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/scripts/admin-ui-fixture.ts",
+          "sha256": "450573aa4afb49b9e4f92b8829595a5f379c5452bc69e85cb7e613dc38c90022"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
+        }
+      ],
+      "checks": [
+        "The original browser trace shows HTTP 503 at POST /api/admin/storage/test-connection. The loopback fixture lacked the unversioned storage ownership and cleanup contract.",
+        "Four Chromium/WebKit bilingual storage cases and four Chromium bilingual team/favicon cases passed with zero retries. Formatting, changed-file ESLint and diff checks passed."
+      ],
+      "limitations": [
+        "The focused checks use an isolated PostgreSQL and loopback object service. The hosted rollup for the repaired source, live staging storage and release receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-browser-probe",
+      "execution_receipts": [
+        {
+          "file": "storage-browser.log",
+          "sha256": "1fa21ecf7daee150328ce47198e9108bd7e2866c6b69a5e764c80ed7ffde2d92"
+        },
+        {
+          "file": "affected-browser.log",
+          "sha256": "c8461e54cb6376f80d22786ae900abb3e5e80087b960584acbe0355c5dad5e2f"
         }
       ]
     }
