@@ -150,7 +150,8 @@ echo backup-settings-admitted
                         self.assertIn('protected off-server backup configuration and key', result.stderr)
 
     def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True,
-                     identities=True, available=True, running_mismatch=""):
+                     identities=True, available=True, running_mismatch="", signal=None,
+                     migration_in_progress=False):
         with tempfile.TemporaryDirectory(prefix="barghsa-rollback-") as directory:
             root = Path(directory)
             runtime = root / "runtime.env"
@@ -210,6 +211,7 @@ echo apps-started >&2
             fake_docker.chmod(0o755)
             text = RELEASE.read_text()
             function = text[text.index("rollback() {"):text.index("\n# Check an existing container")]
+            traps = text[text.index('\ntrap rollback ERR'):text.index('\n# These images are pinned')]
             env = {
                 **os.environ,
                 "PATH": f"{root}:{os.environ['PATH']}",
@@ -227,6 +229,8 @@ echo apps-started >&2
             script = (
                 'set -euo pipefail\n'
                 'runtime=$1\nactive=$2\ncompose=$3\ncompose_files=(-f "$compose")\n'
+                'dc=(docker compose --env-file "$runtime" --env-file "$active" "${compose_files[@]}")\n'
+                f'migration_in_progress={str(migration_in_progress).lower()}\n'
                 '''postgres_id=fixture
 verify_running_image() {
   if [[ $1 == postgres ]]; then
@@ -241,7 +245,9 @@ verify_running_image() {
 }
 '''
                 f'{function}\n'
-                "trap rollback ERR\nbash -c 'exit 17'\necho unreachable\n"
+                f'{traps}\n'
+                + (f'kill -{signal} "$$"\n' if signal else "bash -c 'exit 17'\n")
+                + 'echo unreachable\n'
             )
             return subprocess.run(
                 ["bash", "-c", script, "rollback-fixture", str(runtime), str(active), str(compose)],
@@ -268,6 +274,29 @@ verify_running_image() {
         self.assertEqual(result.returncode, 17, result.stderr)
         self.assertIn("Restoring the previous staging app images failed", result.stderr)
         self.assertIn("apps-stopped", result.stderr)
+
+    def test_interrupt_restores_verified_previous_images_or_stops_on_schema_mismatch(self):
+        for signal, status in (('TERM', 143), ('HUP', 129), ('INT', 130)):
+            with self.subTest(signal=signal):
+                result = self.run_rollback(signal=signal)
+                self.assertEqual(result.returncode, status, result.stderr)
+                self.assertEqual(json.loads(result.stdout)['services']['api']['image'], self.app_id)
+                self.assertIn('verify web', result.stderr)
+        result = self.run_rollback(signal='TERM', schema_ready=False)
+        self.assertEqual(result.returncode, 143, result.stderr)
+        self.assertIn('apps-stopped', result.stderr)
+        self.assertNotIn('apps-started', result.stderr)
+        result = self.run_rollback(signal='TERM', migration_in_progress=True)
+        self.assertEqual(result.returncode, 143, result.stderr)
+        self.assertIn('verify that the migrator has stopped', result.stderr)
+        self.assertIn('apps-stopped', result.stderr)
+        self.assertNotIn('schema-check', result.stderr)
+        self.assertNotIn('apps-started', result.stderr)
+        result = self.run_rollback(migration_in_progress=True)
+        self.assertEqual(result.returncode, 17, result.stderr)
+        self.assertIn('verify that the migrator has stopped', result.stderr)
+        self.assertIn('apps-stopped', result.stderr)
+        self.assertNotIn('schema-check', result.stderr)
 
     def test_missing_or_unavailable_image_id_stops_before_schema_check(self):
         for options in ({"identities": False}, {"available": False}):
@@ -514,7 +543,9 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
     def test_active_manifest_switch_preserves_the_previous_bytes_on_install_failure(self):
         text = RELEASE.read_text()
         start = text.rindex('\nverify_running_image clamav "$clamav_id"\n')
-        switch = text[text.index('\n', start + 1):text.index('\ntrap - ERR\nprintf', start)]
+        switch = text[text.index('\n', start + 1):text.index("\nprintf 'Staging release healthy:", start)]
+        rollback = text[text.index('rollback() {'):text.index('\n# Check an existing container')]
+        traps = text[text.index('\ntrap rollback ERR'):text.index('\n# These images are pinned')]
         script = r'''set -euo pipefail
 active=$1
 candidate=$2
@@ -524,15 +555,27 @@ install() {
     return 1
   fi
   command install "$@"
+  if [[ "$MANIFEST_FAILURE" == before-rename ]]; then kill -TERM "$$"; fi
 }
 mv() {
   [[ $1 == -fT && $2 == -- ]]
   [[ "$MANIFEST_FAILURE" != rename ]] || return 1
   command mv -f -- "$3" "$4"
+  if [[ "$MANIFEST_FAILURE" == after-rename ]]; then kill -TERM "$$"; fi
 }
-trap 'cat "$active"; echo rollback' ERR
-''' + switch + '\necho accepted\n'
-        for failure in ('none', 'install', 'rename'):
+docker() { echo 'restore previous' >&2; return 1; }
+stat() {
+  [[ $1 == -c && $2 == '%i' && $3 == -- ]]
+  if [[ $(uname -s) == Darwin ]]; then command stat -f '%i' "$4"
+  else command stat "$@"; fi
+}
+dc=(docker)
+runtime=fixture
+compose_files=(-f fixture)
+postgres_id=fixture
+verify_running_image() { return 1; }
+''' + rollback + traps + switch + '\necho accepted\n'
+        for failure in ('none', 'install', 'rename', 'before-rename', 'after-rename'):
             with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temp:
                 root = Path(temp)
                 active = root / 'active.env'
@@ -545,14 +588,17 @@ trap 'cat "$active"; echo rollback' ERR
                     env={**os.environ, 'MANIFEST_FAILURE': failure},
                     capture_output=True, text=True, timeout=10,
                 )
-                failed = failure != 'none'
-                self.assertEqual(result.returncode, int(failed), result.stderr)
-                expected = 'PREVIOUS=verified\n' if failed else 'CANDIDATE=verified\n'
+                late = failure == 'after-rename'
+                self.assertEqual(result.returncode, 143 if failure.endswith('-rename') else int(failure != 'none'), result.stderr)
+                promoted = failure == 'none' or late
+                expected = 'CANDIDATE=verified\n' if promoted else 'PREVIOUS=verified\n'
                 self.assertEqual(active.read_text(), expected)
                 self.assertEqual(active.stat().st_mode & 0o777, 0o600)
                 self.assertEqual(sorted(p.name for p in root.iterdir()),
                                  ['active.env', 'candidate.env'])
-                self.assertEqual(result.stdout, expected + 'rollback\n' if failed else 'accepted\n')
+                self.assertEqual(result.stdout, 'accepted\n' if failure == 'none' else '')
+                self.assertEqual('restore previous' in result.stderr, not promoted)
+                self.assertEqual('interrupted after the active manifest was published' in result.stderr, late)
 
     def test_public_smoke_checks_candidate_revision_before_promotion(self):
         text = RELEASE.read_text()

@@ -335,6 +335,11 @@ After a failure, the previous app image checks the current database schema
 before the release restores the previous API, worker, AI inference and web
 images. The release stops those services if the schema check fails. Recover
 the matching app and database pair before accepting writes, or roll forward.
+An interruption before activation uses the same rollback checks. If migration
+fails or is interrupted, the release keeps writers stopped. Verify that the
+migrator has exited and check the schema before restoring them. An
+interruption after the active manifest rename preserves that manifest. Verify
+the live release and reconcile its receipts before retrying.
 Check Compose status and the active manifest before retrying. Use the
 [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
 for database recovery.

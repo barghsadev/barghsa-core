@@ -169,8 +169,22 @@ verify_running_image() {
 }
 
 rollback() {
-  local status=$?
+  local status=${1:-$?}
   trap - ERR
+  trap '' HUP INT TERM
+  if [[ -n "${pending_active:-}" ]]; then
+    # The rename may have completed before Bash handled the interruption.
+    if [[ -n "${pending_inode:-}" && "$(stat -c '%i' -- "$active" 2>/dev/null)" == "$pending_inode" ]]; then
+      echo 'Staging release interrupted after the active manifest was published; verify live release receipts' >&2
+      exit "$status"
+    fi
+    rm -f -- "$pending_active" || true
+  fi
+  if [[ "${migration_in_progress:-false}" == true ]]; then
+    echo 'Staging migration did not complete successfully; verify that the migrator has stopped and check the schema before restoring writers' >&2
+    stop_rollback_services "${dc[@]}"
+    exit "$status"
+  fi
   if [[ -r "$active" ]]; then
     local previous=(docker compose --env-file "$runtime" --env-file "$active" "${compose_files[@]}")
     local previous_app_id previous_web_id loaded_app_id loaded_web_id service expected_id container
@@ -245,6 +259,9 @@ if [[ -n "$postgres_container" ]]; then
   verify_running_image postgres "$postgres_id" "$postgres_container"
 fi
 trap rollback ERR
+trap 'rollback 129' HUP
+trap 'rollback 130' INT
+trap 'rollback 143' TERM
 
 # These images are pinned by digest; a cached exact image needs no registry round trip.
 "${dc[@]}" pull --policy missing redis objectstore
@@ -331,7 +348,9 @@ if (not isinstance(manifest, dict) or not re.fullmatch(r"[0-9]+", system_id)
 print("BARGHSA_STAGING_MIGRATION_BACKUP_V1", json.dumps(manifest, separators=(",", ":")))
 ' "$backup_label" "$database_system_id"
 fi
+migration_in_progress=true
 "${dc[@]}" run --rm --no-deps api node run-packaged-migrations.cjs
+migration_in_progress=false
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 ai-inference
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 api
 "${dc[@]}" up -d --no-deps --wait --wait-timeout 240 web
@@ -418,13 +437,19 @@ docker run --rm --env-file "$runtime" --network barghsa-staging-private \
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
 pending_active=$(mktemp "${active}.XXXXXXXX")
-if ! install -m 0600 -- "$candidate" "$pending_active" ||
-   ! mv -fT -- "$pending_active" "$active"; then
+if ! install -m 0600 -- "$candidate" "$pending_active"; then
   rm -f -- "$pending_active"
   echo 'Could not publish the active staging manifest' >&2
   false
 fi
+# Both paths are in the same directory. Capture the staged inode before rename.
+pending_inode=$(stat -c '%i' -- "$pending_active")
+if ! mv -fT -- "$pending_active" "$active"; then
+  echo 'Could not publish the active staging manifest' >&2
+  false
+fi
 trap - ERR
+trap - HUP INT TERM
 printf 'Staging release healthy: %s\n' "$BARGHSA_APP_IMAGE"
 printf 'Staging app and web image IDs: %s %s\n' "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID"
 printf 'Staging PostgreSQL and ClamAV image IDs: %s %s\n' "$postgres_id" "$clamav_id"

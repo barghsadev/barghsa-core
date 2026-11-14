@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:34:59+00:00",
+  "updated": "2026-11-14T17:41:43+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12442,7 +12442,8 @@
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -12641,7 +12642,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": null
       }
@@ -21191,7 +21193,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21211,7 +21214,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21553,6 +21556,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ]
         }
@@ -25370,7 +25381,8 @@
         "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate.",
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
-        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25454,7 +25466,8 @@
           "release-0.6-release-notification-durability",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": null
       }
@@ -25704,7 +25717,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25724,15 +25738,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "5e51342a3e12f09be27cdd54d6ba8d34cf215cf08b6444f4ecd13cc9e11bf7ee"
+              "sha256": "ddb7e42b47172f34ad1c529ff9d828862644d3b48b063e3a5b9379b23df003b2"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -26052,6 +26066,16 @@
                 "deploy/production/test_guarded_rollout.py"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ]
         }
@@ -34321,7 +34345,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34377,7 +34402,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34834,6 +34859,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ]
         }
@@ -37898,7 +37931,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37929,7 +37963,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -38724,6 +38758,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ]
         }
@@ -106324,7 +106366,8 @@
           "release-0.6-operator-queue-coverage",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -106472,7 +106515,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -108130,6 +108173,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -173769,7 +173820,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -174141,7 +174193,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -174153,7 +174205,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -175631,6 +175683,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -645337,7 +645398,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -645509,7 +645571,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -646237,6 +646299,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -667098,7 +667168,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -667338,7 +667409,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -667946,6 +668017,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -668081,7 +668160,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -668321,7 +668401,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -668929,6 +669009,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -669062,7 +669150,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -669302,7 +669391,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -669910,6 +669999,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -670043,7 +670140,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -670283,7 +670381,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -670915,6 +671013,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -671542,7 +671648,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -671782,7 +671889,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -672390,6 +672497,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -672602,7 +672717,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -672974,7 +673090,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -672986,7 +673102,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -674488,6 +674604,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -674776,7 +674901,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -675016,7 +675142,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -675624,6 +675750,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -675756,7 +675890,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -675996,7 +676131,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -676604,6 +676739,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -676737,7 +676880,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -676977,7 +677121,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -677585,6 +677729,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -677719,7 +677871,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -677959,7 +678112,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -678591,6 +678744,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -678723,7 +678884,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -678963,7 +679125,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -679571,6 +679733,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -679703,7 +679873,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -679943,7 +680114,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -680551,6 +680722,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -708288,7 +708467,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -708300,7 +708480,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -708651,6 +708831,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ]
         }
@@ -740659,7 +740847,8 @@
         "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts.",
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
-        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -740727,7 +740916,8 @@
           "release-0.6-release-notification-durability",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_acceptance": null
       }
@@ -1131470,7 +1131660,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1131494,7 +1131684,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1135165,6 +1135355,15 @@
                 "apps/api/src/tickets/lifecycle-http.integration.test.ts"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "presentation_renewals": [
@@ -1135623,7 +1135822,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-staging-interruption-recovery"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1137792,7 +1137992,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+              "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1137816,7 +1138016,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+              "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1141415,6 +1141615,15 @@
                 "apps/api/src/tickets/lifecycle-http.integration.test.ts"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-staging-interruption-recovery",
+              "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1141890,7 +1142099,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-staging-interruption-recovery"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1147319,7 +1147529,8 @@
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
-        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open."
+        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1147721,7 +1147932,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-hosted-native-timeouts",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-staging-interruption-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1341306,6 +1341518,99 @@
         {
           "file": "staging-release.json",
           "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        }
+      ]
+    },
+    "release-0.6-staging-interruption-recovery": {
+      "batch": "release-0.6-staging-interruption-recovery",
+      "base_commit": "ebfdcd49a1fb959c974d1d017c202ee5e768a3e0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "5e6f30e3be4e4202dc4c89ef0aa2aeaf4b4c7b44b55e395e0851cd2a23b8e628"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "726519e4aef61ab0d633375a44efe6a2568b0d88258f24ab434e2b553afb9be3"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "ddb7e42b47172f34ad1c529ff9d828862644d3b48b063e3a5b9379b23df003b2"
+        }
+      ],
+      "checks": [
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
+        "The original receiver failed all four interruption assertions. The final fixtures verified earlier restore, schema refusal, stopping writers after a migration error or signal, and both sides of manifest activation. Bash syntax, ShellCheck and formatting passed."
+      ],
+      "limitations": [
+        "Isolation fixtures do not establish live staging behavior. An uncatchable host or process failure still requires operator recovery and receipt reconciliation."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-interruption-recovery",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "0746efd7a3dba8ea38905a483fbbf7dd3a8a798322454e07b6bbcb1a59f57555"
+        },
+        {
+          "file": "rollback-tests.log",
+          "sha256": "827f7fc1ee76dc4cd4e69c27f4bbd9ea8af3d6f6e2956561301198389084b9f0"
+        },
+        {
+          "file": "callers.log",
+          "sha256": "1d45c0c61b8a43eae72c1eaa3ab3fd043f45d1b9d7fcd61282fac82e611ba902"
+        },
+        {
+          "file": "static.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }
