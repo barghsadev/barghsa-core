@@ -1,5 +1,6 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.walletReceipts.bankName': 'نام بانک',
   'wallet.receipt.details': 'جزئیات رسید بانکی',
   'wallet.receipt.id': 'شناسه رسید',
   'wallet.receipt.bankName': 'نام بانک',
@@ -127,6 +128,7 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 };
 const en: Record<string, string> = {
+  'admin.walletReceipts.bankName': 'Bank name',
   'wallet.receipt.details': 'Bank receipt details',
   'wallet.receipt.id': 'Receipt ID',
   'wallet.receipt.bankName': 'Bank name',

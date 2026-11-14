@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
 import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -23,16 +22,8 @@ import {
   type WalletLimitSetting,
   type WalletLimitDraft,
 } from '../lib/limit-settings-form.js';
-import { record } from '../lib/catalogue-form.js';
-
-type WalletLimitRecoveryConfig = Pick<WalletLimitSetting, 'limitIrR'>;
-const ConfigRecovery = lazy(async () => {
-  const { default: Recovery } = await import('./ConfigRecovery.js');
-  return { default: Recovery<WalletLimitRecoveryConfig> };
-});
+const WalletLimitRecovery = lazy(() => import('./WalletLimitRecovery.js'));
 const path = '/api/admin/config/wallet-top-up-limit';
-const validRecoveryLimit = (value: unknown): value is WalletLimitRecoveryConfig =>
-  record(value) && Number.isSafeInteger(value.limitIrR) && Number(value.limitIrR) >= 0;
 
 export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps = {}) {
   const locale = useLocale(),
@@ -42,15 +33,6 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
       `admin.walletLimit.${({ readError: 'loadFailed', retry: 'reload', working: 'saving' } as Record<string, string>)[key] ?? key}`,
       locale
     ).replace('{max}', numbers.number(Number.MAX_SAFE_INTEGER));
-  const recoveryLabel = (key: string) => {
-    if (key === 'refresh') return label('refreshHistory');
-    const copy = tServiceSettings(`recovery.${key}`, locale);
-    return key === 'recoveryTitle' ||
-      key === 'recoveryActivateConfirm' ||
-      copy === `recovery.${key}`
-      ? label(key)
-      : copy;
-  };
   const [showRecovery, setShowRecovery] = useState(false);
   const [recoveryPending, setRecoveryPending] = useState(false);
   const messages = { limitIrR: label('invalid') };
@@ -183,25 +165,14 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
         disabled={props.disabled || editor.busy || editor.uncertain || recoveryPending}
         onClick={() => setShowRecovery((visible) => !visible)}
       >
-        {recoveryLabel('recoveryTitle')}
+        {label('recoveryTitle')}
       </Button>
       {showRecovery && (
         <div id="wallet-limit-recovery">
-          <Suspense fallback={<LoadingStatus>{recoveryLabel('recoveryLoading')}</LoadingStatus>}>
-            <ConfigRecovery
+          <Suspense fallback={<LoadingStatus>{label('loading')}</LoadingStatus>}>
+            <WalletLimitRecovery
               path={path}
-              label={recoveryLabel}
-              valid={validRecoveryLimit}
-              basis={(value) => String(value.limitIrR)}
-              activationRisk={(value) => (value.limitIrR === 0 ? 'destructive' : undefined)}
-              renderValues={(value) => (
-                <div className="space-y-2">
-                  <p>
-                    {label('label')} <bdi>{numbers.irrDigits(String(value.limitIrR))}</bdi>
-                  </p>
-                  {value.limitIrR === 0 && <p>{label('blocked')}</p>}
-                </div>
-              )}
+              label={label}
               disabled={!!props.disabled || editor.busy || editor.uncertain}
               onBusyChange={(busy) => {
                 setRecoveryPending(busy);

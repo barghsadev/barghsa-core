@@ -8,7 +8,6 @@ import {
 } from '../components/ReceiptQueueControls.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FinanceCursor } from '../lib/finance-list-query.js';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
@@ -1117,11 +1116,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                   'font-mono text-sm',
                   'ltr'
                 )}
-                {receiptDetail(
-                  adminText('admin.invoiceReceipts.bankName', locale),
-                  selected.bankName ?? copy('none'),
-                  'break-words'
-                )}
+                {receiptDetail(copy('bankName'), selected.bankName ?? copy('none'), 'break-words')}
                 {receiptDetail(copy('walletId'), selected.walletId, 'font-mono text-sm', 'ltr')}
                 {receiptDetail(copy('submittedAt'), time.format(selected.submittedAt))}
                 {receiptDetail(copy('note'), selected.customerNote ?? copy('none'))}

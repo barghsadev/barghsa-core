@@ -112,6 +112,12 @@
     "limitKB": 10
   },
   {
+    "name": "Wallet limit recovery on disclosure",
+    "phase": "interaction",
+    "entries": ["src/components/WalletLimitRecovery.tsx"],
+    "limitKB": 60
+  },
+  {
     "name": "Wallet top-up review on demand",
     "phase": "interaction",
     "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],
