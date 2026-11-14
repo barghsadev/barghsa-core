@@ -75,6 +75,14 @@ On November 14 at 02:36 UTC, Docker's data directory, the active
 external tablespace links. Use these numbers to plan the first rehearsal and
 repeat the measurements before the cutover.
 
+The prepared Linux amd64 image was also exercised with two synthetic databases
+and a 197,112,136-byte data directory. Backup scratch peaked at 406,650,880
+allocated bytes. Restore scratch and replay peaked at 275,374,080 allocated
+bytes. The fixture used private TLS object storage, verified the encrypted
+upload, and recovered both databases to the requested point. Treat these samples
+as a sizing reference. Measure again with the selected off-server destination and
+include Docker image transfer and the logical restore in the cutover budget.
+
 - Measure free bytes and verify the mount for the Docker data directory,
   backup scratch, image archive and restore target. Count space on a shared
   filesystem once. Inventory the active data directory and any external

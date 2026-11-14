@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T02:51:38+00:00",
+  "updated": "2026-11-14T02:57:51+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16951,7 +16951,8 @@
         "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required.",
         "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result.",
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
-        "At 02:36 UTC on November 14, the active staging PostgreSQL volume had 107,408,958 apparent bytes and no external tablespace links. Docker and /tmp shared 6,257,455,104 free bytes. Use the cutover runbook to measure backup and restore scratch, image transfer and retained volume space. The protected off-server configuration and key remain absent."
+        "At 02:36 UTC on November 14, the active staging PostgreSQL volume had 107,408,958 apparent bytes and no external tablespace links. Docker and /tmp shared 6,257,455,104 free bytes. Use the cutover runbook to measure backup and restore scratch, image transfer and retained volume space. The protected off-server configuration and key remain absent.",
+        "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore."
       ],
       "owner": null,
       "depends_on": [],
@@ -17041,7 +17042,8 @@
           "release-0.6-existing-offsite-capacity",
           "release-0.6-backup-target-monitoring",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-cutover-capacity-and-image-readback"
+          "release-0.6-cutover-capacity-and-image-readback",
+          "release-0.6-measured-cutover-scratch"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17065,7 +17067,8 @@
         "Production dataset recovery and core-service RTO including provisioning/cutover/application readiness remain unmeasured. The local verifier reports database RTO and leaves core-service RTO null.",
         "The exact staging PostgreSQL candidate restored the physical backup and encrypted archive to the selected point using the staged Compose archiver. The production-equivalent backup, configuration and object recovery, timed business recovery and alert receipts remain open.",
         "The exact rebuilt image verified the remote object and recovered the selected point with signed TLS storage. Production-equivalent restoration and measured service receipts remain open.",
-        "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints."
+        "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints.",
+        "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -17129,7 +17132,8 @@
           "release-0.6-postgres-restore-readback",
           "release-0.6-staging-wal-archive",
           "release-0.6-backup-object-readback",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-measured-cutover-scratch"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -1095221,7 +1095225,8 @@
         "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts.",
         "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open.",
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
-        "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover."
+        "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover.",
+        "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095290,7 +1095295,8 @@
           "release-0.6-existing-offsite-capacity",
           "release-0.6-backup-target-monitoring",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-cutover-capacity-and-image-readback"
+          "release-0.6-cutover-capacity-and-image-readback",
+          "release-0.6-measured-cutover-scratch"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1275430,6 +1275436,83 @@
         {
           "file": "bundle-final.log",
           "sha256": "90e736bbe8c28ee0f594c264388eb79c673b313407b0d6cd98ae001776443982"
+        }
+      ]
+    },
+    "release-0.6-measured-cutover-scratch": {
+      "batch": "release-0.6-measured-cutover-scratch",
+      "base_commit": "fa580b813838617892320efc0ac34f651b84d2ad",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/compose.wal-archive.yml",
+          "sha256": "509e9233ba683589906f05102464ddffc45e8e6308f74c365fc655326baf0ae4"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "96ab21e4e52f225b37cbac044190fa769e53916411af8e934675720477a83ca7"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "a02805cea7c9f5fce4fc37b5e6383ac53b1ddbbef55ebcf193b3a888da6787b2"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "3c57796fb2eabd4ee8a541a272f1cc5b50c073798716feabe54bd26fafe8e086"
+        }
+      ],
+      "checks": [
+        "The exact prepared Linux amd64 PostgreSQL image performed an encrypted native backup and verified remote object bytes over private TLS. The synthetic cluster had 197,112,136 apparent bytes.",
+        "The restored cluster matched the expected row counts and numeric sums in both synthetic databases. WAL replay included the committed row before the selected point and excluded the later row. Sampled peaks were 406,650,880 backup bytes and 275,374,080 restore bytes.",
+        "The isolated containers, network and database volume were removed after success."
+      ],
+      "limitations": [
+        "The isolated fixture measures PostgreSQL scratch and database replay only. It does not establish approved off-server storage, live staging capacity for the whole cutover or core-service recovery time."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-measured-cutover-scratch",
+      "execution_receipts": [
+        {
+          "file": "capacity-receipt.json",
+          "sha256": "727285d249ae61289386a468455073376d076cb0bde395ee18d732a1ef6a4060"
+        },
+        {
+          "file": "native-full-backup.json",
+          "sha256": "ed7fe57c5d50dc2f38ec4c1034168287eb551cde5aa7ad78daf8f28cce063e0d"
+        },
+        {
+          "file": "native-wal-upload.json",
+          "sha256": "948efebf7a7173af7ec78de0272046df4179079a14d40e800227ef28b7e4716a"
+        },
+        {
+          "file": "native-restore.log",
+          "sha256": "8d3798bc1949c242312544d2a0d50d60d214844bf426db15425d44838716e9e1"
+        },
+        {
+          "file": "backup-scratch.txt",
+          "sha256": "1b4529eb94e9e4a04761fdb11f3b38f09c1d362ec24ee33b50f6ec435dd97c66"
+        },
+        {
+          "file": "source-data.bytes",
+          "sha256": "fd0ea0227cde0f087fadea40615875daebf270607952d6ddeb2808d5fce8b086"
+        },
+        {
+          "file": "source-database-sizes.txt",
+          "sha256": "342241bdee9461e9212e34827af82fdaf27e8f826eb709849a3c0c35bdc20c62"
+        },
+        {
+          "file": "measure.sh",
+          "sha256": "c0cc66f576f155696502e81b047b01eb6e1286abe7eb3722feb7d901994cac05"
         }
       ]
     }
