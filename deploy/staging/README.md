@@ -324,6 +324,9 @@ The API and worker share an image. The worker uses its own command and health
 check. The release stops the API, worker and AI inference before applying
 migrations. A failed stop cancels the migration and enters rollback. The release
 starts the candidate API after migrations finish and waits for its health check.
+The public liveness, readiness and release readbacks require HTTP 200 JSON
+responses of at most 64 KiB. The release checks the candidate API commit and
+the web commit and version before writing the active manifest.
 After a failure, the previous app image checks the current database schema
 before the release restores the previous API, worker, AI inference and web
 images. The release stops those services if the schema check fails. Recover

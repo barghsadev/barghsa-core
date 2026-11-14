@@ -1,10 +1,12 @@
 import json
 from datetime import datetime, timedelta, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import os
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import threading
 import unittest
 
 RELEASE = Path(__file__).with_name("release.sh")
@@ -511,8 +513,8 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
 
     def test_public_smoke_checks_candidate_revision_before_promotion(self):
         text = RELEASE.read_text()
-        smoke = text[text.index('for health in live ready; do'):
-                     text.index('\n[[ $(curl --silent', text.index('for health in live ready; do'))]
+        smoke = text[text.index('verify_public_json() {'):
+                     text.index('\n[[ $(curl --silent', text.index('verify_public_json() {'))]
         script = f'''set -euo pipefail
 APP_PUBLIC_URL=https://staging.example.test
 commit=$1
@@ -521,9 +523,9 @@ curl() {{
   case "$*" in
     *"--dump-header -"*"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$API_HEADERS" ;;
     *"--dump-header -"*"$APP_PUBLIC_URL/") printf '%s' "$WEB_HEADERS" ;;
-    *"$APP_PUBLIC_URL/api/health/live") printf '%s' "$LIVE" ;;
-    *"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$READY" ;;
-    *"$APP_PUBLIC_URL/release.json?commit=$commit") printf '%s' "$WEB" ;;
+    *"$APP_PUBLIC_URL/api/health/live") printf '%s%s' "$LIVE_JSON_HEADERS" "$LIVE" ;;
+    *"$APP_PUBLIC_URL/api/health/ready") printf '%s%s' "$READY_JSON_HEADERS" "$READY" ;;
+    *"$APP_PUBLIC_URL/release.json?commit=$commit") printf '%s%s' "$WEB_JSON_HEADERS" "$WEB" ;;
     *) return 98 ;;
   esac
 }}
@@ -540,8 +542,15 @@ echo promote
         headers = ('HTTP/1.1 200 OK\r\n' + content_type_header
                    + 'Referrer-Policy: strict-origin-when-cross-origin\r\n'
                    + 'X-Frame-Options: DENY\r\n' + permissions_header + '\r\n')
+        json_headers = 'HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n'
         for name, api, web, expected in (
             ('matching', ready, metadata, None),
+            ('exact-json-limit', ready, metadata, None),
+            ('oversized-json', ready, metadata, 'Invalid staging ready'),
+            ('redirect-live-json', ready, metadata, 'Invalid staging live'),
+            ('partial-ready-json', ready, metadata, 'Invalid staging ready'),
+            ('redirect-web-json', ready, metadata, 'Staging web release does not match'),
+            ('wrong-web-content-type', ready, metadata, 'Staging web release does not match'),
             ('degraded', {**ready, 'status': 'degraded',
                           'checks': {**checks, 'objectStorage': {'status': 'degraded'}}},
              metadata, 'Invalid staging ready'),
@@ -566,6 +575,20 @@ echo promote
             with self.subTest(name=name):
                 web_headers = headers
                 api_headers = headers
+                live_json_headers = ready_json_headers = web_json_headers = json_headers
+                ready_json = json.dumps(api)
+                if name == 'exact-json-limit':
+                    ready_json = ready_json.ljust(65536)
+                if name == 'oversized-json':
+                    ready_json = ready_json.ljust(65537)
+                if name == 'redirect-live-json':
+                    live_json_headers = json_headers.replace('200 OK', '302 Found')
+                if name == 'partial-ready-json':
+                    ready_json_headers = json_headers.replace('200 OK', '206 Partial Content')
+                if name == 'redirect-web-json':
+                    web_json_headers = json_headers.replace('200 OK', '307 Temporary Redirect')
+                if name == 'wrong-web-content-type':
+                    web_json_headers = json_headers.replace('application/json', 'text/html')
                 if name == 'duplicate-web-header':
                     web_headers = headers.replace(content_type_header, content_type_header * 2)
                 if name == 'missing-api-header':
@@ -576,8 +599,11 @@ echo promote
                     web_headers = headers.replace('200 OK', '302 Found')
                 result = subprocess.run(['bash', '-c', script, 'public-smoke', commit],
                                         capture_output=True, text=True, env={**os.environ,
-                                            'LIVE': '{"status":"ok"}', 'READY': json.dumps(api), 'WEB': json.dumps(web),
-                                            'WEB_HEADERS': web_headers, 'API_HEADERS': api_headers})
+                                            'LIVE': '{"status":"ok"}', 'READY': ready_json, 'WEB': json.dumps(web),
+                                            'WEB_HEADERS': web_headers, 'API_HEADERS': api_headers,
+                                            'LIVE_JSON_HEADERS': live_json_headers,
+                                            'READY_JSON_HEADERS': ready_json_headers,
+                                            'WEB_JSON_HEADERS': web_json_headers})
                 self.assertEqual(result.returncode, bool(expected), result.stderr)
                 lines = result.stdout.splitlines()
                 if expected:
@@ -590,6 +616,61 @@ echo promote
                         'Staging edge security headers verified on /api/health/ready',
                         'promote',
                     ])
+
+    def test_public_json_network_read_refuses_redirect_and_bounds_body(self):
+        text = RELEASE.read_text()
+        public_json = text[text.index('verify_public_json() {'):
+                           text.index('\nfor health in live ready; do')]
+        requests = []
+
+        class Handler(BaseHTTPRequestHandler):
+            protocol_version = 'HTTP/1.1'
+
+            def do_GET(self):
+                requests.append((self.path, self.headers.get('Cache-Control')))
+                path = self.path
+                status = 302 if path == '/redirect' else 200
+                body = b'{"status":"ok"}'
+                if path in ('/limit', '/oversized'):
+                    body = body.ljust(65536 if path == '/limit' else 65537)
+                self.send_response(status)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Connection', 'close')
+                if status == 302:
+                    self.send_header('Location', '/redirect-target')
+                self.end_headers()
+                try:
+                    self.wfile.write(body)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+
+            def log_message(self, *_):
+                pass
+
+        with ThreadingHTTPServer(('127.0.0.1', 0), Handler) as server, \
+                tempfile.TemporaryDirectory() as home:
+            # A release operator's curl defaults cannot enable redirect following.
+            Path(home, '.curlrc').write_text('location\n')
+            thread = threading.Thread(target=server.serve_forever, kwargs={'poll_interval': .05})
+            thread.start()
+            try:
+                script = f'''set -euo pipefail
+APP_PUBLIC_URL=http://127.0.0.1:{server.server_port}
+commit=
+version=
+{public_json}
+verify_public_json "$1" live || false
+'''
+                for path, code in (('/limit', 0), ('/oversized', 1), ('/redirect', 1)):
+                    with self.subTest(path=path):
+                        result = subprocess.run(['bash', '-c', script, 'public-json', path],
+                                                capture_output=True, text=True, timeout=10,
+                                                env={**os.environ, 'CURL_HOME': home})
+                        self.assertEqual(result.returncode, code, result.stderr)
+            finally:
+                server.shutdown()
+                thread.join()
+        self.assertEqual(requests, [(path, 'no-cache') for path in ('/limit', '/oversized', '/redirect')])
 
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()

@@ -345,26 +345,43 @@ for service in api worker ai-inference web; do
   verify_running_image "$service" "$expected_id"
 done
 
-for health in live ready; do
-  curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/api/health/$health" |
+verify_public_json() {
+  curl --disable --fail --silent --show-error --max-time 20 --max-filesize 65536 \
+    --include --http1.1 --suppress-connect-headers -H 'Cache-Control: no-cache' "$APP_PUBLIC_URL$1" |
     python3 -c '
-import json, sys
+import http.client, json, sys
 
-kind, commit = sys.argv[1:]
+kind, commit, version = sys.argv[1:]
+source = sys.stdin.buffer
 try:
-    body = json.load(sys.stdin)
-    status = body.get("status")
-    valid = status == "ok" if kind == "live" else (
-        status == "ok" and body.get("warnings", []) == []
-        and all(body["checks"][name]["status"] == "ok"
-                for name in ("postgresql", "redis", "objectStorage"))
-        and (not commit or body.get("commit") == commit)
-    )
-except (ValueError, AttributeError, KeyError, TypeError):
+    status = source.readline(1024).split()
+    headers = http.client.parse_headers(source)
+    if status[:2] != [b"HTTP/1.1", b"200"] or headers.get_content_type() != "application/json":
+        raise ValueError("Invalid public JSON response")
+    payload = source.read(65537)
+    if len(payload) > 65536:
+        raise ValueError("Public JSON response exceeded its size limit")
+    body = json.loads(payload)
+    if kind == "release":
+        valid = body.get("commit") == commit and body.get("version") == version
+    else:
+        valid = body.get("status") == "ok"
+        if kind == "ready":
+            valid = (valid and body.get("warnings", []) == []
+                     and all(body["checks"][name]["status"] == "ok"
+                             for name in ("postgresql", "redis", "objectStorage"))
+                     and (not commit or body.get("commit") == commit))
+except (ValueError, AttributeError, KeyError, TypeError, http.client.HTTPException):
     valid = False
 if not valid:
+    if kind == "release":
+        sys.exit("Staging web release does not match the candidate commit and version")
     sys.exit(f"Invalid staging {kind} health response")
-' "$health" "$commit"
+' "$2" "$commit" "$version"
+}
+
+for health in live ready; do
+  verify_public_json "/api/health/$health" "$health" || false
 done
 for route in / /api/health/ready; do
   curl --fail --silent --show-error --max-time 20 --http1.1 --suppress-connect-headers \
@@ -389,19 +406,7 @@ print(f"Staging edge security headers verified on {route}")
 ' "$route"
 done
 if [[ -n "$commit" ]]; then
-  curl --fail --silent --show-error --max-time 20 -H 'Cache-Control: no-cache' \
-    "$APP_PUBLIC_URL/release.json?commit=$commit" |
-    python3 -c '
-import json, sys
-
-try:
-    metadata = json.load(sys.stdin)
-    valid = metadata.get("commit") == sys.argv[1] and metadata.get("version") == sys.argv[2]
-except (ValueError, AttributeError):
-    valid = False
-if not valid:
-    sys.exit("Staging web release does not match the candidate commit and version")
-' "$commit" "$version"
+  verify_public_json "/release.json?commit=$commit" release || false
 fi
 [[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
   echo 'Public S3 gateway did not return AccessDenied' >&2; false;

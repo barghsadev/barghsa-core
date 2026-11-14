@@ -21099,7 +21099,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21119,7 +21120,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21437,6 +21438,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ]
         }
@@ -25170,7 +25179,8 @@
         "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required.",
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate."
+        "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate.",
+        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -25251,7 +25261,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-complete-staging-checkpoint-receipt",
-          "release-0.6-release-notification-durability"
+          "release-0.6-release-notification-durability",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": null
       }
@@ -25490,7 +25501,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25510,15 +25522,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "a7c097d581413db830fa3d75638c5ca0964272a620b64aed905847d88faf414a"
+              "sha256": "26fc0c57351fcbfa78eb514b5cbef29ebe6be823eb52d750cc212c0d1a6708d4"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -25792,6 +25804,16 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ]
         }
@@ -34012,7 +34034,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34068,7 +34091,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34501,6 +34524,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ]
         }
@@ -37548,7 +37579,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-notification-scan-recheck",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37579,7 +37611,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -38318,6 +38350,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ]
         }
@@ -105526,7 +105566,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-coverage-browser-selection",
           "release-0.6-operator-queue-coverage",
-          "release-0.6-saving-quote-fixture-isolation"
+          "release-0.6-saving-quote-fixture-isolation",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -105674,7 +105715,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -107316,6 +107357,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "All 11 native cases passed after isolating the quote rate-limit fixture. Monetary, cross-service abuse, no-side-effect and eligibility assertions still run. Runtime unchanged."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -172773,7 +172822,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -173145,7 +173195,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -173157,7 +173207,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -174601,6 +174651,15 @@
                 "apps/api/src/telegram/telegram-protocol.ts"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -642839,7 +642898,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-upload-command-validation",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -643011,7 +643071,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -643723,6 +643783,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -664582,7 +664650,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -664822,7 +664891,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -665414,6 +665483,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -665547,7 +665624,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -665787,7 +665865,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -666379,6 +666457,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -666510,7 +666596,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -666750,7 +666837,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -667342,6 +667429,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -667473,7 +667568,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -667713,7 +667809,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -668329,6 +668425,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -668954,7 +669058,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -669194,7 +669299,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -669786,6 +669891,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -669994,7 +670107,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -670366,7 +670480,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -670378,7 +670492,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -671846,6 +671960,15 @@
                 "apps/api/src/telegram/telegram-protocol.ts"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -672132,7 +672255,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -672372,7 +672496,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -672964,6 +673088,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -673094,7 +673226,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -673334,7 +673467,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -673926,6 +674059,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -674057,7 +674198,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -674297,7 +674439,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -674889,6 +675031,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -675021,7 +675171,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -675261,7 +675412,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -675877,6 +676028,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -676007,7 +676166,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -676247,7 +676407,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -676839,6 +676999,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -676969,7 +677137,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "status": "done",
@@ -677209,7 +677378,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -677801,6 +677970,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -704203,7 +704380,8 @@
         "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal.",
         "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory.",
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
-        "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open."
+        "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open.",
+        "The staging host release smoke now enforces a 20-second maximum and 64 KiB response limit on all three public JSON reads. Real curl loopback tests passed the exact limit, oversized response without Content-Length and redirects. The broader outbound provider inventory and exact deployment remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -704241,7 +704419,8 @@
           "release-0.6-storage-body-deadline",
           "release-0.6-telegram-receipt-transport",
           "release-0.6-bound-staging-worker-readbacks",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -705290,7 +705469,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -705302,7 +705482,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -705629,6 +705809,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ]
         }
@@ -737413,7 +737601,8 @@
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal.",
         "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram.",
-        "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts."
+        "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts.",
+        "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -737478,7 +737667,8 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-staging-nginx-recovery",
           "release-0.6-staging-nginx-fixture",
-          "release-0.6-release-notification-durability"
+          "release-0.6-release-notification-durability",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_acceptance": null
       }
@@ -1126121,7 +1126311,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1126145,7 +1126335,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1129760,6 +1129950,15 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "The existing consultation customer list and detail now validate the original session after loading response data. SQL and its bindings, profile/agent locks, response fields and command paths are unchanged. The SQL review file renews only this existing entry. The five compiled request cases passed, including both expiry regressions and prior profile/finance isolation. Earlier evidence is retained for the scope it verified."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -1130212,7 +1130411,8 @@
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-release-notification-durability",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-staging-bounded-smoke"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1132381,7 +1132581,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "1a56dcd827eb9f4b64d033535a55492461c352445642dd1dd657534aa5c046e8"
+              "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1132405,7 +1132605,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "590a8a913e9f7849500bd4cd0fb406bcae131e6ab589dc7aee98c16f25bfbcbd"
+              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1135948,6 +1136148,15 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "The existing consultation customer list and detail now validate the original session after loading response data. SQL and its bindings, profile/agent locks, response fields and command paths are unchanged. The SQL review file renews only this existing entry. The five compiled request cases passed, including both expiry regressions and prior profile/finance isolation. Earlier evidence is retained for the scope it verified."
+            },
+            {
+              "batch": "release-0.6-staging-bounded-smoke",
+              "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1136417,7 +1136626,8 @@
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-release-notification-durability",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-staging-bounded-smoke"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1334024,6 +1334234,85 @@
         {
           "file": "compiled-tests.log",
           "sha256": "1441b33b7ced48ba30bcbf4f7ebeda441a9a772456745fcf100f0a27195be1a6"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-staging-bounded-smoke": {
+      "batch": "release-0.6-staging-bounded-smoke",
+      "base_commit": "dbb2a87d5bc16edbdd78900506e39b122a0efe3c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "0d150b1f6c502b2d8b5bdb14428f74294603c4796fd778036e65bd975f6249a7"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "26fc0c57351fcbfa78eb514b5cbef29ebe6be823eb52d750cc212c0d1a6708d4"
+        }
+      ],
+      "checks": [
+        "All 17 staging release and rollback tests passed. A real loopback HTTP fixture accepted exactly 64 KiB without Content-Length and rejected 64 KiB plus one byte and a redirect without making a redirected request. The rollout fixture rejected 206 and 3xx JSON and wrong content type. The exact health and web checks passed read-only from the staging VPS at v0.5.1. Bash syntax, Markdown formatting and diff checks passed."
+      ],
+      "limitations": [
+        "The live API is v0.5.1 and supplies no release commit field. The read-only live compatibility check omitted that API field check and verified the known web commit/version. Final v0.6.0 candidate identity, actual deployment and notification receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-bounded-smoke",
+      "execution_receipts": [
+        {
+          "file": "staging-rollback-tests.log",
+          "sha256": "207b308cd82a93941a60267daf7926eccfc37468599d7f017d8c4c72e1ea8cf8"
+        },
+        {
+          "file": "live-existing-json.log",
+          "sha256": "b4415f9bd1ae1955e6b8b11760524ef55ba3af43368a187e5b9de0f2d8db665a"
         },
         {
           "file": "scoped-checks.log",
