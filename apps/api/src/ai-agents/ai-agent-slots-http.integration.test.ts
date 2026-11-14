@@ -13,7 +13,7 @@ beforeAll(async () => {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'slot-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'slot-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW()-INTERVAL '1 second')",
     [session, csrf, randomUUID()]
   );
   headers = {
@@ -202,7 +202,7 @@ async function expireDuringAudit(run: () => Promise<void>) {
   } finally {
     await http.pool.query('DROP TRIGGER expire_settings_session ON audit_log');
     await http.pool.query(
-      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL,csrf_token=$1 WHERE user_id='slot-admin'",
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW()-INTERVAL '1 second',revoked_at=NULL,csrf_token=$1 WHERE user_id='slot-admin'",
       [headers['x-csrf-token']]
     );
   }

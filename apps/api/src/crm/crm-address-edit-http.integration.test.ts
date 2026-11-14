@@ -23,7 +23,7 @@ beforeAll(async () => {
     csrf = randomUUID();
   await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-    VALUES ($1,'address-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    VALUES ($1,'address-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')`,
     [session, csrf, randomUUID()]
   );
   headers = {
@@ -282,7 +282,7 @@ it('enforces current staff access, CSRF and recent step-up on address edits', as
   );
   expect((await update(profileId, { address: edit })).status).toBe(403);
   await http.pool.query(
-    "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='address-editor'"
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id='address-editor'"
   );
   await http.pool.query("DELETE FROM user_roles WHERE user_id='address-editor'");
   try {
