@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import runpy
 import sys
 import tempfile
 import unittest
@@ -369,6 +370,50 @@ class StructuredReceiptTest(unittest.TestCase):
                 fingerprint = self.write_bundle(bad)
                 with self.assertRaisesRegex(ValueError, expected):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_migration_checkpoint_matches_the_deployed_release_and_separate_rehearsal(self):
+        manifest = {**self.backup()['backup_manifest'],
+                    'label': f'release-{SHA[:12]}-20261112T065800Z-123'}
+        queue = runpy.run_path(str(promotion.ROOT / 'deploy/staging/release-queue.py'))
+        marker = 'BARGHSA_STAGING_MIGRATION_BACKUP_V1 '
+        checkpoint = queue['verify_migration_backup'](
+            marker + json.dumps({**manifest, 'upload_verified': True}), SHA)
+        job = {'completed_at': '2026-11-12T08:00:00Z',
+               'runtime_images': {'commit': SHA, 'migration_backup': checkpoint}}
+        evidence = self.root / 'rehearsal.log'
+        evidence.write_text('Controlled migration, seed and rollback test fixture\n')
+        rehearsal = {'candidate_sha': SHA, 'scope': 'migration_and_rollback', 'strategy': 'rollback',
+                     'evidence': evidence.name, 'evidence_sha256': promotion.file_digest(evidence)}
+        bundle = {'checkpoint_manifest': manifest, 'migration_rehearsal': rehearsal}
+
+        def check(receipts, release=job):
+            return promotion.verify_migration_receipts(
+                self.index, self.bundle, self.write_bundle(receipts), release, SHA)
+
+        verified = check(bundle)
+        self.assertEqual(verified['checkpoint'], manifest['label'])
+        self.assertEqual(verified['strategy'], 'rollback')
+        self.assertEqual(verified['sha256']['rehearsal_evidence'], promotion.file_digest(evidence))
+        for runtime in ({}, {'commit': 'd' * 40, 'migration_backup': checkpoint},
+                        {'commit': SHA, 'migration_backup': {'status': 'disposable'}},
+                        {'commit': SHA, 'migration_backup': {**checkpoint, 'system_id': '123'}}):
+            with self.subTest(runtime=runtime), self.assertRaisesRegex(ValueError, 'off-server manifest'):
+                check(bundle, {**job, 'runtime_images': runtime})
+        for changed in ({'size': True}, {'sha256': '0' * 64}, {'blob': 'other'},
+                        {'label': f'release-{"d" * 12}-20261112T065800Z-123'}):
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'off-server manifest'):
+                check({**bundle, 'checkpoint_manifest': {**manifest, **changed}})
+        with self.assertRaisesRegex(ValueError, 'checkpoint timing'):
+            check(bundle, {**job, 'completed_at': '2026-11-12T06:00:00Z'})
+        with self.assertRaisesRegex(ValueError, 'identify the candidate and strategy'):
+            check({**bundle, 'migration_rehearsal': {**rehearsal, 'strategy': 'unverified'}})
+        evidence.write_text('Different rehearsal bytes\n')
+        with self.assertRaisesRegex(ValueError, 'evidence is missing or changed'):
+            check(bundle)
+        reused = {**rehearsal, 'evidence': 'checkpoint_manifest.json',
+                  'evidence_sha256': hashlib.sha256(json.dumps(manifest).encode()).hexdigest()}
+        with self.assertRaisesRegex(ValueError, 'evidence is missing or changed'):
+            check({**bundle, 'migration_rehearsal': reused})
 
     def test_requires_core_recovery_journeys_and_their_original_evidence(self):
         entries = self.backup()

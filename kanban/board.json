@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T04:04:58+00:00",
+  "updated": "2026-11-14T04:10:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8803,7 +8803,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9138,6 +9138,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -12106,7 +12114,8 @@
         "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence.",
         "The isolated 0288-to-0289 migration and idempotent repeat passed on the retained Debian and Ubuntu trial runtimes. The Ubuntu staging rehearsal through 0296 also passed, including a no-op rerun and HTTP readiness for both matched pairs. The previous image rejected the migrated copy. Verify the final staging cutover and recovery on the production-equivalent topology.",
         "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. The matching rollback pair was verified on isolated copies on the staging host. Verify the actual logical cutover on staging and repeat on the designated production-equivalent topology.",
-        "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery."
+        "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery.",
+        "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -12292,7 +12301,8 @@
           "release-0.6-staging-migration-writer-stop",
           "release-0.6-staging-postgres-volume-guard",
           "release-0.6-queue-schema-rehearsal",
-          "release-0.6-staging-migration-checkpoint"
+          "release-0.6-staging-migration-checkpoint",
+          "release-0.6-promotion-migration-receipt"
         ],
         "current_acceptance": null
       }
@@ -13346,7 +13356,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13437,6 +13447,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -13537,7 +13555,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13922,6 +13940,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -21465,7 +21491,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21701,6 +21727,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -21782,7 +21816,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22018,6 +22052,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -24239,7 +24281,8 @@
         "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal.",
         "The exact rollout pools require healthy PostgreSQL, Redis and object storage without warnings before authenticated smoke. Tested locally. Verify the production-equivalent canary and compatible restoration on the approved topology.",
         "The promotion checker validates the original authenticated DAST receipt against the staged candidate, pinned scanner and eight expected probe outcomes. A stale or incomplete report and high findings block approval. Use the exact deployed candidate and retain finding dispositions with the security review.",
-        "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate."
+        "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate.",
+        "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -24286,7 +24329,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-promotion-receipt-order",
           "release-0.6-promotion-dast-receipt",
-          "release-0.6-promotion-load-receipt"
+          "release-0.6-promotion-load-receipt",
+          "release-0.6-promotion-migration-receipt"
         ],
         "current_acceptance": null
       }
@@ -35735,7 +35779,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -36367,6 +36411,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -38793,7 +38845,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             }
           ],
           "checks": [
@@ -39041,6 +39093,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -685247,7 +685307,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -685375,6 +685435,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -709434,11 +709502,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "e1cd5a9ed86ebe92baf2873154af3e7016f630c7aedd1604f96e2f2d754ff108"
+              "sha256": "c7723c914682379c561fa608ae36f25c5067d681e4b408ecf8ba483cb3dd5f7f"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -709828,6 +709896,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -710355,15 +710432,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "e1cd5a9ed86ebe92baf2873154af3e7016f630c7aedd1604f96e2f2d754ff108"
+              "sha256": "c7723c914682379c561fa608ae36f25c5067d681e4b408ecf8ba483cb3dd5f7f"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -710862,6 +710939,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -711010,7 +711097,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -711371,6 +711458,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -711958,7 +712053,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -712298,6 +712393,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -712370,7 +712473,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -712710,6 +712813,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -719842,7 +719953,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -720132,6 +720243,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -731640,7 +731759,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -731939,6 +732058,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -732287,7 +732414,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "119dce8bc4371f4da3d516a2402a0fdc104ca23a37b54f03450a7e73336dcaa3"
+              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -732591,6 +732718,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -733894,7 +734029,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -734138,6 +734273,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -734270,7 +734413,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -734514,6 +734657,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -734584,7 +734735,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "f2723b053904b355b50ca745db1b8da4f17e825c4a0ddeef941f35e7beb4a244"
+              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -734828,6 +734979,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The approval gate adds verification of the performance receipt after the existing workflow and browser checks. The other receipt, deployment and authorization checks were preserved and their related tests passed."
+            },
+            {
+              "batch": "release-0.6-promotion-migration-receipt",
+              "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
             }
           ]
         }
@@ -1095168,7 +1095327,8 @@
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
         "The exact Linux amd64 app fixture ships the active musl Sharp variant and both original libvips notices. The local SBOM loses two unused glibc rows, including one pending exception. Verify the exact final images and the strict gate.",
         "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open.",
-        "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open."
+        "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open.",
+        "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095493,7 +1095653,8 @@
           "release-0.6-sharp-modified-musl-proof",
           "release-0.6-sharp-runtime-platform",
           "release-0.6-promotion-load-receipt",
-          "release-0.6-recovery-apply-command"
+          "release-0.6-recovery-apply-command",
+          "release-0.6-promotion-migration-receipt"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276586,6 +1276747,80 @@
         {
           "file": "openapi.log",
           "sha256": "43c5ea8f6fc314bf45985768e0220af4bee1eb71e11175231eb2f454af44ebab"
+        }
+      ]
+    },
+    "release-0.6-promotion-migration-receipt": {
+      "batch": "release-0.6-promotion-migration-receipt",
+      "base_commit": "da96546382bcdf9d57c315f9a8685f7bbeceae15",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "c7723c914682379c561fa608ae36f25c5067d681e4b408ecf8ba483cb3dd5f7f"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "ef01f592db97c43c85b2c3d231c2b17c567568838f210a20714e2aef632df54f"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "7b67abbcd430dfe5d2a86683b2ecb069905c8e0993b8a756231c7963a6105c93"
+        }
+      ],
+      "checks": [
+        "All 17 promotion verifier tests and 23 staging release-queue tests passed.",
+        "The positive fixture passes through the staging worker checkpoint parser. Negative cases reject disposable and mismatched receipts, foreign database identity, impossible timing, and changed or reused recovery evidence.",
+        "Runbook formatting and Git diff checks passed."
+      ],
+      "limitations": [
+        "The fixtures verify evidence handling. Actual off-server checkpoint and production-equivalent migration, seed, recovery and live acceptance receipts remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-migration-receipt",
+      "execution_receipts": [
+        {
+          "file": "promotion.log",
+          "sha256": "2ca4fad3f7a85a68f14e3ea05cbe78bbb43dd0a109a53c5251550b6ab792b934"
         }
       ]
     }

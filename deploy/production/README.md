@@ -91,9 +91,9 @@ Keep `receipt-index.json` in the protected approval package. Set `candidate_sha`
 | `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
 | `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
 
-Use JSON indexes for `performance_and_load`, `backup_and_restore`,
-`image_digests_and_scans` and `staging_and_telegram`. Paths in these indexes
-are relative to the same protected approval package.
+Use JSON indexes for `performance_and_load`, `migration_and_rollback`,
+`backup_and_restore`, `image_digests_and_scans` and `staging_and_telegram`.
+Paths in these indexes are relative to the same protected approval package.
 
 - Put the original `deploy/staging/authenticated-dast.py` JSON output under
   `authenticated_dast`. The approval check verifies the exact staging version,
@@ -108,6 +108,15 @@ are relative to the same protected approval package.
   and `evidence` and `evidence_sha256` for the original measured report.
   The verifier binds that rehearsal file to the package. The reviewer checks
   its environment, representative data and indexes, measured load and budgets.
+- Under `migration_and_rollback`, point `checkpoint_manifest` to the original
+  off-server manifest for the encrypted staging pre-migration checkpoint. The
+  check matches it against the candidate's completed staging job, including its
+  database system, backup label, ciphertext object, byte length and checksum.
+  Point `migration_rehearsal` to a JSON object with `candidate_sha`, `scope` set
+  to `migration_and_rollback`, `strategy` set to `rollback` or `roll_forward`,
+  and `evidence` and `evidence_sha256` for the separate rehearsal output.
+  Review the actual migration and seed results, schema compatibility, and the
+  recovery to the expected healthy service and data state from that output.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`

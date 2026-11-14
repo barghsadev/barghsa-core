@@ -451,6 +451,43 @@ def verify_release_receipts(index_path, path, fingerprint, version, sha):
             'album_unconfirmed': bool(images and not album), 'sha256': digests}, job
 
 
+def verify_migration_receipts(index_path, path, fingerprint, job, sha):
+    data, digests = receipt_bundle(index_path, path, fingerprint,
+                                  ('checkpoint_manifest', 'migration_rehearsal'))
+    runtime = job.get('runtime_images')
+    checkpoint = runtime.get('migration_backup') if isinstance(runtime, dict) else None
+    manifest = data['checkpoint_manifest']
+    if (not isinstance(checkpoint, dict) or checkpoint.get('status') != 'verified'
+            or runtime.get('commit') != sha or type(manifest.get('version')) is not int
+            or manifest['version'] != 1 or type(manifest.get('size')) is not int
+            or manifest['size'] <= 0 or type(checkpoint.get('size')) is not int
+            or not matches(rf'release-{re.escape(sha[:12])}-[0-9]{{8}}T[0-9]{{6}}Z-[0-9]+',
+                           manifest.get('label'))
+            or not matches(r'[0-9]+', manifest.get('system_id'))
+            or not matches(r'blobs/[a-f0-9]{32}\.tar\.gpg', manifest.get('blob'))
+            or not matches(r'[a-f0-9]{64}', manifest.get('sha256'))
+            or any(checkpoint.get(field) != manifest[field]
+                   for field in ('label', 'system_id', 'blob', 'sha256', 'size'))):
+        raise ValueError('Staging migration checkpoint must match its verified off-server manifest')
+    started = receipt_time(manifest.get('started_at'))
+    completed = receipt_time(manifest.get('completed_at'))
+    if not started <= completed <= receipt_time(job.get('completed_at')):
+        raise ValueError('Staging migration checkpoint timing does not match the deployment')
+
+    rehearsal = data['migration_rehearsal']
+    if (rehearsal.get('candidate_sha') != sha or rehearsal.get('scope') != 'migration_and_rollback'
+            or rehearsal.get('strategy') not in ('rollback', 'roll_forward')):
+        raise ValueError('Migration and recovery rehearsal must identify the candidate and strategy')
+    evidence = receipt_path(index_path.resolve().parent, rehearsal.get('evidence'),
+                            'migration and recovery evidence')
+    evidence_digest = file_digest(evidence)
+    if (evidence_digest != rehearsal.get('evidence_sha256')
+            or evidence_digest == digests['checkpoint_manifest']):
+        raise ValueError('Migration and recovery rehearsal evidence is missing or changed')
+    return {'checkpoint': checkpoint['label'], 'strategy': rehearsal['strategy'],
+            'sha256': {**digests, 'rehearsal_evidence': evidence_digest}}
+
+
 def verify_image_receipts(index_path, path, fingerprint, job, sha):
     data, digests = receipt_bundle(index_path, path, fingerprint, ('staging_scans', 'production_registry'))
     # Use a portable relative path to the copied scan directory. The staging
@@ -560,6 +597,8 @@ def main():
                                         hashes['backup_and_restore'], checked_at, sha)
         release, job = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
                                                hashes['staging_and_telegram'], version, sha)
+        migration = verify_migration_receipts(args.receipt_index, paths['migration_and_rollback'],
+                                              hashes['migration_and_rollback'], job, sha)
         images = verify_image_receipts(args.receipt_index, paths['image_digests_and_scans'],
                                        hashes['image_digests_and_scans'], job, sha)
     except ValueError as error:
@@ -578,6 +617,7 @@ def main():
                       'operational_receipt_sha256': hashes, 'verified_authenticated_dast': dast,
                       'verified_performance': performance,
                       'verified_backup': backup,
+                      'verified_migration': migration,
                       'verified_staging_images': images,
                       'verified_staging_and_telegram': release}, indent=2))
     return 0
