@@ -152334,7 +152334,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -152434,7 +152435,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -154063,6 +154064,14 @@
                 "apps/api/src/admin/dual-approval.controller.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -154324,7 +154333,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -154424,7 +154434,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -156053,6 +156063,14 @@
                 "apps/api/src/admin/dual-approval.controller.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -164332,7 +164350,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -164432,7 +164451,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -166061,6 +166080,14 @@
                 "apps/api/src/admin/dual-approval.controller.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -200256,7 +200283,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -200324,7 +200352,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -201594,6 +201622,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -201922,7 +201958,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -201990,7 +202027,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -203260,6 +203297,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -203588,7 +203633,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -203656,7 +203702,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -204926,6 +204972,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -205254,7 +205308,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -205322,7 +205377,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -206592,6 +206647,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -206920,7 +206983,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -206988,7 +207052,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -208258,6 +208322,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -208586,7 +208658,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -208654,7 +208727,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -209924,6 +209997,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -210339,7 +210420,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -210407,7 +210489,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -211834,6 +211916,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -212172,7 +212262,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -212240,7 +212331,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -213510,6 +213601,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -213925,7 +214024,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -213993,7 +214093,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -215420,6 +215520,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -215758,7 +215866,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -215826,7 +215935,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -217096,6 +217205,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -217407,7 +217524,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -217451,7 +217569,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -217491,7 +217609,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -218316,6 +218434,15 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -218536,7 +218663,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -218580,7 +218708,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -218628,7 +218756,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -219497,6 +219625,15 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -219701,7 +219838,8 @@
           "release-0.6-contract-limit-recovery",
           "release-0.6-operational-retention",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -219741,7 +219879,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -220620,6 +220758,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -287759,7 +287905,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -287795,7 +287942,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -288624,6 +288771,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -288740,7 +288895,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -288776,7 +288932,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -289605,6 +289761,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -289721,7 +289885,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -289757,7 +289922,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -290586,6 +290751,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -290702,7 +290875,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -290738,7 +290912,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -291567,6 +291741,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -291683,7 +291865,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -291719,7 +291902,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -292548,6 +292731,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -499197,7 +499388,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-contract-limit-recovery",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -499241,7 +499433,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -499862,6 +500054,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -500549,7 +500749,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -500585,7 +500786,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -501414,6 +501615,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -501530,7 +501739,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -501566,7 +501776,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -502395,6 +502605,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -502512,7 +502730,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -502548,7 +502767,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -503377,6 +503596,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -681338,7 +681565,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-public-registration-privacy",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -681370,7 +681598,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
@@ -681476,6 +681704,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ]
         }
@@ -682345,7 +682581,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-public-registration-privacy",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-invoice-approval-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -682377,7 +682614,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
@@ -682501,6 +682738,14 @@
                 "apps/api/src/refund/wallet-refund-http.integration.test.ts"
               ],
               "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ]
         }
@@ -1109593,7 +1109838,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -1109933,7 +1110178,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+              "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -1114263,6 +1114508,15 @@
                 "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1114607,7 +1114861,8 @@
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
           "release-0.6-contract-operation-coverage",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ]
       }
     },
@@ -1115951,7 +1116206,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
-              "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+              "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
@@ -1120221,6 +1120476,14 @@
                 "apps/api/src/invoice/create-adjustment-invoice.service.test.ts"
               ],
               "scope": "All prior assertions still run and pass with the new invoice authority, amount, terms and legacy receipt checks. Runtime sources and unrelated release evidence are unchanged."
+            },
+            {
+              "batch": "release-0.6-invoice-approval-recovery",
+              "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+              ],
+              "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -1120693,7 +1120956,8 @@
           "release-0.6-operator-queue-coverage",
           "release-0.6-contract-template-coverage",
           "release-0.6-contract-operation-coverage",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ]
       }
     },
@@ -1138473,7 +1138737,8 @@
         "The four flagged staff finance controllers for wallet and invoice receipt decisions, dual approval and wallet refunds pass the scoped critical gate. The full combined coverage and final staged financial journeys remain open.",
         "Storage administration, verification policy and verification provider configuration passed the native scoped critical thresholds. Verify the final hosted coverage and deployed provider and configuration receipts.",
         "The security rate-limit configuration controller passed the scoped critical checker at 31/32 lines and 9/10 branches. This verifies actor provenance for regular changes and staged recovery when no request address is available. Retain native recovery tests in the final full run.",
-        "All 51 focused invoice cases passed. Create-adjustment, cancellation/replacement and bank-receipt upload pass the unchanged critical source thresholds. The instrumented selection did not reach the full package statement floor. Complete the exact hosted coverage and staged financial rehearsal."
+        "All 51 focused invoice cases passed. Create-adjustment, cancellation/replacement and bank-receipt upload pass the unchanged critical source thresholds. The instrumented selection did not reach the full package statement floor. Complete the exact hosted coverage and staged financial rehearsal.",
+        "Adjustment approval passed 46 native checks and the critical file gate at 138/141 lines and 115/125 branches. Verify full exact hosted coverage and staged financial approval before closing the release."
       ],
       "owner": null,
       "depends_on": [],
@@ -1138856,7 +1139121,8 @@
           "release-0.6-staff-financial-command-boundaries",
           "release-0.6-config-authority-readback",
           "release-0.6-rate-limit-audit-provenance",
-          "release-0.6-invoice-review-boundaries"
+          "release-0.6-invoice-review-boundaries",
+          "release-0.6-invoice-approval-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1329729,6 +1329995,86 @@
         {
           "file": "initial-uuid-fixture.log",
           "sha256": "9ddcd35b54695c7fc5717bdc5aa53ff9b139b39a47e53152417fdb2c96f08384"
+        }
+      ]
+    },
+    "release-0.6-invoice-approval-recovery": {
+      "batch": "release-0.6-invoice-approval-recovery",
+      "base_commit": "5b0f91d6c756db96978b5431c2750361ddef5374",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "06-security-testing-observability.md#T-06.01.03.02",
+        "06-security-testing-observability.md#T-06.01.03.07",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+        "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "37c234e72eae5862bfc1621ea7e6b9120ef7421c9a7920089e48822090e31337"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+          "sha256": "9d4ddb796dc69a28c7f1862911c25e69704fc385b4a5a78ed5982dea7afcfd10"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
+        }
+      ],
+      "checks": [
+        "All 46 compiled HTTP and service cases passed on disposable PostgreSQL 17.9 with production migrations. Invalid bindings and corrupt reviews preserve Pending and roll back invoice issuance. Legacy retries preserve the single adjustment and original audit history.",
+        "The original critical gate passed at 138/141 lines and 115/125 branches. API type checks, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The first test command referenced an unavailable Homebrew binary path. The successful fixture used the pinned native build. The initial HTTP-only run was short of branch coverage. The complete exact-candidate and deployed release gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-invoice-approval-recovery",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "47cc32f43dcefaa514a0a933a5fc20e0b377e6825caedbf6d157558dbd75c760"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "e8c2bde216ba75e14ee6a16fb7ddf032a0bf2dfffd982d3b5b61b15bc5fbf3c9"
+        },
+        {
+          "file": "initial-scoped-gate.json",
+          "sha256": "9f202703c05a5582831f04e0c394ccd9fe5c9035bc00082095c22ff4cc520ec3"
+        },
+        {
+          "file": "initial-postgres-path.log",
+          "sha256": "ce4b6103932cbb0b7f7737ada3974b0376a7bde754776c66e20d459905d4e034"
         }
       ]
     }

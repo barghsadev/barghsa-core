@@ -20,6 +20,7 @@ import { ConflictException, NotFoundException, BadRequestException } from '@nest
 import { v7 as uuidv7 } from 'uuid';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js';
+import { InvoiceAdjustmentApprovalService } from './invoice-adjustment-approval.service.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { DueAtCalculationRepository } from './due-at.repository.js';
@@ -156,6 +157,76 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     );
     return { invoice: invoice.rows[0]!, lines: lines.rows };
   }
+
+  it('handles pre-review internal adjustments with durable audit and rejects mismatched sessions', async () => {
+    const approvals = new InvoiceAdjustmentApprovalService(service);
+    const originalInvoiceId = await insertInvoice({
+      state: 'PartiallyFunded',
+      paidAmount: ORIGINAL_TOTAL - 10_000n,
+      orderId: null,
+    });
+    const actor = { userId: ACTOR_USER_ID, sessionId: uuidv7(), csrfToken: uuidv7() };
+    await ctx.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes',NOW())`,
+      [actor.sessionId, actor.userId, actor.csrfToken]
+    );
+    const input = { originalInvoiceId, amount: 25_000n, reason: 'Legacy verified correction' };
+    await expect(approvals.review({ ...input, amount: 0n, actor })).rejects.toThrow(
+      'Invalid adjustment review input'
+    );
+    const review = await approvals.review({ ...input, actor });
+    expect(review.data.invoice.remainingAmount).toBe('10000');
+    const command = {
+      ...input,
+      actorUserId: actor.userId,
+      actorSession: actor,
+      idempotencyKey: uuidv7(),
+    };
+    const before = await originalSnapshot(originalInvoiceId);
+    await expect(
+      approvals.submit({ ...command, actorSession: { ...actor, userId: 'other-actor' } })
+    ).rejects.toThrow('Actor mismatch');
+    await ctx.pool.query(
+      `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":25000}')
+       ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+    );
+    try {
+      const pending = await approvals.submit(command);
+      expect(pending).toMatchObject({ status: 'pending_approval', originalInvoiceId });
+      if (!('approvalRequestId' in pending)) throw new Error('Approval request is missing');
+      expect(await approvals.submit(command)).toEqual(pending);
+      const stored = (
+        await ctx.pool.query('SELECT status,details FROM approval_requests WHERE id=$1', [
+          pending.approvalRequestId,
+        ])
+      ).rows[0];
+      expect(stored).toMatchObject({
+        status: 'pending',
+        details: {
+          invoiceAdjustment: { originalInvoiceId, profileId: PROFILE_ID, amount: '25000' },
+        },
+      });
+      expect(stored.details).not.toHaveProperty('financialReview');
+      const audit = await ctx.pool.query(
+        `SELECT user_id FROM audit_log WHERE event='approval_request_created' AND metadata::jsonb->>'requestId'=$1`,
+        [pending.approvalRequestId]
+      );
+      expect(audit.rows).toEqual([{ user_id: ACTOR_USER_ID }]);
+      const after = await originalSnapshot(originalInvoiceId);
+      expect(after.invoice.paid_amount).toBe(before.invoice.paid_amount);
+      expect(after.lines).toEqual(before.lines);
+      expect(
+        (
+          await ctx.pool.query('SELECT id FROM invoices WHERE adjustment_for_invoice_id=$1', [
+            originalInvoiceId,
+          ])
+        ).rows
+      ).toEqual([]);
+    } finally {
+      await ctx.pool.query("DELETE FROM app_config WHERE key='finance.dual_approval_threshold'");
+    }
+  });
 
   it('creates a linked additional-charge invoice without editing the original', async () => {
     const originalId = await insertInvoice({ state: 'Paid' });

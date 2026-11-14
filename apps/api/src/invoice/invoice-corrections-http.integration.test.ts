@@ -715,6 +715,122 @@ async function withThreshold(run: () => Promise<void>, value = '{"threshold_irr"
   }
 }
 
+it('refuses to approve stored adjustment amounts outside the binding contract', async () => {
+  await withThreshold(async () => {
+    const who = await actor();
+    const reviewer = await actor('correction-reviewer');
+    const id = await original('adjustment');
+    const response = await create(id, payload('adjustment'), who.headers);
+    expect(response.status).toBe(202);
+    const { approvalRequestId } = (await response.json()) as Pending;
+    for (const amount of ['0', '9223372036854775808']) {
+      await http.pool.query(
+        `UPDATE approval_requests SET details=jsonb_set(details,'{invoiceAdjustment,amount}',to_jsonb($2::text)) WHERE id=$1`,
+        [approvalRequestId, amount]
+      );
+      const refused = await decision(approvalRequestId, 'approve', reviewer.headers);
+      expect(refused.status).toBe(409);
+      expect(await linkedCount(id)).toBe(0);
+      expect(
+        (
+          await http.pool.query('SELECT status,reviewer_id FROM approval_requests WHERE id=$1', [
+            approvalRequestId,
+          ])
+        ).rows
+      ).toEqual([{ status: 'pending', reviewer_id: null }]);
+    }
+  });
+});
+
+it('rolls back an approval with a corrupt stored financial review and settles once after repair', async () => {
+  await withThreshold(async () => {
+    const who = await actor();
+    const reviewer = await actor('correction-reviewer');
+    const id = await original('adjustment');
+    const body = payload('adjustment');
+    const response = await create(id, body, who.headers);
+    expect(response.status).toBe(202);
+    const { approvalRequestId } = (await response.json()) as Pending;
+    const originalInvoice = (await snapshot(id)).invoice;
+    const audit = () =>
+      http.pool.query(
+        `SELECT event FROM audit_log WHERE event='invoice.adjustment_review_confirmed' AND metadata::jsonb->>'originalInvoiceId'=$1`,
+        [id]
+      );
+    const invalidReview = await create(
+      id,
+      { ...body, expectedReviewHash: '0'.repeat(64) },
+      who.headers
+    );
+    expect(invalidReview.status).toBe(409);
+    await http.pool.query(
+      `UPDATE invoices SET metadata=jsonb_set(metadata,ARRAY['adjustmentApprovals',$2,'financialReview'],'{}'::jsonb) WHERE id=$1`,
+      [id, body.idempotencyKey]
+    );
+    const refused = await decision(approvalRequestId, 'approve', reviewer.headers);
+    expect(refused.status).toBe(409);
+    expect(await linkedCount(id)).toBe(0);
+    expect((await audit()).rows).toEqual([]);
+    expect(
+      (
+        await http.pool.query('SELECT status,reviewer_id FROM approval_requests WHERE id=$1', [
+          approvalRequestId,
+        ])
+      ).rows
+    ).toEqual([{ status: 'pending', reviewer_id: null }]);
+
+    await http.pool.query('UPDATE invoices SET metadata=$2 WHERE id=$1', [
+      id,
+      originalInvoice.metadata,
+    ]);
+    expect((await decision(approvalRequestId, 'approve', reviewer.headers)).status).toBe(200);
+    expect((await decision(approvalRequestId, 'approve', reviewer.headers)).status).toBe(409);
+    expect(await linkedCount(id)).toBe(1);
+    expect((await audit()).rows).toEqual([{ event: 'invoice.adjustment_review_confirmed' }]);
+  });
+});
+
+it('replays a legacy adjustment approval without creating a second invoice or synthetic review history', async () => {
+  await withThreshold(async () => {
+    const who = await actor();
+    const reviewer = await actor('correction-reviewer');
+    const id = await original('adjustment');
+    const body = payload('adjustment');
+    const response = await create(id, body, who.headers);
+    expect(response.status).toBe(202);
+    const first = (await response.json()) as Pending;
+    await http.pool.query(
+      `UPDATE invoices SET metadata=metadata #- ARRAY['adjustmentApprovals',$2,'financialReview'] WHERE id=$1`,
+      [id, body.idempotencyKey]
+    );
+    await http.pool.query('UPDATE approval_requests SET details=details - $2::text WHERE id=$1', [
+      first.approvalRequestId,
+      'financialReview',
+    ]);
+    const pending = await create(id, body, who.headers);
+    expect(pending.status).toBe(202);
+    expect(await pending.json()).toEqual(first);
+    const approval = await decision(first.approvalRequestId, 'approve', reviewer.headers);
+    expect(approval.status).toBe(200);
+    const approved = (await approval.json()) as Approval;
+    const replay = await create(id, body, who.headers);
+    expect(replay.status).toBe(201);
+    expect(await replay.json()).toMatchObject({
+      invoiceId: approved.details.adjustmentInvoiceId,
+      amount: '-25000',
+    });
+    expect(await linkedCount(id)).toBe(1);
+    expect(
+      (
+        await http.pool.query(
+          `SELECT id FROM audit_log WHERE event='invoice.adjustment_review_confirmed' AND metadata::jsonb->>'originalInvoiceId'=$1`,
+          [id]
+        )
+      ).rows
+    ).toEqual([]);
+  });
+});
+
 it('rejects a pending adjustment permanently even after the threshold is disabled', async () => {
   await withThreshold(async () => {
     const who = await actor(),
