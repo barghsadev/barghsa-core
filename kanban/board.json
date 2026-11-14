@@ -25053,7 +25053,8 @@
         "The v0.6.0 worker now refuses an absent, disposable or mismatched migration checkpoint before a Telegram send, including on notification retry. The actual protected staging backup and announcement are still required.",
         "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required.",
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -25133,7 +25134,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-bound-staging-worker-readbacks",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-release-notification-durability"
         ],
         "current_acceptance": null
       }
@@ -736457,7 +736459,8 @@
         "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal.",
-        "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram."
+        "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram.",
+        "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -736521,7 +736524,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-staging-nginx-recovery",
-          "release-0.6-staging-nginx-fixture"
+          "release-0.6-staging-nginx-fixture",
+          "release-0.6-release-notification-durability"
         ],
         "current_acceptance": null
       }
@@ -757302,7 +757306,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-release-notification-durability"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -757322,7 +757327,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d346d9b8d118ca4b6f77da24499b343cf584e0a9daf06fda9e2e20adb430805e"
+              "sha256": "6344a513ab8f3c752b733889725f587cbd3404086bf75c5a549a138d3cc62eb8"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -758203,6 +758208,14 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
+            },
+            {
+              "batch": "release-0.6-release-notification-durability",
+              "base_commit": "f2d6f9bd3625bc0e2b13bfed7dcd0ac6dd533fe5",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
             }
           ]
         }
@@ -1110920,7 +1110933,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
+              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1110928,7 +1110941,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "d346d9b8d118ca4b6f77da24499b343cf584e0a9daf06fda9e2e20adb430805e"
+              "sha256": "6344a513ab8f3c752b733889725f587cbd3404086bf75c5a549a138d3cc62eb8"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1111193,6 +1111206,15 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Add the proxy staging SSH and SCP contract and failed install ordering to the existing release fixture. Existing acceptance, backup, image and notification assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-release-notification-durability",
+              "base_commit": "f2d6f9bd3625bc0e2b13bfed7dcd0ac6dd533fe5",
+              "paths": [
+                "deploy/staging/notify-release.py",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
             }
           ]
         },
@@ -1111215,7 +1111237,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
-          "release-0.6-bound-staging-worker-readbacks"
+          "release-0.6-bound-staging-worker-readbacks",
+          "release-0.6-release-notification-durability"
         ]
       }
     },
@@ -1124909,7 +1124932,7 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
+              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1128515,6 +1128538,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-release-notification-durability",
+              "base_commit": "f2d6f9bd3625bc0e2b13bfed7dcd0ac6dd533fe5",
+              "paths": [
+                "deploy/staging/notify-release.py"
+              ],
+              "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
             }
           ],
           "presentation_renewals": [
@@ -1128965,7 +1128996,8 @@
           "release-0.6-api-config-history",
           "release-0.6-operator-queue-coverage",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-release-notification-durability"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1131150,7 +1131182,7 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
+              "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1134684,6 +1134716,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-release-notification-durability",
+              "base_commit": "f2d6f9bd3625bc0e2b13bfed7dcd0ac6dd533fe5",
+              "paths": [
+                "deploy/staging/notify-release.py"
+              ],
+              "scope": "Only Telegram receipt persistence changed. All notifier and queue fixtures passed. Renames, sync failure, duplicate prevention and staged identity gates preserve previous evidence on unaffected paths."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1135151,7 +1135191,8 @@
           "release-0.6-operator-queue-coverage",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-release-notification-durability"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1140540,7 +1140581,8 @@
         "Eight native contact HTTP tests passed. They verify a wrong destination preserves the OTP counter, a wrong code durably consumes one attempt, and duplicate contact issuance writes no challenge or outbox record. Full exact API coverage remains open.",
         "Hosted affected preflight 43607767584 failed one of 460 API cases when the saving eligibility fixture inherited an intentionally depleted gift-code window. The fixture now resets its exact counters at exit. All 11 saving integration cases passed on compiled HTTP and migrated PostgreSQL. Verify the successor protected-main preflight and full release coverage.",
         "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open.",
-        "The private Telegram queue now requires matching HTTP and integer Bot API rejection status. All 21 compiled PostgreSQL cases and 33 focused protocol/runtime cases passed. A relay 502 with a 429 body stays unknown and does not replay. Rehearse the selected relay on the immutable staging release."
+        "The private Telegram queue now requires matching HTTP and integer Bot API rejection status. All 21 compiled PostgreSQL cases and 33 focused protocol/runtime cases passed. A relay 502 with a 429 body stays unknown and does not replay. Rehearse the selected relay on the immutable staging release.",
+        "The release notifier now atomically syncs the unknown and confirmed summary and album receipts. All 20 notifier and 27 queue checks passed, including blocked send when the unknown receipt cannot sync and persisted unknown after confirmed receipt replacement fails. Actual staged worker and Telegram receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1140928,7 +1140970,8 @@
           "release-0.6-contact-otp-ownership",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-release-notification-durability"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1332260,6 +1332303,62 @@
         {
           "file": "compiled-tests.log",
           "sha256": "7d34ad339aefaa6bb35298eb74c5ad3858fbbbeccfef14e8afc1bb29e240367a"
+        }
+      ]
+    },
+    "release-0.6-release-notification-durability": {
+      "batch": "release-0.6-release-notification-durability",
+      "base_commit": "f2d6f9bd3625bc0e2b13bfed7dcd0ac6dd533fe5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/notify-release.py",
+        "deploy/staging/test_notify_release.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "9884c5222cfc1beaf78fb37bd2875fa4e581c9dbef9644c9ef08b3af796abef3"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "6344a513ab8f3c752b733889725f587cbd3404086bf75c5a549a138d3cc62eb8"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "66f79f9ffbb65788de344e59d53c31de2c12f3c7bcba1e25469a6102946967f2"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "a5544ac915edcd9f65ec84d780a29ee4e5c982285360528a5259ed3778eb0df1"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        }
+      ],
+      "checks": [
+        "All 20 notifier and 27 release queue fixtures passed. Atomic receipt replacement preserves the pre-send unknown record for both the summary and grouped album if confirmation storage is interrupted. A sync failure before sending stops the launch request. The worker retains exact release, recipient, content and image validation. Git diff validation passed."
+      ],
+      "limitations": [
+        "No real Telegram send or deployment was part of these tests. The final immutable worker receipt and external Telegram delivery remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-release-notification-durability",
+      "execution_receipts": [
+        {
+          "file": "notifier-tests.log",
+          "sha256": "a56c4df9c49a95f99a3326495a984a34d77b7037e91f3ab7c62d0fa3870dd732"
+        },
+        {
+          "file": "queue-tests.log",
+          "sha256": "a1ded5529c1eae862706f4e39f041fb2161c55648ba276c5ec260564364348a1"
         }
       ]
     }

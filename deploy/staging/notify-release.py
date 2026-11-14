@@ -11,6 +11,7 @@ import re
 import secrets
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 
@@ -26,6 +27,26 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 opener = urllib.request.build_opener(NoRedirect)
+
+
+def save_receipt(path, receipt):
+    # Persist the unknown receipt before sending. Replacing it atomically
+    # keeps the replay guard intact if the process stops during confirmation.
+    pending = tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False)
+    temporary = Path(pending.name)
+    try:
+        with pending:
+            pending.write(json.dumps(receipt) + "\n")
+            pending.flush()
+            os.fsync(pending.fileno())
+        os.replace(temporary, path)
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def release_details(root, commit):
@@ -140,13 +161,13 @@ def announce(metadata, text, token, destination, state_dir, retry_unknown=False)
                 return previous
             if not retry_unknown:
                 raise ValueError("Previous notification outcome is unknown; inspect the channel before using --retry-unknown")
-        receipt_path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
+        save_receipt(receipt_path, {**receipt, "status": "unknown"})
         # No automatic send retries: a timeout can happen after Telegram publishes.
         sent = telegram_call(token, "sendMessage", {"chat_id": channel["id"], "text": text, "link_preview_options": {"is_disabled": True}})
         if type(sent.get("message_id")) is not int or sent["message_id"] <= 0 or sent.get("text") != text or sent.get("chat", {}).get("id") != channel["id"]:
             raise ValueError("Telegram message receipt did not match this release")
         confirmed = {**receipt, "status": "sent", "message_id": sent["message_id"]}
-        receipt_path.write_text(json.dumps(confirmed) + "\n")
+        save_receipt(receipt_path, confirmed)
         print(f"Staging v{metadata['version']} verified; Telegram message {sent['message_id']} confirmed")
         return confirmed
 
@@ -190,7 +211,7 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
                     print("Legacy release screenshots already confirmed; no new album sent")
                     return
                 raise ValueError("Legacy screenshot receipts require channel inspection; no new album sent")
-        path.write_text(json.dumps({**receipt, "status": "unknown"}) + "\n")
+        save_receipt(path, {**receipt, "status": "unknown"})
         caption = f"تصویر محیط آزمایشی برقسا، نسخه {metadata['version']}"
         if len(images) == 1:
             sent = [telegram_call(token, "sendPhoto", {"chat_id": channel["id"], "caption": caption}, images[0])]
@@ -207,7 +228,7 @@ def announce_screenshots(metadata, token, destination, state_dir, images, retry_
             raise ValueError("Telegram album receipt did not confirm one grouped update")
         ids = [row['message_id'] for row in sent]
         confirmed = {**receipt, "status": "sent", "message_ids": ids, "media_group_id": sent[0].get('media_group_id')}
-        path.write_text(json.dumps(confirmed) + "\n")
+        save_receipt(path, confirmed)
         print(f"Release screenshots confirmed as one grouped update, messages {ids}")
         return confirmed
 
@@ -241,9 +262,7 @@ def main():
         if album is not None:
             receipts["album"] = album
     if args.receipt:
-        temporary = args.receipt.with_suffix('.tmp')
-        temporary.write_text(json.dumps(receipts) + "\n")
-        temporary.replace(args.receipt)
+        save_receipt(args.receipt, receipts)
 
 
 if __name__ == "__main__":

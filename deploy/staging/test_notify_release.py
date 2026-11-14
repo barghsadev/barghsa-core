@@ -76,6 +76,59 @@ class ReleaseNotificationTests(unittest.TestCase):
                 self.announce()
         self.assertEqual(json.loads(next(self.root.glob("*.json")).read_text())["status"], "unknown")
 
+    def test_summary_and_album_keep_the_unknown_receipt_if_confirmation_cannot_replace_it(self):
+        replace = os.replace
+        for media in (False, True):
+            with self.subTest(media=media):
+                state = self.root / str(media)
+                method = "sendMediaGroup" if media else "sendMessage"
+
+                def send(token, called, payload, photo=None):
+                    if called == "getChat":
+                        return self.channel
+                    before_send = json.loads(next(state.glob("*.json")).read_text())
+                    self.assertEqual(before_send["status"], "unknown")
+                    self.assertEqual(before_send["commit"], self.metadata["commit"])
+                    if media:
+                        caption = json.loads(payload["media"])[0]["caption"]
+                        return [
+                            {"message_id": i + 1, "chat": self.channel, "photo": [{"file_id": "fixture"}],
+                             "media_group_id": "one-album", "caption": caption if i == 0 else ""}
+                            for i in range(2)
+                        ]
+                    return self.call(called, payload)
+
+                def fail_after_send(source, destination):
+                    if Path(destination).exists():
+                        raise OSError("Confirmation rename interrupted")
+                    replace(source, destination)
+
+                def announce():
+                    if media:
+                        return release.announce_screenshots(
+                            self.metadata, "synthetic", "@barghsa_releases", state, [b"first", b"second"]
+                        )
+                    return release.announce(self.metadata, self.text, "synthetic", "@barghsa_releases", state)
+
+                with patch.object(release, "telegram_call", side_effect=send) as api, \
+                        patch.object(release, "request_json", return_value=self.metadata):
+                    with patch.object(release.os, "replace", side_effect=fail_after_send), \
+                            self.assertRaisesRegex(OSError, "Confirmation rename interrupted"):
+                        announce()
+                    with self.assertRaisesRegex(ValueError, "outcome is unknown"):
+                        announce()
+                self.assertEqual([call.args[1] for call in api.call_args_list].count(method), 1)
+                self.assertEqual(json.loads(next(state.glob("*.json")).read_text())["status"], "unknown")
+
+    def test_summary_waits_for_durable_unknown_receipt_before_sending(self):
+        with patch.object(release, "telegram_call", return_value=self.channel) as api, \
+                patch.object(release, "request_json", return_value=self.metadata), \
+                patch.object(release.os, "fsync", side_effect=OSError("Sync failed")), \
+                self.assertRaisesRegex(OSError, "Sync failed"):
+            self.announce()
+        self.assertEqual([call.args[1] for call in api.call_args_list], ["getChat"])
+        self.assertEqual(list(self.root.iterdir()), [self.root / ".notification.lock"])
+
     def test_channel_identity_rejects_dm_group_and_wrong_destination(self):
         for channel in [{**self.channel, "type": "private"}, {**self.channel, "type": "supergroup"}, {**self.channel, "username": "different_channel"}]:
             with self.subTest(channel=channel), self.assertRaises(ValueError):
