@@ -3386,6 +3386,114 @@
         ]
       }
     },
+    "/api/admin/config/escalation-policy/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateEscalationPolicyRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate a service escalation policy recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/escalation-policy/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageEscalationPolicyRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a service escalation policy recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/escalation-policy/rollback-history": {
+      "get": {
+        "operationId": "AdminController_readEscalationPolicyRecovery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous service escalation policy revisions",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/green-electricity-rules": {
       "get": {
         "operationId": "AdminController_getGreenElectricityRules",
@@ -5811,6 +5919,114 @@
           }
         },
         "summary": "Update the service response targets configuration (admin)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/service-response-targets/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateServiceTargetsRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate a service response targets recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/service-response-targets/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageServiceTargetsRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a service response targets recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/service-response-targets/rollback-history": {
+      "get": {
+        "operationId": "AdminController_readServiceTargetsRecovery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous service response targets revisions",
         "tags": [
           "Admin"
         ]

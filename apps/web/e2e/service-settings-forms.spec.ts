@@ -214,3 +214,59 @@ test('only one service-settings confirmation owns the page', async ({ page }) =>
   await expect(escalation).toBeEnabled();
   await expect(target).toHaveValue('72');
 });
+
+test('a recovery draft stays separate from the live service target', async ({ page }) => {
+  await setupCatalogueForms(page, 'en', false);
+  const settings = (ticket: number) => ({ ticket, verification_case: null, consultation: null });
+  const sourceId = '0199f2eb-de42-78d9-8ba7-1afedd591be1';
+  const draftId = '0199f2eb-de42-78d9-8ba7-1afedd591be2';
+  const revision = { id: sourceId, version: 1, config: settings(24) };
+  const draft = {
+    id: draftId,
+    sourceId,
+    sourceVersion: 1,
+    baseVersion: 2,
+    config: revision.config,
+  };
+  const path = '**/api/admin/config/service-response-targets';
+  let active = settings(48);
+  let staged = false;
+  let activated = false;
+  await page.route(path, (route) => route.fulfill({ json: active }));
+  await page.route(`${path}/rollback-history`, (route) =>
+    route.fulfill({
+      json: {
+        baseVersion: activated ? 3 : 2,
+        items: [revision],
+        nextBeforeVersion: null,
+        draft: staged && !activated ? draft : null,
+      },
+    })
+  );
+  await page.route(`${path}/rollback-draft`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ sourceId, expectedVersion: 2 });
+    staged = true;
+    return route.fulfill({ status: 201, json: draft });
+  });
+  await page.route(`${path}/rollback-activate`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ draftId, expectedVersion: 2 });
+    activated = true;
+    active = draft.config;
+    return route.fulfill({ json: { version: 3, draftId, config: active } });
+  });
+  await page.goto('/admin/service-targets');
+  const target = page.locator('#target-ticket');
+  await expect(target).toHaveValue('48');
+  const section = page.getByRole('group', { name: t('admin.targets.formTitle', 'en') });
+  await section.getByRole('button', { name: 'Restore previous settings' }).click();
+  await section.getByRole('button', { name: 'Review version 1' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('24 Hours');
+  await dialog.locator('button[type=submit]').click();
+  await expect(dialog).toHaveCount(0);
+  await expect(target).toHaveValue('48');
+  await section.getByRole('button', { name: 'Activate recovery draft' }).click();
+  await dialog.locator('button[type=submit]').click();
+  await expect(target).toHaveValue('24');
+  await expect(section.getByRole('button', { name: 'Activate recovery draft' })).toHaveCount(0);
+});

@@ -1,6 +1,21 @@
 import type { Locale } from './index.js';
 // Service configuration copy stays with its route instead of shared customer downloads.
 export const fa: Record<string, string> = {
+  'recovery.recoveryTitle': 'بازیابی تنظیمات پیشین',
+  'recovery.recoveryLoading': 'در حال دریافت نسخه‌های پیشین…',
+  'recovery.recoveryReadError': 'سابقهٔ بازیابی دریافت نشد.',
+  'recovery.recoveryEmpty': 'نسخهٔ پیشینی برای بازیابی وجود ندارد.',
+  'recovery.recoveryRevision': 'نسخهٔ {version}',
+  'recovery.recoveryDraft': 'پیش‌نویس بازیابی نسخهٔ {version}',
+  'recovery.recoveryStage': 'بررسی نسخهٔ {version}',
+  'recovery.recoveryStageConfirm':
+    'این نسخه به‌صورت پیش‌نویس آماده می‌شود. تنظیمات فعال فعلاً برقرار می‌مانند.',
+  'recovery.recoveryActivate': 'فعال‌سازی پیش‌نویس',
+  'recovery.recoveryActivateConfirm':
+    'پیش‌نویس به‌عنوان نسخهٔ جدید فعال می‌شود و بر کارهای باز هم اثر دارد.',
+  'recovery.recoveryConflict': 'نسخه یا پیش‌نویس تغییر کرده است. سابقه را دوباره دریافت کنید.',
+  'recovery.recoveryLatest': 'نسخه‌های جدیدتر',
+  'recovery.recoveryOlder': 'نسخه‌های قدیمی‌تر',
   'workflow.title': 'زمان‌های هدف و قواعد ارجاع گردش کار',
   'workflow.note':
     'این هشدارها داخلی هستند. فعال کردن یک اولویت تیکت، تنظیم قدیمی تیکت را برای همه اولویت‌ها جایگزین می‌کند؛ هر اولویت لازم را جداگانه فعال کنید. برای سایر گردش‌ها نیز تنظیم جدید مقدم است. تغییر قاعده یک دوره هشدار جدید آغاز می‌کند.',
@@ -130,6 +145,21 @@ export const fa: Record<string, string> = {
   'admin.escalation.email': 'ارسال ایمیل هم فعال باشد',
 };
 export const en: Record<string, string> = {
+  'recovery.recoveryTitle': 'Restore previous settings',
+  'recovery.recoveryLoading': 'Loading previous versions…',
+  'recovery.recoveryReadError': 'Recovery history could not be loaded.',
+  'recovery.recoveryEmpty': 'There are no earlier versions to restore.',
+  'recovery.recoveryRevision': 'Version {version}',
+  'recovery.recoveryDraft': 'Recovery draft from version {version}',
+  'recovery.recoveryStage': 'Review version {version}',
+  'recovery.recoveryStageConfirm':
+    'Prepare this version as a draft. Current settings stay active until you activate the draft.',
+  'recovery.recoveryActivate': 'Activate recovery draft',
+  'recovery.recoveryActivateConfirm':
+    'Activate the draft as a new version. It also applies to open work.',
+  'recovery.recoveryConflict': 'The active version or draft changed. Reload the recovery history.',
+  'recovery.recoveryLatest': 'Newer versions',
+  'recovery.recoveryOlder': 'Older versions',
   'workflow.title': 'Workflow targets and escalation rules',
   'workflow.note':
     'These are internal alerts. Enabling any ticket priority replaces the legacy ticket target for every priority; enable each required priority separately. Expanded settings take precedence for other configured workflows. Changing a rule starts a new alert episode.',

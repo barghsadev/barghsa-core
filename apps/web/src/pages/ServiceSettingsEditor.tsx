@@ -1,7 +1,7 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
-import { useRef } from 'react';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { lazy, Suspense, useCallback, useRef, useState } from 'react';
+import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { SettingsFormSection } from '../components/SettingsFormSection.js';
 import { AuditLogViewer } from '../components/AuditLogViewer.js';
@@ -28,6 +28,10 @@ import {
 } from '../lib/service-settings-form.js';
 import type { EscalationPolicies, ServiceResponseTargets } from '@barghsa/shared/admin';
 
+const ConfigRecovery = lazy(async () => {
+  const { default: Recovery } = await import('../components/ConfigRecovery.js');
+  return { default: Recovery<ServiceSettings> };
+});
 const definitions = {
   targets: {
     path: '/api/admin/config/service-response-targets',
@@ -49,6 +53,18 @@ export function ServiceSettingsEditor({
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const label = (key: string) => tServiceSettings(`admin.${kind}.${key}`, locale);
+  const recoveryLabel = (key: string) =>
+    key.startsWith('recovery') ? tServiceSettings(`recovery.${key}`, locale) : label(key);
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const onBusyChange = props.onBusyChange;
+  const onRecoveryBusy = useCallback(
+    (busy: boolean) => {
+      setRecoveryBusy(busy);
+      onBusyChange?.(busy);
+    },
+    [onBusyChange]
+  );
   const definition = definitions[kind],
     fields = serviceFields(kind);
   const messages = Object.fromEntries(
@@ -56,6 +72,7 @@ export function ServiceSettingsEditor({
   ) as Record<keyof ServiceDraft, string>;
   const editor = useCatalogueEditor<ServiceSettings, ServiceDraft>({
     ...props,
+    disabled: props.disabled || recoveryBusy,
     identity: kind,
     ...definition,
     defaults: serviceDefaults,
@@ -83,6 +100,26 @@ export function ServiceSettingsEditor({
   };
   const proposal = editor.action?.body as ServiceSettings | undefined;
   const root = catalogueRootMessage(editor.errors);
+  const renderValues = (config: ServiceSettings) => {
+    const values = serviceValues(kind, config);
+    return fields.map((field) => (
+      <p key={field.prefix}>
+        {title(field)}:{' '}
+        <bdi>
+          {values[field.enabled]
+            ? `${numbers.number(Number(values[field.hours]))} ${label('hours')}`
+            : label('disabled')}
+        </bdi>
+        {kind === 'escalation' && values[field.enabled] && (
+          <span className="block text-sm text-muted-foreground">
+            {label('inApp')}
+            {values[field.email] ? ` · ${label('email')}` : ''}
+          </span>
+        )}
+      </p>
+    ));
+  };
+  const recoveryId = `${kind}-settings-recovery`;
   return (
     <section className="space-y-4" role="group" aria-label={label('formTitle')}>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -91,7 +128,7 @@ export function ServiceSettingsEditor({
           ref={refreshButton}
           type="button"
           variant="outline"
-          disabled={editor.resource.loading || editor.commandPending}
+          disabled={editor.resource.loading || editor.commandPending || recoveryBusy}
           onClick={refresh}
         >
           {label('refresh')}
@@ -226,6 +263,38 @@ export function ServiceSettingsEditor({
           onDenied={editor.deny}
         />
       )}
+      {editor.resource.data && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-expanded={showRecovery}
+          aria-controls={showRecovery ? recoveryId : undefined}
+          disabled={props.disabled || editor.busy || recoveryBusy}
+          onClick={() => setShowRecovery((current) => !current)}
+        >
+          {recoveryLabel('recoveryTitle')}
+        </Button>
+      )}
+      {showRecovery && editor.resource.data && (
+        <div id={recoveryId}>
+          <Suspense fallback={<LoadingStatus>{recoveryLabel('recoveryLoading')}</LoadingStatus>}>
+            <ConfigRecovery
+              key={definition.basis(editor.resource.data)}
+              path={definition.path}
+              valid={definition.validate}
+              basis={definition.basis}
+              renderValues={renderValues}
+              label={recoveryLabel}
+              disabled={
+                !!props.disabled || editor.busy || editor.uncertain || editor.resource.loading
+              }
+              onBusyChange={onRecoveryBusy}
+              onDenied={editor.onDenied}
+              onActivated={editor.refresh}
+            />
+          </Suspense>
+        </div>
+      )}
       {editor.action && (
         <TeamActionDialog
           action={editor.action}
@@ -244,26 +313,7 @@ export function ServiceSettingsEditor({
           }
           summary={
             <div className="space-y-3 rounded-md border p-3">
-              {proposal &&
-                fields.map((field) => {
-                  const values = serviceValues(kind, proposal);
-                  return (
-                    <p key={field.prefix}>
-                      {title(field)}:{' '}
-                      <bdi>
-                        {values[field.enabled]
-                          ? `${numbers.number(Number(values[field.hours]))} ${label('hours')}`
-                          : label('disabled')}
-                      </bdi>
-                      {kind === 'escalation' && values[field.enabled] && (
-                        <span className="block text-sm text-muted-foreground">
-                          {label('inApp')}
-                          {values[field.email] ? ` · ${label('email')}` : ''}
-                        </span>
-                      )}
-                    </p>
-                  );
-                })}
+              {proposal && renderValues(proposal)}
               <Button
                 type="button"
                 variant="outline"

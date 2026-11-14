@@ -135,6 +135,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const loadRequest = useRef<AbortController | null>(null);
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
+  const walletText = (key: string) => t(`wallet.page.${key}`, locale);
   const maintenance = useMaintenance('wallet_topup');
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
@@ -148,23 +149,23 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     async () => {
       const { createOnlineTopUpSchema } = await import('../lib/wallet-top-up-form-schema.js');
       return createOnlineTopUpSchema(advertisedOnlineTopUpLimit(wallet), {
-        invalid: t('wallet.page.invalidAmount', locale),
-        limit: t('wallet.page.limitExceeded', locale),
+        invalid: walletText('invalidAmount'),
+        limit: walletText('limitExceeded'),
       });
     },
     { amount: '' },
-    t('wallet.page.loadError', locale)
+    walletText('loadError')
   );
   const [amountInput, setAmountInput] = online.field('amount');
   const invalidOnlineAmount = useActionFieldErrors(
     online.form,
-    { amount: t('wallet.page.invalidAmount', locale) },
-    t('wallet.page.loadError', locale)
+    { amount: walletText('invalidAmount') },
+    walletText('loadError')
   );
   const exceededOnlineAmount = useActionFieldErrors(
     online.form,
-    { amount: t('wallet.page.limitExceeded', locale) },
-    t('wallet.page.loadError', locale)
+    { amount: walletText('limitExceeded') },
+    walletText('loadError')
   );
   const onlinePending = useRef(false),
     receiptPending = useRef(false),
@@ -255,7 +256,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           (typeof profileData.activeProfileId !== 'string' || !profileData.activeProfileId.trim()))
       ) {
         withdraw();
-        throw new Error('Invalid wallet profile');
+        setError('load');
+        return;
       }
       if (!profileData.activeProfileId) {
         setError('no-profile');
@@ -282,7 +284,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       const walletData = walletBalance(walletRes.data);
       if (!walletData) {
         withdraw();
-        throw new Error('Invalid wallet balance');
+        setError('load');
+        return;
       }
       setWallet(walletData);
     } catch {
@@ -497,7 +500,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       }
       setReceiptReview(null);
       setReceiptSuccess(true);
-      toast.success(t('wallet.page.receiptSuccess', locale));
+      toast.success(walletText('receiptSuccess'));
       setReceiptIdempotencyKey(crypto.randomUUID());
       receipt.form.reset({ ...receipt.form.getValues(), file: null });
       setReceiptUploaded(null);
@@ -572,19 +575,20 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     error &&
     (error === 'maintenance'
       ? tMaintenance('title', locale)
-      : t(
+      : walletText(
           error === 'no-profile'
-            ? 'wallet.page.noProfile'
+            ? 'noProfile'
             : error === 'gateway'
-              ? 'wallet.page.gatewayError'
+              ? 'gatewayError'
               : error === 'conflict'
-                ? 'wallet.page.conflict'
-                : 'wallet.page.loadError',
-          locale
+                ? 'conflict'
+                : 'loadError'
         ));
 
   const receiptErrorMessage = receiptError && receiptErrorText(receiptError, locale);
-  const reviewLoading = <p role="status">{t('wallet.page.reviewLoading', locale)}</p>;
+  const reviewLoading = <p role="status">{walletText('reviewLoading')}</p>;
+  const tomanPreviewText = (amount: number | bigint) =>
+    walletText('tomanPreview').replace('{amount}', numbers.irrDigits(amount));
 
   function receiptFieldError(field: Parameters<typeof receipt.errorId>[0]) {
     const error = receipt.errors[field];
@@ -604,14 +608,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       data-testid="wallet-page"
     >
       <header>
-        <h1 className="text-2xl font-bold text-foreground">{t('wallet.page.title', locale)}</h1>
-        <p className="mt-2 text-muted-foreground">{t('wallet.page.subtitle', locale)}</p>
+        <h1 className="text-2xl font-bold text-foreground">{walletText('title')}</h1>
+        <p className="mt-2 text-muted-foreground">{walletText('subtitle')}</p>
         {returnInvoiceId && (
           <a
             className="mt-3 inline-block text-sm font-medium text-primary underline"
             href={`/invoices/${encodeURIComponent(returnInvoiceId)}`}
           >
-            {t('wallet.page.returnToInvoice', locale)}
+            {walletText('returnToInvoice')}
           </a>
         )}
       </header>
@@ -635,9 +639,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
         <div className="space-y-6" data-testid="wallet-loaded">
           {wallet && (
             <section className="rounded-lg bg-card text-card-foreground p-6 shadow-sm">
-              <p className="text-sm text-muted-foreground">
-                {t('wallet.page.currentBalance', locale)}
-              </p>
+              <p className="text-sm text-muted-foreground">{walletText('currentBalance')}</p>
               <p className="mt-1 text-3xl font-bold text-foreground" data-testid="wallet-balance">
                 {wallet.currency === 'IRR' ? (
                   <Currency amount={wallet.balance} showToman variant="large" locale={locale} />
@@ -668,12 +670,10 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   <AlertDescription>{errorMessage || validationError}</AlertDescription>
                 </Alert>
               )}
-              <h2 className="text-lg font-semibold text-foreground">
-                {t('wallet.page.onlineTitle', locale)}
-              </h2>
+              <h2 className="text-lg font-semibold text-foreground">{walletText('onlineTitle')}</h2>
               <div>
                 <label htmlFor="top-up-amount" className={fieldLabelClass}>
-                  {t('wallet.page.amountLabel', locale)}
+                  {walletText('amountLabel')}
                 </label>
                 <input
                   {...online.bind('amount')}
@@ -698,8 +698,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 />
                 <p id="top-up-amount-hint" className="mt-2 text-sm text-muted-foreground">
                   {advertisedLimit === 0
-                    ? t('wallet.page.amountHintBlocked', locale)
-                    : t('wallet.page.amountHint', locale).replace(
+                    ? walletText('amountHintBlocked')
+                    : walletText('amountHint').replace(
                         '{limit}',
                         advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
                       )}
@@ -715,10 +715,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 )}
                 {tomanPreview !== null && (
                   <p className="mt-1 text-sm text-muted-foreground" data-testid="wallet-toman">
-                    {t('wallet.page.tomanPreview', locale).replace(
-                      '{amount}',
-                      numbers.irrDigits(tomanPreview)
-                    )}
+                    {tomanPreviewText(tomanPreview)}
                   </p>
                 )}
               </div>
@@ -730,8 +727,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
               >
                 {onlineBusy
-                  ? t(onlineReview ? 'wallet.page.submitting' : 'wallet.page.reviewLoading', locale)
-                  : t('wallet.page.submit', locale)}
+                  ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
+                  : walletText('submit')}
               </button>
             </form>
           )}
@@ -745,10 +742,10 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
             >
               <div>
                 <h2 className="text-lg font-semibold text-foreground">
-                  {t('wallet.page.receiptTitle', locale)}
+                  {walletText('receiptTitle')}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {t('wallet.page.receiptSubtitle', locale)}
+                  {walletText('receiptSubtitle')}
                 </p>
               </div>
 
@@ -758,7 +755,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   data-testid="wallet-receipt-success"
                   className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
                 >
-                  {t('wallet.page.receiptSuccess', locale)}
+                  {walletText('receiptSuccess')}
                 </div>
               )}
 
@@ -772,7 +769,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
               <div>
                 <label htmlFor="receipt-amount" className={fieldLabelClass}>
-                  {t('wallet.page.receiptAmountLabel', locale)}
+                  {walletText('receiptAmountLabel')}
                 </label>
                 <input
                   {...receipt.bind('amount')}
@@ -796,17 +793,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                     className="mt-1 text-sm text-muted-foreground"
                     data-testid="wallet-receipt-toman"
                   >
-                    {t('wallet.page.tomanPreview', locale).replace(
-                      '{amount}',
-                      numbers.irrDigits(receiptTomanPreview)
-                    )}
+                    {tomanPreviewText(receiptTomanPreview)}
                   </p>
                 )}
               </div>
 
               <div>
                 <label htmlFor="receipt-date" className={fieldLabelClass}>
-                  {t('wallet.page.receiptDateLabel', locale)}
+                  {walletText('receiptDateLabel')}
                 </label>
                 <input
                   {...receipt.bind('paymentDate')}
@@ -828,7 +822,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
               <div>
                 <label htmlFor="receipt-payer-ref" className={fieldLabelClass}>
-                  {t('wallet.page.receiptPayerRefLabel', locale)}
+                  {walletText('receiptPayerRefLabel')}
                 </label>
                 <input
                   {...receipt.bind('payerReference')}
@@ -871,7 +865,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
               </div>
               <div>
                 <label htmlFor="receipt-file" className={fieldLabelClass}>
-                  {t('wallet.page.receiptFileLabel', locale)}
+                  {walletText('receiptFileLabel')}
                 </label>
                 <FormField
                   control={receipt.form.control}
@@ -909,14 +903,14 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   )}
                 />
                 <p id="receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
-                  {t('wallet.page.receiptFileHint', locale)}
+                  {walletText('receiptFileHint')}
                 </p>
                 {receiptFieldError('file')}
               </div>
 
               <div>
                 <label htmlFor="receipt-note" className={fieldLabelClass}>
-                  {t('wallet.page.receiptNoteLabel', locale)}
+                  {walletText('receiptNoteLabel')}
                 </label>
                 <textarea
                   {...receipt.bind('customerNote')}
@@ -940,9 +934,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 aria-busy={receiptBusy || undefined}
                 className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
               >
-                {receiptBusy
-                  ? t('wallet.page.receiptSubmitting', locale)
-                  : t('wallet.page.receiptSubmit', locale)}
+                {receiptBusy ? walletText('receiptSubmitting') : walletText('receiptSubmit')}
               </button>
             </form>
           )}
@@ -986,7 +978,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
               onClick={() => void load()}
               className="text-sm font-medium text-foreground hover:underline"
             >
-              {t('wallet.page.retry', locale)}
+              {walletText('retry')}
             </button>
           )}
         </div>

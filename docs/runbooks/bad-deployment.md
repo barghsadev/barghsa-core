@@ -64,6 +64,14 @@ creates a new version, keeps the current emergency rule and preserves existing
 request counters. Refresh the settings if another operator changes the action
 before activation.
 
+For legacy service response targets or escalation, open the corresponding
+section on the service targets page and select **Restore previous settings**.
+Prepare the prior version as a draft, review its values and confirm
+**Activate recovery draft**. Only activation changes the live settings. The
+new audit entry links the draft and source version. Reload the history after
+a conflict or an uncertain response. Check which work types use the expanded
+workflow rules before verifying the effect on open items.
+
 ## Data rollback
 
 1. Treat suspected data loss as P0. The database operator preserves the source and restores to a separate target using the approved backup and, when needed, the PITR target.

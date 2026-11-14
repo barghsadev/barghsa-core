@@ -3,6 +3,11 @@ import type { PoolClient } from 'pg';
 import { WIZARD_DRAFT_TTL_KEY } from '../common/wizard-draft-retention.js';
 import { activationPageSize } from './config-activation-history.js';
 
+export {
+  stageRecoveryDraft as stageElectricitySetting,
+  activateRecoveryDraft as activateElectricitySetting,
+} from './config-activation-history.js';
+
 export const templateSettingKey = 'electricity.contract_template_version_id';
 export const electricitySettingRoute = z.enum([
   'wizard-draft-ttl',
@@ -24,14 +29,6 @@ const retention = z.strictObject({ days });
 const template = z.strictObject({ versionId: templateId });
 export type ElectricityRecoveryConfig = z.infer<typeof retention> | z.infer<typeof template>;
 export const electricityRecoveryDraftEvent = 'electricity_setting.rollback_draft';
-export const stageElectricitySetting = z.strictObject({
-  sourceId: z.string().uuid(),
-  expectedVersion: version,
-});
-export const activateElectricitySetting = z.strictObject({
-  draftId: z.string().uuid(),
-  expectedVersion: version,
-});
 
 export async function electricitySettingHistory(
   client: PoolClient,

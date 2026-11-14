@@ -19,6 +19,16 @@ import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
 import { withStaffReadAuthority, type StaffReadActor } from './staff-read-authority.js';
 import {
+  serviceRecoveryDraftEvent,
+  serviceSettingDraft,
+  serviceSettingHistory,
+  serviceSettingRow,
+  serviceSettings,
+  type ServiceRecoveryDraft,
+  type ServiceSetting,
+  type ServiceSettingValue,
+} from './service-settings-recovery.js';
+import {
   electricitySettingHistory,
   electricitySettingKeys,
   electricitySettingLock,
@@ -2338,87 +2348,11 @@ export class AdminService {
     }
 
     const config = toServiceResponseTargets(input);
-    const pool = getDbPool();
-    const now = new Date();
-
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:service-targets:edit');
-      await requireSessionStepUp(client, actor);
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
-        SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
-      ]);
-
-      // Lock the existing row (if any) so the previous value recorded in the
-      // audit trail is the true value being replaced — read it before the
-      // upsert mutates it. Concurrent writers serialize on this row lock, so
-      // no target change can be dropped from the audit trail.
-      const prevResult = await client.query(
-        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY]
-      );
-      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
-      const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
-
-      const upsertResult = await client.query(
-        `INSERT INTO app_config (key, value, version, updated_at)
-         VALUES ($1, $2::jsonb, 1, $3)
-         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
-         RETURNING version`,
-        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY, JSON.stringify(config), now]
-      );
-      const newVersion = upsertResult.rows[0]!.version as number;
-
-      // Bump global config version for cache invalidation.
-      await client.query(
-        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now]
-      );
-
-      // Record audit event (config_change, matching other admin configs).
-      // The trail captures the previous value and both version numbers so a
-      // target change (including disabling a type) can be reconstructed
-      // end-to-end later.
-      const auditId = uuidv7();
-      const correlationId = uuidv7();
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          auditId,
-          actorUserId,
-          'config_change',
-          JSON.stringify({
-            key: SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
-            previousValue,
-            previousVersion,
-            newValue: config,
-            version: newVersion,
-          }),
-          correlationId,
-          ip,
-          now,
-        ]
-      );
-
-      await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
-
-      this.logger.log(`Service response targets updated by ${privateLogId('actor', actorUserId)}`);
-      return config;
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      if (error instanceof HttpException) throw error;
-      this.logger.error('Failed to set service response targets config');
-      throw new HttpException(
-        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500
-      );
-    } finally {
-      client.release();
-    }
+    await this.writeServiceSetting('targets', actor, (client) =>
+      this.persistServiceSetting(client, 'targets', config, actor, ip)
+    );
+    this.logger.log(`Service response targets updated by ${privateLogId('actor', actorUserId)}`);
+    return config;
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -2497,76 +2431,114 @@ export class AdminService {
     }
 
     const config = toEscalationPolicies(input);
-    const pool = getDbPool();
-    const now = new Date();
+    await this.writeServiceSetting('escalation', actor, (client) =>
+      this.persistServiceSetting(client, 'escalation', config, actor, ip)
+    );
+    this.logger.log(`Service escalation policy updated by ${privateLogId('actor', actorUserId)}`);
+    return config;
+  }
 
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:service-escalation:edit');
-      await requireSessionStepUp(client, actor);
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
-        ESCALATION_POLICY_CONFIG_KEY,
-      ]);
-
-      // Lock the existing row (if any) so the previous value recorded in the
-      // audit trail is the true value being replaced — read it before the
-      // upsert mutates it. Concurrent writers serialize on this row lock.
-      const prevResult = await client.query(
-        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [ESCALATION_POLICY_CONFIG_KEY]
+  serviceRecoveryHistory(setting: ServiceSetting, actor: StaffReadActor, before?: number) {
+    const { key, grant } = serviceSettings[setting];
+    return withStaffReadAuthority(actor, grant, async (client) => {
+      await client.query('SELECT pg_advisory_xact_lock_shared(hashtext($1))', [key]);
+      const baseVersion = (await serviceSettingRow(client, setting))?.version ?? 0;
+      const history = await serviceSettingHistory(
+        client,
+        setting,
+        Math.min(baseVersion, before ?? baseVersion)
       );
-      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
-      const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
+      return {
+        baseVersion,
+        ...history,
+        draft: await serviceSettingDraft(client, setting, baseVersion),
+      };
+    });
+  }
 
-      const upsertResult = await client.query(
-        `INSERT INTO app_config (key, value, version, updated_at)
-         VALUES ($1, $2::jsonb, 1, $3)
-         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
-         RETURNING version`,
-        [ESCALATION_POLICY_CONFIG_KEY, JSON.stringify(config), now]
-      );
-      const newVersion = upsertResult.rows[0]!.version as number;
-
-      // Bump global config version for cache invalidation.
+  stageServiceRecovery(
+    setting: ServiceSetting,
+    input: { sourceId: string; expectedVersion: number },
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    return this.writeServiceSetting(setting, actor, async (client) => {
+      const baseVersion = (await serviceSettingRow(client, setting))?.version ?? 0;
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Setting revision changed');
+      const {
+        items: [source],
+      } = await serviceSettingHistory(client, setting, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException('Setting revision not found');
+      const current = await serviceSettingDraft(client, setting, baseVersion);
+      if (current?.sourceId === source.id) return current;
+      const draft: ServiceRecoveryDraft = {
+        id: uuidv7(),
+        baseVersion,
+        sourceId: source.id,
+        sourceVersion: source.version,
+        config: source.config,
+      };
       await client.query(
-        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now]
-      );
-
-      // Record audit event (config_change, matching other admin configs).
-      const auditId = uuidv7();
-      const correlationId = uuidv7();
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        `INSERT INTO audit_log (id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,$3,$4::jsonb,$5,$6,clock_timestamp())`,
         [
-          auditId,
-          actorUserId,
-          'config_change',
-          JSON.stringify({
-            key: ESCALATION_POLICY_CONFIG_KEY,
-            previousValue,
-            previousVersion,
-            newValue: config,
-            version: newVersion,
-          }),
-          correlationId,
+          draft.id,
+          actor.userId,
+          serviceRecoveryDraftEvent,
+          JSON.stringify({ key: serviceSettings[setting].key, ...draft }),
+          correlationIdStorage.getStore() ?? uuidv7(),
           ip,
-          now,
         ]
       );
+      return draft;
+    });
+  }
 
+  activateServiceRecovery(
+    setting: ServiceSetting,
+    input: { draftId: string; expectedVersion: number },
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    return this.writeServiceSetting(setting, actor, async (client) => {
+      const baseVersion = (await serviceSettingRow(client, setting))?.version ?? 0;
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Setting revision changed');
+      const draft = await serviceSettingDraft(client, setting, baseVersion);
+      if (draft?.id !== input.draftId) throw new ConflictException('Recovery draft changed');
+      const version = await this.persistServiceSetting(
+        client,
+        setting,
+        draft.config,
+        actor,
+        ip,
+        draft
+      );
+      return { config: draft.config, version, draftId: draft.id };
+    });
+  }
+
+  private async writeServiceSetting<T>(
+    setting: ServiceSetting,
+    actor: StaffReadActor,
+    write: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const { key, grant, label } = serviceSettings[setting];
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, grant);
+      await requireSessionStepUp(client, actor);
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [key]);
+      const result = await write(client);
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
-
-      this.logger.log(`Service escalation policy updated by ${privateLogId('actor', actorUserId)}`);
-      return config;
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error('Failed to set escalation policy config');
+      this.logger.error(`Failed to update ${label} config`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -2574,6 +2546,57 @@ export class AdminService {
     } finally {
       client.release();
     }
+  }
+
+  private async persistServiceSetting(
+    client: PoolClient,
+    setting: ServiceSetting,
+    config: ServiceSettingValue,
+    actor: StaffReadActor,
+    ip: string,
+    draft?: ServiceRecoveryDraft
+  ) {
+    const { key } = serviceSettings[setting];
+    const previous = await serviceSettingRow(client, setting, true);
+    const now = new Date();
+    const { rows } = await client.query<{ version: number }>(
+      `INSERT INTO app_config (key, value, version, updated_at)
+       VALUES ($1, $2::jsonb, 1, $3)
+       ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+       RETURNING version`,
+      [key, JSON.stringify(config), now]
+    );
+    const version = rows[0]!.version;
+    await client.query(
+      "UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'",
+      [now]
+    );
+    await client.query(
+      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+       VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+      [
+        uuidv7(),
+        actor.userId,
+        'config_change',
+        JSON.stringify({
+          key,
+          previousValue: previous?.value ?? null,
+          previousVersion: previous?.version ?? 0,
+          newValue: config,
+          version,
+          ...(draft && {
+            action: 'rollback_activated',
+            draftId: draft.id,
+            sourceId: draft.sourceId,
+            sourceVersion: draft.sourceVersion,
+          }),
+        }),
+        correlationIdStorage.getStore() ?? uuidv7(),
+        ip,
+        now,
+      ]
+    );
+    return version;
   }
 
   // ───────────────────────────────────────────────────────────────────────

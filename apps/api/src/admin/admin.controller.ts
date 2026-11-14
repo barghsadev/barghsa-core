@@ -8,7 +8,13 @@ import {
   readVerificationModeHistory,
   type VerificationModeConfig,
 } from './verification-mode-config.js';
-import { activationHistoryQuery, activationPageSize } from './config-activation-history.js';
+import {
+  activateRecoveryDraft,
+  activationHistoryQuery,
+  activationPageSize,
+  stageRecoveryDraft,
+} from './config-activation-history.js';
+import type { ServiceSetting } from './service-settings-recovery.js';
 import {
   Body,
   BadRequestException,
@@ -3046,6 +3052,107 @@ export class AdminController {
     assertServiceSettingsFields(rawBody, 'escalation');
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.setEscalationPolicy(rawBody, req.session, ip);
+  }
+
+  @Get('config/service-response-targets/rollback-history')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Read previous service response targets revisions' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  readServiceTargetsRecovery(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    return this.readServiceRecovery('targets', req, query);
+  }
+
+  @Post('config/service-response-targets/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a service response targets recovery draft' })
+  @ApiZodBody(stageRecoveryDraft)
+  stageServiceTargetsRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.stageServiceRecovery('targets', req, body);
+  }
+
+  @Post('config/service-response-targets/rollback-activate')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Activate a service response targets recovery draft' })
+  @ApiZodBody(activateRecoveryDraft)
+  activateServiceTargetsRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.activateServiceRecovery('targets', req, body);
+  }
+
+  @Get('config/escalation-policy/rollback-history')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Read previous service escalation policy revisions' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  readEscalationPolicyRecovery(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    return this.readServiceRecovery('escalation', req, query);
+  }
+
+  @Post('config/escalation-policy/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a service escalation policy recovery draft' })
+  @ApiZodBody(stageRecoveryDraft)
+  stageEscalationPolicyRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.stageServiceRecovery('escalation', req, body);
+  }
+
+  @Post('config/escalation-policy/rollback-activate')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Activate a service escalation policy recovery draft' })
+  @ApiZodBody(activateRecoveryDraft)
+  activateEscalationPolicyRecovery(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.activateServiceRecovery('escalation', req, body);
+  }
+
+  private assertServiceRecoveryPermission(setting: ServiceSetting, req: AuthenticatedRequest) {
+    if (setting === 'targets') this.assertServiceTargetsEditPermission(req);
+    else this.assertEscalationEditPermission(req);
+  }
+
+  private readServiceRecovery(setting: ServiceSetting, req: AuthenticatedRequest, query: unknown) {
+    this.assertServiceRecoveryPermission(setting, req);
+    const parsed = activationHistoryQuery.safeParse(query);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.adminService.serviceRecoveryHistory(
+      setting,
+      req.session,
+      parsed.data.beforeVersion
+    );
+  }
+
+  private stageServiceRecovery(setting: ServiceSetting, req: AuthenticatedRequest, body: unknown) {
+    this.assertServiceRecoveryPermission(setting, req);
+    const parsed = stageRecoveryDraft.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.adminService.stageServiceRecovery(
+      setting,
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  private activateServiceRecovery(
+    setting: ServiceSetting,
+    req: AuthenticatedRequest,
+    body: unknown
+  ) {
+    this.assertServiceRecoveryPermission(setting, req);
+    const parsed = activateRecoveryDraft.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.adminService.activateServiceRecovery(
+      setting,
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
   }
 
   /**

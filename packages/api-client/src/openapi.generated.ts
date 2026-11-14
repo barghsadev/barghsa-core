@@ -846,6 +846,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/escalation-policy/rollback-activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate a service escalation policy recovery draft */
+        post: operations["AdminController_activateEscalationPolicyRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/escalation-policy/rollback-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a service escalation policy recovery draft */
+        post: operations["AdminController_stageEscalationPolicyRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/escalation-policy/rollback-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read previous service escalation policy revisions */
+        get: operations["AdminController_readEscalationPolicyRecovery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/green-electricity-rules": {
         parameters: {
             query?: never;
@@ -1177,6 +1228,57 @@ export interface paths {
         get: operations["AdminController_getServiceResponseTargets"];
         /** Update the service response targets configuration (admin) */
         put: operations["AdminController_setServiceResponseTargets"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/service-response-targets/rollback-activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate a service response targets recovery draft */
+        post: operations["AdminController_activateServiceTargetsRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/service-response-targets/rollback-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a service response targets recovery draft */
+        post: operations["AdminController_stageServiceTargetsRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/service-response-targets/rollback-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read previous service response targets revisions */
+        get: operations["AdminController_readServiceTargetsRecovery"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -13300,6 +13402,75 @@ export interface operations {
             };
         };
     };
+    AdminController_activateEscalationPolicyRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    draftId: string;
+                    expectedVersion: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_stageEscalationPolicyRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_readEscalationPolicyRecovery: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminController_getGreenElectricityRules: {
         parameters: {
             query?: never;
@@ -14354,6 +14525,75 @@ export interface operations {
             };
             /** @description Admin role required */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_activateServiceTargetsRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    draftId: string;
+                    expectedVersion: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_stageServiceTargetsRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_readServiceTargetsRecovery: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

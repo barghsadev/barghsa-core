@@ -3,6 +3,7 @@ import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { AdminService } from './admin.service.js';
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
@@ -146,6 +147,99 @@ function write(item: (typeof cases)[number], user = 'operator', body: unknown = 
     body: JSON.stringify(body),
   });
 }
+
+it.each(
+  cases.filter(
+    (item) => item.path === 'service-response-targets' || item.path === 'escalation-policy'
+  )
+)(
+  '$path restores a reviewed prior activation with a separate, version-bound command',
+  async (item) => {
+    const recover = (operation: string, body?: object, user = 'operator', csrf = true) =>
+      fetch(`${http.base}/api/admin/config/${item.path}/rollback-${operation}`, {
+        headers: { ...headers[user], ...(!csrf && { 'X-CSRF-Token': '' }) },
+        ...(body && { method: 'POST', body: JSON.stringify(body) }),
+      });
+    for (const body of [item.body, {}, {}])
+      expect((await write(item, 'operator', body)).status).toBe(200);
+    expect((await recover('history', undefined, 'viewer')).status).toBe(403);
+    expect((await recover('history?beforeVersion=0')).status).toBe(400);
+    const history = await recover('history?beforeVersion=2');
+    expect(history.status).toBe(200);
+    expect(history.headers.get('cache-control')).toBe(
+      'private, no-cache, no-store, must-revalidate'
+    );
+    const page = (await history.json()) as Awaited<
+      ReturnType<AdminService['serviceRecoveryHistory']>
+    >;
+    expect(page).toEqual({
+      baseVersion: 3,
+      items: [{ id: expect.any(String), version: 1, config: item.stored }],
+      draft: null,
+      nextBeforeVersion: null,
+    });
+    const selection = { sourceId: page.items[0]!.id, expectedVersion: 3 };
+    expect((await recover('draft', selection, 'viewer')).status).toBe(403);
+    expect((await recover('draft', selection, 'operator', false)).status).toBe(403);
+    expect((await recover('draft', { ...selection, expectedVersion: 2 })).status).toBe(409);
+    expect((await recover('draft', { ...selection, sourceId: randomUUID() })).status).toBe(404);
+    expect((await recover('draft', { ...selection, config: item.body })).status).toBe(400);
+    const staged = await recover('draft', selection);
+    expect(staged.status).toBe(201);
+    const draft = (await staged.json()) as Awaited<
+      ReturnType<AdminService['stageServiceRecovery']>
+    >;
+    expect(draft).toEqual({
+      id: expect.any(String),
+      baseVersion: 3,
+      sourceId: selection.sourceId,
+      sourceVersion: 1,
+      config: item.stored,
+    });
+    expect(await (await recover('draft', selection)).json()).toEqual(draft);
+    expect(await (await recover('history')).json()).toMatchObject({ draft });
+    expect(
+      (await http.pool.query('SELECT version,value FROM app_config WHERE key=$1', [item.key])).rows
+    ).toEqual([
+      { version: 3, value: { ticket: null, verification_case: null, consultation: null } },
+    ]);
+    const activation = { draftId: draft.id, expectedVersion: 3 };
+    const session = headers.operator!.Cookie!.split('=')[1];
+    await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+      session,
+    ]);
+    expect((await recover('activate', activation)).status).toBe(403);
+    await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+      session,
+    ]);
+    const results = await Promise.all([
+      recover('activate', activation),
+      recover('activate', activation),
+    ]);
+    expect(results.map(({ status }) => status).sort()).toEqual([200, 409]);
+    expect(await results.find(({ status }) => status === 200)!.json()).toEqual({
+      config: item.stored,
+      version: 4,
+      draftId: draft.id,
+    });
+    expect(await (await recover('history')).json()).toMatchObject({ baseVersion: 4, draft: null });
+    const { rows } = await http.pool.query(
+      "SELECT metadata::jsonb AS data FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'draftId'=$1",
+      [draft.id]
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0].data).toMatchObject({
+      key: item.key,
+      previousVersion: 3,
+      newValue: item.stored,
+      version: 4,
+      action: 'rollback_activated',
+      draftId: draft.id,
+      sourceId: selection.sourceId,
+      sourceVersion: 1,
+    });
+  }
+);
 
 const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
 it('wallet limit returns only its public form field for invalid amounts and checks permission first', async () => {

@@ -6,6 +6,15 @@ import { requireCurrentSession } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 
 export const activationPageSize = 20;
+const revision = z.number().int().min(1).max(2_147_483_647);
+export const stageRecoveryDraft = z.strictObject({
+  sourceId: z.string().uuid(),
+  expectedVersion: revision,
+});
+export const activateRecoveryDraft = z.strictObject({
+  draftId: z.string().uuid(),
+  expectedVersion: revision,
+});
 export const activationHistoryQuery = z.strictObject({
   beforeVersion: z
     .string()

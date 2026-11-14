@@ -88,6 +88,61 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 const input = (selector: string) => host.querySelector<HTMLInputElement>(selector)!;
+
+it.each(cases.slice(0, 2))('$kind reviews and activates an exact recovery draft', async (item) => {
+  const sourceId = '0199f2eb-de42-78d9-8ba7-1afedd591be1';
+  const draftId = '0199f2eb-de42-78d9-8ba7-1afedd591be2';
+  const path = `/api/admin/config/${item.kind === 'targets' ? 'service-response-targets' : 'escalation-policy'}`;
+  const draft = { id: draftId, baseVersion: 2, sourceId, sourceVersion: 1, config: item.saved };
+  let active: unknown = item.initial;
+  let history: unknown = {
+    baseVersion: 2,
+    items: [{ id: sourceId, version: 1, config: item.saved }],
+    draft: null,
+    nextBeforeVersion: null,
+  };
+  vi.mocked(fetch).mockImplementation(async (url) =>
+    Response.json(url === `${path}/rollback-history` ? history : active)
+  );
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <ServiceSettingsEditor kind={item.kind} />
+      </QueryProvider>
+    )
+  );
+  const button = (name: string) =>
+    Array.from(host.querySelectorAll('button')).find((node) => node.textContent?.trim() === name);
+  expect(fetch).not.toHaveBeenCalledWith(`${path}/rollback-history`, expect.anything());
+  await act(async () => button('Restore previous settings')!.click());
+  await vi.waitFor(() => expect(button('Review version 1')).toBeDefined());
+  await act(async () => button('Review version 1')!.click());
+  expect(harness.command?.action).toMatchObject({
+    path: `${path}/rollback-draft`,
+    body: { sourceId, expectedVersion: 2 },
+  });
+  await act(async () => {
+    await expect(harness.command?.onSuccess({ ...draft, sourceVersion: 2 })).rejects.toThrow();
+  });
+  history = { baseVersion: 2, items: [], draft, nextBeforeVersion: null };
+  await act(async () => {
+    await harness.command?.onSuccess(draft);
+  });
+  expect(input(item.selector).value).toBe('24');
+  await act(async () => button('Activate recovery draft')!.click());
+  expect(harness.command?.action).toMatchObject({
+    path: `${path}/rollback-activate`,
+    body: { draftId, expectedVersion: 2 },
+  });
+  history = { baseVersion: 3, items: [], draft: null, nextBeforeVersion: null };
+  active = item.saved;
+  await act(async () => {
+    await harness.command?.onSuccess({ version: 3, draftId, config: item.saved });
+  });
+  expect(input(item.selector).value).toBe('72');
+  expect(button('Activate recovery draft')).toBeUndefined();
+});
+
 async function fill(selector: string, raw: string) {
   await act(async () => {
     const node = input(selector);
