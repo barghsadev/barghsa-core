@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T20:26:12+00:00",
+  "updated": "2026-11-14T20:32:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -745664,12 +745664,10 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.06 | Add status check reporting: pass/fail per check, summary comment on PR | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Hosted push preflight 43456360315 ran the current CI workflow bytes at b11f41263. Its protected job and six dependencies passed, and the logs recorded affected-test and report-only license mode. Verify full coverage enforcement and enforced license mode on the frozen release candidate."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -745681,9 +745679,27 @@
         "batches": [
           "release-0.6-required-check-summary",
           "release-0.6-coverage-required-check",
-          "release-0.6-required-check-hosted-readback"
+          "release-0.6-required-check-hosted-readback",
+          "release-0.6-ci-reporting-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "hosted_status_reporting",
+          "base_commit": "66e501f1affefb00b9e2485ecc054fc66fd75a7a",
+          "checks": [
+            "The active main ruleset requires GitHub Actions Verify monorepo integrity. The approved direct-main workflow reports in the Actions job summary. Its exact job body matches the current source in runs 43630925743 and 43583704822.",
+            "Hosted run 43630925743 reported its exact SHA, affected tests, report-only licensing and all six successful dependency outcomes. Strict run 43583704822 reported its exact SHA, full tests, enforced licensing and six dependency outcomes. It recorded license and coverage failures and failed the required check. The original hosted job logs retain the values and the current script reproduces both summaries."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
+            }
+          ]
+        }
       }
     },
     {
@@ -1352180,6 +1352196,55 @@
         {
           "file": "live-compose-readback.json",
           "sha256": "70e2343d4e6b1a5ac843b56c1ce25f8cc0b19e64b9431c7ae19775efe816e761"
+        }
+      ]
+    },
+    "release-0.6-ci-reporting-acceptance": {
+      "batch": "release-0.6-ci-reporting-acceptance",
+      "base_commit": "66e501f1affefb00b9e2485ecc054fc66fd75a7a",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "a12ad87c3d38e4e298d0c4385158387cd1872aa8375c442c31c54c1c01d3c1f6"
+        }
+      ],
+      "checks": [
+        "The active main ruleset requires GitHub Actions Verify monorepo integrity. The approved direct-main workflow reports in the Actions job summary. Its exact job body matches the current source in runs 43630925743 and 43583704822.",
+        "Hosted run 43630925743 reported its exact SHA, affected tests, report-only licensing and all six successful dependency outcomes. Strict run 43583704822 reported its exact SHA, full tests, enforced licensing and six dependency outcomes. It recorded license and coverage failures and failed the required check. The original hosted job logs retain the values and the current script reproduces both summaries."
+      ],
+      "limitations": [
+        "GitHub returns null summary text through the check API. The summaries were reproduced by running the byte-identical strict Bash job fragment with its recorded hosted inputs.",
+        "The failed strict rehearsal proves status propagation. The immutable release still requires passing license and coverage outcomes under T-06.07.02.06 and T-06.12.03.01."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ci-reporting-acceptance",
+      "execution_receipts": [
+        {
+          "file": "reporting-evidence.json",
+          "sha256": "35d814e637dd6d63e486292d608c8da8605e90c9278e4fde150db5065ab59d1a"
+        },
+        {
+          "file": "required-check-132572794152.log",
+          "sha256": "e047287acbf01fa22d2bbe1a71bef83a6cfa99d46e251209d7128814e2b9c9fa"
+        },
+        {
+          "file": "summary-132572794152.md",
+          "sha256": "9cedfe5ba0a6a77978e35047b5cb9ed824413a037ac86e129e980f9ffe6a2b1c"
+        },
+        {
+          "file": "required-check-132453247904.log",
+          "sha256": "2d5dd00b80bb5a21b8948716f89539cbf1f62c9bea6554fe3c118bcba3385c18"
+        },
+        {
+          "file": "summary-132453247904.md",
+          "sha256": "1f5cc3c81f22aa02c97d64d8645efd6af08c4d9178032dc001b2d003b16fecfa"
         }
       ]
     }
