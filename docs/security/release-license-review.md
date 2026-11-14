@@ -149,8 +149,16 @@ librsvg source release lockfile. The publisher's lock update logged four
 removals and zero additions. Its rewritten lockfile was not published. The
 build logs identify the static archives listed in the linker visibility flags.
 Use those flags as evidence of build inputs alongside the exact recipe and
-crate records. Complete the compatible modified rebuild and final image
-readback before accepting the package conditions.
+crate records.
+
+A Linux amd64 musl fixture rebuilt libvips 8.18.7 with a source modification
+and verified the new version string through its shared-library interface.
+The prior Alpine app loaded that library as UID 1000 and resized a PNG to
+a valid 3 × 2 JPEG. The proof includes the binary checksum, resolved Cargo
+lock, build recipe, toolchain inventory and logs. The fixture uses a fresh
+Cargo resolution. Keep the publisher's original binary and source evidence
+for the exact distributed packages. The glibc variant, final image notice
+readback and distribution conditions still require reviewer disposition.
 
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
