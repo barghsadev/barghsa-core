@@ -159,6 +159,23 @@ it('requeues a failed KB through an audited staff action', async () => {
     "UPDATE knowledge_bases SET source_type='url',source_config=$2::jsonb,content_state='error',content_error='kb_processing_failed' WHERE id=$1",
     [ids.kb, JSON.stringify({ urls: ['https://example.org/guide'] })]
   );
+  const rejected = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/reprocess`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ force: true }),
+  });
+  expect(rejected.status).toBe(400);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT content_state, content_error FROM knowledge_bases WHERE id=$1',
+        [ids.kb]
+      )
+    ).rows
+  ).toEqual([{ content_state: 'error', content_error: 'kb_processing_failed' }]);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+  ).toEqual([]);
   const response = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/reprocess`, {
     method: 'POST',
     headers,
@@ -374,6 +391,29 @@ it.each(entities)(
   }
 );
 
+it.each(entities)(
+  'rejects unexpected $kind delete fields before removing any records',
+  async (entry) => {
+    const remove = (body: object) =>
+      fetch(`${http.base}/api/admin/${entry.path}/${ids[entry.kind]}`, {
+        method: 'DELETE',
+        headers,
+        body: JSON.stringify(body),
+      });
+    expect((await remove({ force: true })).status).toBe(400);
+    expect((await http.pool.query(`SELECT id FROM ${entry.table}`)).rows).toEqual([
+      { id: ids[entry.kind] },
+    ]);
+    await assertLinkUnchanged('remove');
+    expect((await remove({})).status).toBe(204);
+    expect((await http.pool.query(`SELECT id FROM ${entry.table}`)).rows).toEqual([]);
+    expect((await http.pool.query('SELECT group_id FROM kb_group_members')).rows).toEqual([]);
+    expect(
+      (await auditWindow.query("SELECT event FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    ).toEqual([{ event: entry.kind === 'kb' ? 'kb_deleted' : 'kb_group_deleted' }]);
+  }
+);
+
 type LinkAction = 'attach' | 'detach' | 'add' | 'remove';
 async function prepareLink(action: LinkAction) {
   const key = `kb-test/${randomUUID()}`;
@@ -422,6 +462,33 @@ async function assertLinkUnchanged(action: LinkAction) {
     (await auditWindow.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
   ).toHaveLength(0);
 }
+it.each(['detach', 'remove'] as const)('rejects unexpected link fields on %s', async (action) => {
+  const item = await prepareLink(action);
+  const path =
+    action === 'detach'
+      ? `knowledge-bases/${ids.kb}/documents/${item.documentId}`
+      : `kb-groups/${ids.group}/members/${ids.kb}`;
+  const rejected = await fetch(`${http.base}/api/admin/${path}`, {
+    method: 'DELETE',
+    headers,
+    body: JSON.stringify({ force: true }),
+  });
+  expect(rejected.status).toBe(400);
+  await assertLinkUnchanged(action);
+  expect((await linkRequest(action, item)).status).toBe(204);
+  const linkTable = action === 'detach' ? 'kb_documents' : 'kb_group_members';
+  expect((await http.pool.query(`SELECT 1 FROM ${linkTable}`)).rows).toEqual([]);
+  expect(
+    (
+      await http.pool.query('SELECT storage_key FROM storage_records WHERE storage_key=$1', [
+        item.key,
+      ])
+    ).rows
+  ).toEqual([{ storage_key: item.key }]);
+  expect(
+    (await auditWindow.query("SELECT event FROM audit_log WHERE event LIKE 'kb_%'")).rows
+  ).toEqual([{ event: action === 'detach' ? 'kb_document_detached' : 'kb_group_member_removed' }]);
+});
 it.each(['attach', 'detach', 'add', 'remove'] as const)(
   'rolls back %s when auditing fails',
   async (action) => {

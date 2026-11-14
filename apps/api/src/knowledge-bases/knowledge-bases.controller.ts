@@ -19,6 +19,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import {
@@ -229,9 +230,11 @@ export class KnowledgeBasesController {
   @ApiOperation({ summary: 'Reprocess a knowledge base after a source or provider failure' })
   async reprocess(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<KbDto> {
     this.assertKbPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.reprocessKb(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -318,9 +321,11 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 204, description: 'Knowledge base deleted (links cascaded).' })
   async remove(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertKbPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removeKb(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -370,9 +375,11 @@ export class KnowledgeBasesController {
   async detachDocument(
     @Req() req: AuthenticatedRequest,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Param('documentId', new ParseUUIDPipe()) documentId: string
+    @Param('documentId', new ParseUUIDPipe()) documentId: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertKbPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.detachDocument(
       id,
       documentId,
@@ -494,9 +501,11 @@ export class KbGroupsController {
   @ApiResponse({ status: 204, description: 'KB group deleted (memberships cascaded).' })
   async remove(
     @Req() req: AuthenticatedRequest,
-    @Param('id', new ParseUUIDPipe()) id: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertKbPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removeGroup(id, req.session.userId, requestIp(req), req.session);
   }
 
@@ -537,9 +546,11 @@ export class KbGroupsController {
   async removeMember(
     @Req() req: AuthenticatedRequest,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Param('kbId', new ParseUUIDPipe()) kbId: string
+    @Param('kbId', new ParseUUIDPipe()) kbId: string,
+    @Body() body?: unknown
   ): Promise<void> {
     this.assertKbPermission(req);
+    assertEmptyCommandBody(body);
     return this.service.removeGroupMember(
       id,
       kbId,

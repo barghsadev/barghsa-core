@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T10:21:18+00:00",
+  "updated": "2026-11-14T10:27:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -168063,7 +168063,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -168075,7 +168076,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -168083,7 +168084,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -168629,6 +168630,15 @@
                 "apps/web/src/hooks/useWizardForm.ts"
               ],
               "scope": "The wizard preserves authorized server field feedback on blur of an unchanged draft and ignores blur during a pending submission. Editing revalidates locally and explicit submission runs full validation. The geography regression exercises protected status edits, duplicate command guards, field focus and localized feedback. The recovery test uses the existing saved locale before boot and keeps the exact challenge, OTP, reset and secret-clearing assertions. Targeted tests cover changed behavior and affected form callers. Previous evidence still applies to unchanged criteria."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -598303,7 +598313,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -598515,7 +598526,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -600548,6 +600559,14 @@
                 "apps/api/src/admin/staff-http.integration.test.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -645130,7 +645149,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645142,7 +645162,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -645150,7 +645170,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -645696,6 +645716,15 @@
                 "apps/web/src/hooks/useWizardForm.ts"
               ],
               "scope": "The wizard preserves authorized server field feedback on blur of an unchanged draft and ignores blur during a pending submission. Editing revalidates locally and explicit submission runs full validation. The geography regression exercises protected status edits, duplicate command guards, field focus and localized feedback. The recovery test uses the existing saved locale before boot and keeps the exact challenge, OTP, reset and secret-clearing assertions. Targeted tests cover changed behavior and affected form callers. Previous evidence still applies to unchanged criteria."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -645820,7 +645849,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645832,7 +645862,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -645840,7 +645870,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -646386,6 +646416,15 @@
                 "apps/web/src/hooks/useWizardForm.ts"
               ],
               "scope": "The wizard preserves authorized server field feedback on blur of an unchanged draft and ignores blur during a pending submission. Editing revalidates locally and explicit submission runs full validation. The geography regression exercises protected status edits, duplicate command guards, field focus and localized feedback. The recovery test uses the existing saved locale before boot and keeps the exact challenge, OTP, reset and secret-clearing assertions. Targeted tests cover changed behavior and affected form callers. Previous evidence still applies to unchanged criteria."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -646512,7 +646551,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -646524,7 +646564,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -646532,7 +646572,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -647078,6 +647118,15 @@
                 "apps/web/src/hooks/useWizardForm.ts"
               ],
               "scope": "The wizard preserves authorized server field feedback on blur of an unchanged draft and ignores blur during a pending submission. Editing revalidates locally and explicit submission runs full validation. The geography regression exercises protected status edits, duplicate command guards, field focus and localized feedback. The recovery test uses the existing saved locale before boot and keeps the exact challenge, OTP, reset and secret-clearing assertions. Targeted tests cover changed behavior and affected form callers. Previous evidence still applies to unchanged criteria."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -647203,7 +647252,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-wizard-server-feedback"
+          "release-0.6-wizard-server-feedback",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -647215,7 +647265,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -647223,7 +647273,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
@@ -647769,6 +647819,15 @@
                 "apps/web/src/hooks/useWizardForm.ts"
               ],
               "scope": "The wizard preserves authorized server field feedback on blur of an unchanged draft and ignores blur during a pending submission. Editing revalidates locally and explicit submission runs full validation. The geography regression exercises protected status edits, duplicate command guards, field focus and localized feedback. The recovery test uses the existing saved locale before boot and keeps the exact challenge, OTP, reset and secret-clearing assertions. Targeted tests cover changed behavior and affected form callers. Previous evidence still applies to unchanged criteria."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -684580,7 +684639,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -684800,7 +684860,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -685467,6 +685527,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ]
         }
@@ -687753,7 +687821,8 @@
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
-        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open."
+        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open.",
+        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -687828,7 +687897,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-content-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": null
       }
@@ -687863,7 +687933,8 @@
         "Financial approval and reconciliation investigation now reject unexpected bodies before changing the decision, assignment, audit or notice. Native finance, refund and electricity/saving callers passed. Complete the remaining application-wide validation inventory and final staged release evidence.",
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "Terms draft discard, notification template publish, unpublish and delete, and contract template delete now reject undeclared request bodies before any state or audit mutation. The migrated HTTP cases verify rejection and accepted omitted or empty-object requests. Complete the remaining command review and exact staging release checks.",
-        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open."
+        "The Telegram unlink command now rejects undeclared body fields using the existing empty command validator. The native case checks unchanged intent and audit history on rejection and successful omitted and empty-object requests. The wider request inventory and final staging verification remain open.",
+        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -687974,7 +688045,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-content-command-validation",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-kb-command-validation"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -1100819,7 +1100891,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -1103804,6 +1103876,14 @@
                 "apps/web/playwright.config.ts"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -1104269,7 +1104349,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-kb-command-validation"
         ]
       }
     },
@@ -1104869,7 +1104950,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -1104877,7 +1104958,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
@@ -1109944,6 +1110025,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "presentation_renewals": [
@@ -1110386,7 +1110476,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-kb-command-validation"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1110995,7 +1111086,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
-              "sha256": "3cc285d2a87bf11e103ad21116ec718b2cb059e911338306cf28349f1fd89f28"
+              "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
@@ -1111003,7 +1111094,7 @@
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
-              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+              "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
             },
             {
               "path": "apps/api/src/knowledge-bases/knowledge-bases.module.ts",
@@ -1115955,6 +1116046,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-kb-command-validation",
+              "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+              "paths": [
+                "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+                "apps/api/src/knowledge-bases/knowledge-bases.controller.ts"
+              ],
+              "scope": "The controller changes only the five audited empty-body commands. Test additions retain the prior assertions. The compiled migrated HTTP, controller and web caller checks renew the changed inputs. Existing scope and earlier live receipts remain applicable."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1116415,7 +1116515,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-telegram-unlink-validation",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-kb-command-validation"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1308762,6 +1308863,110 @@
         {
           "file": "affected-test-a18c8a3d3.zip",
           "sha256": "9c3229d6c524a0a3b32fba4cce88e5160679e42c9bc2b42cf8d5e32631f52e04"
+        }
+      ]
+    },
+    "release-0.6-kb-command-validation": {
+      "batch": "release-0.6-kb-command-validation",
+      "base_commit": "fd3d3cc177f7dc6c920800961541cbd4681ea57d",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.02",
+        "03-core-business.md#T-03.90.03",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.04.01.01",
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+        "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "e13ac1a842798fe7c80bffc6f8b782bcfa245869419ec42af4700cde5f627524"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "871d7a15420183ac71a779871d80a3bd3d3db451bb17693dbbb99933e086b494"
+        },
+        {
+          "path": "apps/api/src/common/empty-command-body.ts",
+          "sha256": "95f24304a521b2e7491e63a5f8c75f66a75b74f718106506e49c39e2e29cb339"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+          "sha256": "d67a262d418e6e48fe27548a0f2edb139e491a858b87b2fbb7b6fe8a7074cc62"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "6d28b33f7d71600cc8b0f283c1a7c8bf59f3ae0ec2089cd4ab385a3dbe588e22"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-documents.test.tsx",
+          "sha256": "82410f89c9522f5441714b2b7d3d3575e7ab5d387448cfd313d01c28ddb1e256"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-membership.test.tsx",
+          "sha256": "668f6be47d76bbfe30a50712ad95e6d22a86773181bbba158cf3b6348b2d0c61"
+        },
+        {
+          "path": "apps/web/src/pages/knowledge-policy-forms.test.tsx",
+          "sha256": "4209617f08e6c6ac7e206ff3a2a415f5361c35d023189611b93c3f8c06acc60b"
+        },
+        {
+          "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
+          "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
+        }
+      ],
+      "checks": [
+        "All 95 knowledge-base controller and migrated HTTP tests passed. They cover request validation, retained step-up and staff authority, state and audit rollback, and document storage preservation.",
+        "All 78 related web caller tests passed. The compiled OpenAPI still matches the committed contract and generated client.",
+        "API build, API typecheck, changed-file ESLint and Prettier passed.",
+        "The five staff knowledge-base reprocess, knowledge-base deletion, group deletion, document-detach and membership-removal commands now reject unexpected JSON before changing state or writing an audit event. Migrated HTTP cases verify unchanged records and audits on rejection, existing bodyless callers, and accepted empty objects. The remaining request inventory and exact staged release evidence are open."
+      ],
+      "limitations": [
+        "The tested change covers staff knowledge-base command boundaries and existing callers. Broader request audit and staged release validation remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-kb-command-validation",
+      "execution_receipts": [
+        {
+          "file": "native-final.log",
+          "sha256": "9e174a0cedf4b61b008866a1b2425b524545fa3897f287ac94da6f18914723b6"
+        },
+        {
+          "file": "web-callers.log",
+          "sha256": "2fae8c646c1a90b6474655d25d69ff3141133eb95d51a374ba8b7ceec0f59f80"
+        },
+        {
+          "file": "build.log",
+          "sha256": "14aceb3c75913c8c1e24389f2d3862e7f780be53d61bdd46daea741d65c48f23"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "b1b58de4c8548e1753d88207e1cf96692c9080b99c3d21a4575733712ddac834"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }
