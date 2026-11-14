@@ -92,6 +92,32 @@ it('validates a partial lead update against persisted members within the transac
   expect(accepted.status).toBe(200);
   expect((await accepted.json()) as { leadUserId: string }).toMatchObject({ leadUserId: 'member' });
 });
+it('rejects an unexpected team deletion body before changing membership or audit history', async () => {
+  const created = await team();
+  const path = `staff-teams/${created.id}`;
+  const read = async () => ({
+    team: (await http.pool.query('SELECT * FROM staff_teams WHERE id=$1', [created.id])).rows,
+    members: (
+      await http.pool.query('SELECT * FROM staff_team_members WHERE team_id=$1', [created.id])
+    ).rows,
+    audit: (await http.pool.query("SELECT id FROM audit_log WHERE event='team_delete' ORDER BY id"))
+      .rows,
+  });
+  const before = await read();
+  for (const body of [{ unexpected: 'private-submitted-value' }, []]) {
+    const response = await call(path, 'DELETE', body);
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(JSON.parse(text)).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(text).not.toContain('private-submitted-value');
+    expect(await read()).toEqual(before);
+  }
+  expect((await call(path, 'DELETE')).status).toBe(200);
+  const after = await read();
+  expect(after.team).toEqual([]);
+  expect(after.members).toEqual([]);
+  expect(after.audit).toHaveLength(before.audit.length + 1);
+});
 it('requires current capability and password confirmation for every team/rule mutation', async () => {
   const created = await team();
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='admin'");

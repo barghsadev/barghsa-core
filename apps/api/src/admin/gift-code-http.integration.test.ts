@@ -40,13 +40,17 @@ function mutation(action: 'create' | 'update' | 'toggle' | 'archive') {
     {
       method: action === 'archive' ? 'DELETE' : action === 'update' ? 'PATCH' : 'POST',
       headers,
-      body: JSON.stringify(
-        action === 'create'
-          ? { code: 'SECOND', discountType: 'fixed_irr', discountValue: '1000' }
-          : action === 'update'
-            ? { code: 'CHANGED' }
-            : { status: 'inactive' }
-      ),
+      ...(action === 'archive'
+        ? {}
+        : {
+            body: JSON.stringify(
+              action === 'create'
+                ? { code: 'SECOND', discountType: 'fixed_irr', discountValue: '1000' }
+                : action === 'update'
+                  ? { code: 'CHANGED' }
+                  : { status: 'inactive' }
+            ),
+          }),
     }
   );
 }
@@ -616,10 +620,11 @@ it('searches only current profile names and resolves selected archived profiles 
 });
 
 it('archives idempotently while retaining released history and rejects consumed redemptions', async () => {
-  const archive = () =>
+  const archive = (body?: unknown) =>
     fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId.toUpperCase()}`, {
       method: 'DELETE',
       headers,
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
   const profileId = (
     await http.pool.query(
@@ -651,11 +656,30 @@ it('archives idempotently while retaining released history and rejects consumed 
       "UPDATE gift_code_redemptions SET status='released',restored_at=clock_timestamp() WHERE order_id=$1",
       [orderId]
     );
+    const released = await http.pool.query(
+      'SELECT * FROM gift_code_redemptions WHERE order_id=$1',
+      [orderId]
+    );
+    for (const body of [{ unexpected: 'private-submitted-value' }, []]) {
+      const response = await archive(body);
+      expect(response.status).toBe(400);
+      const text = await response.text();
+      expect(JSON.parse(text)).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+      expect(text).not.toContain('private-submitted-value');
+      await unchanged();
+      expect(
+        (await http.pool.query('SELECT * FROM gift_code_redemptions WHERE order_id=$1', [orderId]))
+          .rows
+      ).toEqual(released.rows);
+      expect(
+        (await auditWindow.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      ).toHaveLength(0);
+    }
     const archived = await archive();
     expect(archived.status).toBe(200);
     const receipt = await archived.json();
     expect(receipt).toMatchObject({ id: giftId, status: 'inactive', usage: { released: 1 } });
-    const replay = await archive();
+    const replay = await archive({});
     expect(replay.status).toBe(200);
     expect(await replay.json()).toEqual(receipt);
     expect(

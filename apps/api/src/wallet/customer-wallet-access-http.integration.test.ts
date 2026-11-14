@@ -81,6 +81,27 @@ it('returns exact transaction amounts beyond safe integers and isolates each wal
   ).toBe(404);
 });
 
+it('rejects an unexpected wallet creation body before creating the profile wallet', async () => {
+  const f = await seed();
+  const path = `${http.base}/api/wallet/${f.profile}/create`;
+  const read = async () =>
+    (await http.pool.query('SELECT * FROM wallets WHERE profile_id=$1', [f.profile])).rows;
+  for (const body of [{ unexpected: 'private-submitted-value' }, []]) {
+    const response = await fetch(path, {
+      method: 'POST',
+      headers: f.headers,
+      body: JSON.stringify(body),
+    });
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(JSON.parse(text)).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(text).not.toContain('private-submitted-value');
+    expect(await read()).toEqual([]);
+  }
+  expect((await fetch(path, { method: 'POST', headers: f.headers })).status).toBe(201);
+  expect(await read()).toHaveLength(1);
+});
+
 it.each([
   { roles: undefined, view: 200, create: 201 },
   { roles: ['Finance'], view: 200, create: 201 },

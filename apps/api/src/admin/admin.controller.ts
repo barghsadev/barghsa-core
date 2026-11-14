@@ -3404,20 +3404,24 @@ export class AdminController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a staff team (admin)' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
   @ApiResponse({
     status: 200,
     description: 'Team deleted.',
     schema: { type: 'object', properties: { deleted: { type: 'boolean' } } },
   })
+  @ApiResponse({ status: 400, description: 'Invalid team ID or unexpected request body' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Team not found' })
   async deleteStaffTeam(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
     this.assertStaffTeamsEditPermission(req);
+    assertEmptyCommandBody(body);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.deleteStaffTeam(id, req.session, ip);
   }

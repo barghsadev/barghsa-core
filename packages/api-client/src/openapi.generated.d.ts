@@ -23285,10 +23285,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Gift code inactive. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid gift code ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -25081,7 +25092,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Team deleted. */
             200: {
@@ -25093,6 +25108,13 @@ export interface operations {
                         deleted?: boolean;
                     };
                 };
+            };
+            /** @description Invalid team ID or unexpected request body */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {
@@ -38845,9 +38867,21 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
+            /** @description Profile wallet available. */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid profile ID or unexpected request body */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

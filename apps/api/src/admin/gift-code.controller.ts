@@ -14,7 +14,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -32,6 +39,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
@@ -403,11 +411,18 @@ export class GiftCodeController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Deactivate a gift code without active redemptions; retain its ledger' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Gift code inactive.' })
+  @ApiResponse({ status: 400, description: 'Invalid gift code ID or unexpected request body' })
   @ApiResponse({ status: 409, description: 'Active redemptions prevent archival.' })
-  async archive(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<GiftCodeDto> {
+  async archive(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body?: unknown
+  ): Promise<GiftCodeDto> {
     this.assertPromotionsPermission(req);
     assertUuid(id);
+    assertEmptyCommandBody(body);
     return this.service.archive(id, req.session, requestIp(req));
   }
 

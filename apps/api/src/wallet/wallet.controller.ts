@@ -18,6 +18,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiHeader,
   ApiOperation,
   ApiQuery,
@@ -38,6 +39,7 @@ import { parseWalletHistoryQuery, readWalletHistory } from './wallet-history.js'
 import { activeProfileSql } from '../profiles/profile-context.js';
 import { withCustomerWalletAccess } from './customer-wallet-access.js';
 import { RequiresCapability } from '../maintenance/maintenance.guard.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 const TopUpReviewBodySchema = z
   .object({
@@ -168,9 +170,17 @@ export class WalletController {
 
   @Post(':profileId/create')
   @ApiOperation({ summary: 'Create wallet for a profile' })
-  async createWallet(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
+  @ApiResponse({ status: 201, description: 'Profile wallet available.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile ID or unexpected request body' })
+  async createWallet(
+    @Param('profileId') profileId: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
+  ) {
     assertUuid(profileId, 'profileId');
     await this.assertProfileAccess(req, profileId, 'wallet:charge');
+    assertEmptyCommandBody(body);
     return withCustomerWalletAccess(req.session, profileId, 'wallet:charge', async (client) => {
       this.logger.debug(
         `Wallet creation: user=${privateLogId('actor', req.session.userId)} profile=${privateLogId('profile', profileId)}`

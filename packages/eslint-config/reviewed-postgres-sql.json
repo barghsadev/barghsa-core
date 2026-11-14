@@ -74,7 +74,7 @@
   "apps/api/src/wallet/customer-wallet-receipt.controller.ts": "93b05e47a94d4c7bb744bb47d65bf54b4431ff6e87f9bffbf9f18affdcd8ade2",
   "apps/api/src/wallet/profile-lock.ts": "eeee0935eb3e725d6cf4fdb11a6fbbfbf68d00179af0d47266f488728025d80d",
   "apps/api/src/wallet/wallet-history.ts": "f8713d956bcd1636200639abfe482e2c603975215830f7b349210c02ac9fbda3",
-  "apps/api/src/wallet/wallet.controller.ts": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7",
+  "apps/api/src/wallet/wallet.controller.ts": "524547713b15ae23ec2091be296d0a023ab57ee7e657609cc476785b07c8163d",
   "apps/worker/src/ai-models/test-runner.ts": "f0b79da8e35c831616ab01f9ce0d9e409e18b4d56161a17d5e7a5a930872e4e6",
   "apps/worker/src/invoices/reconciliation-scanner.ts": "ff2bbdbe7a04d190a450c4a7cd2575b1b996f56d9b0659c087163d2af1fddb45",
   "apps/worker/src/invoices/reminder-scheduler.ts": "637ad3ac217e8554cfa253dd1d22ed3d6f63079b32666b24767e18962589e6c7",

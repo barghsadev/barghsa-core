@@ -27700,9 +27700,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Gift code inactive."
+          },
+          "400": {
+            "description": "Invalid gift code ID or unexpected request body"
           },
           "409": {
             "description": "Active redemptions prevent archival."
@@ -30909,6 +30923,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -30924,6 +30949,9 @@
               }
             },
             "description": "Team deleted."
+          },
+          "400": {
+            "description": "Invalid team ID or unexpected request body"
           },
           "401": {
             "description": "Not authenticated"
@@ -53843,9 +53871,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Profile wallet available."
+          },
+          "400": {
+            "description": "Invalid profile ID or unexpected request body"
           }
         },
         "security": [
