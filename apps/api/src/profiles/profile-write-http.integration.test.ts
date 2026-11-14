@@ -256,8 +256,12 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
 }
 
 it('requires saved identity and address before finalizing a draft and audits the transition once', async () => {
-  const complete = () =>
-    fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers });
+  const complete = (body?: unknown) =>
+    fetch(`${http.base}/api/onboarding/complete/${profileId}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
   expect((await complete()).status).toBe(400);
   expect((await snapshot()).status).toBe('DRAFT');
   expect(
@@ -273,8 +277,17 @@ it('requires saved identity and address before finalizing a draft and audits the
       })
     ).status
   ).toBe(200);
-  expect((await snapshot()).status).toBe('DRAFT');
-  const first = await complete();
+  const draft = await snapshot();
+  expect(draft.status).toBe('DRAFT');
+  const invalid = await complete({ profileId: randomUUID() });
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(await snapshot()).toEqual(draft);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_onboarding_completed'"))
+      .rows
+  ).toHaveLength(0);
+  const first = await complete({});
   expect(first.status).toBe(200);
   const completed = await snapshot();
   expect(completed.status).toBe('ACTIVE');

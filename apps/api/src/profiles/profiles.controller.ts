@@ -17,7 +17,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProfilesService } from './profiles.service.js';
 import { AgentsService } from './agents.service.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
@@ -306,16 +306,19 @@ export class ProfilesController {
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:verify:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Auto-verify a profile via API method' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 503, description: 'Identity verification provider unavailable.' })
-  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier or unexpected body.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Invalid CSRF token' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   @ApiResponse({ status: 409, description: 'Profile is already verified.' })
   async verifyProfile(
     @Param('id', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ message: string }> {
+    assertEmptyCommandBody(body);
     return this.profilesService.verifyProfileApi(req.session, profileId);
   }
 

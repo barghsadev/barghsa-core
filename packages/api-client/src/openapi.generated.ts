@@ -31515,7 +31515,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Onboarding completed. */
             200: {
@@ -31555,6 +31559,13 @@ export interface operations {
                         title?: string | null;
                     };
                 };
+            };
+            /** @description Invalid profile identifier, body or draft state. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Not authenticated */
             401: {
@@ -32610,9 +32621,13 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
-            /** @description Invalid profile identifier. */
+            /** @description Invalid profile identifier or unexpected body. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -37497,7 +37512,17 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /**
+                     * Format: uuid
+                     * @description Optional legacy field
+                     */
+                    versionId?: string;
+                };
+            };
+        };
         responses: {
             /** @description TOS acceptance recorded. */
             200: {
@@ -37506,7 +37531,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Version is invalid or no longer active */
+            /** @description Invalid body or unavailable published version */
             400: {
                 headers: {
                     [name: string]: unknown;

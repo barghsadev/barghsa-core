@@ -115,8 +115,14 @@ it.each(['API', 'MANUAL', 'DISABLED'])(
         await (await fetch(`${http.base}/api/profiles/verification-status`, { headers })).json()
       ).toMatchObject({ verificationSubmittedAt: later, verificationNotice: null });
     }
-    for (let i = 0; i < 2; i++) {
-      const result = await post(`profiles/${profileId}/verify`);
+    const verifyPath = `profiles/${profileId}/verify`;
+    const invalid = await post(verifyPath, { profileId: randomUUID() });
+    expect(invalid.status).toBe(400);
+    expect(await invalid.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    for (const result of [
+      await post(verifyPath),
+      await fetch(`${http.base}/api/${verifyPath}`, { method: 'POST', headers }),
+    ]) {
       expect(result.status).toBe(503);
       expect(await result.json()).toMatchObject({
         error: {

@@ -439,9 +439,19 @@ it('accepts the canonical version URL with session and CSRF and preserves exact 
       })
     ).status
   ).toBe(400);
+  for (const body of [{ versionId: previous, consent: true }, { versionId: 'not-a-version' }]) {
+    const invalid = await fetch(url, {
+      method: 'POST',
+      headers: headers.other!,
+      body: JSON.stringify(body),
+    });
+    expect(invalid.status).toBe(400);
+    expect(await invalid.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
   expect(
     Number((await http.pool.query('SELECT count(*) FROM tos_acceptances')).rows[0].count)
   ).toBe(0);
+  expect(await acceptanceRequired()).toBe(true);
   const response = await fetch(url, {
     method: 'POST',
     headers: { ...headers.other!, 'user-agent': 'TOS-consent-browser-test/1.0' },

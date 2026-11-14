@@ -25,6 +25,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 const AcceptTosSchema = z.strictObject({
   versionId: z.string().min(1),
 });
+const AcceptTosVersionBodySchema = z.strictObject({ versionId: z.uuid().optional() }).optional();
 
 @ApiTags('Terms of Service')
 @Controller('api/tos')
@@ -128,15 +129,32 @@ export class TosController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Accept the current Terms of Service identified in the URL' })
   @ApiParam({ name: 'versionId', description: 'Immutable UUID of the displayed published version' })
+  @ApiBody({
+    required: false,
+    schema: {
+      type: 'object',
+      properties: {
+        versionId: { type: 'string', format: 'uuid', description: 'Optional legacy field' },
+      },
+      additionalProperties: false,
+    },
+  })
   @ApiResponse({ status: 200, description: 'TOS acceptance recorded.' })
-  @ApiResponse({ status: 400, description: 'Version is invalid or no longer active' })
+  @ApiResponse({ status: 400, description: 'Invalid body or unavailable published version' })
   @ApiResponse({ status: 401, description: 'Unauthenticated' })
   @ApiResponse({ status: 403, description: 'CSRF validation failed' })
   acceptVersion(
     @Param('versionId') versionId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ): Promise<{ message: string; acceptedVersionId: string }> {
-    // The URL identifies the displayed document. A body cannot substitute another version.
+    if (!AcceptTosVersionBodySchema.safeParse(body).success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    }
+    // The URL remains authoritative for the version the user displayed.
     return this.accept({ versionId }, req);
   }
 

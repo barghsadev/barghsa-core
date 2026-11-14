@@ -41080,6 +41080,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "content": {
@@ -41203,6 +41214,9 @@
               }
             },
             "description": "Onboarding completed."
+          },
+          "400": {
+            "description": "Invalid profile identifier, body or draft state."
           },
           "401": {
             "description": "Not authenticated"
@@ -42966,9 +42980,20 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "400": {
-            "description": "Invalid profile identifier."
+            "description": "Invalid profile identifier or unexpected body."
           },
           "401": {
             "description": "Not authenticated"
@@ -52050,12 +52075,30 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "versionId": {
+                    "description": "Optional legacy field",
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "TOS acceptance recorded."
           },
           "400": {
-            "description": "Version is invalid or no longer active"
+            "description": "Invalid body or unavailable published version"
           },
           "401": {
             "description": "Unauthenticated"

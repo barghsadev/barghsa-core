@@ -1,4 +1,5 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   OnboardingJourneysService,
@@ -26,7 +27,7 @@ import {
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { ApiResponseSchemaHost } from '@nestjs/swagger';
 import { ProfilesService } from './profiles.service.js';
 import { LegalProfilesService } from './legal-profiles.service.js';
@@ -416,6 +417,7 @@ export class OnboardingController {
   @HttpCode(200)
   @RateLimit({ namespace: 'onboarding:complete:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Complete onboarding — finalize profile' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({
     status: 200,
     description: 'Onboarding completed.',
@@ -434,12 +436,15 @@ export class OnboardingController {
       },
     },
   })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier, body or draft state.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async completeOnboarding(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     const profile = await this.profilesService.completeOnboarding(req.session, profileId);
 
     this.logger.log(
