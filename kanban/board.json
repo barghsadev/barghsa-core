@@ -664790,7 +664790,8 @@
       "launch_required": true,
       "remaining": [
         "Live v0.5.1 still served the exact same-origin PNG at 20:51 UTC on November 13. After the 13:23 activation, the same API container recorded zero image reports and one style-src-elem report. Earlier Chromium and WebKit readbacks decoded the exact PNG. Verify the staged Sonner fix, complete the representative full-week report-only observation and exercise customer and staff journeys before enforcement.",
-        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks."
+        "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
+        "At 04:21 UTC on November 14, the live v0.5.1 branding endpoint returned the exact same-origin PNG and the login response stayed report-only. The complete observation and candidate style fix still need live proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -664811,7 +664812,8 @@
           "release-0.6-staging-favicon-observation-readback",
           "release-0.6-staging-favicon-final-readback",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-csp-window-followup"
+          "release-0.6-csp-window-followup",
+          "release-0.6-staging-favicon-confirmed-readback"
         ],
         "current_acceptance": null
       }
@@ -688165,7 +688167,8 @@
         "Both Sharp npm package signatures and provenance attestations verified. The publisher job identifies 105 matching Rust crate archives and retains a log of removed features and static link options. The receipt packet includes all 33 direct build inputs and a non-root prior-image checksum readback. Complete the modified rebuild, verify actual candidate notices and obtain the named package dispositions.",
         "Read back all 217 package-specific notices in retained PostgreSQL image dbb54d6c8c53. The supplement maps 216 installed Debian packages to full source versions and identifies both common-license path mismatches. Obtain reviewer dispositions and verify the final immutable image.",
         "The modified musl libvips fixture loaded inside the prior Linux amd64 Alpine image as UID 1000 and converted PNG to JPEG. Obtain named dispositions, confirm both final native package notices and distribution conditions, and run the strict gate.",
-        "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review."
+        "The Alpine runtime SBOM removes the glibc Sharp addon and one LGPL libvips review row. Reconcile the remaining 386 rows against the final five-image inventory and verify conditions and named dispositions. A separate glibc deployment still needs its own review.",
+        "Exact hosted five-image readback for 7b62b875c confirms 386 pending dispositions and zero new entries. Apply the named dispositions and enforce the strict gate on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -688232,7 +688235,8 @@
           "release-0.6-sharp-attestations-and-build-inputs",
           "release-0.6-postgres-notice-readback",
           "release-0.6-sharp-modified-musl-proof",
-          "release-0.6-sharp-runtime-platform"
+          "release-0.6-sharp-runtime-platform",
+          "release-0.6-hosted-alpine-inventory-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -688388,7 +688392,8 @@
         "The worker pins the exact retained license report alongside the retained scans. The approval package verifier checks both against the deployed image IDs. Actual staging and registry receipts remain open.",
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts."
+        "The exact local Linux amd64 app image ce2980001a9e has a verified CycloneDX receipt, 315 package rows, 12 medium findings and zero high or critical findings. Collect final staging and production registry receipts.",
+        "Hosted 43555538867 identifies all five SBOMs and scan reports from exact 7b62b875c by image ID and checksums. Verify the final distributed images and retain the release SBOMs."
       ],
       "owner": null,
       "depends_on": [],
@@ -688448,7 +688453,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-sharp-runtime-platform"
+          "release-0.6-sharp-runtime-platform",
+          "release-0.6-hosted-alpine-inventory-readback"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1095328,7 +1095334,8 @@
         "The exact Linux amd64 app fixture ships the active musl Sharp variant and both original libvips notices. The local SBOM loses two unused glibc rows, including one pending exception. Verify the exact final images and the strict gate.",
         "The promotion checker verifies all seven operations from the original hosted load report and requires separate measured topology evidence. Exact accepted candidate and real production-equivalent load receipts remain open.",
         "The bodyless and empty-object recovery apply requests passed native HTTP checks, with strict rejection before a contact or session change. The accepted candidate verification remains open.",
-        "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open."
+        "Production promotion verification matches the staged migration checkpoint label, system ID, encrypted object size and checksum to the off-server manifest. Separate candidate rehearsal evidence is required. Final live evidence remains open.",
+        "Hosted report-only 43555538867 verified five exact image identities, SBOMs and scans for 7b62b875c. Package review comprises 386 entries. Final strict acceptance and deployed receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1095654,7 +1095661,8 @@
           "release-0.6-sharp-runtime-platform",
           "release-0.6-promotion-load-receipt",
           "release-0.6-recovery-apply-command",
-          "release-0.6-promotion-migration-receipt"
+          "release-0.6-promotion-migration-receipt",
+          "release-0.6-hosted-alpine-inventory-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1276823,6 +1276831,79 @@
           "sha256": "2ca4fad3f7a85a68f14e3ea05cbe78bbb43dd0a109a53c5251550b6ab792b934"
         }
       ]
+    },
+    "release-0.6-hosted-alpine-inventory-readback": {
+      "batch": "release-0.6-hosted-alpine-inventory-readback",
+      "base_commit": "7b62b875c0168539c47e832349b075c2994fdd93",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f3f174f59be1eeccdc7ea44f67130eea453371bc366043a07d23440ed29272c8"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        }
+      ],
+      "checks": [
+        "Hosted report-only preflight 43555538867 on exact 7b62b875c verified five runtime image, CycloneDX SBOM and vulnerability report identities with zero high or critical findings.",
+        "The 857 package and scope entries match the preceding report after removing exactly the two unused glibc Sharp rows. The retained 386 review-required entries are unchanged."
+      ],
+      "limitations": [
+        "Package-specific sign-off, the strict release license gate and exact accepted release distribution remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-migration-receipt",
+      "execution_receipts": [
+        {
+          "file": "hosted-image-readback.json",
+          "sha256": "8c26d002a6550b6bf7b61f151225636a71bc865f2b1e3e00ed1ae4d41b97e0fb"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-confirmed-readback": {
+      "batch": "release-0.6-staging-favicon-confirmed-readback",
+      "base_commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "d20b8da63f2b8b3c7990098421ae964b2d6c81e43efec167c858dd3390a1ac8f"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        }
+      ],
+      "checks": [
+        "At 04:21 UTC on November 14, v0.5.1 served the published same-origin 3,415-byte favicon matching the original SHA-256 and private no-store policy. The login response retained CSP Report-Only."
+      ],
+      "limitations": [
+        "The API log readback found one CSP event during the checked window. This follow-up did not reclassify its directive. The staged style fix, full representative week, and enforcement journeys remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-migration-receipt",
+      "execution_receipts": [
+        {
+          "file": "staging-favicon-and-csp-readback.json",
+          "sha256": "38c8bded5595ac7d5249cc034d0ca0e8867580fb2278c74170035b7fb3dc571e"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -1276877,7 +1276958,7 @@
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.1 staging and Telegram receipts are confirmed. Manual 40-shard diagnostic 43437113471 on protected-main commit 347938359 reported all 40 shards, 14,751 expected, zero unexpected and runner errors, 27 skipped, and two flakes. The scheduled gate and report delivery remain open. The solar touch target and Firefox provider fixture each have targeted passing evidence. The November 9 target passed. The final strict license gate requires named dispositions for 387 entries. Nightly report delivery, CSP observations, external on-call monitoring, and production-equivalent TLS, providers, backups, recovery and load evidence remain open."
+    "method": "v0.5.1 staging and Telegram receipts are confirmed. Exact protected preflight 43555538867 and manual browser run 43555617831 for 7b62b875c are underway. The report-only inventory confirms 386 license entries require named dispositions. The November 9 target passed. Final strict acceptance, scheduled report delivery, representative CSP observation, external on-call monitoring and production-equivalent TLS, providers, backup, recovery and load evidence remain open."
   },
   "capabilities": [
     {
