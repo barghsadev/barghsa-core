@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:46:47+00:00",
+  "updated": "2026-11-14T13:52:11+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -679440,7 +679440,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-public-registration-privacy",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-session-read-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -682079,7 +682080,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-public-registration-privacy",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-session-read-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-dynamic-csrf-verification",
@@ -721135,7 +721137,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-auth-entry-mounted-handoff",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-session-read-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-new-device-mfa-and-session-revocation-browser-journey",
@@ -1132292,7 +1132295,8 @@
         "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open.",
         "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files.",
         "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved.",
-        "All three operator queue controllers passed the scoped critical thresholds. Compiled HTTP verified safe notification replay date validation; rerun the additive PostgreSQL regression and final combined coverage on the exact candidate. The local Docker image store returned a blob I/O failure before the final PostgreSQL run."
+        "The 122 operator queue cases passed with the compiled API and native PostgreSQL. The replay date regression preserved queue and audit state. All three controller thresholds passed at 214/214 lines and 110/110 branches. The full exact combined and live replay gates remain open.",
+        "All three session and device API files passed the unchanged scoped critical coverage gate with 54 passing tests and a compiled PostgreSQL-backed HTTP fixture. The final exact combined release run remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132660,7 +1132664,8 @@
           "release-0.6-provider-coverage",
           "release-0.6-web-admin-coverage",
           "release-0.6-api-config-history",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-session-read-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1321794,10 +1321799,11 @@
       "checks": [
         "Malformed replay timestamps now return the localized 400 validation contract. Range validation works on ISO strings; controllers construct Date values only after success. UTC, precision, range, permission and exact revision constraints remain in effect.",
         "The focused run passed 38 unit tests and the unchanged three-file coverage gate at 181/181 lines and 109/110 branches. Fourteen compiled loopback HTTP cases passed against both aliases using the production exception filter and mocked auth/queue. Type checking, ESLint and formatting passed.",
-        "The new PostgreSQL test asserts equal queue and audit snapshots for rejected dates. Every existing assertion in the PostgreSQL suite is byte-identical. Docker failed before the final full integration run with a containerd blob read I/O error."
+        "The new PostgreSQL test asserts equal queue and audit snapshots for rejected dates. Every existing assertion in the PostgreSQL suite is byte-identical. Docker failed before the final full integration run with a containerd blob read I/O error.",
+        "A native PostgreSQL 17.9 loopback cluster replaced the failed Docker fixture. All 122 cases passed with the compiled API and production migrations, including the new replay regression. The scoped combined report passed at 214/214 lines and 110/110 branches."
       ],
       "limitations": [
-        "The final PostgreSQL integration run, combined exact-candidate coverage and live operational replay readback remain open. The separate loopback HTTP fixture used mocked guards and queue."
+        "The exact combined release gate and live operational replay readback remain open."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-operator-queue-coverage",
       "execution_receipts": [
@@ -1321820,6 +1321826,99 @@
         {
           "sha256": "b745f808a89f3cc480239c9d775d30ed3d82a760d5d6384f4d364bf3a17f4c43",
           "file": "coverage.log"
+        },
+        {
+          "file": "native-postgres-init.log",
+          "sha256": "549c9ae1375385cf0ae027873bf5d7733cea821572c83b38e75e77e8c365c7ff"
+        },
+        {
+          "file": "native-postgres-tests.log",
+          "sha256": "25e538af8b5cc3db4663e079ef7385cd4af9be82266a105394ae8dc7a8f58087"
+        },
+        {
+          "file": "native-scoped-gate.json",
+          "sha256": "b94d1ef93625dca85ac76283488e1f826541ecc4494e9a276923282045a914b3"
+        },
+        {
+          "file": "operator-queue-postgres-readback.json",
+          "sha256": "37711fede0bb9316fbbf63bc1a47e412e47c4e4d8922d108381d80828b05b7d3"
+        }
+      ]
+    },
+    "release-0.6-session-read-coverage": {
+      "batch": "release-0.6-session-read-coverage",
+      "base_commit": "492d4a2c7053855df0f6653f943cb52b88efdc0e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.04.06",
+        "06-security-testing-observability.md#T-06.02.01.05",
+        "06-security-testing-observability.md#T-06.10.03.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/session/session-read-boundaries.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session-read-boundaries.test.ts",
+          "sha256": "039f9a6db0265b1c70f61982d1f97381c8ad1b1e1f11d730d431b1f46a819caf"
+        },
+        {
+          "path": "apps/api/src/session/account-session-read.ts",
+          "sha256": "c090ae58fd0c27345eda01376f6482fc0bfc73bb9880cd90a6c6714630425c1e"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.ts",
+          "sha256": "50c555376b8d806c170e61ba37abaa817213663d94f4690018e637b1257f713a"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "a01f3f746428a0881287bf13e5d3f290741b0cf7477c0764b3197c5ca0337992"
+        },
+        {
+          "path": "apps/api/src/session/session.controller.test.ts",
+          "sha256": "37a3833c9f2fc29a97332b3aac15d01c231176f25dac464a03bde23dfb58200a"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices-http.integration.test.ts",
+          "sha256": "6041e397c571492e75982c25458427213871047e2d77ae9282a061156beddd47"
+        },
+        {
+          "path": "apps/api/src/session/operating-context-http.integration.test.ts",
+          "sha256": "5aecdd3fac66f055b07a65b30e3231abd771c2d3b827a2923f221e5a1256ab89"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "5db6559326251f9ac1cb853f65edeb9cd596e69ae4f09cd50d3af1ff1da43b6c"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "All 54 session and trusted-device tests passed across five suites. This includes compiled HTTP on a fresh PostgreSQL 17.9 fixture with production migrations. The new cases verify denied and rolled-back sensitive reads, context validation and credential rotation, and trusted-device proof and revocation delegation.",
+        "The original three-file critical gate passed at 87/87 lines and 31/31 branches. Strict API types, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The scoped run does not replace the final hosted combined release gate. The native fixture used newly created disposable databases and did not use staging."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-session-read-coverage",
+      "execution_receipts": [
+        {
+          "file": "postgres-init.log",
+          "sha256": "c82c224ae8e6d434ca65a256580e1edc11090692924076cd9435fc608e02bec8"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "de942f9be409ad2938db6dadc4669cb01651a2da97aafdd9458fd00d417ee858"
+        },
+        {
+          "file": "scoped-gate.json",
+          "sha256": "78b64b3587bb03198d35486c76ca3f434dffea301d46dfa610ff75d1fc3e6bca"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
         }
       ]
     }
