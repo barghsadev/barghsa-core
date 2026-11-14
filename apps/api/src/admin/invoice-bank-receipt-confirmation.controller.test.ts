@@ -105,6 +105,30 @@ function rejectionBody(error: unknown): Record<string, unknown> {
   throw new Error(`expected HttpException, got ${String(error)}`);
 }
 
+it.each([
+  [{ remoteAddress: '192.0.2.10' }, '192.0.2.10'],
+  [undefined, 'unknown'],
+] as const)(
+  'preserves invoice receipt decision audit provenance with optional request metadata',
+  async (socket, ip) => {
+    const { controller, service, correlationId } = makeController();
+    correlationId.getCorrelationId.mockReturnValue(undefined);
+    const request = { ...adminReq, ip: undefined, socket } as unknown as AuthenticatedRequest;
+    await controller.confirm(request, RECEIPT_ID, { expectedReviewHash: REVIEW_HASH });
+    await controller.reject(request, RECEIPT_ID, { reason: 'Illegible scan' });
+    for (const command of [service.confirm, service.reject]) {
+      expect(command).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          receiptId: RECEIPT_ID,
+          ip,
+          actorUserId: adminReq.session.userId,
+        })
+      );
+      expect(command.mock.calls[0]?.[0]).not.toHaveProperty('correlationId');
+    }
+  }
+);
+
 describe('invoice bank-receipt confirmation and rejection permission gate (T-04.3.01.03 / T-04.3.01.04)', () => {
   it('rejects non-admin on list with AUTHZ_FORBIDDEN', async () => {
     const { controller, service } = makeController();

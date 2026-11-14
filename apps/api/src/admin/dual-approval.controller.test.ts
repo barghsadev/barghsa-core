@@ -61,6 +61,41 @@ function rejectionBody(error: unknown): Record<string, unknown> {
   throw new Error(`expected HttpException, got ${String(error)}`);
 }
 
+it.each([
+  [{ remoteAddress: '192.0.2.10' }, '192.0.2.10'],
+  [undefined, 'unknown'],
+] as const)(
+  'retains the authenticated actor and available address for each decision',
+  async (socket, ip) => {
+    const { controller, service } = makeController();
+    const request = { ...adminReq, ip: undefined, socket } as unknown as AuthenticatedRequest;
+    const creation = { action_type: 'refund', amount_irr: 250000000, reason: 'refund' };
+    await controller.createApprovalRequest(creation, request);
+    await controller.approveApprovalRequest('req-1', request);
+    await controller.rejectApprovalRequest(
+      'req-1',
+      { reason: '  Verify original payment  ' },
+      request
+    );
+    expect(service.createApprovalRequest).toHaveBeenCalledExactlyOnceWith(
+      creation,
+      request.session,
+      ip
+    );
+    expect(service.approveApprovalRequest).toHaveBeenCalledExactlyOnceWith(
+      'req-1',
+      request.session,
+      ip
+    );
+    expect(service.rejectApprovalRequest).toHaveBeenCalledExactlyOnceWith(
+      'req-1',
+      request.session,
+      ip,
+      'Verify original payment'
+    );
+  }
+);
+
 // ─── Permission gate (S-09.07) ────────────────────────────────────────
 
 describe('DualApprovalController permission gate (S-09.07, admin:financial:edit)', () => {

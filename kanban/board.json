@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:39:39+00:00",
+  "updated": "2026-11-14T14:43:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -7694,7 +7694,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -7936,6 +7936,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -55737,7 +55745,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -57646,6 +57654,14 @@
                 "apps/api/src/wallet/wallet.controller.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -95602,7 +95618,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/orders/orders.service.ts",
@@ -97236,6 +97252,14 @@
                 "apps/api/src/wallet/wallet.controller.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -120085,7 +120109,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "packages/db/drizzle/production/0269_wallet_low_balance_signals.sql",
@@ -122627,6 +122651,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -152326,7 +152358,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "9476472b78dfa184afc20c9ddf4979aa1292734abd03619a4b2eb7ee812b83b6"
+              "sha256": "d279cbf8f044f9a63470b8242f297c7abd1c87232789b048ab9b2ad9af01dfb8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -153991,6 +154023,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -154308,7 +154348,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "9476472b78dfa184afc20c9ddf4979aa1292734abd03619a4b2eb7ee812b83b6"
+              "sha256": "d279cbf8f044f9a63470b8242f297c7abd1c87232789b048ab9b2ad9af01dfb8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -155973,6 +156013,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -160656,7 +160704,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
@@ -161946,6 +161994,14 @@
                 "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -164300,7 +164356,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "9476472b78dfa184afc20c9ddf4979aa1292734abd03619a4b2eb7ee812b83b6"
+              "sha256": "d279cbf8f044f9a63470b8242f297c7abd1c87232789b048ab9b2ad9af01dfb8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -165965,6 +166021,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -241738,7 +241802,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -242869,6 +242933,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -243070,7 +243142,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -244201,6 +244273,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -244408,7 +244488,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -244717,6 +244797,14 @@
                 "packages/i18n/src/admin-ui-messages.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         },
@@ -245065,7 +245153,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -245374,6 +245462,14 @@
                 "packages/i18n/src/admin-ui-messages.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         },
@@ -245716,7 +245812,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -246847,6 +246943,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -247049,7 +247153,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -248180,6 +248284,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -248379,7 +248491,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -249510,6 +249622,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -249709,7 +249829,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -250840,6 +250960,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -251046,7 +251174,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -251355,6 +251483,14 @@
                 "packages/i18n/src/admin-ui-messages.ts"
               ],
               "scope": "Preserved existing electricity setting payloads and guarded write behavior. New routes recover only validated audit revisions and reuse the original transaction locks, template availability check, version bump and audit. Admin messages and lazy UI are additive. The wallet markup retains its hint and error IDs and existing error copy while keeping the unchanged bundle limit."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         },
@@ -251694,7 +251830,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -252825,6 +252961,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -253023,7 +253167,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -254154,6 +254298,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -254352,7 +254504,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -255483,6 +255635,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -531040,7 +531200,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -532665,6 +532825,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -532949,7 +533117,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -534574,6 +534742,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -534858,7 +535034,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -536483,6 +536659,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -536767,7 +536951,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -538392,6 +538576,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -538677,7 +538869,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -540302,6 +540494,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -680800,7 +681000,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -680894,6 +681094,14 @@
                 "apps/api/src/session/session-http.integration.test.ts"
               ],
               "scope": "Only the three profile selection and three session or trusted-device revocation commands reject undeclared JSON. Omitted and empty bodies retain the existing dispatch. The generated contract only updates the affected HTTP 400 responses. Existing ownership, CSRF, step-up, revocation and audit assertions passed. Other handlers and success response contracts retain their previous evidence."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -681799,7 +682007,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -681911,6 +682119,14 @@
                 "apps/api/src/session/trusted-devices.controller.ts"
               ],
               "scope": "Only the three profile selection and three session or trusted-device revocation commands reject undeclared JSON. Omitted and empty bodies retain the existing dispatch. The generated contract only updates the affected HTTP 400 responses. Existing ownership, CSRF, step-up, revocation and audit assertions passed. Other handlers and success response contracts retain their previous evidence."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -689384,7 +689600,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
-              "sha256": "3e9d4c52c8f3ac393263c92203ef72d7c518753644e488f7d5ea392b711cfe83"
+              "sha256": "f6912ecbab9f5bad11af4c1cc21c59ac3fc8554a1cdad87abcc87413f944cf6f"
             },
             {
               "path": "apps/api/src/admin/branding-boundaries.test.ts",
@@ -689412,7 +689628,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "9476472b78dfa184afc20c9ddf4979aa1292734abd03619a4b2eb7ee812b83b6"
+              "sha256": "d279cbf8f044f9a63470b8242f297c7abd1c87232789b048ab9b2ad9af01dfb8"
             },
             {
               "path": "apps/api/src/admin/due-at-override.controller.test.ts",
@@ -689444,7 +689660,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
-              "sha256": "040797eb7042efe10af4cf9b4720073c0254f29e52dde8809fde2b259714a7dd"
+              "sha256": "525ca5527bf8046614632e4441f48cc7af94020044f2ff40760435789507aa87"
             },
             {
               "path": "apps/api/src/admin/invoice-ledger.controller.test.ts",
@@ -689987,6 +690203,16 @@
                 "apps/api/src/admin/reminder-offset-toggle.controller.test.ts"
               ],
               "scope": "Internal exception construction removes unread defaults. Status codes, response keys, messages, guarded routes and transactions are preserved. Additive cases and exact compiled HTTP suites verify the existing finance and authority behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+                "apps/api/src/admin/dual-approval.controller.test.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -691850,7 +692076,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -692392,6 +692618,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -696592,7 +696826,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -696842,6 +697076,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -696961,7 +697203,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -697211,6 +697453,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -697330,7 +697580,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -697580,6 +697830,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Added the current staff authority recheck to two staff directory and role audit GET handlers. Native revocation and existing filter, permission and audit checks passed. Other routes and historical execution receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -717352,7 +717610,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -717518,6 +717776,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -723630,7 +723896,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -723923,6 +724189,14 @@
                 "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ]
         }
@@ -1110001,7 +1110275,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -1113581,6 +1113855,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -1114556,7 +1114838,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/orders/orders.service.ts",
@@ -1119522,6 +1119804,14 @@
                 "apps/api/src/wallet/wallet.controller.test.ts"
               ],
               "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -1120845,7 +1121135,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/saving/saving-fulfillment.service.ts",
@@ -1125767,6 +1126057,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "presentation_renewals": [
@@ -1127076,7 +1127374,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+              "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
             },
             {
               "path": "apps/api/src/saving/saving-fulfillment.service.ts",
@@ -1131893,6 +1132191,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-staff-financial-command-boundaries",
+              "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+              "paths": [
+                "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+              ],
+              "scope": "Additional staff receipt and refund cases preserve runtime source and previous assertions. Native and unit receipts verify optional provenance, invalid targets and unchanged balances."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1137737,7 +1138043,8 @@
         "The saving order service passed the unchanged scoped critical gate after proving current agreement, catalogue, address and gift eligibility against compiled HTTP and native PostgreSQL. Verify the full final candidate coverage report.",
         "Wallet review and staff ledger controllers and the chargeback alert reader now pass the original critical thresholds. Focused tests covered current reconciliation context, wallet amount and body validation, and the absence of private alerts without authorized recipients. The final full combined gate is open.",
         "The bank receipt top-up service passed the original critical file thresholds. Retry tests preserved the reviewed terms, rejected foreign-wallet key reuse and refused inconsistent stored snapshots. The final exact hosted release coverage remains open.",
-        "The two previously flagged provider callback services pass the original scoped critical thresholds. Focused cases cover exact stored payment context, fail-closed claim recovery and chargeback reversal provenance. Enforced full candidate coverage and actual provider receipts remain open."
+        "The two previously flagged provider callback services pass the original scoped critical thresholds. Focused cases cover exact stored payment context, fail-closed claim recovery and chargeback reversal provenance. Enforced full candidate coverage and actual provider receipts remain open.",
+        "The four flagged staff finance controllers for wallet and invoice receipt decisions, dual approval and wallet refunds pass the scoped critical gate. The full combined coverage and final staged financial journeys remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1138116,7 +1138423,8 @@
           "release-0.6-saving-quote-boundaries",
           "release-0.6-wallet-read-and-alert-boundaries",
           "release-0.6-bank-receipt-review-binding",
-          "release-0.6-wallet-provider-verification"
+          "release-0.6-wallet-provider-verification",
+          "release-0.6-staff-financial-command-boundaries"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1328670,6 +1328978,113 @@
         {
           "file": "initial-fixture-failure.log",
           "sha256": "84a60d0ad8db5a60a97e8c941bcaab7e78f06112d1de20de2f9144dedb899fa9"
+        }
+      ]
+    },
+    "release-0.6-staff-financial-command-boundaries": {
+      "batch": "release-0.6-staff-financial-command-boundaries",
+      "base_commit": "bed91054e172685f3e920cf7ff53c955ff3f5e36",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.10.01",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.03",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.02.01",
+        "04-invoices-wallet-contracts.md#T-04.4.02.02",
+        "04-invoices-wallet-contracts.md#T-04.4.02.03",
+        "04-invoices-wallet-contracts.md#T-04.4.02.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.05",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.01.03.02",
+        "06-security-testing-observability.md#T-06.01.03.07",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.09.02.04",
+        "06-security-testing-observability.md#T-06.10.02.09",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+        "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
+        "apps/api/src/admin/dual-approval.controller.test.ts",
+        "apps/api/src/refund/wallet-refund-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+          "sha256": "f6912ecbab9f5bad11af4c1cc21c59ac3fc8554a1cdad87abcc87413f944cf6f"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
+          "sha256": "525ca5527bf8046614632e4441f48cc7af94020044f2ff40760435789507aa87"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.test.ts",
+          "sha256": "d279cbf8f044f9a63470b8242f297c7abd1c87232789b048ab9b2ad9af01dfb8"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "3582ed6c53e0f1d187b69efb594bbb92901944fb9959e0314c4f810341df931b"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "cb5331f37a1692a13b3126ca156c0832429adb2a11ed391821382ad4d4cf5f22"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund.controller.ts",
+          "sha256": "e629b4ec9c381df2d65cee1fc541e2e5abaf9bd63c6471ed6e8436b3255d244d"
+        }
+      ],
+      "checks": [
+        "All 102 focused cases passed with coverage instrumentation. The refund HTTP suite ran on native PostgreSQL 17.9 with production migrations and the compiled server. Invalid cursors and decision targets preserved Requested state and financial balances.",
+        "The unchanged checked gate passed all four controllers at 264/265 lines and 122/130 branches. Verified historical hits apply to byte-identical runtime sources. API type checks, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The initial added fixture used Pending rather than the actual Requested status. Both the API response and database assertion now show Requested. Full exact coverage and actual staging gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staff-financial-command-boundaries",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "86709280b1af087d8058f87f24ebc1ff5a2e488294cfa53d34b6389b1a18d27a"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "0cf3a8905d85357ea01bde5bdd94f74f8cac26464d0d2824390713b1c8103c74"
+        },
+        {
+          "file": "initial-refund-state-assertion.log",
+          "sha256": "7da6cc731cad7102dbb8d5a87ec79e01120454df4d3bb540582a94199d5a9163"
         }
       ]
     }

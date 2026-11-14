@@ -528,6 +528,35 @@ it('preserves bigint amounts and validates requests before writing', async () =>
   });
 });
 
+it('rejects invalid refund cursors and decision targets before changing financial state', async () => {
+  const f = await invoice();
+  const endpoint = `${http.base}/api/admin/wallet-refunds`;
+  const staff = headers['refund-finance']!;
+  const cursor = await fetch(endpoint + '/contract-obligations?before=invalid', { headers: staff });
+  expect(cursor.status, http.logs()).toBe(400);
+  const refund = await request(requestBody(f.id, '50'));
+  const before = await balances(f);
+  expect(refund.state).toBe('Requested');
+  for (const [path, body] of [
+    [`/${refund.id}/unknown/review`, '{}'],
+    [`/${refund.id}/unknown`, '{}'],
+    [`/${refund.id}/approve`, null],
+    ['/invalid/approve/review', '{}'],
+    ['/invalid/approve', '{}'],
+  ] as const) {
+    const denied = await fetch(endpoint + path, {
+      method: 'POST',
+      headers: staff,
+      ...(body === null ? {} : { body }),
+    });
+    expect(denied.status, http.logs()).toBe(400);
+  }
+  expect(await balances(f)).toEqual(before);
+  expect(
+    (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
+  ).toEqual([{ state: 'Requested' }]);
+});
+
 it('requires finance permission, CSRF and recent step-up', async () => {
   const f = await invoice(),
     body = requestBody(f.id);
