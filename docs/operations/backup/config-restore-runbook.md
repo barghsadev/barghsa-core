@@ -58,11 +58,13 @@ created by these scripts are removed; the caller's directory is never deleted.
 ```
 
 Objects live below `postgres/<BACKUP_CLUSTER_ID>/config/`. An encrypted unique blob is
-uploaded first. The immutable `full/<label>/manifest.json` completion record is written
-last. Failed collection/export/upload cannot create a completed backup. Public metadata
-contains no configuration values or file names. Selection paginates storage listings.
-Labels cannot be overwritten. `--dry-run` performs no reads, writes or network requests;
-it is a preview of no changes, not a validation of credentials or inventory.
+uploaded first. The job reads it back and verifies its exact size and SHA-256 before
+publishing the immutable `full/<label>/manifest.json` completion record. It reads back
+the exact manifest before reporting success or running retention. Investigate a failed
+manifest readback by checking the label and object version in storage. A label with a
+stored manifest remains reserved. Public metadata contains no configuration values or
+file names. Selection paginates storage listings. `--dry-run` previews operations without
+checking credentials or inventory.
 
 Retention defaults to a minimum 90-day age window and always retains the newest
 completed configuration backup. It touches neither database backups nor WAL. Unreferenced

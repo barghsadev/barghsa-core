@@ -18045,7 +18045,8 @@
       "launch_required": true,
       "remaining": [
         "Production secret-manager provisioning, complete deployment file inventory, HTTPS off-server storage/IAM/lifecycle and actual retained backup history require operational evidence.",
-        "Daily and quarterly unit templates are not installed or enabled. Production config rehydration, independently captured current baselines, measured application recovery and delivered monitoring alerts remain unverified. The local report explicitly limits RPO/RTO to covered assets."
+        "Daily and quarterly unit templates are not installed or enabled. Production config rehydration, independently captured current baselines, measured application recovery and delivered monitoring alerts remain unverified. The local report explicitly limits RPO/RTO to covered assets.",
+        "Configuration backup now reads back the encrypted archive and exact immutable manifest before reporting success or pruning. The migrated PostgreSQL and isolated SeaweedFS fixture passed successful rehydration, same-size corruption and inconsistent-manifest checks. Install the job on the approved off-server destination and retain an independently measured configuration restore."
       ],
       "owner": null,
       "depends_on": [],
@@ -18137,10 +18138,11 @@
           ".env.example"
         ],
         "batches": [
-          "release-0.6-database-clocks-and-recovery-rehearsal"
+          "release-0.6-database-clocks-and-recovery-rehearsal",
+          "release-0.6-configuration-backup-readback"
         ],
         "current_acceptance": null,
-        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
+        "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback/native-backup-tests.log"
       }
     },
     {
@@ -22034,7 +22036,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-backup-object-readback",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-configuration-backup-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -22070,7 +22073,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "f918b3bc293da4ff7fd159e43a7dcccda7db6305aebcde4c107553b4d77bfc6f"
+              "sha256": "d3598d64adf9c1b9a6306cd65d4f60053b0c4ab4e69d02089c79549945f1cf9c"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -22160,6 +22163,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-configuration-backup-readback",
+              "base_commit": "11ff5cce23a5869359490fdaa0f70183da75be26",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "The existing encrypted PostgreSQL publication path now calls the shared readback function. Native WAL replay, tablespaces, corrupt uploads and mismatched manifests passed with the same receipt format. Prior Compose, TLS and deployment-isolation evidence applies to its original scope."
             }
           ]
         }
@@ -701049,7 +701060,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-backup-manifest-binding"
+          "release-0.6-backup-manifest-binding",
+          "release-0.6-configuration-backup-readback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-sql-data-flow",
@@ -701082,7 +701094,7 @@
             },
             {
               "path": "packages/db/scripts/backup/config_backup.py",
-              "sha256": "8c17f8741d3a2230eb440dafd59af32937f3cdbf6c37f41745585e472d498628"
+              "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
             },
             {
               "path": "packages/db/scripts/backup/verify_restore.py",
@@ -701208,6 +701220,14 @@
                 "packages/db/scripts/backup/verify_restore.py"
               ],
               "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
+            },
+            {
+              "batch": "release-0.6-configuration-backup-readback",
+              "base_commit": "11ff5cce23a5869359490fdaa0f70183da75be26",
+              "paths": [
+                "packages/db/scripts/backup/config_backup.py"
+              ],
+              "scope": "Configuration publication now shares encrypted object and manifest readback. Source review confirmed that SQL, parameters, table inventory and snapshot rehydration are unaffected. Native migrated configuration backup and rehydration passed."
             }
           ]
         }
@@ -1141660,7 +1141680,8 @@
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
         "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report.",
-        "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open."
+        "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open.",
+        "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1141744,7 +1141765,8 @@
           "release-0.6-staging-telegram-relay-recovery",
           "release-0.6-staging-knowledge-preview-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-configuration-backup-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1332949,6 +1332971,81 @@
         {
           "file": "rollout-tests.log",
           "sha256": "327e2883d524a1353793ecfaac17ec02c7bdcee56fcfeb7468de018aeff0c56e"
+        }
+      ]
+    },
+    "release-0.6-configuration-backup-readback": {
+      "batch": "release-0.6-configuration-backup-readback",
+      "base_commit": "11ff5cce23a5869359490fdaa0f70183da75be26",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.07",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/config-restore-runbook.md",
+        "packages/db/scripts/backup/config_backup.py",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/test_config_backup.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/config-restore-runbook.md",
+          "sha256": "f701c10629544dcc36f5093c79cf50d1cd130f8188f4b029ee2857a7062ff04d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "d756ebc6b42173eca69eb69bf27803b953a8d4635e09acef75311456c35527b7"
+        },
+        {
+          "path": "packages/db/scripts/backup/config_backup.py",
+          "sha256": "b3b7ce15a3ba9c086e4cd1c335f569f579b7f814bc55f8877baad5f5c0e7bbbf"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "d3598d64adf9c1b9a6306cd65d4f60053b0c4ab4e69d02089c79549945f1cf9c"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "196c7b9be270d821feb01fdb9c1aa7172735d0a38e3a20f609bf31d8605d36eb"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_config_backup.py",
+          "sha256": "34fc5bd62f6a5737d204f11d79dce534f06f460cee442eb4b4a5455841a50a20"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "b8e56f5a26b07c45f400d7c49941ede106007505d8347109e0d7125927a75cc5"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "31452bb926f34d78e14e53e5edd96510725591ad81fc2010a405202ce6d4292f"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "87d6730283a64759d9f02bef93c51a0b6dde5df605986680e5a35fa7881609a0"
+        }
+      ],
+      "checks": [
+        "All 18 local archive and restore evidence checks passed. All 18 migrated configuration backup tests and the three affected PostgreSQL physical backup integration cases passed on a disposable PostgreSQL and SeaweedFS fixture. Same-size remote corruption prevents manifest creation and retention. A changed manifest prevents retention and keeps the label immutable. Restore preserved configuration and key bytes, rehydrated the migrated schema and replayed WAL with a tablespace. Markdown and diff checks passed."
+      ],
+      "limitations": [
+        "The native fixture used isolated storage and synthetic data. The live backup target, source data, key custody, active schedule and measured end-to-end recovery require operational evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-configuration-backup-readback",
+      "execution_receipts": [
+        {
+          "file": "backup-unit-tests.log",
+          "sha256": "16e6fec4c2fe1c6974b804a08b5d3d5b6bc81f40e6871089e3248ca0bf24dd53"
+        },
+        {
+          "file": "native-backup-tests.log",
+          "sha256": "31b623dcb6e6af4a65266f923e7d0bb1655c5b85768ffb94f487651e1929040b"
+        },
+        {
+          "file": "fixture-cleanup.txt",
+          "sha256": "b990663ca9e479f53a555f189b8b8b8600493b71ff414bd8432a7148f001a5d4"
         }
       ]
     }

@@ -177,6 +177,33 @@ def validate_manifest(value, key):
     timestamp(value["completed_at"])
 
 
+def publish_verified_backup(store, key, encrypted, manifest):
+    blob = manifest["blob"]
+    store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
+    body = store.get(blob)["Body"]
+    received = hashlib.sha256()
+    size = 0
+    try:
+        for block in body.iter_chunks(chunk_size=1024 * 1024):
+            size += len(block)
+            if size > manifest["size"]:
+                raise BackupError("Uploaded backup checksum mismatch")
+            received.update(block)
+    finally:
+        body.close()
+    if size != manifest["size"] or received.hexdigest() != manifest["sha256"]:
+        raise BackupError("Uploaded backup checksum mismatch")
+
+    manifest_bytes = json.dumps(manifest).encode()
+    store.put(key, manifest_bytes, ContentType="application/json")
+    body = store.get(key)["Body"]
+    try:
+        if body.read(len(manifest_bytes) + 1) != manifest_bytes:
+            raise BackupError("Uploaded backup manifest differs from readback")
+    finally:
+        body.close()
+
+
 def backup(store, label):
     label = identifier(label or utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))
     started = utcnow().isoformat()
@@ -216,28 +243,7 @@ def backup(store, label):
         crypt(archive, encrypted)
         blob = f"blobs/{uuid.uuid4().hex}.tar.gpg"
         meta.update(blob=blob, size=encrypted.stat().st_size, sha256=digest(encrypted))
-        store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
-        response = store.get(blob)
-        received = hashlib.sha256()
-        size = 0
-        try:
-            for block in response["Body"].iter_chunks(chunk_size=1024 * 1024):
-                size += len(block)
-                if size > meta["size"]:
-                    raise BackupError("Uploaded backup checksum mismatch")
-                received.update(block)
-        finally:
-            response["Body"].close()
-        if size != meta["size"] or received.hexdigest() != meta["sha256"]:
-            raise BackupError("Uploaded backup checksum mismatch")
-        manifest_bytes = json.dumps(meta).encode()
-        store.put(key, manifest_bytes, ContentType="application/json")
-        manifest_body = store.get(key)["Body"]
-        try:
-            if manifest_body.read(len(manifest_bytes) + 1) != manifest_bytes:
-                raise BackupError("Uploaded backup manifest differs from readback")
-        finally:
-            manifest_body.close()
+        publish_verified_backup(store, key, encrypted, meta)
         print(json.dumps({**meta, "upload_verified": True, "manifest_readback_verified": True}))
 
 

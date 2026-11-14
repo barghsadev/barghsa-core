@@ -68,7 +68,7 @@ class ConfigBackupTests(unittest.TestCase):
             cls.store.client.create_bucket(Bucket=cls.store.bucket)
         cls.baseline = cls.root / 'baseline.json'
         config.baseline(cls.args(output=str(cls.baseline)))
-        config.backup_config(cls.store, cls.args(label='initial'))
+        cls.receipt = config.backup_config(cls.store, cls.args(label='initial'))
 
     @classmethod
     def tearDownClass(cls):
@@ -107,6 +107,8 @@ class ConfigBackupTests(unittest.TestCase):
 
     def test_real_schema_rehydration_and_independent_loss_check(self):
         before = self.sql('SELECT count(*) FROM app_config')
+        self.assertIs(self.receipt['upload_verified'], True)
+        self.assertIs(self.receipt['manifest_readback_verified'], True)
         report = config.verify_config(self.store, self.args())
         self.assertEqual(report['status'], 'passed', report)
         self.assertEqual(report['rpo_seconds'], 0)
@@ -216,6 +218,38 @@ class ConfigBackupTests(unittest.TestCase):
             with self.assertRaises(backup.BackupError):
                 config.backup_job(self.store, self.args())
             prune.assert_not_called()
+
+    def test_corrupt_archive_never_publishes_completion_or_prunes(self):
+        label = 'corrupt-config-upload'
+
+        def upload_corrupted(path, bucket, key):
+            data = Path(path).read_bytes()
+            self.store.client.put_object(Bucket=bucket, Key=key, Body=bytes([data[0] ^ 1]) + data[1:])
+
+        with patch.object(self.store.client, 'upload_file', side_effect=upload_corrupted), \
+                patch.object(config, 'prune_config') as prune:
+            with self.assertRaisesRegex(backup.BackupError, 'Uploaded backup checksum mismatch'):
+                config.backup_job(self.store, self.args(label=label))
+            prune.assert_not_called()
+        self.assertNotIn(label, [record['label'] for record in config.manifests(self.store)])
+
+    def test_changed_completion_manifest_never_prunes_or_overwrites(self):
+        label = 'changed-config-manifest'
+        put = self.store.put
+
+        def write_changed_manifest(key, contents, **kwargs):
+            changed = json.loads(contents)
+            changed['size'] += 1
+            return put(key, json.dumps(changed).encode(), **kwargs)
+
+        with patch.object(self.store, 'put', side_effect=write_changed_manifest), \
+                patch.object(config, 'prune_config') as prune:
+            with self.assertRaisesRegex(backup.BackupError, 'manifest differs from readback'):
+                config.backup_job(self.store, self.args(label=label))
+            prune.assert_not_called()
+        self.assertIn(label, [record['label'] for record in config.manifests(self.store)])
+        with self.assertRaisesRegex(backup.BackupError, 'already exists'):
+            config.backup_config(self.store, self.args(label=label))
 
     def test_retention_failure_is_not_job_success(self):
         with patch.object(config, 'backup_config', return_value={'label': 'new'}), \

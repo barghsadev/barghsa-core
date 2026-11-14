@@ -17,7 +17,8 @@ import uuid
 
 from botocore.exceptions import ClientError
 from physical_backup import (BackupError, Store, connection_env, crypt, digest, download,
-                             extract, identifier, missing, run, timestamp, utcnow)
+                             extract, identifier, missing, publish_verified_backup, run,
+                             timestamp, utcnow)
 from verify_restore import alert
 
 # Export stored versions, including active, disabled, draft and rollback versions.
@@ -192,11 +193,11 @@ def backup_config(store, args):
                 tar.add(path, arcname=path.name)
         crypt(archive, encrypted)
         blob = f"config/blobs/{uuid.uuid4().hex}.tar.gpg"
-        store.client.upload_file(str(encrypted), store.bucket, store.prefix + blob)
         public = {k: metadata[k] for k in ("version", "label", "captured_at")}
         public.update(blob=blob, sha256=digest(encrypted), size=encrypted.stat().st_size)
-        store.put(key, json.dumps(public).encode(), ContentType="application/json")
-        return {"label": label, "files": len(entries), "configuration_tables": len(CONFIG_TABLES)}
+        publish_verified_backup(store, key, encrypted, public)
+        return {"label": label, "files": len(entries), "configuration_tables": len(CONFIG_TABLES),
+                "upload_verified": True, "manifest_readback_verified": True}
 
 
 def manifests(store):
