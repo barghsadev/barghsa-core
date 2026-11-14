@@ -14,7 +14,7 @@ import sys
 import tempfile
 import time
 
-from release_evidence import ReleaseEvidenceError, protected_file
+from release_evidence import REVIEWED_OPERATIONAL_RECEIPTS, ReleaseEvidenceError, protected_file
 
 
 MAX_JSON_BYTES = 65536
@@ -163,6 +163,15 @@ def verify_production_approval(plan, plan_digest, report_path, approval_path, no
     require(isinstance(ids, dict) and all(
         ids.get(scope) == plan['candidate'][scope + '_image'] for scope in ('app', 'web')
     ), 'production_promotion_image_mismatch')
+    reviews = report.get('verified_operational_reviews')
+    hashes = report.get('operational_receipt_sha256')
+    require(isinstance(reviews, dict) and set(reviews) == set(REVIEWED_OPERATIONAL_RECEIPTS)
+            and isinstance(hashes, dict) and all(
+                isinstance(review, dict) and review.get('review_sha256') == hashes.get(scope)
+                and all(isinstance(review.get(key), str) and re.fullmatch(r'[a-f0-9]{64}', review[key])
+                        for key in ('review_sha256', 'evidence_sha256'))
+                for scope, review in reviews.items()
+            ), 'production_operational_reviews_missing_or_invalid')
     backup = report.get('verified_backup')
     checked_at = report.get('checked_at')
     require(finite(checked_at, 1, now) and isinstance(backup, dict)

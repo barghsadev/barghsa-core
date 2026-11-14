@@ -14,7 +14,7 @@ import tempfile
 import time
 from urllib.request import Request, build_opener
 
-from release_evidence import NoRedirect
+from release_evidence import NoRedirect, REVIEWED_OPERATIONAL_RECEIPTS
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -180,22 +180,24 @@ def index_receipts(index_path, sha):
     return paths, hashes
 
 
-def receipt_bundle(index_path, path, fingerprint, required, optional=()):
-    def read(file):
-        with file.open('rb') as source:
-            content = source.read(65537)
-        if len(content) > 65536:
-            raise ValueError('Structured receipt exceeds its size limit')
-        value = json.loads(content)
-        if not isinstance(value, dict):
-            raise ValueError('Structured receipt must be a JSON object')
-        return value, hashlib.sha256(content).hexdigest()
+def read_structured_receipt(path):
+    with path.open('rb') as source:
+        content = source.read(65537)
+    if len(content) > 65536:
+        raise ValueError('Structured receipt exceeds its size limit')
+    value = json.loads(content)
+    if not isinstance(value, dict):
+        raise ValueError('Structured receipt must be a JSON object')
+    return value, hashlib.sha256(content).hexdigest()
 
-    bundle, digest = read(path)
+
+def receipt_bundle(index_path, path, fingerprint, required, optional=()):
+    bundle, digest = read_structured_receipt(path)
     if digest != fingerprint or not set(required).issubset(bundle) or set(bundle) - set(required) - set(optional):
         raise ValueError('Invalid or changed structured receipt index')
     directory = index_path.resolve().parent
-    entries = {key: read(receipt_path(directory, name, key)) for key, name in bundle.items()}
+    entries = {key: read_structured_receipt(receipt_path(directory, name, key))
+               for key, name in bundle.items()}
     return ({key: value for key, (value, _) in entries.items()},
             {key: digest for key, (_, digest) in entries.items()})
 
@@ -314,6 +316,29 @@ def epoch(value):
 
 def matches(pattern, value):
     return isinstance(value, str) and bool(re.fullmatch(pattern, value))
+
+
+def verify_operational_reviews(index_path, paths, hashes, sha, now):
+    directory = index_path.resolve().parent
+    verified = {}
+    index_digests = set(hashes.values()) | {file_digest(index_path)}
+    for kind in REVIEWED_OPERATIONAL_RECEIPTS:
+        try:
+            review, digest = read_structured_receipt(paths[kind])
+            reviewer = review.get('reviewed_by')
+            if (digest != hashes[kind] or review.get('candidate_sha') != sha
+                    or review.get('scope') != kind or review.get('status') != 'reviewed'
+                    or not isinstance(reviewer, str) or not 1 <= len(reviewer.strip()) <= 200
+                    or not reviewer.isprintable() or not 0 < epoch(review.get('reviewed_at')) <= now):
+                raise ValueError('invalid review')
+            evidence = receipt_path(directory, review.get('evidence'), kind)
+            evidence_digest = file_digest(evidence)
+            if evidence_digest != review.get('evidence_sha256') or evidence_digest in index_digests:
+                raise ValueError('invalid review evidence')
+        except ValueError:
+            raise ValueError(f'Missing, changed or invalid operational review for {kind}') from None
+        verified[kind] = {'review_sha256': digest, 'evidence_sha256': evidence_digest}
+    return verified
 
 
 def verify_core_recovery(core, database, database_digest, directory, sha, now):
@@ -628,6 +653,7 @@ def main():
             raise ValueError('Use the immutable v0.9.0 first-launch candidate')
         command('Launch board', sys.executable, 'kanban/scripts/board.py', 'ready', '--release', version)
         paths, hashes = index_receipts(args.receipt_index, sha)
+        operational_reviews = verify_operational_reviews(args.receipt_index, paths, hashes, sha, time.time())
         dast = verify_dast_receipt(paths['authenticated_dast'], hashes['authenticated_dast'], version, sha)
         ci_run = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
         verify_ci_checks(args.ci_run, sha, ci_run.get('run_attempt'))
@@ -663,7 +689,8 @@ def main():
     print(json.dumps({'status': 'ready_for_owner_review', 'version': version, 'candidate_sha': sha,
                       'checked_at': checked_at,
                       'ci': ci_run['html_url'], 'browser': browser_run['html_url'], 'browser_counts': counts,
-                      'operational_receipt_sha256': hashes, 'verified_authenticated_dast': dast,
+                      'operational_receipt_sha256': hashes, 'verified_operational_reviews': operational_reviews,
+                      'verified_authenticated_dast': dast,
                       'verified_performance': performance,
                       'verified_backup': backup,
                       'verified_migration': migration,

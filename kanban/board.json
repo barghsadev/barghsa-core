@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:56:23+00:00",
+  "updated": "2026-11-14T19:04:12+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9174,7 +9174,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9194,7 +9195,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9626,6 +9627,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -13902,7 +13911,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13915,7 +13925,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14110,6 +14120,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -14208,7 +14226,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -14220,7 +14239,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14701,6 +14720,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -22665,7 +22692,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22677,7 +22705,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23009,6 +23037,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -23088,7 +23124,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -23100,7 +23137,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23432,6 +23469,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -25268,7 +25313,8 @@
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
-        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
+        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -25341,7 +25387,8 @@
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-hosted-image-scan-8436b628a",
-          "release-0.6-license-review-refresh-f7fc00b88"
+          "release-0.6-license-review-refresh-f7fc00b88",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -25904,7 +25951,8 @@
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
-        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -25943,7 +25991,8 @@
           "deploy/staging/README.md",
           "deploy/staging/release-queue.py",
           "deploy/staging/test_notify_release.py",
-          "deploy/staging/test_release_queue.py"
+          "deploy/staging/test_release_queue.py",
+          "deploy/production/release_evidence.py"
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
@@ -25963,7 +26012,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-production-marker-wiring",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": null
       }
@@ -26126,7 +26176,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
-          "release-0.6-rollout-rollback-readback"
+          "release-0.6-rollout-rollback-readback",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -26158,11 +26209,11 @@
             },
             {
               "path": "deploy/production/guarded-rollout.py",
-              "sha256": "8b3d83196609ef676e082b40980e96a20017784b403005f8994e4c158b1255bf"
+              "sha256": "28790cd11f7916e2d72bf32993b821dfa8fe8f143687d67c4ebb1376e9bb6837"
             },
             {
               "path": "deploy/production/test_guarded_rollout.py",
-              "sha256": "1b1be2f87ecc786203ccc85d3a9e48ec7f135e13e9e3992b01a61a4af5648a8f"
+              "sha256": "e0a318ea8424b1394265f60ec80bb89c33c567bb06b675095a851acc0f4e2d5f"
             },
             {
               "path": "docs/runbooks/database-restore.md",
@@ -26503,6 +26554,15 @@
                 "deploy/production/test_guarded_rollout.py"
               ],
               "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/guarded-rollout.py",
+                "deploy/production/test_guarded_rollout.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -38488,7 +38548,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38511,7 +38572,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -39347,6 +39408,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -41963,7 +42032,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41991,7 +42061,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             }
           ],
           "checks": [
@@ -42335,6 +42405,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -717906,7 +717984,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -717918,7 +717997,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -718142,6 +718221,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -721043,7 +721130,8 @@
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
-        "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open."
+        "The development image preflight 43620360844 at 7d7fe976e verified all five image identities, SBOMs and original vulnerability reports. There were zero High or Critical findings. All 857 entries match the refreshed f7fc00b88 review packet, including Nodemailer 10.1.4 and the 386 entries awaiting disposition. Strict enforcement and candidate images remain open.",
+        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -721121,7 +721209,8 @@
           "release-0.6-nodemailer-moderate-advisories",
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-license-review-refresh-f7fc00b88",
-          "release-0.6-staging-scanner-gate-readback"
+          "release-0.6-staging-scanner-gate-readback",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -744106,7 +744195,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -744128,11 +744218,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "cf1b21958b059bd435b9a347313f5b92fb7d51746f4d46da689551af73cc534c"
+              "sha256": "6284df06bd574eda7b330176327be664d54d7d90e6d56f30197894003b49913b"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -744638,6 +744728,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -745184,7 +745283,8 @@
           "release-0.6-full-coverage-continuation",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -745206,15 +745306,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "cf1b21958b059bd435b9a347313f5b92fb7d51746f4d46da689551af73cc534c"
+              "sha256": "6284df06bd574eda7b330176327be664d54d7d90e6d56f30197894003b49913b"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -745875,6 +745975,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -746037,7 +746147,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-journey-source-pairing",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -746048,7 +746159,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -746513,6 +746624,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -747133,7 +747252,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -747154,7 +747274,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -747583,6 +747703,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -747642,7 +747770,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -747663,7 +747792,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -748092,6 +748221,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -755403,7 +755540,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-journey-source-pairing",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -755427,7 +755565,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -755823,6 +755961,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -768153,7 +768299,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -768201,7 +768348,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -768606,6 +768753,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -768943,7 +769098,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -768991,7 +769147,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "071316397616a366dd2a75adaa4a94152e7dc34c1a312575955b1b73216730df"
+              "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -769400,6 +769556,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -770766,7 +770930,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -770786,7 +770951,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -771136,6 +771301,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -771266,7 +771439,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -771286,7 +771460,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -771636,6 +771810,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -771695,7 +771877,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -771715,7 +771898,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+              "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -772065,6 +772248,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-promotion-review-evidence",
+              "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Scoped renewal covers promotion receipt identity and guarded rollout compliance. The four operational review records require original bytes and exact candidate binding. Existing approval, staging readback, rollback and marker criteria retain their evidence."
             }
           ]
         }
@@ -1152285,7 +1152476,8 @@
         "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open.",
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
-        "Solar administrative guidance now uses the live catalogue authority, and all four reads stop if the session expires during a database wait. All six compiled HTTP regressions, 93 related API cases and 86 web caller cases passed. The older full Chromium rehearsal passed all 2,976 cases. Its combined job failed on the missing web report from native timeouts. Exact deployed candidate evidence remains open."
+        "Solar administrative guidance now uses the live catalogue authority, and all four reads stop if the session expires during a database wait. All six compiled HTTP regressions, 93 related API cases and 86 web caller cases passed. The older full Chromium rehearsal passed all 2,976 cases. Its combined job failed on the missing web report from native timeouts. Exact deployed candidate evidence remains open.",
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1152696,7 +1152888,8 @@
           "release-0.6-journey-source-pairing",
           "release-0.6-restore-source-identity",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-promotion-review-evidence"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1153015,7 +1153208,8 @@
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
         "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
-        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1153107,7 +1153301,8 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-restore-source-identity",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-promotion-review-evidence"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1153163,7 +1153358,8 @@
           "deploy/production/guarded-rollout.py",
           "deploy/production/test_guarded_rollout.py",
           ".github/workflows/ci.yml",
-          "docs/development/ci.md"
+          "docs/development/ci.md",
+          "deploy/production/release_evidence.py"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1347725,6 +1347921,123 @@
         {
           "file": "openapi.log",
           "sha256": "4cdf5cab3a9eed7b0c60c84dde394b2b0f236df2acec79c66c11a081e3caf213"
+        }
+      ]
+    },
+    "release-0.6-promotion-review-evidence": {
+      "batch": "release-0.6-promotion-review-evidence",
+      "base_commit": "65c07522f73845e82cca9c32d825d538bd94a301",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/release_evidence.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/production/test_guarded_rollout.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "84da7fafce5530e0fe60d0e8fcceecda8739f201aab2e9faffdff4fbbdf331b5"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "fc432dff1905068989297d27adec808375cd6fbe90c0de2b5c5123cd473087b6"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "28790cd11f7916e2d72bf32993b821dfa8fe8f143687d67c4ebb1376e9bb6837"
+        },
+        {
+          "path": "deploy/production/record-release-annotation.py",
+          "sha256": "190b7519e3a394339433c19346201bceb70110959274a680e0efe47fda765bc4"
+        },
+        {
+          "path": "deploy/production/record-sentry-deploy.py",
+          "sha256": "5c0d9cd1bc65455268a513a4f968e73ac79e396a3227889db5755a82fdbd51ce"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "10f3a9337738909a69956dd848ce043e94dd0a97640f4e27a8fce517b057666c"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "6284df06bd574eda7b330176327be664d54d7d90e6d56f30197894003b49913b"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "e0a318ea8424b1394265f60ec80bb89c33c567bb06b675095a851acc0f4e2d5f"
+        }
+      ],
+      "checks": [
+        "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
+        "Strict rehearsal 43628730572 rejected the same 386 pending package dispositions at exact 876bd2435. The checksum-verified artifact matches all 857 package rows in the current reviewer packet and contains five exact image scans and SBOMs with zero High or Critical findings. Obtain the package-specific dispositions and rerun enforced licensing on the accepted candidate.",
+        "Python syntax, Prettier and Git diff checks passed."
+      ],
+      "limitations": [
+        "The review verifier confirms metadata and supporting bytes. Named reviewers are still responsible for the underlying decisions and the owner authorizes the separate production action.",
+        "Hosted license evidence belongs to strict rehearsal 43628730572. No release deployment or notification was made."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-review-evidence",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "473242ca56a5b1a451c9c7086d4672c6310f2a91b717b9efc25fa04cb85c661f"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "469dd2cc1738995036bf560fecfdb481ac4783ef40fa1533615e256a12794cde"
+        },
+        {
+          "file": "rollout.log",
+          "sha256": "c6f99cfdfe80ec5a3467cc61f5e7d8b4a956bb822a7d4f653767833e723eb165"
+        },
+        {
+          "file": "markers.log",
+          "sha256": "1c86799245fbe65bf24559eb0a0311784b3eba184a5b8a4dac543b5906e731b4"
+        },
+        {
+          "file": "static.log",
+          "sha256": "9dddae398d25278d03610da6356446d87f29ad9df11705d375ec4c1892bbf1e5"
+        },
+        {
+          "file": "hosted-jobs.json",
+          "sha256": "fc5bd08a3f2cb287012b1febeeb73cdb42ac3420b3def25ae8badd5a5986dc93"
+        },
+        {
+          "file": "hosted-artifacts.json",
+          "sha256": "60d367d73b100cd6bfeccf39eb8e9c0b9b29f5cbbd654044c59ae2c926fafe78"
+        },
+        {
+          "file": "strict-license-readback.json",
+          "sha256": "7a540e7d2da324bde41bcb1155de026ae4834b2258bd9f2ded7f47ffaad93a65"
         }
       ]
     }

@@ -40,6 +40,26 @@ class PromotionEvidenceTest(unittest.TestCase):
             self.assertEqual(command.call_count, 2)
             self.assertIn('immutable v0.9.0 first-launch candidate', errors.getvalue())
 
+    def test_blocks_placeholder_operational_receipts_before_hosted_checks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'package.json').write_text('{"version":"0.9.0"}')
+            placeholder = root / 'placeholder'
+            placeholder.write_text('pending')
+            index = root / 'receipt-index.json'
+            index.write_text(json.dumps({'candidate_sha': SHA, 'receipts': dict.fromkeys(
+                promotion.OPERATIONAL_RECEIPTS, placeholder.name)}))
+            argv = ['check-promotion.py', '--ci-run', '1', '--browser-run', '2',
+                    '--load-run', '3', '--receipt-index', str(index)]
+            errors = io.StringIO()
+            with patch.object(promotion, 'ROOT', root), patch.object(sys, 'argv', argv), \
+                    patch.object(promotion, 'command', side_effect=['', SHA, '']), \
+                    patch.object(promotion, 'verify_dast_receipt'), \
+                    patch.object(promotion, 'verify_workflow', side_effect=AssertionError('unexpected hosted check')), \
+                    redirect_stderr(errors):
+                self.assertEqual(promotion.main(), 1)
+            self.assertIn('operational review', errors.getvalue())
+
     def test_requires_exact_successful_manual_workflow(self):
         expected = {
             'path': '.github/workflows/ci.yml',
@@ -308,6 +328,61 @@ class PromotionEvidenceTest(unittest.TestCase):
                 }))
                 with self.assertRaisesRegex(ValueError, 'invalid receipt'):
                     promotion.index_receipts(index, SHA)
+
+    def test_operational_reviews_bind_current_candidate_scope_and_original_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            index = root / 'receipt-index.json'
+            evidence = root / 'reviewed-rehearsal.md'
+            evidence.write_text('Controlled rehearsal and operator review fixture')
+            evidence_digest = promotion.file_digest(evidence)
+            now = datetime(2026, 11, 14, 20, tzinfo=timezone.utc).timestamp()
+            records = {
+                kind: {'candidate_sha': SHA, 'scope': kind, 'status': 'reviewed',
+                       'reviewed_by': 'Fixture reviewer', 'reviewed_at': '2026-11-14T18:30:00Z',
+                       'evidence': evidence.name, 'evidence_sha256': evidence_digest}
+                for kind in promotion.REVIEWED_OPERATIONAL_RECEIPTS
+            }
+            other = root / 'automated.json'
+            other.write_text('{"automated":true}')
+            names = dict.fromkeys(promotion.OPERATIONAL_RECEIPTS, other.name)
+            for name, review in records.items():
+                names[name] = name + '.json'
+                (root / names[name]).write_text(json.dumps(review))
+            index.write_text(json.dumps({'candidate_sha': SHA, 'receipts': names}))
+
+            def verify():
+                paths, hashes = promotion.index_receipts(index, SHA)
+                return promotion.verify_operational_reviews(index, paths, hashes, SHA, now)
+
+            verified = verify()
+            self.assertEqual(set(verified), set(records))
+            for name, receipt in verified.items():
+                self.assertEqual(receipt, {'review_sha256': promotion.file_digest(root / names[name]),
+                                           'evidence_sha256': evidence_digest})
+
+            kind = 'provider_and_storage'
+            path = root / names[kind]
+            errors = (
+                {'candidate_sha': 'b' * 40}, {'scope': 'rollout_controls'}, {'status': 'pending'},
+                {'reviewed_by': ' '}, {'reviewed_at': '2026-11-14T18:30:00'},
+                {'reviewed_at': '2026-11-14T20:00:01Z'}, {'evidence_sha256': '0' * 64},
+                {'evidence': '../outside'},
+                {'evidence': other.name, 'evidence_sha256': promotion.file_digest(other)},
+            )
+            for change in errors:
+                with self.subTest(change=change), self.assertRaisesRegex(ValueError, kind):
+                    path.write_text(json.dumps({**records[kind], **change}))
+                    verify()
+            path.write_text(json.dumps(records[kind]))
+            paths, hashes = promotion.index_receipts(index, SHA)
+            path.write_text(path.read_text() + '\n')
+            with self.assertRaisesRegex(ValueError, kind):
+                promotion.verify_operational_reviews(index, paths, hashes, SHA, now)
+            path.write_text(json.dumps(records[kind]))
+            evidence.write_text('Replaced after review')
+            with self.assertRaisesRegex(ValueError, 'rollout_controls'):
+                verify()
 
     def test_dast_requires_exact_candidate_complete_probes_and_no_high_findings(self):
         scanner = promotion.runpy.run_path(str(promotion.ROOT / 'deploy/staging/authenticated-dast.py'))

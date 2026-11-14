@@ -13,6 +13,12 @@ from urllib.request import HTTPRedirectHandler
 
 ROOT = Path(__file__).resolve().parents[2]
 LIMIT = 65536
+REVIEWED_OPERATIONAL_RECEIPTS = (
+    'rollout_controls',
+    'provider_and_storage',
+    'security_and_incident_review',
+    'release_notes_and_on_call',
+)
 
 
 class ReleaseEvidenceError(Exception):

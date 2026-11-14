@@ -78,22 +78,35 @@ and combined coverage gates.
 
 Keep `receipt-index.json` in the protected approval package. Set `candidate_sha` to the full candidate SHA. Under `receipts`, map each key below to a nonempty evidence file in the same protected directory or one of its subdirectories.
 
-| Receipt key                    | Evidence to review                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `authenticated_dast`           | Original JSON report from the authenticated staging scan.                                  |
-| `performance_and_load`         | Representative test inputs, measured outcomes and comparison with budgets.                 |
-| `migration_and_rollback`       | Migration and seed results, compatibility and rollback or roll-forward rehearsal.          |
-| `backup_and_restore`           | Recent off-server backup, tested restore, RPO and RTO.                                     |
-| `rollout_controls`             | High-risk flag or canary plan, halt conditions, and post-deploy smoke and comparison plan. |
-| `image_digests_and_scans`      | Pinned runtime digests, image and license scan receipts, SBOMs.                            |
-| `provider_and_storage`         | Protected provider, storage, network and TLS readbacks.                                    |
-| `security_and_incident_review` | Open finding dispositions, independent assessment and incident coverage.                   |
-| `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
-| `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
+| Receipt key                    | Evidence to review                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------------------- |
+| `authenticated_dast`           | Original JSON report from the authenticated staging scan.                                    |
+| `performance_and_load`         | Representative test inputs, measured outcomes and comparison with budgets.                   |
+| `migration_and_rollback`       | Migration and seed results, compatibility and rollback or roll-forward rehearsal.            |
+| `backup_and_restore`           | Recent off-server backup, tested restore, RPO and RTO.                                       |
+| `rollout_controls`             | Reviewed high-risk flags or canary plan, halt conditions, and smoke and comparison evidence. |
+| `image_digests_and_scans`      | Pinned runtime digests, image and license scan receipts, SBOMs.                              |
+| `provider_and_storage`         | Protected provider, storage, network and TLS readbacks.                                      |
+| `security_and_incident_review` | Open finding dispositions, independent assessment and incident coverage.                     |
+| `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                              |
+| `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                   |
 
 Use JSON indexes for `performance_and_load`, `migration_and_rollback`,
 `backup_and_restore`, `image_digests_and_scans` and `staging_and_telegram`.
 Paths in these indexes are relative to the same protected approval package.
+
+For `rollout_controls`, `provider_and_storage`, `security_and_incident_review`
+and `release_notes_and_on_call`, use one JSON review record per section. Set
+`candidate_sha` to the full candidate SHA, `scope` to the matching receipt key
+and `status` to `reviewed` after the named reviewer has completed that section.
+Record their name in `reviewed_by` and the review timestamp with its timezone
+in `reviewed_at`. Set `evidence` to the relative path of the underlying report
+or reviewed notes and `evidence_sha256` to the digest of those exact bytes.
+Multiple records can refer to the same reviewed document when it contains the
+relevant evidence for each section. The checker verifies the candidate, scope
+and file digests. The rollout guard requires all four reviewed sections in the
+exact promotion report approved by the owner. The owner reviews the findings
+and retains separate explicit production authorization.
 
 - Put the original `deploy/staging/authenticated-dast.py` JSON output under
   `authenticated_dast`. The approval check verifies the exact staging version,

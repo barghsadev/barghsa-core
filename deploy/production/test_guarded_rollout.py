@@ -294,6 +294,11 @@ class IsolatedRolloutTest(unittest.TestCase):
                            'verified_staging_images': {'image_ids': {
                                'app': CANDIDATE['app_image'], 'web': CANDIDATE['web_image'],
                            }},
+                           'operational_receipt_sha256': dict.fromkeys(rollout.REVIEWED_OPERATIONAL_RECEIPTS, '1' * 64),
+                           'verified_operational_reviews': {
+                               scope: {'review_sha256': '1' * 64, 'evidence_sha256': '2' * 64}
+                               for scope in rollout.REVIEWED_OPERATIONAL_RECEIPTS
+                           },
                            'verified_backup': {'backup_age_seconds': 60}}
             report.write_text(json.dumps(report_data))
             report.chmod(0o600)
@@ -358,6 +363,19 @@ class IsolatedRolloutTest(unittest.TestCase):
                 self.assertIn('production_promotion_image_mismatch', execute(*paths).stderr)
                 self.assertFalse(receipt.exists())
                 self.assertEqual(json.loads(state.read_text())['changes'], [])
+            valid_reviews = report_data['verified_operational_reviews']
+            for reviews in (None, {'rollout_controls': valid_reviews['rollout_controls']},
+                            {**valid_reviews, 'rollout_controls': {'review_sha256': 'a' * 64,
+                                                                  'evidence_sha256': '2' * 64}}):
+                with self.subTest(reviews=reviews):
+                    report.write_text(json.dumps({**report_data, 'verified_operational_reviews': reviews}))
+                    readback_approval = {**approval_data,
+                                         'promotion_report_sha256': sha256(report.read_bytes()).hexdigest()}
+                    approval.write_text(json.dumps(readback_approval))
+                    self.assertIn('production_operational_reviews_missing_or_invalid', execute(*paths).stderr)
+                    self.assertFalse(receipt.exists())
+                    self.assertEqual(json.loads(state.read_text())['changes'], [])
+            approval.write_text(json.dumps(approval_data))
             report.write_text(json.dumps({**report_data, 'checked_at': now - 86400}))
             self.assertIn('production_backup_evidence_stale', execute(*paths).stderr)
             report.write_text(json.dumps(report_data))
