@@ -29,7 +29,7 @@ beforeAll(async () => {
     INSERT INTO user_roles(user_id,role_id) VALUES('policy-editor','policy-role')`);
   await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-    VALUES($1,'policy-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    VALUES($1,'policy-editor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')`,
     [session, csrf, randomUUID()]
   );
 }, 40000);
@@ -45,7 +45,7 @@ beforeEach(async () => {
     [JSON.stringify(permissions)]
   );
   await http.pool.query(
-    'UPDATE sessions SET revoked_at=NULL,step_up_verified_at=NOW() WHERE session_id=$1',
+    "UPDATE sessions SET revoked_at=NULL,step_up_verified_at=NOW()-INTERVAL '1 second' WHERE session_id=$1",
     [session]
   );
   profileId = randomUUID();
@@ -210,9 +210,10 @@ it('saves draft separately, rejects stale races, and activates only the exact te
     session,
   ]);
   expect((await write(policy, 'activate', 1)).status).toBe(403);
-  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
-    session,
-  ]);
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE session_id=$1",
+    [session]
+  );
   expect((await write(DEFAULT_VERIFICATION_POLICY, 'activate', 1)).status).toBe(409);
   expect((await write(policy, 'activate', 1)).status).toBe(200);
   expect(await (await read()).json()).toEqual({ active: policy, draft: null, version: 2 });
@@ -278,9 +279,10 @@ it('restores an audited activation as a new draft and requires separate step-up 
   expect((await restore(id, 4)).status).toBe(200);
   expect(await (await read()).json()).toEqual({ active: second, draft: first, version: 5 });
   expect((await write(first, 'activate', 5)).status).toBe(403);
-  await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
-    session,
-  ]);
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE session_id=$1",
+    [session]
+  );
   expect((await write(first, 'activate', 5)).status).toBe(200);
   expect(await (await read()).json()).toEqual({ active: first, draft: null, version: 6 });
   const audit = await http.pool.query(

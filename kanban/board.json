@@ -31695,7 +31695,7 @@
           "reviewed_base_commit": "ed6217872ee74e73631eb35397a3350e4976931f",
           "source_evidence": [
             3092727852743051,
-            134304372599150,
+            202814518473624,
             1009765675302626,
             3535624444161393,
             1090216741586406,
@@ -32721,7 +32721,8 @@
             2895164938908203,
             682433724730332,
             2983158311970137,
-            2731592014677537
+            2731592014677537,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -52949,7 +52950,7 @@
             4100935620291072,
             3092727852743051,
             7455602685647,
-            134304372599150,
+            202814518473624,
             2173206092603262,
             1009765675302626,
             504867543476242,
@@ -53339,7 +53340,8 @@
             3239468737812509,
             1261929357306033,
             3019710123762774,
-            3341326461649856
+            3341326461649856,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -53585,7 +53587,7 @@
             3720233048843282,
             4100935620291072,
             3092727852743051,
-            134304372599150,
+            202814518473624,
             2173206092603262,
             1009765675302626,
             2161792068924987,
@@ -53710,7 +53712,8 @@
             3239468737812509,
             1261929357306033,
             3019710123762774,
-            3341326461649856
+            3341326461649856,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -67412,7 +67415,7 @@
             3720233048843282,
             4100935620291072,
             3092727852743051,
-            134304372599150,
+            202814518473624,
             1653379195978158,
             1345875911635862,
             3817337598802695,
@@ -67540,7 +67543,8 @@
             3239468737812509,
             4134633858599471,
             3019710123762774,
-            3341326461649856
+            3341326461649856,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -101399,7 +101403,7 @@
             3720233048843282,
             4100935620291072,
             3092727852743051,
-            134304372599150,
+            202814518473624,
             2173206092603262,
             1009765675302626,
             504867543476242,
@@ -101788,7 +101792,8 @@
             3239468737812509,
             1261929357306033,
             3019710123762774,
-            3341326461649856
+            3341326461649856,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -101999,7 +102004,7 @@
             3720233048843282,
             4100935620291072,
             3092727852743051,
-            134304372599150,
+            202814518473624,
             1653379195978158,
             1345875911635862,
             3817337598802695,
@@ -102121,7 +102126,8 @@
             3239468737812509,
             4134633858599471,
             3019710123762774,
-            3341326461649856
+            3341326461649856,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -342418,7 +342424,7 @@
             3383179565104516,
             526499926568401,
             1201410908334027,
-            134304372599150,
+            202814518473624,
             2791351082398983,
             3043852208687867,
             829089047057765,
@@ -343596,7 +343602,8 @@
             2109628401967424,
             4180707226366873,
             2993353317448856,
-            389321936331371
+            389321936331371,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -377520,7 +377527,7 @@
           "base_commit": "b4c243ee41d4ec78721157d77ee7dac5ddecdfb1",
           "source_evidence": [
             2542927658603768,
-            134304372599150,
+            202814518473624,
             3535624444161393,
             504867543476242,
             2601889625513770,
@@ -377607,7 +377614,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            580025591045385
+            580025591045385,
+            357842333658798
           ]
         }
       }
@@ -377877,7 +377885,7 @@
           "base_commit": "b4c243ee41d4ec78721157d77ee7dac5ddecdfb1",
           "source_evidence": [
             2542927658603768,
-            134304372599150,
+            202814518473624,
             3535624444161393,
             504867543476242,
             2601889625513770,
@@ -377962,7 +377970,8 @@
             3892749074705326,
             2058965043428197,
             1774011102101374,
-            580025591045385
+            580025591045385,
+            357842333658798
           ]
         }
       }
@@ -378735,7 +378744,7 @@
           "kind": "source-bound-dynamic-csrf-verification",
           "base_commit": "4f64a8be087d5135d706cf22b3fb91c9fb1a385f",
           "source_evidence": [
-            134304372599150,
+            202814518473624,
             3535624444161393,
             1090216741586406,
             1182234437544303,
@@ -378755,7 +378764,8 @@
             3968376939953718,
             2032591472955937,
             4017126431015455,
-            4196204090038088
+            4196204090038088,
+            357842333658798
           ]
         }
       }
@@ -381156,7 +381166,7 @@
           "base_commit": "4d694aa4e3752cd9247da25d6cab104cf11b3be2",
           "source_evidence": [
             3720233048843282,
-            134304372599150,
+            202814518473624,
             4363080450550563,
             771355023850083,
             493769835631086,
@@ -381207,7 +381217,8 @@
             4134633858599471,
             2024402797106035,
             4027414871507536,
-            750451702957048
+            750451702957048,
+            357842333658798
           ]
         }
       },
@@ -390031,7 +390042,7 @@
           "kind": "verified-compiled-http-security-regressions",
           "base_commit": "4d694aa4e3752cd9247da25d6cab104cf11b3be2",
           "source_evidence": [
-            134304372599150,
+            202814518473624,
             4200184305785306,
             445443137723875,
             2332858311967969,
@@ -390084,7 +390095,8 @@
             3239468737812509,
             145435064327048,
             3220796003910005,
-            803749665552840
+            803749665552840,
+            357842333658798
           ]
         }
       },
@@ -547247,7 +547259,7 @@
             4216866548334738,
             829089047057765,
             606509661095106,
-            1199249899487033,
+            3324813456827490,
             4061932514727157,
             779139958461583,
             1025079540611131,
@@ -547423,7 +547435,8 @@
             3892749074705326,
             2058965043428197,
             1226723991928536,
-            3454701496299565
+            3454701496299565,
+            3446246931091481
           ],
           "presentation_renewals": [
             {
@@ -553652,7 +553665,7 @@
             2714612299175362,
             4036475579738296,
             4100935620291072,
-            134304372599150,
+            202814518473624,
             1345875911635862,
             3817337598802695,
             3972251278126488,
@@ -555646,7 +555659,8 @@
             2910684343496302,
             3161361640650978,
             842218650528331,
-            3134045428856168
+            3134045428856168,
+            357842333658798
           ],
           "presentation_renewals": [
             {
@@ -562064,7 +562078,8 @@
         "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
         "The cumulative hosted check at 4207c06c8 measured the wallet receipts route at 508.38 KB against the existing 500 KB limit. The isolated production build now measures 463.27 KB and independently bounds the deferred recovery panel at 54.29 KB against its 60 KB interaction budget. All 105 gzip budgets, 12 browser cases, 91 web native cases and 138 translation tests passed. The exact hosted successor acceptance remains open.",
         "Wallet recovery tests now cover malformed history and valid zero and nonzero drafts. The receipt history component requires the disclosure callback already passed by its only caller. The focused readback passes the unchanged threshold for wallet recovery, receipt history and the bilingual top-up dictionary. Twenty wallet form tests, four customer receipt browser cases, all 139 translation tests and all 105 bundle budgets passed. Final hosted native and combined coverage remain required.",
-        "Bodyless JSON command audit completed on the compiled application. Complete the validation inventory for commands with declared fields and repeat the affected journeys on the exact accepted staging build."
+        "Bodyless JSON command audit completed on the compiled application. Complete the validation inventory for commands with declared fields and repeat the affected journeys on the exact accepted staging build.",
+        "The earlier local API coverage run at 8b9b2deae passed 8,350 cases with seven failures in two fixture files. The two files now seed successful step-up proof one second before the test database clock and pass all 28 compiled integration cases. Future and missing proofs retain their explicit denial cases. Obtain a fresh passing whole API coverage report and the exact final hosted combined report."
       ],
       "owner": null,
       "depends_on": [],
@@ -562490,7 +562505,8 @@
           "release-0.6-board-evidence-compaction",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "release-0.6-empty-command-inventory"
+          "release-0.6-empty-command-inventory",
+          "release-0.6-recent-proof-test-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -761167,6 +761183,55 @@
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
+    },
+    "release-0.6-recent-proof-test-fixtures": {
+      "batch": "release-0.6-recent-proof-test-fixtures",
+      "base_commit": "6d7f5c6a7a21d042abb3af1ec7df76d04d0c3aa7",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "03-core-business.md#T-03.90.03",
+        "06-security-testing-observability.md#T-06.01.04.03",
+        "06-security-testing-observability.md#T-06.01.04.07",
+        "06-security-testing-observability.md#T-06.02.01.05",
+        "06-security-testing-observability.md#T-06.03.01.08",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/staff-http.integration.test.ts",
+        "apps/api/src/admin/verification-policy-http.integration.test.ts"
+      ],
+      "checks": [
+        "The earlier local API coverage run at 8b9b2deae passed 8,350 cases with seven failures in two fixture files. The two files now seed successful step-up proof one second before the test database clock and pass all 28 compiled integration cases. Future and missing proofs retain their explicit denial cases. Obtain a fresh passing whole API coverage report and the exact final hosted combined report.",
+        "Focused ESLint, Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The targeted test result does not certify application-wide coverage or deployed release acceptance."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "9e6de2d0c9ef76f9477a9d815110166e0a97672bcb1320381f2c7da2261abb5f"
+        },
+        {
+          "path": "apps/api/src/admin/verification-policy-http.integration.test.ts",
+          "sha256": "fcf4db86a4aea43bf329c4708e715b2795419b7004c4f14f8f460ccbae6bc5b0"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-empty-command-inventory",
+      "execution_receipts": [
+        {
+          "file": "recent-proof-fixtures.log",
+          "sha256": "1024aded772df10977e0be5c2b8decb90eb5b7f4d3c3a50f63d5510427fbbcd2"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -768157,9 +768222,9 @@
         "path": "apps/web/e2e/release-version.spec.ts",
         "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
       },
-      "134304372599150": {
+      "202814518473624": {
         "path": "apps/api/src/admin/staff-http.integration.test.ts",
-        "sha256": "41c990bc16347c9c0601175c7f61a09b8951fb609950090323b486d0eaa8d885"
+        "sha256": "9e6de2d0c9ef76f9477a9d815110166e0a97672bcb1320381f2c7da2261abb5f"
       },
       "1009765675302626": {
         "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
@@ -779841,9 +779906,9 @@
         "path": "apps/api/src/admin/verification-policy-config.ts",
         "sha256": "a4159fb26356ab7cb0bc67a8f78989eabcbf27a05d512ffda0a749badd18298e"
       },
-      "1199249899487033": {
+      "3324813456827490": {
         "path": "apps/api/src/admin/verification-policy-http.integration.test.ts",
-        "sha256": "b2bc678580ffbd6e2d6e2f90721e073d3d5dee98c006d63fc1cf91964f306132"
+        "sha256": "fcf4db86a4aea43bf329c4708e715b2795419b7004c4f14f8f460ccbae6bc5b0"
       },
       "1141715805764503": {
         "path": "apps/api/src/upload/upload-access.ts",
@@ -787576,6 +787641,14 @@
           "apps/api/src/storage/storage-record-http.integration.test.ts"
         ],
         "scope": "Changes are limited to bodyless command validation and nine generated contract operations. Existing guards, scope, step-up, CSRF, business commands, success response schemas and unrelated operations were verified. The focused compiled HTTP, controller and caller tests did not replace existing acceptance."
+      },
+      "357842333658798": {
+        "batch": "release-0.6-recent-proof-test-fixtures",
+        "base_commit": "6d7f5c6a7a21d042abb3af1ec7df76d04d0c3aa7",
+        "paths": [
+          "apps/api/src/admin/staff-http.integration.test.ts"
+        ],
+        "scope": "Successful fixture proof is one second old. The 28 compiled integration cases passed with all authorization, expiry, future-proof and existing state assertions."
       },
       "3697707543665687": {
         "batch": "release-0.6-registration-pointer-after-strength",
@@ -809236,6 +809309,14 @@
           "docs/decisions/admin-configuration-expansion.md"
         ],
         "scope": "Renewed the affected source bindings after reviewing the isolated financial recovery commands and optional confirmation behavior. Existing routes and other recovery panels retain their behavior. The changed API paths, affected native payment and staff callers, browser flow and generated contract passed."
+      },
+      "3446246931091481": {
+        "batch": "release-0.6-recent-proof-test-fixtures",
+        "base_commit": "6d7f5c6a7a21d042abb3af1ec7df76d04d0c3aa7",
+        "paths": [
+          "apps/api/src/admin/verification-policy-http.integration.test.ts"
+        ],
+        "scope": "Successful fixture proof is one second old. The 28 compiled integration cases passed with all authorization, expiry, future-proof and existing state assertions."
       },
       "800242815122055": {
         "batch": "release-0.6-operator-log-pseudonyms",

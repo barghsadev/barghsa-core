@@ -16,7 +16,7 @@ async function session(userId: string) {
     family = randomUUID();
   await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,otp_step_up_verified_at)
-    VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),NOW())`,
+    VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second',NOW()-INTERVAL '1 second')`,
     [sessionId, userId, token, family]
   );
   await http.pool.query(
@@ -432,7 +432,7 @@ it('replaces roles through HTTP, revokes old sessions, and rejects disabled acco
     );
   } finally {
     await http.pool.query(
-      "UPDATE sessions SET step_up_verified_at=NOW(),otp_step_up_verified_at=NOW() WHERE user_id='bootstrap'"
+      "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second',otp_step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id='bootstrap'"
     );
   }
   const response = await fetch(`${http.base}/api/admin/users/${userId}/roles`, {
