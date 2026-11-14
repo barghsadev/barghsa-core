@@ -58,7 +58,12 @@ beforeEach(async () => {
   await pool.query('DELETE FROM notification_outbox');
   await pool.query('DELETE FROM in_app_notifications');
 });
-async function queue(user = 'notice-user', purpose = 'login', traceParent?: string) {
+async function queue(
+  user = 'notice-user',
+  purpose = 'login',
+  traceParent?: string,
+  contact = destination
+) {
   const id = randomUUID(),
     challenge = randomUUID();
   const hash = createHash('sha256').update(code).digest('hex');
@@ -67,7 +72,7 @@ async function queue(user = 'notice-user', purpose = 'login', traceParent?: stri
     VALUES($1,$2,$3,$4,$5,NOW()+INTERVAL '10 minutes',$6,$7)`,
     [
       challenge,
-      destination,
+      contact,
       hash,
       purpose,
       user || null,
@@ -79,13 +84,13 @@ async function queue(user = 'notice-user', purpose = 'login', traceParent?: stri
     await pool.query(
       `INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,trace_parent)
       VALUES($1,$2,$3,$4,NOW()+INTERVAL '10 minutes',$5)`,
-      [id, challenge, hash, encryptAuthDelivery(id, { code, destination }), traceParent]
+      [id, challenge, hash, encryptAuthDelivery(id, { code, destination: contact }), traceParent]
     );
   } else {
     await pool.query(
       `INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
       VALUES($1,$2,$3,$4,NOW()+INTERVAL '10 minutes')`,
-      [id, challenge, hash, encryptAuthDelivery(id, { code, destination })]
+      [id, challenge, hash, encryptAuthDelivery(id, { code, destination: contact })]
     );
   }
   return id;
@@ -274,4 +279,62 @@ it('publishes no success notice for a failed or pending physical delivery', asyn
     (await pool.query("SELECT id FROM notification_outbox WHERE event_key='auth.otp_sent'"))
       .rowCount
   ).toBe(0);
+});
+
+it('publishes an SMS delivery notice without its phone number or verification code', async () => {
+  const contact = '+989120000001';
+  const id = await queue('notice-user', 'login', undefined, contact);
+  const send = vi.fn(async () => 'accepted-sms-receipt');
+  expect(await runAuthDelivery(pool, send)).toBe('sent');
+  expect(await publishAuthDeliveryNotice(pool)).toBe('published');
+  const { rows } = await pool.query(
+    'SELECT payload, channels FROM notification_outbox WHERE idempotency_key=$1',
+    [`auth.otp_sent:${id}:notice-user`]
+  );
+  expect(rows).toEqual([
+    {
+      channels: ['in_app'],
+      payload: {
+        channel: 'پیامک / SMS',
+        purpose: 'ورود / Sign-in',
+        sentAt: expect.any(String),
+      },
+    },
+  ]);
+  expect(JSON.stringify(rows)).not.toContain(contact);
+  expect(JSON.stringify(rows)).not.toContain(code);
+  expect(send).toHaveBeenCalledOnce();
+});
+
+it('clears a sent notice for a disabled recipient without publishing it or retrying the OTP', async () => {
+  await pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ('disabled-notice-user','disabled-notice@example.test','fixture-only')"
+  );
+  const id = await queue(
+    'disabled-notice-user',
+    'login',
+    undefined,
+    'disabled-notice@example.test'
+  );
+  const send = vi.fn(async () => 'accepted-otp-receipt');
+  expect(await runAuthDelivery(pool, send)).toBe('sent');
+  await pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='disabled-notice-user'");
+  expect(await publishAuthDeliveryNotice(pool)).toBe('published');
+  expect(
+    (
+      await pool.query(
+        'SELECT status, inbox_notice_pending FROM auth_delivery_outbox WHERE id=$1',
+        [id]
+      )
+    ).rows
+  ).toEqual([{ status: 'sent', inbox_notice_pending: false }]);
+  expect(
+    (
+      await pool.query('SELECT id FROM notification_outbox WHERE user_id=$1', [
+        'disabled-notice-user',
+      ])
+    ).rowCount
+  ).toBe(0);
+  expect(await runAuthDelivery(pool, send)).toBe('idle');
+  expect(send).toHaveBeenCalledOnce();
 });

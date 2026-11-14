@@ -334,4 +334,102 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
     expect(db.calls.some(({ sql }) => sql === 'ROLLBACK')).toBe(true);
     expect(db.calls.some(({ sql }) => sql.includes("SET status = 'sent'"))).toBe(false);
   });
+
+  it('rolls back the delivery intent when fewer schedule rows can be marked sent', async () => {
+    const db = makeFakeDb(defaultHandler([dueGroup()], [scheduleRow()], [invoiceRow()], 0));
+    const options = sendOptions(db);
+    expect(await sendDueInvoiceReminders(options)).toMatchObject({
+      sent: 0,
+      skipped: 1,
+      errors: [],
+    });
+    expect(options.enqueue).toHaveBeenCalledOnce();
+    expect(db.calls.at(-1)?.sql).toBe('ROLLBACK');
+    expect(db.calls.some(({ sql }) => sql === 'COMMIT')).toBe(false);
+  });
+
+  it('uses the earliest locked row and defers delivery to a later external channel', async () => {
+    const emailAt = new Date(NOW.getTime() + 60_000);
+    const original = defaultHandler();
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('GROUP BY')) return { rows: [{ ...dueGroup(), scheduled_at: '' }] };
+      if (sql.includes('FROM invoices i') && sql.includes('FOR UPDATE OF i SKIP LOCKED'))
+        return { rows: [{ ...invoiceRow(), due_at: DUE.toISOString() }] };
+      if (sql.includes('FROM invoice_reminder_schedule') && sql.includes('FOR UPDATE SKIP LOCKED'))
+        return {
+          rows: [
+            {
+              ...scheduleRow({ id: ROW_EMAIL, channel: 'email' }),
+              scheduled_at: emailAt.toISOString(),
+            },
+            { ...scheduleRow(), scheduled_at: SCHEDULED.toISOString() },
+          ],
+        };
+      return original(sql);
+    });
+    const options = sendOptions(db);
+    expect(await sendDueInvoiceReminders(options)).toMatchObject({ sent: 1, errors: [] });
+    expect(options.enqueue).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        channels: ['in_app', 'email'],
+        payload: {
+          invoiceId: INVOICE_ID,
+          offset: -7,
+          dueAt: DUE.toISOString(),
+          scheduledAt: SCHEDULED.toISOString(),
+        },
+      })
+    );
+    expect(db.calls.find(({ sql }) => sql.includes('SET run_after'))?.params).toEqual([
+      'outbox-1',
+      'email',
+      emailAt,
+    ]);
+  });
+
+  it('does not enqueue from a stale candidate with a dirty plan', async () => {
+    const original = defaultHandler();
+    const db = makeFakeDb((sql) =>
+      sql.includes('FOR UPDATE OF i SKIP LOCKED')
+        ? { rows: [{ ...invoiceRow(), reminder_plan_dirty: true }] }
+        : original(sql)
+    );
+    const options = sendOptions(db);
+    expect(await sendDueInvoiceReminders(options)).toMatchObject({
+      sent: 0,
+      skipped: 1,
+      errors: [],
+    });
+    expect(options.enqueue).not.toHaveBeenCalled();
+    expect(db.calls.at(-1)?.sql).toBe('ROLLBACK');
+  });
+
+  it('refuses a previous occurrence for a different recipient or invoice due date', async () => {
+    const existing = {
+      profile_id: PROFILE_ID,
+      user_id: USER_ID,
+      channels: ['in_app', 'email'],
+      payload: { invoiceId: INVOICE_ID, offset: -7, dueAt: DUE.toISOString() },
+    };
+    const original = defaultHandler();
+    for (const saved of [
+      { ...existing, profile_id: 'wrong-profile' },
+      { ...existing, user_id: 'wrong-owner' },
+      { ...existing, payload: { ...existing.payload, invoiceId: 'different-invoice' } },
+      { ...existing, payload: { ...existing.payload, offset: 0 } },
+      { ...existing, payload: { ...existing.payload, dueAt: null } },
+    ]) {
+      const db = makeFakeDb((sql) =>
+        sql.includes('FROM notification_outbox o') ? { rows: [saved] } : original(sql)
+      );
+      const enqueue = vi.fn().mockResolvedValue({ outboxId: null, inserted: false });
+      expect(await sendDueInvoiceReminders(sendOptions(db, { enqueue }))).toMatchObject({
+        sent: 0,
+        errors: [`${INVOICE_ID}@-7: existing reminder occurrence requires reconciliation`],
+      });
+      expect(db.calls.at(-1)?.sql).toBe('ROLLBACK');
+      expect(db.calls.some(({ sql }) => sql.includes("SET status = 'sent'"))).toBe(false);
+    }
+  });
 });

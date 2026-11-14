@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:02:23+00:00",
+  "updated": "2026-11-14T13:07:20+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -199857,7 +199857,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -199869,7 +199869,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -200974,6 +200974,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -201493,7 +201502,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -201505,7 +201514,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -202610,6 +202619,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -203129,7 +203147,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -203141,7 +203159,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -204246,6 +204264,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -204765,7 +204792,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -204777,7 +204804,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -205882,6 +205909,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -206401,7 +206437,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -206413,7 +206449,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -207518,6 +207554,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -208037,7 +208082,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -208049,7 +208094,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -209154,6 +209199,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -209784,7 +209838,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -209796,7 +209850,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -211034,6 +211088,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -211563,7 +211626,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -211575,7 +211638,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -212680,6 +212743,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -213310,7 +213382,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -213322,7 +213394,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -214560,6 +214632,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -215089,7 +215170,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -215101,7 +215182,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -216206,6 +216287,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -216676,7 +216766,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
@@ -216684,7 +216774,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -217398,6 +217488,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -217793,7 +217892,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
@@ -217801,7 +217900,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -218551,6 +218650,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -218898,7 +219006,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
@@ -218906,7 +219014,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -219646,6 +219754,15 @@
                 "packages/shared/src/finance/due-at-override.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -729639,7 +729756,8 @@
         "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
         "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
         "Hosted run 43583704822 belongs to 81d4381e9, attempt 1. All 2,976 Chromium tests passed with no flakes, skips or runner errors. Mapped coverage completed, but combined coverage failed with 63 file errors. The two telemetry files now pass the unchanged changed-source threshold locally at 55/55 lines and 59/61 branches.",
-        "Six further shared finance, verification and admin files from the hosted failure now pass the original critical coverage gate locally. Verified 161/161 lines and 130/133 branches for these six; rerun the full final candidate gate after fixing the other deficits."
+        "Six further shared finance, verification and admin files from the hosted failure now pass the original critical coverage gate locally. Verified 161/161 lines and 130/133 branches for these six; rerun the full final candidate gate after fixing the other deficits.",
+        "All three previously failing worker notification files now pass the existing critical per-file coverage gate in a focused five-file unit and PostgreSQL run. The exact immutable release gate and the other package gaps remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -729676,7 +729794,8 @@
           "release-0.6-board-source-validation",
           "release-0.6-coverage-browser-selection",
           "release-0.6-telemetry-source-coverage",
-          "release-0.6-shared-critical-coverage"
+          "release-0.6-shared-critical-coverage",
+          "release-0.6-worker-notification-coverage"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1102838,7 +1102957,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
-              "sha256": "15cefb610eb3f7230c224dd477f42dc906a7c7b4d4a1952397eb3e24312e7e47"
+              "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
             },
             {
               "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -1102850,7 +1102969,7 @@
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.test.ts",
-              "sha256": "fc6282f7e7c67457280c1012f0b0a155a02683a3e04c6900b7c427a203dc0b95"
+              "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
             },
             {
               "path": "apps/worker/src/invoices/reminder-sender.ts",
@@ -1107318,6 +1107437,15 @@
                 "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
               ],
               "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
+            },
+            {
+              "batch": "release-0.6-worker-notification-coverage",
+              "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+              "paths": [
+                "apps/worker/src/invoices/reminder-scheduler.test.ts",
+                "apps/worker/src/invoices/reminder-sender.test.ts"
+              ],
+              "scope": "Additive tests for dirty-plan rebuilding, transaction rollback, delayed channel delivery, and previous-recipient rejection. The unchanged reminder integration and focused unit cases passed."
             }
           ],
           "presentation_renewals": [
@@ -1131324,7 +1131452,8 @@
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
         "The hosted full rehearsal passed 2,976 browser cases with zero failures, skips and flakes. Combined coverage failed across seven groups with 63 file errors. The telemetry package now emits coverage and passes the existing threshold locally. Preserve the full file report, address remaining errors and run the final enforced gates.",
-        "The shared critical coverage batch closes six specific previously reported file gaps in its scoped check. The full rehearsal still has other coverage failures, plus the strict license and exact operational release checks."
+        "The shared critical coverage batch closes six specific previously reported file gaps in its scoped check. The full rehearsal still has other coverage failures, plus the strict license and exact operational release checks.",
+        "The scoped release coverage check resolved the three recorded worker file deficits for OTP notices and invoice reminders. Ninety-three affected cases passed, including native migrated PostgreSQL. The final combined and license checks still need exact release evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131686,7 +1131815,8 @@
           "release-0.6-staging-telegram-relay-recovery",
           "release-0.6-staging-knowledge-preview-readback",
           "release-0.6-telemetry-source-coverage",
-          "release-0.6-shared-critical-coverage"
+          "release-0.6-shared-critical-coverage",
+          "release-0.6-worker-notification-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1319974,6 +1320104,102 @@
         {
           "file": "check-43597378287-quality-132454686315-failed.log",
           "sha256": "52e0d9fffb42848345149241c74d9685d15b2d5668f8eec682f07bdd5fd05424"
+        }
+      ]
+    },
+    "release-0.6-worker-notification-coverage": {
+      "batch": "release-0.6-worker-notification-coverage",
+      "base_commit": "42da0e8bd232f2f4ad3703d4e6f5f3f0a7758173",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/auth-delivery/inbox-notice.integration.test.ts",
+        "apps/worker/src/invoices/reminder-scheduler.test.ts",
+        "apps/worker/src/invoices/reminder-sender.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/auth-delivery/inbox-notice.integration.test.ts",
+          "sha256": "05e354affae268ba4629fe9cbe00939548ddcfe777e333f0510cc83a93537822"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.test.ts",
+          "sha256": "52a86d7fda1da9e9b80ec8eda6880c12b6a9e9d29aef89b3dca997c98525d5b1"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.test.ts",
+          "sha256": "0920f956055ebbac578fd10c02a38a84d7e8b6bf0f0cce767961079b719eef87"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/inbox-notice.ts",
+          "sha256": "f7961bd8e7924b49602e2059e9956635cbfc4821e3ac89ba12ef7d3bcd1d3d54"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.ts",
+          "sha256": "637ad3ac217e8554cfa253dd1d22ed3d6f63079b32666b24767e18962589e6c7"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.ts",
+          "sha256": "73f028190d1dad22f44d73208cfaabd2cbff6511d923f303a912c075ed1ebb90"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-scheduler.integration.test.ts",
+          "sha256": "520363710bd934aea238fe298d72b17b49c1ee9707b17632a1f1819fb4a0d5b7"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "9ab2027db385216494c16560b5aa38b85c8e1f217062d5f7b3b833f808aa3865"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "93 affected worker tests passed in five files with native migrated PostgreSQL. Verified SMS inbox privacy, disabled recipient suppression without OTP re-delivery, plan rebuilding, delayed channel scheduling, partial status update rollback and mismatched occurrence rejection.",
+        "The unchanged scoped 90% line and 85% branch thresholds passed for all three files with 221/222 lines and 152/172 branches. ESLint, formatting and diff checks passed. Worker runtime and existing assertions were preserved.",
+        "The first fixture used a step-up challenge without the mandatory bound session and PostgreSQL rejected it. The scenario now uses a valid sign-in OTP. An intermediate scoped check still reported low sender coverage, which the final two cases addressed."
+      ],
+      "limitations": [
+        "The scoped check proves the three previously failing files. Combined exact candidate coverage and staged notification receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-worker-notification-coverage",
+      "execution_receipts": [
+        {
+          "file": "worker-coverage.log",
+          "sha256": "8d6b1fec9d25626ad6097191d0a95dcd58052619b22c5df7c3ea0cc7b442f47e"
+        },
+        {
+          "file": "worker-notification-gate.json",
+          "sha256": "95a19b043caaabefb3462161349658a6e4672c8ddd336bfff684d7b9da212e11"
+        },
+        {
+          "file": "first-fixture-failure.log",
+          "sha256": "60071daeb7b35ddd6e89808b170dc6a6ec2e808880a0bd81334b0993ee9da5d6"
+        },
+        {
+          "file": "initial-scoped-deficit.json",
+          "sha256": "8a6d0dcbe895a2fad1a1f2b7723069b831f72f8ccddaad116081ad0a01c3abd0"
         }
       ]
     }

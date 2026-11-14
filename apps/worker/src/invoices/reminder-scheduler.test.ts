@@ -197,6 +197,18 @@ describe('snapToDaytimeWindow / reminderWindowForProfile', () => {
 });
 
 describe('planInvoiceReminders', () => {
+  it('keeps the mandatory inbox reminder when no channel preferences are supplied', () => {
+    expect(
+      planInvoiceReminders({
+        dueAt: DUE_INSIDE,
+        issuedAt: ISSUED,
+        now: ISSUED,
+        channels: [],
+        window: TEHRAN,
+        enabledOffsets: [0],
+      })
+    ).toEqual([{ offset: 0, channel: 'in_app', scheduledAt: DUE_INSIDE }]);
+  });
   it('emits one row per canonical offset for in_app, inside the window', () => {
     const planned = planInvoiceReminders({
       dueAt: DUE_INSIDE,
@@ -330,6 +342,40 @@ describe('planInvoiceReminders', () => {
 });
 
 describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
+  it('replaces a dirty reminder plan from persisted string timestamps despite existing rows', async () => {
+    const candidate = unpaidCandidate();
+    const original = defaultHandler([candidate], [candidate], 1);
+    const db = makeFakeDb((sql) =>
+      sql.includes('FOR UPDATE OF i SKIP LOCKED')
+        ? {
+            rows: [
+              {
+                ...candidate,
+                due_at: DUE_INSIDE.toISOString(),
+                issued_at: ISSUED.toISOString(),
+                reminder_plan_dirty: true,
+                timezone: null,
+              },
+            ],
+          }
+        : original(sql)
+    );
+    expect(await scheduleIssuedInvoiceReminders(scheduleOptions(db))).toMatchObject({
+      scheduled: 1,
+      skipped: 0,
+    });
+    const operations = db.calls.map(({ sql }) => sql);
+    const insert = operations.findIndex((sql) =>
+      sql.includes('INSERT INTO invoice_reminder_schedule')
+    );
+    const clear = operations.findIndex((sql) =>
+      sql.includes("metadata = metadata - 'reminderPlanDirty'")
+    );
+    expect(insert).toBeGreaterThan(-1);
+    expect(operations[insert]).toContain("WHERE invoice_reminder_schedule.status = 'cancelled'");
+    expect(clear).toBeGreaterThan(insert);
+    expect(operations.at(-1)).toBe('COMMIT');
+  });
   it('selects issued invoices without schedule rows, oldest issued first, bounded', async () => {
     const db = makeFakeDb(defaultHandler());
     await scheduleIssuedInvoiceReminders(scheduleOptions(db));
