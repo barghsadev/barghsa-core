@@ -35,6 +35,16 @@ CORE_RECOVERY_CHECKS = frozenset({
     'configuration_restore', 'object_restore', 'readiness', 'login', 'dashboard', 'wallet',
     'electricity', 'saving', 'solar', 'consultation',
 })
+DAST_PROBES = {
+    'anonymous_session': 401,
+    'authenticated_session': 200,
+    'profiles': 200,
+    'electricity_orders': 200,
+    'unknown_order': 404,
+    'saving_orders': 200,
+    'solar_requests': 200,
+    'consultation_requests': 200,
+}
 
 
 def command(label, *args):
@@ -171,6 +181,40 @@ def receipt_bundle(index_path, path, fingerprint, required, optional=()):
     entries = {key: read(receipt_path(directory, name, key)) for key, name in bundle.items()}
     return ({key: value for key, (value, _) in entries.items()},
             {key: digest for key, (_, digest) in entries.items()})
+
+
+def verify_dast_receipt(path, fingerprint, version, sha):
+    with path.open('rb') as source:
+        raw = source.read(65537)
+    if len(raw) > 65536 or hashlib.sha256(raw).hexdigest() != fingerprint:
+        raise ValueError('Authenticated DAST report is too large or changed after indexing')
+    report = json.loads(raw)
+    dast = runpy.run_path(str(ROOT / 'deploy/staging/authenticated-dast.py'))
+    if (not isinstance(report, dict) or report.get('commit') != sha or report.get('version') != version
+            or report.get('origin') != STAGING or report.get('image') != dast['IMAGE']
+            or report.get('mode') != 'passive_with_authenticated_probes'
+            or not matches(r'[0-9]+\.[0-9]+\.[0-9]+', report.get('scanner'))):
+        raise ValueError('Authenticated DAST report must match the staged candidate and pinned scanner')
+    probes = report.get('probes')
+    if (not isinstance(probes, list) or len(probes) != len(DAST_PROBES) or any(
+            not isinstance(probe, dict) or not isinstance(probe.get('probe'), str)
+            or type(probe.get('status')) is not int for probe in probes)
+            or {probe['probe']: probe['status'] for probe in probes} != DAST_PROBES):
+        raise ValueError('Authenticated DAST report must include every expected probe outcome')
+    findings = report.get('findings')
+    if not isinstance(findings, list) or any(
+            not isinstance(item, dict) or not matches(r'[0-9]{1,8}', item.get('rule'))
+            or item.get('risk') not in ('Informational', 'Low', 'Medium', 'High')
+            or type(item.get('count')) is not int or not 1 <= item['count'] <= 500
+            for item in findings):
+        raise ValueError('Authenticated DAST report has invalid findings')
+    if (len({(item['rule'], item['risk']) for item in findings}) != len(findings)
+            or sum(item['count'] for item in findings) > 500):
+        raise ValueError('Authenticated DAST report has invalid findings')
+    if any(item['risk'] == 'High' for item in findings):
+        raise ValueError('Authenticated DAST report contains high-severity findings')
+    return {'scanner': report['scanner'], 'image': report['image'], 'probes': dict(DAST_PROBES),
+            'findings': [{field: item[field] for field in ('rule', 'risk', 'count')} for item in findings]}
 
 
 def receipt_time(value):
@@ -424,6 +468,7 @@ def main():
             raise ValueError('Use the immutable v0.9.0 first-launch candidate')
         command('Launch board', sys.executable, 'kanban/scripts/board.py', 'ready', '--release', version)
         paths, hashes = index_receipts(args.receipt_index, sha)
+        dast = verify_dast_receipt(paths['authenticated_dast'], hashes['authenticated_dast'], version, sha)
         ci_run = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
         verify_ci_checks(args.ci_run)
         browser_run = verify_workflow(args.browser_run, '.github/workflows/browser-nightly.yml', sha)
@@ -453,7 +498,8 @@ def main():
     print(json.dumps({'status': 'ready_for_owner_review', 'version': version, 'candidate_sha': sha,
                       'checked_at': checked_at,
                       'ci': ci_run['html_url'], 'browser': browser_run['html_url'], 'browser_counts': counts,
-                      'operational_receipt_sha256': hashes, 'verified_backup': backup,
+                      'operational_receipt_sha256': hashes, 'verified_authenticated_dast': dast,
+                      'verified_backup': backup,
                       'verified_staging_images': images,
                       'verified_staging_and_telegram': release}, indent=2))
     return 0

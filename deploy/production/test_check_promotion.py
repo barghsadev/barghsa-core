@@ -154,6 +154,48 @@ class PromotionEvidenceTest(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'invalid receipt'):
                     promotion.index_receipts(index, SHA)
 
+    def test_dast_requires_exact_candidate_complete_probes_and_no_high_findings(self):
+        scanner = promotion.runpy.run_path(str(promotion.ROOT / 'deploy/staging/authenticated-dast.py'))
+        probes = [
+            {'probe': name, 'status': status} for name, status in (
+                ('anonymous_session', 401), ('authenticated_session', 200), ('profiles', 200),
+                ('electricity_orders', 200), ('unknown_order', 404), ('saving_orders', 200),
+                ('solar_requests', 200), ('consultation_requests', 200),
+            )
+        ]
+        findings = [{'rule': '10035', 'risk': 'Low', 'count': 7}]
+        valid = {'commit': SHA, 'version': '0.9.0', 'origin': promotion.STAGING,
+                 'image': scanner['IMAGE'], 'scanner': '2.17.0',
+                 'mode': 'passive_with_authenticated_probes', 'probes': probes, 'findings': findings}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'authenticated-dast.json'
+
+            def report(data):
+                payload = json.dumps(data).encode()
+                path.write_bytes(payload)
+                return hashlib.sha256(payload).hexdigest()
+
+            verified = promotion.verify_dast_receipt(path, report(valid), '0.9.0', SHA)
+            self.assertEqual(verified['probes'], {row['probe']: row['status'] for row in probes})
+            self.assertEqual(verified['findings'], findings)
+            for change, diagnostic in (
+                ({'commit': 'b' * 40}, 'staged candidate'),
+                ({'version': '0.6.0'}, 'staged candidate'),
+                ({'origin': 'https://wrong.example.test'}, 'staged candidate'),
+                ({'image': 'latest'}, 'pinned scanner'),
+                ({'mode': 'passive'}, 'pinned scanner'),
+                ({'probes': probes[:-1]}, 'probe outcome'),
+                ({'probes': [*probes[:-1], probes[0]]}, 'probe outcome'),
+                ({'probes': [{**probes[0], 'status': 200}, *probes[1:]]}, 'probe outcome'),
+                ({'findings': [{**findings[0], 'count': True}]}, 'invalid findings'),
+                ({'findings': findings * 2}, 'invalid findings'),
+                ({'findings': [{**findings[0], 'risk': 'High'}]}, 'high-severity findings'),
+            ):
+                with self.subTest(change=change), self.assertRaisesRegex(ValueError, diagnostic):
+                    promotion.verify_dast_receipt(path, report({**valid, **change}), '0.9.0', SHA)
+            with self.assertRaisesRegex(ValueError, 'changed after indexing'):
+                promotion.verify_dast_receipt(path, '0' * 64, '0.9.0', SHA)
+
 
 class StructuredReceiptTest(unittest.TestCase):
     def setUp(self):

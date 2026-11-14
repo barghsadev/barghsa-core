@@ -76,7 +76,7 @@ Keep `receipt-index.json` in the protected approval package. Set `candidate_sha`
 
 | Receipt key                    | Evidence to review                                                                         |
 | ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `authenticated_dast`           | Authenticated scan, findings and dispositions.                                             |
+| `authenticated_dast`           | Original JSON report from the authenticated staging scan.                                  |
 | `performance_and_load`         | Representative test inputs, measured outcomes and comparison with budgets.                 |
 | `migration_and_rollback`       | Migration and seed results, compatibility and rollback or roll-forward rehearsal.          |
 | `backup_and_restore`           | Recent off-server backup, tested restore, RPO and RTO.                                     |
@@ -91,6 +91,10 @@ Use JSON indexes for `backup_and_restore`, `image_digests_and_scans` and
 `staging_and_telegram`. The paths
 inside both indexes are relative to the same protected approval package.
 
+- Put the original `deploy/staging/authenticated-dast.py` JSON output under
+  `authenticated_dast`. The approval check verifies the exact staging version,
+  SHA, pinned scanner, all eight probe outcomes and absence of high findings.
+  Record the disposition of any remaining findings under `security_and_incident_review`.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`
