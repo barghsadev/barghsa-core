@@ -92,6 +92,79 @@ async function decide(path: string, user: string, body: Record<string, unknown> 
   return post(path, user, { ...body, expectedReviewHash: review.hash });
 }
 
+it('denies consultation team names when the staff session expires during the read', async () => {
+  const session = randomUUID();
+  const teamId = randomUUID();
+  const teamName = 'Private assignment ' + teamId;
+  await http.pool.query('INSERT INTO staff_teams(id,name) VALUES($1,$2)', [teamId, teamName]);
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline)
+     VALUES($1,'reviewer',$2,$3,'staff',clock_timestamp()+INTERVAL '1 hour',clock_timestamp()+INTERVAL '30 minutes')`,
+    [session, randomUUID(), randomUUID()]
+  );
+  const read = (path: string) =>
+    fetch(`${http.base}/api/${path}/consultations/teams`, {
+      headers: { Cookie: `barghsa_session=${session}` },
+    });
+  for (const path of ['admin', 'staff']) {
+    const allowed = await read(path);
+    expect(allowed.status, http.logs()).toBe(200);
+    expect(await allowed.json()).toMatchObject({
+      teams: expect.arrayContaining([{ name: teamName }]),
+    });
+  }
+
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE staff_teams IN ACCESS EXCLUSIVE MODE');
+    const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
+      .rows[0]!;
+    const { expires_at: expiresAt } = (
+      await http.pool.query<{ expires_at: Date }>(
+        `UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '4 seconds'
+         WHERE session_id=$1 RETURNING expires_at`,
+        [session]
+      )
+    ).rows[0]!;
+    pending = read('admin');
+    await expect
+      .poll(async () => {
+        const waiting = await http.pool.query<{ count: number }>(
+          `SELECT count(*)::int AS count FROM pg_stat_activity
+           WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
+             AND query LIKE 'SELECT name FROM staff_teams%'`,
+          [pid]
+        );
+        return waiting.rows[0]!.count;
+      })
+      .toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query<{ expired: boolean }>(
+              'SELECT clock_timestamp()>=$1::timestamptz AS expired',
+              [expiresAt]
+            )
+          ).rows[0]!.expired,
+        { timeout: 6000 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const denied = await pending;
+    expect(denied.status, http.logs()).toBe(401);
+    expect(await denied.text()).not.toContain(teamName);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+    await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [session]);
+    await http.pool.query('DELETE FROM staff_teams WHERE id=$1', [teamId]);
+  }
+}, 12000);
+
 it('moves a consultation through staff assignment, customer information, and a reasoned decision', async () => {
   const submitted = await post('/api/consultations/requests', 'customer', {
     profileId,

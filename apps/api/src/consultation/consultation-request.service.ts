@@ -59,6 +59,7 @@ export class ConsultationRequestService {
       ).rows[0]!;
       const rows = (await client.query<ProductRow>(`${this.productSql} ORDER BY p.created_at,p.id`))
         .rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         products: rows

@@ -98,6 +98,7 @@ export class ConsultationWorkflowService {
           'SELECT name FROM staff_teams WHERE is_active ORDER BY name'
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { teams };
     } catch (error) {

@@ -48,39 +48,52 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 
-it.each(['history', 'detail'])(
+it.each(['catalogue', 'history', 'detail'] as const)(
   'denies consultation %s when its session expires during the data read',
   async (view) => {
     const requestId = randomUUID();
     const session = randomUUID();
-    await http.pool.query(
-      `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,submission_key)
-       SELECT $1,$2,id,jsonb_build_object('title',title),'individual',$3
-       FROM products WHERE system_key='electricity_generation_station'`,
-      [requestId, profiles.individual, randomUUID()]
-    );
+    const productId = (
+      await http.pool.query<{ id: string }>(
+        "SELECT id FROM products WHERE system_key='electricity_generation_station'"
+      )
+    ).rows[0]!.id;
+    if (view !== 'catalogue') {
+      await http.pool.query(
+        `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,submission_key)
+         SELECT $1,$2,id,jsonb_build_object('title',title),'individual',$3 FROM products WHERE id=$4`,
+        [requestId, profiles.individual, randomUUID(), productId]
+      );
+    }
     await http.pool.query(
       `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
        VALUES($1,'individual',$2,$3,clock_timestamp()+INTERVAL '1 hour',clock_timestamp()+INTERVAL '30 minutes')`,
       [session, randomUUID(), randomUUID()]
     );
-    const suffix = view === 'detail' ? `/${requestId}` : `?profileId=${profiles.individual}`;
+    const query = `?profileId=${profiles.individual}`;
+    const routes = {
+      catalogue: { path: `products${query}`, table: 'products', marker: productId },
+      history: { path: `requests${query}`, table: 'invoices', marker: requestId },
+      detail: { path: `requests/${requestId}`, table: 'invoices', marker: requestId },
+    } as const;
+    const { path, table, marker } = routes[view];
     const read = () =>
-      fetch(`${http.base}/api/consultations/requests${suffix}`, {
+      fetch(`${http.base}/api/consultations/${path}`, {
         headers: { Cookie: `barghsa_session=${session}` },
       });
     const before = await read();
     expect(before.status, http.logs()).toBe(200);
-    expect(await before.json()).toMatchObject(
-      view === 'detail'
-        ? { request: { id: requestId } }
-        : { requests: expect.arrayContaining([expect.objectContaining({ id: requestId })]) }
-    );
+    const expected = {
+      catalogue: { products: expect.arrayContaining([expect.objectContaining({ id: productId })]) },
+      history: { requests: expect.arrayContaining([expect.objectContaining({ id: requestId })]) },
+      detail: { request: { id: requestId } },
+    };
+    expect(await before.json()).toMatchObject(expected[view]);
     const blocker = await http.pool.connect();
     let pending: Promise<Response> | undefined;
     try {
       await blocker.query('BEGIN');
-      await blocker.query('LOCK TABLE invoices IN ACCESS EXCLUSIVE MODE');
+      await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
       const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
         .rows[0]!;
       const { expires_at: expiresAt } = (
@@ -96,8 +109,8 @@ it.each(['history', 'detail'])(
           const waiting = await http.pool.query<{ count: number }>(
             `SELECT count(*)::int AS count FROM pg_stat_activity
              WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
-               AND query LIKE '%FROM consultation_requests r%'`,
-            [pid]
+               AND query LIKE $2`,
+            [pid, view === 'catalogue' ? '%FROM products p%' : '%FROM consultation_requests r%']
           );
           return waiting.rows[0]!.count;
         })
@@ -117,12 +130,14 @@ it.each(['history', 'detail'])(
       await blocker.query('COMMIT');
       const denied = await pending;
       expect(denied.status, http.logs()).toBe(401);
-      expect(await denied.text()).not.toContain(requestId);
+      expect(await denied.text()).not.toContain(marker);
     } finally {
       await blocker.query('ROLLBACK');
       blocker.release();
       await pending;
-      await http.pool.query('DELETE FROM consultation_requests WHERE id=$1', [requestId]);
+      if (view !== 'catalogue') {
+        await http.pool.query('DELETE FROM consultation_requests WHERE id=$1', [requestId]);
+      }
       await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [session]);
     }
   },
