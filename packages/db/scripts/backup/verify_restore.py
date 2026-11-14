@@ -123,8 +123,10 @@ def exercise(args):
             target = root / "candidate"
             recovery = argparse.Namespace(target_dir=str(target), backup=None, pitr=args.pitr)
             with contextlib.redirect_stdout(io.StringIO()):
-                restore(Store(), recovery)
-            result["backup"] = json.loads((target / "metadata.json").read_text())["label"]
+                manifest = restore(Store(), recovery)
+            result["backup"] = manifest["label"]
+            result["backup_manifest_sha256"] = hashlib.sha256(
+                json.dumps(manifest, sort_keys=True).encode()).hexdigest()
             data, socket = target / "data", root / "socket"
             socket.mkdir(mode=0o700)
             # Trust is confined to this 0700 socket directory; TCP remains disabled.

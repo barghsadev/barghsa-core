@@ -3,6 +3,7 @@
 
 import contextlib
 import fcntl
+import hashlib
 import io
 import json
 import os
@@ -56,7 +57,10 @@ def run_job():
         with contextlib.redirect_stdout(io.StringIO()) as output:
             backup(store, None)
         full = json.loads(output.getvalue())
+        if full.pop("upload_verified", None) is not True or full.pop("manifest_readback_verified", None) is not True:
+            raise BackupError("Backup object and manifest verification are required")
         result["backup"] = full["label"]
+        result["backup_manifest_sha256"] = hashlib.sha256(json.dumps(full, sort_keys=True).encode()).hexdigest()
         result["phase"] = "retention"
         with contextlib.redirect_stdout(io.StringIO()):
             prune(store)

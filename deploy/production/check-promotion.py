@@ -362,6 +362,10 @@ def verify_backup_receipts(index_path, path, fingerprint, now, sha):
                 or type(value.get('size')) is not int or value['size'] <= 0):
             raise ValueError('Encrypted backup manifest is invalid')
     completed = epoch(manifest.get('completed_at'))
+    for receipt, expected in ((job, manifest), (report, restored)):
+        digest = hashlib.sha256(json.dumps(expected, sort_keys=True).encode()).hexdigest()
+        if receipt.get('backup_manifest_sha256') != digest:
+            raise ValueError('Backup job and restore report must match their exact off-server manifests')
     if (job.get('status') != 'passed' or job.get('phase') != 'retention' or job.get('monitoring') == 'failed'
             or not matches(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z', job.get('backup'))
             or job['backup'] != manifest.get('label')

@@ -16,6 +16,11 @@ import run_backup_job as job
 
 
 class RestoreEvidenceTests(unittest.TestCase):
+    @staticmethod
+    def backup_receipt(label='fixture', completed='2026-09-13T12:00:00Z'):
+        return {'label': label, 'completed_at': completed, 'upload_verified': True,
+                'manifest_readback_verified': True}
+
     def test_backup_job_never_prunes_after_failed_backup(self):
         with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=backup.BackupError('backup failed')), \
                 patch.object(job, 'prune') as prune, patch.object(job, 'alert', return_value='accepted') as alert:
@@ -26,7 +31,7 @@ class RestoreEvidenceTests(unittest.TestCase):
         self.assertEqual(result['status'], 'failed')
 
     def test_backup_job_reports_retention_failure(self):
-        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print('{"label":"test"}')), \
+        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print(json.dumps(self.backup_receipt('test')))), \
                 patch.object(job, 'prune', side_effect=backup.BackupError('retention failed')), \
                 patch.object(job, 'alert', return_value='accepted'):
             result = job.run_job()
@@ -35,12 +40,30 @@ class RestoreEvidenceTests(unittest.TestCase):
         self.assertEqual(result['status'], 'failed')
 
     def test_backup_job_success_prunes_without_alert(self):
-        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print('{"label":"test"}')), \
+        receipt = self.backup_receipt('test')
+        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print(json.dumps(receipt))), \
                 patch.object(job, 'prune') as prune, patch.object(job, 'alert') as alert:
             result = job.run_job()
         prune.assert_called_once()
         alert.assert_not_called()
         self.assertEqual(result['status'], 'passed')
+        receipt.pop('upload_verified')
+        receipt.pop('manifest_readback_verified')
+        self.assertEqual(result['backup_manifest_sha256'], hashlib.sha256(
+            json.dumps(receipt, sort_keys=True).encode()).hexdigest())
+
+    def test_backup_job_refuses_unverified_receipt_before_retention(self):
+        for field in ('upload_verified', 'manifest_readback_verified'):
+            with self.subTest(field=field):
+                receipt = self.backup_receipt()
+                receipt[field] = False
+                with patch.object(job, 'Store'), \
+                        patch.object(job, 'backup', side_effect=lambda *_: print(json.dumps(receipt))), \
+                        patch.object(job, 'prune') as prune, patch.object(job, 'alert', return_value='accepted'):
+                    result = job.run_job()
+                prune.assert_not_called()
+                self.assertEqual((result['status'], result['phase']), ('failed', 'backup'))
+                self.assertNotIn('backup_manifest_sha256', result)
 
     def test_backup_metrics_preserve_verified_time_on_failure_and_advance_on_prune_failure(self):
         old = '2026-09-13T12:00:00Z'
@@ -50,7 +73,7 @@ class RestoreEvidenceTests(unittest.TestCase):
             with patch.dict(os.environ, {'BACKUP_METRICS_PATH': str(path)}), patch.object(job, 'Store'), \
                     patch.object(job, 'alert', return_value='accepted') as send:
                 def payload(completed):
-                    return json.dumps({'label': 'fixture', 'completed_at': completed})
+                    return json.dumps(self.backup_receipt(completed=completed))
 
                 with patch.object(job, 'backup', side_effect=lambda *_: print(payload(old))), patch.object(job, 'prune'):
                     self.assertEqual(job.run_job()['monitoring'], 'reported')
@@ -79,7 +102,7 @@ class RestoreEvidenceTests(unittest.TestCase):
     def test_monitoring_write_failure_keeps_backup_result_and_invokes_failure_handoff(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'missing-directory' / 'postgres-backup.prom'
-            full = {'label': 'fixture', 'completed_at': '2026-09-13T12:00:00Z'}
+            full = self.backup_receipt()
             with patch.dict(os.environ, {'BACKUP_METRICS_PATH': str(path)}), patch.object(job, 'Store'), \
                     patch.object(job, 'backup', side_effect=lambda *_: print(json.dumps(full))), \
                     patch.object(job, 'prune') as prune, patch.object(job, 'alert', return_value='accepted') as send:
@@ -154,6 +177,8 @@ class RestoreExerciseTests(unittest.TestCase):
         self.assertEqual(result['status'], 'passed', result)
         self.assertEqual(result['tables']['users']['count'], 3)
         self.assertEqual(result['baseline_sha256'], hashlib.sha256(self.baseline.read_bytes()).hexdigest())
+        self.assertEqual(result['backup_manifest_sha256'], hashlib.sha256(
+            json.dumps(self.fixture.base, sort_keys=True).encode()).hexdigest())
         self.assertEqual(result['rpo_seconds'], 0)
         self.assertGreater(result['database_rto_seconds'], 0)
         self.assertIsNone(result['core_service_rto_seconds'])

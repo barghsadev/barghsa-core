@@ -194,6 +194,8 @@ and private workspace `/var/lib/barghsa-backup`. Install the pinned requirements
 into that environment. Supply `/etc/barghsa/backup.env` from managed secrets.
 The daily job uses `run_backup_job.py`: it prunes only after a successful backup
 and sends backup or retention failures to the same configured alert receiver.
+Keep its `backup_manifest_sha256` alongside the original off-server manifest.
+The restore report records the same field for the backup it actually used.
 The quarterly job runs at 03:00 UTC on the first Saturday of January, April,
 July and October. Both timers catch up missed executions.
 

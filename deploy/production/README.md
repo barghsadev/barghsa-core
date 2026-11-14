@@ -123,7 +123,10 @@ Paths in these indexes are relative to the same protected approval package.
 - Under `backup_and_restore`, point `backup_job` to the latest successful daily
   job result, `backup_manifest` to its off-server encrypted manifest,
   `restore_report` to the verified database exercise result, and `restore_manifest`
-  to the manifest used in that exercise. Set `source_baseline` to the original
+  to the manifest used in that exercise. The daily job and restore exercise
+  each record `backup_manifest_sha256` for the exact manifest they verified,
+  using SHA-256 over its JSON object serialized with sorted keys. Set
+  `source_baseline` to the original
   independently captured baseline file used by the restore verifier. Keep that
   file byte-for-byte so its SHA-256 matches the restore report. Add
   `core_service_report` using the format below. The check enforces backup age

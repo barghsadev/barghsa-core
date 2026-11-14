@@ -356,6 +356,8 @@ class StructuredReceiptTest(unittest.TestCase):
                   'database_rto_seconds': 3300, 'core_service_rto_seconds': None,
                   'started_at': '2026-11-09T03:00:00Z', 'replayed_transaction_time': '2026-11-09T02:00:00Z',
                   'tables': {table: {'count': 2, 'sha256': 'c' * 64} for table in ('users', 'orders', 'invoices')}}
+        restored = {**manifest, 'label': older, 'started_at': older, 'completed_at': '2026-11-09T01:05:00Z'}
+        report['backup_manifest_sha256'] = self.manifest_digest(restored)
         baseline = {'version': 1, 'reference_time': '2026-11-09T02:05:00Z',
                     'captured_at': '2026-11-09T02:06:00Z', 'tables': deepcopy(report['tables'])}
         report['baseline_sha256'] = hashlib.sha256(json.dumps(baseline).encode()).hexdigest()
@@ -367,9 +369,10 @@ class StructuredReceiptTest(unittest.TestCase):
                             'evidence': path.name, 'evidence_sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
         return {
             'backup_job': {'status': 'passed', 'phase': 'retention', 'backup': label,
-                           'started_at': at(self.completed - 121)},
+                           'started_at': at(self.completed - 121),
+                           'backup_manifest_sha256': self.manifest_digest(manifest)},
             'backup_manifest': manifest,
-            'restore_manifest': {**manifest, 'label': older, 'started_at': older, 'completed_at': '2026-11-09T01:05:00Z'},
+            'restore_manifest': restored,
             'restore_report': report,
             'source_baseline': baseline,
             'core_service_report': {
@@ -379,6 +382,10 @@ class StructuredReceiptTest(unittest.TestCase):
                 'checks': checks,
             },
         }
+
+    @staticmethod
+    def manifest_digest(manifest):
+        return hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
 
     def test_backup_requires_fresh_success_and_a_verified_restore_for_the_same_database(self):
         entries = self.backup()
@@ -407,8 +414,24 @@ class StructuredReceiptTest(unittest.TestCase):
             with self.subTest(field=field):
                 bad = deepcopy(entries)
                 bad[artifact][field] = value
+                if artifact == 'restore_manifest':
+                    bad['restore_report']['backup_manifest_sha256'] = self.manifest_digest(bad[artifact])
                 fingerprint = self.write_bundle(bad)
                 with self.assertRaisesRegex(ValueError, expected):
+                    promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_rejects_substituted_daily_and_restore_manifests_with_the_same_label(self):
+        for artifact, field, replacement in (
+            ('backup_manifest', 'blob', 'blobs/' + 'e' * 32 + '.tar.gpg'),
+            ('restore_manifest', 'sha256', 'd' * 64),
+            ('backup_job', 'backup_manifest_sha256', None),
+            ('restore_report', 'backup_manifest_sha256', None),
+        ):
+            with self.subTest(artifact=artifact, field=field):
+                entries = self.backup()
+                entries[artifact][field] = replacement
+                fingerprint = self.write_bundle(entries)
+                with self.assertRaisesRegex(ValueError, 'exact off-server manifests'):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
     def test_migration_checkpoint_matches_the_deployed_release_and_separate_rehearsal(self):

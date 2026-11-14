@@ -428,6 +428,7 @@ def restore(store, args):
             raise BackupError("Restore publication failed; inspect the reserved target") from None
     print(json.dumps({"backup": meta["label"], "data_dir": str(target / "data"),
                       "prepared": True, "replayed": False}))
+    return meta
 
 
 def prune(store, now=None):

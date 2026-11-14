@@ -9006,7 +9006,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9026,7 +9027,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9409,6 +9410,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -13658,7 +13667,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13671,7 +13681,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13810,6 +13820,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -13901,7 +13919,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13913,7 +13932,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14338,6 +14357,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -17483,7 +17510,8 @@
         "The prepared PostgreSQL image with a 197 MB synthetic data directory peaked at 407 MB of allocated backup scratch during verified encrypted upload. Repeat on the approved off-server destination while budgeting the retained volume, candidate images, transfer archive, and logical restore.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
-        "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover."
+        "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover.",
+        "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -17590,7 +17618,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-protected-staging-migration",
-          "release-0.6-backup-config-preflight"
+          "release-0.6-backup-config-preflight",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17617,7 +17646,8 @@
         "Retain the original source baseline with the exact production-equivalent database and application recovery receipts. The isolated PostgreSQL verifier emits its SHA-256 and still verifies replay and table fingerprints.",
         "An isolated two-database recovery exercised the prepared image and replayed encrypted WAL to the requested point. Sampled restore scratch peaked at 275 MB. This measures database restore and replay on the fixture. Production-equivalent data recovery and core-service RTO remain open.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
+        "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test."
       ],
       "owner": null,
       "depends_on": [],
@@ -17692,7 +17722,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-measured-cutover-scratch",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-packaged-backup-manifest-rehearsal"
+          "release-0.6-packaged-backup-manifest-rehearsal",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -21973,7 +22004,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-backup-object-readback",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -22009,7 +22041,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "c335c88fd64fdd5fd3783530674aac3442de5c39a2daecbfb00b6db611499827"
+              "sha256": "f918b3bc293da4ff7fd159e43a7dcccda7db6305aebcde4c107553b4d77bfc6f"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -22091,6 +22123,14 @@
                 "packages/db/scripts/backup/physical_backup.py"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -22164,7 +22204,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22176,7 +22217,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22452,6 +22493,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -22524,7 +22573,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22536,7 +22586,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22812,6 +22862,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -37428,7 +37486,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-notification-scan-recheck"
+          "release-0.6-notification-scan-recheck",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37451,7 +37510,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -37475,7 +37534,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "b061c59f73ff8ebe0c038632613cb74c5de63bfb0d0687838c479d01beec28f0"
+              "sha256": "2a864bd7fb4fd9ffab1fcbc89f1e691c1e046982c8ffd54aa8cb4c7c3a63b79c"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -38181,6 +38240,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -40723,7 +40791,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -40751,7 +40820,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             }
           ],
           "checks": [
@@ -41039,6 +41108,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -700904,7 +700981,8 @@
           "release-0.6-sql-data-flow",
           "release-0.6-async-job-tracing",
           "release-0.6-postgres-query-tracing",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "batch": "release-0.6-sql-data-flow",
@@ -700941,7 +701019,7 @@
             },
             {
               "path": "packages/db/scripts/backup/verify_restore.py",
-              "sha256": "96d12710b9b659bd42e69064ce384751d380a311e60dfc0de72006ba722bd9c4"
+              "sha256": "87d6730283a64759d9f02bef93c51a0b6dde5df605986680e5a35fa7881609a0"
             },
             {
               "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
@@ -701055,6 +701133,14 @@
                 "packages/db/scripts/backup/verify_restore.py"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "packages/db/scripts/backup/verify_restore.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -711226,7 +711312,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -711238,7 +711325,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -711406,6 +711493,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -736573,7 +736668,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -736595,11 +736691,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "0e3d3583fc3c75687a118dfe3a14610892c131f6811955c2ccccbca8718e9ffd"
+              "sha256": "772b00a287972f078b1bbf31262ec037484f9d3c6a1004f2d642470b3e22a756"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -737051,6 +737147,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -737570,7 +737675,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -737592,15 +737698,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "0e3d3583fc3c75687a118dfe3a14610892c131f6811955c2ccccbca8718e9ffd"
+              "sha256": "772b00a287972f078b1bbf31262ec037484f9d3c6a1004f2d642470b3e22a756"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -738179,6 +738285,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -738329,7 +738445,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -738340,7 +738457,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -738741,6 +738858,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -739344,7 +739469,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -739365,7 +739491,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -739745,6 +739871,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -739798,7 +739932,8 @@
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -739819,7 +739954,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -740199,6 +740334,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Only the staging HTTPS readback selects a no-redirect opener and sends Cache-Control: no-cache. The existing 15-second socket timeout, 64 KiB bound and exact final URL check remain enforced. All promotion gate tests passed, including checkpoint, rollback, receipt and strict quarantine checks."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -747439,7 +747582,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -747463,7 +747607,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -747794,6 +747938,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -751964,7 +752116,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-backup-target-monitoring",
-          "release-0.6-backup-manifest-readback"
+          "release-0.6-backup-manifest-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -751980,7 +752133,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "b061c59f73ff8ebe0c038632613cb74c5de63bfb0d0687838c479d01beec28f0"
+              "sha256": "2a864bd7fb4fd9ffab1fcbc89f1e691c1e046982c8ffd54aa8cb4c7c3a63b79c"
             }
           ],
           "checks": [
@@ -752131,6 +752284,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -759919,7 +760080,8 @@
           "release-0.6-empty-command-validation",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -759967,7 +760129,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -760315,6 +760477,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -760645,7 +760815,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-migration-manifest-binding",
           "release-0.6-synthetic-logout-readback",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -760693,7 +760864,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "cacf66408c3a02c009d4ba79a991cb8e248dad4d003a625550ccdb2771b94dae"
+              "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -761046,6 +761217,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Reviewed the checkpoint validation and documentation change. Promotion verifier and staging queue regression suites passed."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -762385,7 +762564,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762405,7 +762585,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -762706,6 +762886,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -762830,7 +763018,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -762850,7 +763039,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -763151,6 +763340,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -763204,7 +763401,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-backup-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -763224,7 +763422,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7282aa909208b44d17b17774737da361e735ea5df8bf7ed2cf5019e02ff60e0e"
+              "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -763525,6 +763723,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-backup-manifest-binding",
+              "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The manifest fingerprint binds the physical backup and restore outputs to inspected content. The successful promotion and backup checks retain prior safeguards and unrelated live receipts. Documentation only explains that boundary."
             }
           ]
         }
@@ -1140582,7 +1140788,8 @@
         "Hosted affected preflight 43607767584 failed one of 460 API cases when the saving eligibility fixture inherited an intentionally depleted gift-code window. The fixture now resets its exact counters at exit. All 11 saving integration cases passed on compiled HTTP and migrated PostgreSQL. Verify the successor protected-main preflight and full release coverage.",
         "A broader auth run completed 92 of 93 cases, with the forced-password account-lock fixture returning 500 at database lock timeout. Both corrected contention cases passed on migrated PostgreSQL, with exact failed-request rollback checks. Full exact API coverage remains open.",
         "The private Telegram queue now requires matching HTTP and integer Bot API rejection status. All 21 compiled PostgreSQL cases and 33 focused protocol/runtime cases passed. A relay 502 with a 429 body stays unknown and does not replay. Rehearse the selected relay on the immutable staging release.",
-        "The release notifier now atomically syncs the unknown and confirmed summary and album receipts. All 20 notifier and 27 queue checks passed, including blocked send when the unknown receipt cannot sync and persisted unknown after confirmed receipt replacement fails. Actual staged worker and Telegram receipts remain required."
+        "The release notifier now atomically syncs the unknown and confirmed summary and album receipts. All 20 notifier and 27 queue checks passed, including blocked send when the unknown receipt cannot sync and persisted unknown after confirmed receipt replacement fails. Actual staged worker and Telegram receipts remain required.",
+        "Daily backup and isolated restore reports now identify the exact off-server manifests by canonical SHA-256. The promotion verifier rejects a substituted manifest under the same label. All 19 promotion and 18 backup unit checks passed, as did the isolated native restore on the retained staging PostgreSQL and SeaweedFS images. The actual approved off-server deployment and production-equivalent recovery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1140971,7 +1141178,8 @@
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-release-notification-durability"
+          "release-0.6-release-notification-durability",
+          "release-0.6-backup-manifest-binding"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1141268,7 +1141476,8 @@
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
-        "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate."
+        "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
+        "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report."
       ],
       "owner": null,
       "depends_on": [],
@@ -1141350,7 +1141559,8 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-promotion-checkpoint-parity",
           "release-0.6-staging-telegram-relay-recovery",
-          "release-0.6-staging-knowledge-preview-readback"
+          "release-0.6-staging-knowledge-preview-readback",
+          "release-0.6-backup-manifest-binding"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1332359,6 +1332569,119 @@
         {
           "file": "queue-tests.log",
           "sha256": "a1ded5529c1eae862706f4e39f041fb2161c55648ba276c5ec260564364348a1"
+        }
+      ]
+    },
+    "release-0.6-backup-manifest-binding": {
+      "batch": "release-0.6-backup-manifest-binding",
+      "base_commit": "30d537352293a7945c6f1dfff5167608b9592d1e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "packages/db/scripts/backup/run_backup_job.py",
+        "packages/db/scripts/backup/test_verify_restore.py",
+        "packages/db/scripts/backup/verify_restore.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "c3ff13905769b8aed4e485e4165c6c6effd22db4fa0fc6158625a8c5a24ffaec"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "87c209f287b520a40d93f3d9686f59c1026079ad8d8d1dc4c8bdde83e5c59cd5"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "772b00a287972f078b1bbf31262ec037484f9d3c6a1004f2d642470b3e22a756"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "2a864bd7fb4fd9ffab1fcbc89f1e691c1e046982c8ffd54aa8cb4c7c3a63b79c"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "f918b3bc293da4ff7fd159e43a7dcccda7db6305aebcde4c107553b4d77bfc6f"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "196c7b9be270d821feb01fdb9c1aa7172735d0a38e3a20f609bf31d8605d36eb"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "31452bb926f34d78e14e53e5edd96510725591ad81fc2010a405202ce6d4292f"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "87d6730283a64759d9f02bef93c51a0b6dde5df605986680e5a35fa7881609a0"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "b8e56f5a26b07c45f400d7c49941ede106007505d8347109e0d7125927a75cc5"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify-restore.sh",
+          "sha256": "615d8615db6e893b642eed3e5e6ec0676b1cd274bbd89cdbfefd36a706d12169"
+        }
+      ],
+      "checks": [
+        "All 19 promotion checks and 18 backup unit and archive-safety checks passed. The exact source overlay passed one isolated native PostgreSQL restore, verified replay and source fingerprints, and matched the canonical digest of the actual downloaded manifest. The retained container IDs and four executed source digests are in the native receipt. Markdown formatting and Git diff validation passed."
+      ],
+      "limitations": [
+        "An initial local command mistyped the unit class name and its corrected selection passed. The isolated Linux fixture used a disposable network, storage and synthetic data, not the live staging database or an approved off-server destination. Production-equivalent end-to-end RTO and actual deployment gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-manifest-binding",
+      "execution_receipts": [
+        {
+          "file": "promotion-tests.log",
+          "sha256": "e875692915570b56b183b24dff2c7be789ccdd42ac209e7ac72e77fac3ff4a77"
+        },
+        {
+          "file": "backup-unit-tests.log",
+          "sha256": "1c3d426f0b663863b925bf2acf7f998c52a79b12cb024d2514d932e33faef681"
+        },
+        {
+          "file": "native-restore.log",
+          "sha256": "80bbd94f28a300ef1cdb90f5044fbb462f5f16ccfe5333de3e13b3bdce233d3e"
+        },
+        {
+          "file": "initial-wrong-test-class.log",
+          "sha256": "eda094883ce54ce56e8e2446b0887fdd650fbe40cf0d2881e16ecb176a9f42ec"
+        },
+        {
+          "file": "staging-fixture.sh",
+          "sha256": "701af8813615ddcc44a2065d6fa682629b05dbd102ad4e89989fd28965aa1e0f"
         }
       ]
     }
