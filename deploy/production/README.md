@@ -130,7 +130,8 @@ Paths in these indexes are relative to the same protected approval package.
   independently captured baseline file used by the restore verifier. Keep that
   file byte-for-byte so its SHA-256 matches the restore report. Add
   `core_service_report` using the format below. The check enforces backup age
-  under 24 hours, a matching database system and matching source/restored table
+  under 24 hours, native WAL range and tablespace metadata on both manifests,
+  a matching database system and matching source/restored table
   fingerprints. It recomputes the recovery point from the baseline's confirmed
   commit time and the restored transaction replay time.
 - Under `staging_and_telegram`, point `deployment` to the completed staging

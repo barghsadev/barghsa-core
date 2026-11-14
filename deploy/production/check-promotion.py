@@ -382,13 +382,15 @@ def verify_backup_receipts(index_path, path, fingerprint, now, sha):
                                    'source_baseline', 'core_service_report'))
     job, manifest = data['backup_job'], data['backup_manifest']
     restored, report = data['restore_manifest'], data['restore_report']
+    verify_native_manifest = runpy.run_path(str(ROOT / 'deploy/staging/release-queue.py'))['verified_manifest_details']
     for value in (manifest, restored):
         if (type(value.get('version')) is not int or value['version'] != 1
                 or not matches(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}', value.get('label'))
                 or not matches(r'[0-9]+', value.get('system_id'))
                 or not matches(r'blobs/[a-f0-9]{32}\.tar\.gpg', value.get('blob'))
                 or not matches(r'[a-f0-9]{64}', value.get('sha256'))
-                or type(value.get('size')) is not int or value['size'] <= 0):
+                or type(value.get('size')) is not int or value['size'] <= 0
+                or not verify_native_manifest(value)):
             raise ValueError('Encrypted backup manifest is invalid')
     completed = epoch(manifest.get('completed_at'))
     for receipt, expected in ((job, manifest), (report, restored)):

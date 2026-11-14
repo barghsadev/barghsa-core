@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T16:55:04+00:00",
+  "updated": "2026-11-14T16:59:27+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9008,7 +9008,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9028,7 +9029,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9427,6 +9428,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -13679,7 +13688,8 @@
           "release-0.6-forced-password-expiry-fixture",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13692,7 +13702,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13855,6 +13865,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -13949,7 +13967,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13961,7 +13980,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14410,6 +14429,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -17557,7 +17584,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The v0.6.0 worker checks backup mode, archiving and the three protected files before image or remote configuration work. The read-only preflight refused live staging. Provision the approved off-server endpoint and recovery key, verify backup and restore, and complete the staged cutover.",
         "The daily job checks verified ciphertext and manifest readback before pruning and emits the canonical digest of that exact manifest. The live configured daily schedule, approved off-server storage and WAL/PITR evidence remain open.",
-        "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning."
+        "Verify new encrypted WAL bytes on the approved off-server target before acknowledging each segment. The isolated PostgreSQL archiver and PITR cases passed. Same-size corruption and failed readback keep the operation retryable, and a matching stored ciphertext is preserved. Verify deployed archive throughput, backlog and RPO after provisioning.",
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -17666,7 +17694,8 @@
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-wal-upload-readback"
+          "release-0.6-wal-upload-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -17695,7 +17724,8 @@
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The native restore fixture verified replay, source fingerprints and the exact encrypted manifest digest with staged PostgreSQL and isolated object storage. Complete the actual approved recovery and timed core-service test.",
-        "The restoration probe emits a structured exact-candidate result for login, dashboard, wallet and electricity, saving, solar and consultation with session revocation. The promotion verifier requires that original result and checks the chronology after data recovery. Verify it on the actual production-equivalent restored deployment."
+        "The restoration probe emits a structured exact-candidate result for login, dashboard, wallet and electricity, saving, solar and consultation with session revocation. The promotion verifier requires that original result and checks the chronology after data recovery. Verify it on the actual production-equivalent restored deployment.",
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -17772,7 +17802,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -22312,7 +22343,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22324,7 +22356,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22624,6 +22656,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -22699,7 +22739,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22711,7 +22752,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23011,6 +23052,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -37732,7 +37781,8 @@
           "release-0.6-wal-upload-readback",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37755,7 +37805,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -38542,6 +38592,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -41087,7 +41145,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41115,7 +41174,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             }
           ],
           "checks": [
@@ -41427,6 +41486,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -713937,7 +714004,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -713949,7 +714017,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -714141,6 +714209,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -739373,7 +739449,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -739395,11 +739472,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "ca8767a9e9ea84602910b5c7bf8af4288f13fd59f8a2d8fe55d8c83d881aad0f"
+              "sha256": "18316dede61cce403ffe7bf06f0bfe35cad37e7fb344962825e8d52620e5e1ee"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -739869,6 +739946,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -740391,7 +740477,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -740413,15 +740500,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "ca8767a9e9ea84602910b5c7bf8af4288f13fd59f8a2d8fe55d8c83d881aad0f"
+              "sha256": "18316dede61cce403ffe7bf06f0bfe35cad37e7fb344962825e8d52620e5e1ee"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -741028,6 +741115,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -741183,7 +741280,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -741194,7 +741292,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -741619,6 +741717,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -742226,7 +742332,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -742247,7 +742354,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -742643,6 +742750,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -742698,7 +742813,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -742719,7 +742835,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -743115,6 +743231,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -750421,7 +750545,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -750445,7 +750570,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -750801,6 +750926,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -762965,7 +763098,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -763013,7 +763147,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -763386,6 +763520,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -763719,7 +763861,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -763767,7 +763910,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "49745f47608bdf9e10f1fd3e075daedeedb3fc5da26df507bf3be405643097ec"
+              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -764144,6 +764287,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -765487,7 +765638,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -765507,7 +765659,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -765824,6 +765976,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -765950,7 +766110,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -765970,7 +766131,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -766287,6 +766448,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -766342,7 +766511,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
-          "release-0.6-restored-application-probe"
+          "release-0.6-restored-application-probe",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -766362,7 +766532,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "b6c5fe9024c3ea627fc6c450aff878f9ec96f32aad42f4aa0256fcc761600a3d"
+              "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -766679,6 +766849,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The one-shot restoration probe requires the exact revision and same-profile customer evidence. The scheduled probe and rollout scopes keep their existing output and authorization. All affected fixture suites passed and prior unaffected operational receipts retain their scoped proof."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         }
@@ -1114487,7 +1114665,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
+              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -1114776,6 +1114954,14 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ]
         },
@@ -1114800,7 +1114986,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-release-notification-durability",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-backup-native-manifest-parity"
         ]
       }
     },
@@ -1128529,7 +1128716,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
+              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1132187,6 +1132374,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ],
           "presentation_renewals": [
@@ -1132643,7 +1132838,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-consultation-read-authority",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1134832,7 +1135028,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
+              "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1138418,6 +1138614,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
+            },
+            {
+              "batch": "release-0.6-backup-native-manifest-parity",
+              "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+              "paths": [
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1138891,7 +1139095,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-consultation-read-authority",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-atomic-active-staging-manifest"
+          "release-0.6-atomic-active-staging-manifest",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1144290,7 +1144495,8 @@
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
-        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144689,7 +1144895,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-operator-archive-restore-identity",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1144990,7 +1145197,8 @@
         "The isolated native restore with synthetic data verified source fingerprints and bound the exact retained encrypted object manifest. Repeat for the approved off-server destination and core-service recovery, with the updated daily job and restore report.",
         "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open.",
         "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required.",
-        "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts."
+        "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts.",
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1145076,7 +1145284,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-configuration-backup-readback",
-          "release-0.6-wal-upload-readback"
+          "release-0.6-wal-upload-readback",
+          "release-0.6-backup-native-manifest-parity"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1337461,6 +1337670,100 @@
         {
           "file": "guarded-rollout.log",
           "sha256": "a1b4b814957a46bc1cc7cf8ba21ccc420c19bad5a34e240c04e4dc9887892574"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-backup-native-manifest-parity": {
+      "batch": "release-0.6-backup-native-manifest-parity",
+      "base_commit": "e1fe88662c4d30c19b271d7fd5f050ddef7d9adf",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/release-queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "406c30ec2671523db8c486c8b00b876f2c2607a45e9ba58160f1e39528e765a4"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "18316dede61cce403ffe7bf06f0bfe35cad37e7fb344962825e8d52620e5e1ee"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "f0173820939b26887f725d72f5868f6dc5633d0655868f62121287d4b5cad273"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "726519e4aef61ab0d633375a44efe6a2568b0d88258f24ab434e2b553afb9be3"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "70d83afebb43b4482544f4556474aca16bc119569273d67e83cd55b240275431"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "196c7b9be270d821feb01fdb9c1aa7172735d0a38e3a20f609bf31d8605d36eb"
+        }
+      ],
+      "checks": [
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
+        "The negative fixtures recomputed the daily job and restore receipts and updated the core report digest. Existing timestamp, RPO/RTO, source fingerprint and artifact binding assertions passed. Changed documentation formatting, Python syntax and Git diff checks passed."
+      ],
+      "limitations": [
+        "The tests verify the acceptance parser against controlled receipts. Actual protected backup, restore and staging deployment evidence remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-native-manifest-parity",
+      "execution_receipts": [
+        {
+          "file": "regression-confirmed.log",
+          "sha256": "6203d3fbb79ceee8cb182d78aa36655cef3e509a562a045399b53cf7fff23495"
+        },
+        {
+          "file": "promotion-tests.log",
+          "sha256": "bd0aedbbe9f77813ae42229f3b1d59edb61360d015c7b3ef04c33b399c912ae9"
+        },
+        {
+          "file": "queue-tests.log",
+          "sha256": "ec309b8af2ffdac1efccc05fa1b323abf6ac96fa3298fc6c2a67a5dd31b358b1"
         },
         {
           "file": "scoped-checks.log",

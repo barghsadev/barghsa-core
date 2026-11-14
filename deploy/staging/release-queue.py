@@ -80,9 +80,12 @@ def verified_checkpoint_fields(backup, commit):
 
 def verified_manifest_details(backup):
     try:
-        started = datetime.datetime.fromisoformat(backup["started_at"])
-        completed = datetime.datetime.fromisoformat(backup["completed_at"])
-    except (KeyError, TypeError, ValueError):
+        timestamps = (backup[key] for key in ("started_at", "completed_at"))
+        started, completed = (
+            datetime.datetime.fromisoformat(value[:-1] + "+00:00" if value.endswith("Z") else value)
+            for value in timestamps
+        )
+    except (AttributeError, KeyError, TypeError, ValueError):
         return False
     ranges = backup.get("wal_ranges")
     tablespaces = backup.get("tablespaces")

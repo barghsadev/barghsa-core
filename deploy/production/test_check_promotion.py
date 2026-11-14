@@ -351,7 +351,9 @@ class StructuredReceiptTest(unittest.TestCase):
         older = '2026-11-09T01:00:00Z'
         manifest = {'version': 1, 'label': label, 'system_id': '12345', 'blob': f'blobs/{"a" * 32}.tar.gpg',
                     'size': 100, 'sha256': 'b' * 64, 'started_at': at(self.completed - 120),
-                    'completed_at': at(self.completed)}
+                    'completed_at': at(self.completed),
+                    'wal_ranges': [{'Timeline': 1, 'Start-LSN': '0/5000028', 'End-LSN': '0/5000100'}],
+                    'tablespaces': []}
         report = {'status': 'passed', 'scope': 'database_restore', 'backup': older, 'rpo_seconds': 300,
                   'database_rto_seconds': 3300, 'core_service_rto_seconds': None,
                   'started_at': '2026-11-09T03:00:00Z', 'replayed_transaction_time': '2026-11-09T02:00:00Z',
@@ -411,7 +413,7 @@ class StructuredReceiptTest(unittest.TestCase):
             ('backup_job', 'status', 'failed', 'successful verified backup'),
             ('backup_manifest', 'sha256', 'invalid', 'manifest is invalid'),
             ('restore_manifest', 'system_id', '23456', 'same database system'),
-            ('restore_manifest', 'started_at', '2026-11-09T02:00:00Z', 'same database system'),
+            ('restore_manifest', 'started_at', '2026-11-09T02:00:00Z', 'manifest is invalid'),
             ('restore_report', 'rpo_seconds', 300.001, 'recovery limits'),
             ('restore_report', 'database_rto_seconds', None, 'recovery limits'),
             ('restore_report', 'tables', {}, 'table fingerprints'),
@@ -441,6 +443,25 @@ class StructuredReceiptTest(unittest.TestCase):
                 fingerprint = self.write_bundle(entries)
                 with self.assertRaisesRegex(ValueError, 'exact off-server manifests'):
                     promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
+
+    def test_rejects_non_native_daily_and_restore_manifests_even_with_matching_digests(self):
+        for artifact, receipt in (('backup_manifest', 'backup_job'), ('restore_manifest', 'restore_report')):
+            for field, value in (
+                ('wal_ranges', []),
+                ('wal_ranges', [{'Timeline': True, 'Start-LSN': '0/5000028', 'End-LSN': '0/5000100'}]),
+                ('wal_ranges', [{'Timeline': 1, 'Start-LSN': 'not-an-lsn', 'End-LSN': '0/5000100'}]),
+                ('tablespaces', ['../elsewhere']),
+            ):
+                with self.subTest(artifact=artifact, field=field, value=value):
+                    entries = self.backup()
+                    entries[artifact][field] = value
+                    entries[receipt]['backup_manifest_sha256'] = self.manifest_digest(entries[artifact])
+                    if receipt == 'restore_report':
+                        entries['core_service_report']['database_restore_sha256'] = hashlib.sha256(
+                            json.dumps(entries[receipt]).encode()).hexdigest()
+                    fingerprint = self.write_bundle(entries)
+                    with self.assertRaisesRegex(ValueError, 'Encrypted backup manifest is invalid'):
+                        promotion.verify_backup_receipts(self.index, self.bundle, fingerprint, self.now, SHA)
 
     def test_migration_checkpoint_matches_the_deployed_release_and_separate_rehearsal(self):
         manifest = {**self.backup()['backup_manifest'],
