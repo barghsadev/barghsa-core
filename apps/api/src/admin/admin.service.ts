@@ -24,10 +24,13 @@ import {
   serviceSettingHistory,
   serviceSettingRow,
   serviceSettings,
+  versionedConfigChangeHistory,
+  versionedConfigRecoveryDraft,
   type ServiceRecoveryDraft,
   type ServiceSetting,
   type ServiceSettingValue,
 } from './service-settings-recovery.js';
+import type { activateRecoveryDraft, stageRecoveryDraft } from './config-activation-history.js';
 import {
   electricitySettingHistory,
   electricitySettingKeys,
@@ -123,6 +126,36 @@ import { InputFieldException } from '../common/input-field.exception.js';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { z } from 'zod';
 import { greenRuleLimitsCompatible } from '../electricity/electricity-calculation.js';
+
+const walletLimitRecoveryEvent = 'wallet_limit.rollback_draft';
+const walletLimitAmount = z.number().int().nonnegative();
+const persistedWalletLimit = z.union([
+  z.strictObject({ limit_irr: walletLimitAmount }),
+  z.strictObject({ limitIrR: walletLimitAmount }),
+]);
+type WalletLimitRecoveryActivation = z.infer<typeof activateRecoveryDraft>;
+
+function recoverableWalletLimit(value: unknown) {
+  const parsed = persistedWalletLimit.safeParse(value);
+  return parsed.success ? toWalletTopUpLimitConfig(parsed.data) : null;
+}
+
+function readWalletLimitRecoveryDraft(client: Pick<PoolClient, 'query'>, baseVersion: number) {
+  return versionedConfigRecoveryDraft(
+    client,
+    walletLimitRecoveryEvent,
+    WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+    recoverableWalletLimit,
+    baseVersion
+  );
+}
+
+async function lockWalletLimit(client: PoolClient) {
+  await client.query(`SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`, [
+    WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+    WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  ]);
+}
 
 /**
  * Supported activation methods for new staff users.
@@ -1393,10 +1426,8 @@ export class AdminService {
    * (T-04.2.02.06).
    *
    * Returns the 2,000,000,000 IRR default at version `0` when no admin
-   * value has been persisted yet (T-09.10.01). A persisted row that does
-   * not normalize to a *valid* config means the stored value is corrupt;
-   * fail open to the default limit but make the corruption observable so
-   * it cannot silently change the enforced ceiling.
+   * value has been persisted yet (T-09.10.01). Invalid stored values make
+   * the current configuration unavailable and can be recovered from history.
    */
   async getWalletTopUpLimitConfig(): Promise<{ limitIrR: number; version: number }> {
     const pool = getDbPool();
@@ -1422,6 +1453,113 @@ export class AdminService {
     };
   }
 
+  async getWalletLimitRecovery(actor: StaffReadActor, beforeVersion?: number) {
+    return withStaffReadAuthority(actor, 'admin:financial:edit', async (client) => {
+      const baseVersion = await this.readWalletLimitVersion(client);
+      return {
+        baseVersion,
+        ...(await this.readWalletLimitHistory(
+          client,
+          Math.min(baseVersion, beforeVersion ?? baseVersion)
+        )),
+        draft: await readWalletLimitRecoveryDraft(client, baseVersion),
+      };
+    });
+  }
+
+  async stageWalletLimitRecovery(
+    input: z.infer<typeof stageRecoveryDraft>,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await lockWalletLimit(client);
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireSessionStepUp(client, actor);
+      const baseVersion = await this.readWalletLimitVersion(client);
+      if (baseVersion !== input.expectedVersion)
+        throw new ConflictException('Wallet top-up limit changed');
+      const {
+        items: [source],
+      } = await this.readWalletLimitHistory(client, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException('Wallet top-up limit revision not found');
+      const current = await readWalletLimitRecoveryDraft(client, baseVersion);
+      const draft =
+        current?.sourceId === source.id
+          ? current
+          : {
+              id: uuidv7(),
+              baseVersion,
+              sourceId: source.id,
+              sourceVersion: source.version,
+              config: source.config,
+            };
+      if (draft !== current) {
+        await client.query(
+          `INSERT INTO audit_log (id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES ($1,$2,$3,$4::jsonb,$5,$6,clock_timestamp())`,
+          [
+            draft.id,
+            actor.userId,
+            walletLimitRecoveryEvent,
+            JSON.stringify({
+              key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+              sessionId: actor.sessionId,
+              ...draft,
+            }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            ip,
+          ]
+        );
+      }
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return draft;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async activateWalletLimitRecovery(
+    input: WalletLimitRecoveryActivation,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const draft = await readWalletLimitRecoveryDraft(getDbPool(), input.expectedVersion);
+    if (draft?.id !== input.draftId)
+      throw new ConflictException('Wallet top-up limit recovery draft changed');
+    const { limitIrR, version } = await this.setWalletTopUpLimitConfig(
+      { limitIrR: draft.config.limitIrR, expectedVersion: input.expectedVersion },
+      actor,
+      ip,
+      input
+    );
+    return { config: { limitIrR }, version, draftId: draft.id };
+  }
+
+  private async readWalletLimitVersion(client: PoolClient) {
+    const { rows } = await client.query<{ version: number }>(
+      'SELECT version FROM app_config WHERE key = $1',
+      [WALLET_TOP_UP_LIMIT_CONFIG_KEY]
+    );
+    return rows[0]?.version ?? 0;
+  }
+
+  private readWalletLimitHistory(client: PoolClient, beforeVersion: number, sourceId?: string) {
+    return versionedConfigChangeHistory(
+      client,
+      WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+      recoverableWalletLimit,
+      beforeVersion,
+      sourceId
+    );
+  }
+
   /**
    * Persist a new admin-configurable per-transaction online wallet top-up
    * limit.
@@ -1442,7 +1580,8 @@ export class AdminService {
   async setWalletTopUpLimitConfig(
     input: unknown,
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    ip: string
+    ip: string,
+    recovery?: WalletLimitRecoveryActivation
   ): Promise<{ limitIrR: number; version: number }> {
     const actorUserId = actor.userId;
     assertSettingsWriteFields(input, [
@@ -1494,10 +1633,7 @@ export class AdminService {
       // online top-up submission path uses so a concurrent first write
       // cannot commit a tighter ceiling after a submission has already
       // observed the default (T-04.2.02.06).
-      await client.query(`SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`, [
-        WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
-        WALLET_TOP_UP_LIMIT_CONFIG_KEY,
-      ]);
+      await lockWalletLimit(client);
       await requireStaffMutationPermission(client, actorUserId, 'admin:financial:edit');
       await requireSessionStepUp(client, actor);
 
@@ -1534,6 +1670,14 @@ export class AdminService {
         );
       }
 
+      const draft = recovery ? await readWalletLimitRecoveryDraft(client, previousVersion) : null;
+      if (
+        recovery &&
+        (!draft || draft.id !== recovery.draftId || draft.config.limitIrR !== config.limitIrR)
+      ) {
+        throw new ConflictException('Wallet top-up limit recovery draft changed');
+      }
+
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
@@ -1568,6 +1712,12 @@ export class AdminService {
             previousVersion,
             newValue: stored,
             version: newVersion,
+            ...(draft && {
+              action: 'rollback_activated',
+              draftId: draft.id,
+              sourceId: draft.sourceId,
+              sourceVersion: draft.sourceVersion,
+            }),
           }),
           correlationId,
           ip,

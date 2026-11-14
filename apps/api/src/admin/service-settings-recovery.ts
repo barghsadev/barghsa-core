@@ -69,6 +69,22 @@ export async function serviceSettingHistory(
   beforeVersion: number,
   sourceId?: string
 ) {
+  return versionedConfigChangeHistory(
+    client,
+    serviceSettings[setting].key,
+    (value) => recoverableValue(setting, value),
+    beforeVersion,
+    sourceId
+  );
+}
+
+export async function versionedConfigChangeHistory<T>(
+  client: PoolClient,
+  key: string,
+  validate: (value: unknown) => T | null,
+  beforeVersion: number,
+  sourceId?: string
+) {
   const { rows } = await client.query<{ id: string; version: number; value: unknown }>(
     `WITH revisions AS (
        SELECT id, data->'newValue' AS value,
@@ -82,18 +98,13 @@ export async function serviceSettingHistory(
      SELECT id, version::int, value FROM revisions
      WHERE version>0 AND version<$2 AND version=trunc(version)
      ORDER BY revisions.version DESC, id DESC LIMIT $4`,
-    [
-      serviceSettings[setting].key,
-      beforeVersion,
-      sourceId ?? null,
-      sourceId ? 1 : activationPageSize + 1,
-    ]
+    [key, beforeVersion, sourceId ?? null, sourceId ? 1 : activationPageSize + 1]
   );
   const page = rows.slice(0, activationPageSize);
   return {
     items: page.flatMap(({ id, version, value }) => {
-      const config = recoverableValue(setting, value);
-      return config ? [{ id, version, config }] : [];
+      const config = validate(value);
+      return config !== null ? [{ id, version, config }] : [];
     }),
     nextBeforeVersion: rows.length > activationPageSize ? page.at(-1)!.version : null,
   };
@@ -104,18 +115,34 @@ export async function serviceSettingDraft(
   setting: ServiceSetting,
   baseVersion: number
 ): Promise<ServiceRecoveryDraft | null> {
+  return versionedConfigRecoveryDraft(
+    client,
+    serviceRecoveryDraftEvent,
+    serviceSettings[setting].key,
+    (value) => recoverableValue(setting, value),
+    baseVersion
+  );
+}
+
+export async function versionedConfigRecoveryDraft<T>(
+  client: Pick<PoolClient, 'query'>,
+  event: string,
+  key: string,
+  validate: (value: unknown) => T | null,
+  baseVersion: number
+) {
   const { rows } = await client.query<{ id: string; data: unknown }>(
     `SELECT id,data FROM audit_log CROSS JOIN LATERAL (
        SELECT CASE WHEN metadata IS JSON OBJECT THEN metadata::jsonb ELSE '{}'::jsonb END AS data
      ) safe
      WHERE event=$1 AND data->>'key'=$2 AND data->>'baseVersion'=$3::text
      ORDER BY created_at DESC,id DESC LIMIT 1`,
-    [serviceRecoveryDraftEvent, serviceSettings[setting].key, baseVersion]
+    [event, key, baseVersion]
   );
   const row = rows[0];
   if (!row) return null;
   const parsed = draftMetadata.safeParse(row.data);
   if (!parsed.success || parsed.data.sourceVersion >= baseVersion) return null;
-  const config = recoverableValue(setting, parsed.data.config);
-  return config ? { id: row.id, baseVersion, ...parsed.data, config } : null;
+  const config = validate(parsed.data.config);
+  return config !== null ? { id: row.id, baseVersion, ...parsed.data, config } : null;
 }

@@ -77,6 +77,7 @@ export default function ConfigRecovery<T>({
   onBusyChange,
   onDenied,
   onActivated,
+  activationRisk,
   errorMessages,
 }: {
   path: string;
@@ -88,6 +89,7 @@ export default function ConfigRecovery<T>({
   onBusyChange: (busy: boolean) => void;
   onDenied: () => void;
   onActivated: () => void;
+  activationRisk?: (value: T) => TeamAction['risk'];
   errorMessages?: TeamAction['errorMessages'];
 }) {
   const locale = useLocale();
@@ -136,7 +138,8 @@ export default function ConfigRecovery<T>({
           <Button
             type="button"
             disabled={disabled || !!selection}
-            onClick={() =>
+            onClick={() => {
+              const risk = activationRisk?.(draft.config);
               setSelection({
                 kind: 'activate',
                 draft,
@@ -147,12 +150,13 @@ export default function ConfigRecovery<T>({
                   method: 'POST',
                   successStatus: 200,
                   body: { draftId: draft.id, expectedVersion: draft.baseVersion },
+                  ...(risk && { risk }),
                   forbiddenMessage: label('forbidden'),
                   conflictMessage: label('recoveryConflict'),
                   ...(errorMessages && { errorMessages }),
                 },
-              })
-            }
+              });
+            }}
           >
             {label('recoveryActivate')}
           </Button>

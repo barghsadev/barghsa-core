@@ -22,6 +22,11 @@ const fa: Record<string, string> = {
   'admin.walletLimit.reload': 'بارگذاری دوباره مقدار فعلی',
   'admin.walletLimit.current': 'سقف فعلی',
   'admin.walletLimit.version': 'نسخه پیکربندی: {version}',
+  'admin.walletLimit.recoveryTitle': 'بازیابی سقف پیشین شارژ',
+  'admin.walletLimit.recoveryActivateConfirm':
+    'سقف پیش‌نویس برای شارژهای آنلاین جدید فعال می‌شود. سقف تراکنش‌های در جریان حفظ می‌شود.',
+  'admin.walletLimit.forbidden': 'دسترسی مدیریت سقف شارژ آنلاین در دسترس نیست.',
+  'admin.walletLimit.refreshHistory': 'بارگیری دوباره سابقه',
   'admin.walletLimit.conflict':
     'سقف توسط ادمین دیگری به‌روز شده است. انصراف دهید، مقدار فعلی را دوباره بارگذاری کنید و پیش از ذخیره، تغییر خود را بررسی کنید.',
 };
@@ -47,6 +52,11 @@ const en: Record<string, string> = {
   'admin.walletLimit.reload': 'Reload current value',
   'admin.walletLimit.current': 'Current limit',
   'admin.walletLimit.version': 'Config version: {version}',
+  'admin.walletLimit.recoveryTitle': 'Restore a previous top-up limit',
+  'admin.walletLimit.recoveryActivateConfirm':
+    'The draft limit applies to new online top-ups. In-flight transactions keep their original limit.',
+  'admin.walletLimit.forbidden': 'Access to manage the online top-up limit is unavailable.',
+  'admin.walletLimit.refreshHistory': 'Reload history',
   'admin.walletLimit.conflict':
     'The limit was updated by another admin. Cancel, reload the current value and review your change before saving.',
 };

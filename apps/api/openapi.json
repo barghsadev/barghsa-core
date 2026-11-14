@@ -18913,6 +18913,141 @@
         ]
       }
     },
+    "/api/admin/config/wallet-top-up-limit/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateWalletLimitRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Activated revision and recovery draft receipt"
+          },
+          "400": {
+            "description": "Invalid activation request"
+          },
+          "403": {
+            "description": "Financial settings permission and recent verification required"
+          },
+          "409": {
+            "description": "Active version or recovery draft changed"
+          }
+        },
+        "summary": "Activate the reviewed wallet top-up limit as a new revision",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wallet-top-up-limit/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageWalletLimitRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Reviewed revision placed in the recovery draft"
+          },
+          "400": {
+            "description": "Invalid draft request"
+          },
+          "403": {
+            "description": "Financial settings permission and recent verification required"
+          },
+          "404": {
+            "description": "Eligible source revision not found"
+          },
+          "409": {
+            "description": "Active version changed"
+          }
+        },
+        "summary": "Prepare a wallet top-up limit recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/wallet-top-up-limit/rollback-history": {
+      "get": {
+        "operationId": "AdminController_walletLimitRecoveryHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recovery history and current draft"
+          },
+          "400": {
+            "description": "Invalid history cursor"
+          },
+          "403": {
+            "description": "Financial settings permission required"
+          }
+        },
+        "summary": "Read wallet top-up limit revisions and the current recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/wizard-draft-ttl": {
       "get": {
         "operationId": "AdminController_getWizardDraftTtl",

@@ -242,6 +242,106 @@ it.each(
 );
 
 const walletLimit = cases.find((item) => item.path === 'wallet-top-up-limit')!;
+it('restores a reviewed wallet limit with a new version and preserves the zero ceiling', async () => {
+  const recover = (operation: string, body?: object, user = 'operator', csrf = true) =>
+    fetch(`${http.base}/api/admin/config/${walletLimit.path}/rollback-${operation}`, {
+      headers: { ...headers[user], ...(!csrf && { 'X-CSRF-Token': '' }) },
+      ...(body && { method: 'POST', body: JSON.stringify(body) }),
+    });
+  for (const limit_irr of [0, 125_000, 250_000]) {
+    expect((await write(walletLimit, 'operator', { limit_irr })).status).toBe(200);
+  }
+  expect((await recover('history', undefined, 'viewer')).status).toBe(403);
+  expect((await recover('history?beforeVersion=0')).status).toBe(400);
+  const pageResponse = await recover('history?beforeVersion=2');
+  expect(pageResponse.status).toBe(200);
+  expect(pageResponse.headers.get('cache-control')).toContain('no-store');
+  const page = (await pageResponse.json()) as Awaited<
+    ReturnType<AdminService['getWalletLimitRecovery']>
+  >;
+  expect(page).toEqual({
+    baseVersion: 3,
+    items: [{ id: expect.any(String), version: 1, config: { limitIrR: 0 } }],
+    nextBeforeVersion: null,
+    draft: null,
+  });
+  const selection = { sourceId: page.items[0]!.id, expectedVersion: 3 };
+  expect((await recover('draft', selection, 'viewer')).status).toBe(403);
+  expect((await recover('draft', selection, 'operator', false)).status).toBe(403);
+  expect((await recover('draft', { ...selection, config: { limitIrR: 1 } })).status).toBe(400);
+  expect((await recover('draft', { ...selection, expectedVersion: 2 })).status).toBe(409);
+  const history = (await (await recover('history')).json()) as typeof page;
+  expect(history.items.map((row) => row.version)).toEqual([2, 1]);
+  const first = await recover('draft', { ...selection, sourceId: history.items[0]!.id });
+  expect(first.status).toBe(201);
+  const firstDraft = (await first.json()) as Awaited<
+    ReturnType<AdminService['stageWalletLimitRecovery']>
+  >;
+  const staged = await recover('draft', selection);
+  expect(staged.status).toBe(201);
+  const draft = (await staged.json()) as typeof firstDraft;
+  expect(draft).toEqual({
+    id: expect.any(String),
+    baseVersion: 3,
+    sourceId: selection.sourceId,
+    sourceVersion: 1,
+    config: { limitIrR: 0 },
+  });
+  expect(await (await recover('draft', selection)).json()).toEqual(draft);
+  expect((await recover('activate', { draftId: firstDraft.id, expectedVersion: 3 })).status).toBe(
+    409
+  );
+  expect(
+    (await http.pool.query('SELECT value,version FROM app_config WHERE key=$1', [walletLimit.key]))
+      .rows
+  ).toEqual([{ value: { limit_irr: 250_000 }, version: 3 }]);
+  const activation = { draftId: draft.id, expectedVersion: 3 };
+  const session = headers.operator!.Cookie!.split('=')[1];
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    session,
+  ]);
+  try {
+    expect((await recover('activate', activation)).status).toBe(403);
+  } finally {
+    await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+      session,
+    ]);
+  }
+  const results = await Promise.all([
+    recover('activate', activation),
+    recover('activate', activation),
+  ]);
+  expect(results.map(({ status }) => status).sort()).toEqual([200, 409]);
+  expect(await results.find(({ status }) => status === 200)!.json()).toEqual({
+    config: { limitIrR: 0 },
+    version: 4,
+    draftId: draft.id,
+  });
+  expect(await (await recover('history')).json()).toMatchObject({ baseVersion: 4, draft: null });
+  expect(
+    (await http.pool.query('SELECT value,version FROM app_config WHERE key=$1', [walletLimit.key]))
+      .rows
+  ).toEqual([{ value: { limit_irr: 0 }, version: 4 }]);
+  const { rows } = await auditWindow.query(
+    "SELECT metadata::jsonb AS data FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'draftId'=$1",
+    [draft.id]
+  );
+  expect(rows).toEqual([
+    {
+      data: expect.objectContaining({
+        key: walletLimit.key,
+        action: 'rollback_activated',
+        sourceId: selection.sourceId,
+        sourceVersion: 1,
+        previousVersion: 3,
+        previousValue: { limit_irr: 250_000 },
+        newValue: { limit_irr: 0 },
+        version: 4,
+      }),
+    },
+  ]);
+});
+
 it('wallet limit returns only its public form field for invalid amounts and checks permission first', async () => {
   for (const user of ['operator', 'viewer']) {
     const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {

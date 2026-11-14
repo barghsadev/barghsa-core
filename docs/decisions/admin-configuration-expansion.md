@@ -39,3 +39,12 @@ the old revision. Template recovery rechecks that the selected template
 remains active and its placeholders are supported. An explicit selection of
 **No template** can also be recovered. Existing submitted orders and contracts
 keep their captured terms.
+
+Staff with financial settings access can restore an earlier wallet top-up limit
+from **Wallet receipts**. Review the saved amount, prepare a recovery draft,
+then activate that draft with recent staff verification. Activating a zero
+limit also requires typed confirmation. The restored limit creates a new audit
+revision and applies to new submissions. In-flight submissions keep their
+captured limit. If another staff member saves a newer limit or prepares a
+different draft, reload the history and review the current version before
+trying again.

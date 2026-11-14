@@ -2383,6 +2383,67 @@ export class AdminController {
     return this.adminService.getWalletTopUpLimitConfig();
   }
 
+  @Get('config/wallet-top-up-limit/rollback-history')
+  @ApiOperation({ summary: 'Read wallet top-up limit revisions and the current recovery draft' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'Recovery history and current draft' })
+  @ApiResponse({ status: 400, description: 'Invalid history cursor' })
+  @ApiResponse({ status: 403, description: 'Financial settings permission required' })
+  async walletLimitRecoveryHistory(@Query() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = activationHistoryQuery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery history query');
+    return this.adminService.getWalletLimitRecovery(req.session, parsed.data.beforeVersion);
+  }
+
+  @Post('config/wallet-top-up-limit/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a wallet top-up limit recovery draft' })
+  @ApiZodBody(stageRecoveryDraft)
+  @ApiResponse({ status: 201, description: 'Reviewed revision placed in the recovery draft' })
+  @ApiResponse({ status: 400, description: 'Invalid draft request' })
+  @ApiResponse({
+    status: 403,
+    description: 'Financial settings permission and recent verification required',
+  })
+  @ApiResponse({ status: 404, description: 'Eligible source revision not found' })
+  @ApiResponse({ status: 409, description: 'Active version changed' })
+  async stageWalletLimitRecovery(@Body() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = stageRecoveryDraft.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery draft request');
+    return this.adminService.stageWalletLimitRecovery(
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Post('config/wallet-top-up-limit/rollback-activate')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Activate the reviewed wallet top-up limit as a new revision' })
+  @ApiZodBody(activateRecoveryDraft)
+  @ApiResponse({ status: 200, description: 'Activated revision and recovery draft receipt' })
+  @ApiResponse({ status: 400, description: 'Invalid activation request' })
+  @ApiResponse({
+    status: 403,
+    description: 'Financial settings permission and recent verification required',
+  })
+  @ApiResponse({ status: 409, description: 'Active version or recovery draft changed' })
+  async activateWalletLimitRecovery(@Body() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req);
+    const parsed = activateRecoveryDraft.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery activation request');
+    return this.adminService.activateWalletLimitRecovery(
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
   /**
    * PUT /api/admin/config/wallet-top-up-limit
    *

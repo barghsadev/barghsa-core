@@ -1,6 +1,8 @@
+import { lazy, Suspense, useState } from 'react';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
-import { Alert, Button, Input, Label } from '@barghsa/ui';
+import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCatalogueEditor, type CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
@@ -21,7 +23,17 @@ import {
   type WalletLimitSetting,
   type WalletLimitDraft,
 } from '../lib/limit-settings-form.js';
+import { record } from '../lib/catalogue-form.js';
+
+type WalletLimitRecoveryConfig = Pick<WalletLimitSetting, 'limitIrR'>;
+const ConfigRecovery = lazy(async () => {
+  const { default: Recovery } = await import('./ConfigRecovery.js');
+  return { default: Recovery<WalletLimitRecoveryConfig> };
+});
 const path = '/api/admin/config/wallet-top-up-limit';
+const validRecoveryLimit = (value: unknown): value is WalletLimitRecoveryConfig =>
+  record(value) && Number.isSafeInteger(value.limitIrR) && Number(value.limitIrR) >= 0;
+
 export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps = {}) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
@@ -30,9 +42,21 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
       `admin.walletLimit.${({ readError: 'loadFailed', retry: 'reload', working: 'saving' } as Record<string, string>)[key] ?? key}`,
       locale
     ).replace('{max}', numbers.number(Number.MAX_SAFE_INTEGER));
+  const recoveryLabel = (key: string) => {
+    if (key === 'refresh') return label('refreshHistory');
+    const copy = tServiceSettings(`recovery.${key}`, locale);
+    return key === 'recoveryTitle' ||
+      key === 'recoveryActivateConfirm' ||
+      copy === `recovery.${key}`
+      ? label(key)
+      : copy;
+  };
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryPending, setRecoveryPending] = useState(false);
   const messages = { limitIrR: label('invalid') };
   const editor = useCatalogueEditor<WalletLimitSetting, WalletLimitDraft>({
     ...props,
+    disabled: props.disabled || recoveryPending,
     identity: 'wallet-top-up-limit',
     path,
     validate: validWalletLimit,
@@ -150,6 +174,44 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
         >
           {label('reload')}
         </Button>
+      )}
+      <Button
+        type="button"
+        variant="outline"
+        aria-expanded={showRecovery}
+        aria-controls={showRecovery ? 'wallet-limit-recovery' : undefined}
+        disabled={props.disabled || editor.busy || editor.uncertain || recoveryPending}
+        onClick={() => setShowRecovery((visible) => !visible)}
+      >
+        {recoveryLabel('recoveryTitle')}
+      </Button>
+      {showRecovery && (
+        <div id="wallet-limit-recovery">
+          <Suspense fallback={<LoadingStatus>{recoveryLabel('recoveryLoading')}</LoadingStatus>}>
+            <ConfigRecovery
+              path={path}
+              label={recoveryLabel}
+              valid={validRecoveryLimit}
+              basis={(value) => String(value.limitIrR)}
+              activationRisk={(value) => (value.limitIrR === 0 ? 'destructive' : undefined)}
+              renderValues={(value) => (
+                <div className="space-y-2">
+                  <p>
+                    {label('label')} <bdi>{numbers.irrDigits(String(value.limitIrR))}</bdi>
+                  </p>
+                  {value.limitIrR === 0 && <p>{label('blocked')}</p>}
+                </div>
+              )}
+              disabled={!!props.disabled || editor.busy || editor.uncertain}
+              onBusyChange={(busy) => {
+                setRecoveryPending(busy);
+                props.onBusyChange?.(busy);
+              }}
+              onDenied={editor.onDenied}
+              onActivated={editor.resource.retry}
+            />
+          </Suspense>
+        </div>
       )}
       {editor.action && (
         <TeamActionDialog

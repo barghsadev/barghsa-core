@@ -5,6 +5,8 @@ import { mockOtpStepUp, completeOtp } from './otp-step-up-fixture';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { tWalletLimit } from '@barghsa/i18n/wallet-limit';
+import { tServiceSettings } from '@barghsa/i18n/service-settings';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
 import { retentionText } from '@barghsa/i18n/operational-retention';
 import { defaultOperationalRetention } from '@barghsa/shared/admin';
@@ -119,6 +121,84 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(label('recoveryActivateConfirm'));
     await confirm.click();
     await expect(field).toHaveValue('3');
+    await expect(activate).toHaveCount(0);
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`wallet top-up recovery restores the zero ceiling after a separate review (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const label = (key: string) => tWalletLimit(`admin.walletLimit.${key}`, locale);
+    const recovery = (key: string) => tServiceSettings(`recovery.${key}`, locale);
+    const config = { limitIrR: 0 };
+    const sourceId = '73c785ad-6059-4055-9a19-5ad1d4b534c3';
+    const draftId = '03899b68-02b2-4ff9-a52f-420ae91d5df0';
+    const draft = { id: draftId, baseVersion: 2, sourceId, sourceVersion: 1, config };
+    let active = { limitIrR: 250_000, version: 2 };
+    let pending: typeof draft | null = null;
+    const path = '**/api/admin/config/wallet-top-up-limit';
+    await page.route(path, (route) => {
+      expect(route.request().method()).toBe('GET');
+      return route.fulfill({ json: active });
+    });
+    await page.route(`${path}/rollback-history`, (route) =>
+      route.fulfill({
+        json: {
+          baseVersion: active.version,
+          items: [{ id: sourceId, version: 1, config }],
+          draft: pending,
+          nextBeforeVersion: null,
+        },
+      })
+    );
+    await page.route(`${path}/rollback-draft`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ sourceId, expectedVersion: 2 });
+      pending = draft;
+      return route.fulfill({ status: 201, json: draft });
+    });
+    await page.route(`${path}/rollback-activate`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ draftId, expectedVersion: 2 });
+      pending = null;
+      active = { ...config, version: 3 };
+      return route.fulfill({ json: { config, version: 3, draftId } });
+    });
+    await page.goto('/admin/wallet-receipts');
+    const toggle = page.getByRole('button', { name: label('recoveryTitle'), exact: true });
+    const field = page.locator('#online-top-up-limit');
+    await expect(field).toHaveValue('250000');
+    await toggle.focus();
+    await toggle.press('Enter');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: appText('team.confirm', locale),
+      exact: true,
+    });
+    const activate = page.getByRole('button', { name: recovery('recoveryActivate'), exact: true });
+    await page
+      .getByRole('button', {
+        name: recovery('recoveryStage').replace('{version}', locale === 'fa' ? '۱' : '1'),
+        exact: true,
+      })
+      .click();
+    await expect(dialog).toContainText(label('blocked'));
+    await confirm.click();
+    await expect(activate).toBeVisible();
+    await expect(field).toHaveValue('250000');
+    expect(
+      (await new AxeBuilder({ page }).include('#wallet-limit-recovery').analyze()).violations
+    ).toEqual([]);
+    await activate.click();
+    await expect(dialog).toContainText(label('recoveryActivateConfirm'));
+    await expect(dialog).toContainText(label('blocked'));
+    await expect(confirm).toBeDisabled();
+    await dialog
+      .getByLabel(confirmationText('typePhrase', locale))
+      .fill(confirmationText('phrase', locale));
+    await confirm.click();
+    await expect(field).toHaveValue('0');
     await expect(activate).toHaveCount(0);
   });
 }
