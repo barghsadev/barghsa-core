@@ -1,5 +1,6 @@
 import {
   Controller,
+  Body,
   Get,
   Patch,
   Param,
@@ -9,8 +10,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { withInboxSession } from './notification-center.service.js';
@@ -123,8 +132,11 @@ export class NotificationCenterController {
   @Patch('read-all')
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark all notifications read' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: '{ marked, unread_count }' })
-  async markAllRead(@Req() req: AuthenticatedRequest) {
+  @ApiResponse({ status: 400, description: 'Unexpected body' })
+  async markAllRead(@Req() req: AuthenticatedRequest, @Body() body?: unknown) {
+    assertEmptyCommandBody(body);
     const actor = req.session;
     return withInboxSession(actor, async (center, profileId) => {
       const marked = await center.markAllRead(profileId, actor.userId, actor.operatingContext);
@@ -146,9 +158,16 @@ export class NotificationCenterController {
   @Patch(':id/read')
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark one notification read' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: '{ id, is_read, unread_count }' })
+  @ApiResponse({ status: 400, description: 'Invalid notification identifier or unexpected body' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
-  async markRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  async markRead(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
+  ) {
+    assertEmptyCommandBody(body);
     const actor = req.session;
     return withInboxSession(actor, async (center, profileId) => {
       await center.markRead(profileId, id, actor.userId, actor.operatingContext);

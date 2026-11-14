@@ -59,8 +59,12 @@ beforeAll(async () => {
 afterAll(async () => {
   await fixture?.close();
 });
-async function request(user: string, path: string, method = 'GET') {
-  return fetch(`${fixture.base}/api/${path}`, { method, headers: headers[user]! });
+async function request(user: string, path: string, method = 'GET', body?: unknown) {
+  return fetch(`${fixture.base}/api/${path}`, {
+    method,
+    headers: headers[user]!,
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
 }
 
 it('loads a private 50-notification page with HTTP p95 below 200ms', async () => {
@@ -345,6 +349,39 @@ it('walks all newer and older pages without skipping notices, including equal ti
   ).json()) as { data: Array<{ id: string }> };
   expect(newest.data.map((row) => row.id)).toEqual(ids.slice(-2).reverse());
 });
+it.each([
+  ['v1/notifications/:id/read', 'PATCH'],
+  ['v1/notifications/read-all', 'PATCH'],
+  ['notifications/:id/read', 'PATCH'],
+  ['notifications/read-all', 'POST'],
+] as const)('validates empty %s commands before mutating the inbox', async (route, method) => {
+  const user = 'inbox-alone';
+  const notice = await service.create({
+    userId: user,
+    operatingContext: 'account',
+    type: 'general',
+    title: 'Read-state command fixture',
+  });
+  const path = route.replace(':id', notice.id);
+  const readState = async () =>
+    (
+      await db.pool.query<{ is_read: boolean }>(
+        'SELECT is_read FROM in_app_notifications WHERE id=$1',
+        [notice.id]
+      )
+    ).rows[0]?.is_read;
+
+  const invalid = await request(user, path, method, { profileId: second });
+  expect(invalid.status, fixture.logs()).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+  });
+  expect(await readState()).toBe(false);
+  expect((await request(user, path, method, {})).status).toBe(200);
+  expect(await readState()).toBe(true);
+  expect((await request(user, path, method)).status).toBe(200);
+});
+
 it('rejects malformed cursor UUIDs and read IDs without database errors', async () => {
   const cursor = Buffer.from('2026-09-01T00:00:00Z|not-a-uuid').toString('base64url');
   expect((await request('inbox-alone', `v1/notifications?cursor=${cursor}`)).status).toBe(400);

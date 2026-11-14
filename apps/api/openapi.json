@@ -41085,9 +41085,23 @@
       "post": {
         "operationId": "NotificationsController_markAllAsRead",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "All notifications marked as read."
+          },
+          "400": {
+            "description": "Unexpected body"
           }
         },
         "security": [
@@ -41134,9 +41148,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Notification marked as read."
+          },
+          "400": {
+            "description": "Invalid notification identifier or unexpected body"
           },
           "404": {
             "description": "Notification not found"
@@ -53348,9 +53376,23 @@
       "patch": {
         "operationId": "NotificationCenterController_markAllRead",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "{ marked, unread_count }"
+          },
+          "400": {
+            "description": "Unexpected body"
           }
         },
         "security": [
@@ -53397,9 +53439,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "{ id, is_read, unread_count }"
+          },
+          "400": {
+            "description": "Invalid notification identifier or unexpected body"
           },
           "404": {
             "description": "Notification not found"

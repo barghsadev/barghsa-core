@@ -1,5 +1,6 @@
 import {
   Controller,
+  Body,
   Get,
   Patch,
   Param,
@@ -9,8 +10,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import '@barghsa/shared/errors';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 import { NotificationsService } from './notifications.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -76,9 +85,16 @@ export class NotificationsController {
   @Patch(':id/read')
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark a notification as read' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Notification marked as read.' })
+  @ApiResponse({ status: 400, description: 'Invalid notification identifier or unexpected body' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
-  async markAsRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  async markAsRead(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
+  ) {
+    assertEmptyCommandBody(body);
     await this.notificationsService.markAsRead(id, req.session);
     return { message: 'Notification marked as read' };
   }
@@ -91,8 +107,11 @@ export class NotificationsController {
   @Post('read-all')
   @HttpCode(200)
   @ApiOperation({ summary: 'Mark all notifications as read' })
+  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'All notifications marked as read.' })
-  async markAllAsRead(@Req() req: AuthenticatedRequest) {
+  @ApiResponse({ status: 400, description: 'Unexpected body' })
+  async markAllAsRead(@Req() req: AuthenticatedRequest, @Body() body?: unknown) {
+    assertEmptyCommandBody(body);
     await this.notificationsService.markAllAsRead(req.session);
     return { message: 'All notifications marked as read' };
   }
