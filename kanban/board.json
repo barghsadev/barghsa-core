@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:35:13+00:00",
+  "updated": "2026-11-14T18:42:33+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4397,7 +4397,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4425,7 +4426,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             }
           ],
           "checks": [
@@ -4687,6 +4688,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -5060,7 +5069,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -5076,7 +5086,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -5320,6 +5330,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -5550,7 +5568,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5574,7 +5593,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             }
           ],
           "checks": [
@@ -6087,6 +6106,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -6505,7 +6532,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -6513,7 +6541,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -6781,6 +6809,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -7024,7 +7060,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7064,7 +7101,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7307,6 +7344,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -7382,7 +7427,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7422,7 +7468,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7665,6 +7711,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -8142,7 +8196,8 @@
           "release-0.6-registration-request-observation",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8154,7 +8209,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -8559,6 +8614,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -8684,7 +8747,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -8724,7 +8788,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8967,6 +9031,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -9101,7 +9173,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9113,7 +9186,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -9121,7 +9194,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9544,6 +9617,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -13250,7 +13332,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -13270,7 +13353,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             }
           ],
           "checks": [
@@ -13477,6 +13560,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -20584,7 +20675,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-protected-rollout-tests",
           "release-0.6-upload-command-validation",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "batch": "release-0.6-signed-document-retention-acceptance",
@@ -20598,7 +20690,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -20953,6 +21045,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -23756,7 +23856,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -23764,11 +23865,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "AGENTS.md",
@@ -24076,6 +24177,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -24146,7 +24256,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -24154,7 +24265,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -24443,6 +24554,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -24532,7 +24651,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -24540,7 +24660,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "package.json",
@@ -25105,6 +25225,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -25379,7 +25507,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-native-coverage-rehearsal-81d4381e9",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -25387,7 +25516,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -25589,6 +25718,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -25644,7 +25781,8 @@
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -25686,7 +25824,8 @@
           "deploy/staging/test_release_rollback.py",
           "kanban/WORKFLOW.md",
           "kanban/scripts/board.py",
-          "kanban/scripts/test_board.py"
+          "kanban/scripts/test_board.py",
+          "docs/development/ci.md"
         ],
         "batches": [
           "release-0.6-production-quarantine-guard",
@@ -25731,7 +25870,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-staging-interruption-recovery",
           "release-0.6-linux-recovery-readback",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": null
       }
@@ -31812,7 +31952,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -31826,7 +31967,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -32551,6 +32692,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -36592,7 +36741,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -36605,11 +36755,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "eslint.config.mjs",
@@ -36938,6 +37088,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -37004,7 +37163,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -37020,7 +37180,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".prettierignore",
@@ -37302,6 +37462,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -37374,7 +37542,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37392,7 +37561,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".husky/commit-msg",
@@ -37416,7 +37585,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "eslint.config.mjs",
@@ -37761,6 +37930,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -39690,7 +39868,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-contract-template-coverage",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -39735,7 +39914,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -40875,6 +41054,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -40963,7 +41150,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -40978,7 +41166,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".prettierignore",
@@ -40994,7 +41182,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "package.json",
@@ -41688,6 +41876,15 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -42199,7 +42396,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-stage-acceptance-and-publication-order",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -42224,7 +42422,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -42351,6 +42549,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -634409,7 +634615,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -634417,7 +634624,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -635077,6 +635284,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -635237,7 +635452,8 @@
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635245,7 +635461,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -636279,6 +636495,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -636430,7 +636654,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -636438,7 +636663,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -637059,6 +637284,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -637176,7 +637409,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -637184,7 +637418,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -637805,6 +638039,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -637922,7 +638164,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -637930,7 +638173,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -638551,6 +638794,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -693501,7 +693752,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -693509,7 +693761,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "Dockerfile.web",
@@ -693817,6 +694069,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -694138,7 +694398,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -694182,7 +694443,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -694438,6 +694699,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -694494,7 +694763,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -694502,7 +694772,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "Dockerfile.web",
@@ -694810,6 +695080,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -695347,7 +695625,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -695375,7 +695654,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             }
           ],
           "checks": [
@@ -695611,6 +695890,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -695697,7 +695984,8 @@
           "release-0.6-single-edge-security-headers",
           "release-0.6-protected-preflight-and-stateful-readback",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "protected-ci-security-header-assertions",
@@ -695705,7 +695993,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/server.js",
@@ -695793,6 +696081,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -707044,7 +707340,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
           "release-0.6-profile-export-validation",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -707057,7 +707354,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -707216,6 +707513,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -707262,7 +707567,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -707270,7 +707576,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -707463,6 +707769,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -715455,7 +715769,8 @@
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-protected-rollout-tests",
           "release-0.6-upload-command-validation",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -715464,7 +715779,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -716051,6 +716366,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -717764,7 +718087,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -717776,7 +718100,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".gitignore",
@@ -718134,6 +718458,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -718188,7 +718520,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -718200,7 +718533,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".gitignore",
@@ -718461,6 +718794,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         },
@@ -718580,7 +718921,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-nodemailer-moderate-advisories",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -718588,7 +718930,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -718839,6 +719181,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         },
@@ -718940,7 +719290,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -718948,7 +719299,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -719141,6 +719492,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -719195,7 +719554,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -719203,7 +719563,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "Dockerfile.base",
@@ -719470,6 +719830,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -719524,7 +719892,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -719536,7 +719905,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".gitignore",
@@ -719797,6 +720166,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         },
@@ -719896,7 +720273,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -719908,7 +720286,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -720107,6 +720485,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -721166,7 +721552,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -721190,7 +721577,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -721416,6 +721803,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -723620,7 +724015,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -723628,7 +724024,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "vitest.config.ts",
@@ -723680,7 +724076,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -723964,6 +724360,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md",
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -724003,7 +724408,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -724015,7 +724421,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -724230,6 +724636,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -724268,7 +724682,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -724280,7 +724695,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -724483,6 +724898,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -724524,7 +724947,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -724532,7 +724956,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
@@ -724544,7 +724968,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -724626,6 +725050,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -728445,7 +728878,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -728515,11 +728949,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -728782,6 +729216,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -728825,7 +729268,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -728833,7 +729277,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -728982,6 +729426,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -729025,7 +729477,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -729033,7 +729486,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -729182,6 +729635,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -729237,7 +729698,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
           "release-0.6-upload-command-validation",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -729269,7 +729731,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -729539,6 +730001,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -732307,7 +732777,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
           "release-0.6-upload-command-validation",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -732339,7 +732810,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -732610,6 +733081,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -732649,7 +733128,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -732697,7 +733177,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -732827,6 +733307,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -734406,7 +734894,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -734418,7 +734907,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -734426,7 +734915,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -734702,6 +735191,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -734755,7 +735253,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -734835,7 +735334,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -734988,6 +735487,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -735348,7 +735855,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -735362,7 +735870,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -735727,6 +736235,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -735775,7 +736291,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -735791,7 +736308,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -736132,6 +736649,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -736734,7 +737259,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -736742,7 +737268,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -736935,6 +737461,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -736982,7 +737516,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -736990,7 +737525,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -737207,6 +737742,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -738498,7 +739041,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -738513,7 +739057,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -738877,6 +739421,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -740282,7 +740834,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-native-coverage-rehearsal-81d4381e9",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -740295,7 +740848,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -740531,6 +741084,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -740571,7 +741132,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -740583,7 +741145,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -740819,6 +741381,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -740859,7 +741429,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -740873,7 +741444,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -741109,6 +741680,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -741149,7 +741728,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -741160,7 +741740,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -741396,6 +741976,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -741475,7 +742063,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -741483,11 +742072,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -741640,6 +742229,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -741679,7 +742277,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -741691,7 +742290,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -741966,6 +742565,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -742022,7 +742629,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -742033,7 +742641,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -742646,6 +743254,14 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -742743,7 +743359,8 @@
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
-        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open."
+        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -742761,7 +743378,9 @@
           "docs/security/release-license-review.md",
           "docs/development/ci.md",
           "scripts/ci_preflight_receipt.py",
-          "scripts/test_ci_preflight_receipt.py"
+          "scripts/test_ci_preflight_receipt.py",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -742789,7 +743408,8 @@
           "release-0.6-auth-credential-races",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -742974,7 +743594,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -742992,15 +743613,15 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "530211bdebc8cdae993281f56741f727679294c1b869d474c2c218dc8df37a2f"
+              "sha256": "cf1b21958b059bd435b9a347313f5b92fb7d51746f4d46da689551af73cc534c"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -743496,6 +744117,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -743539,7 +744170,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -743548,7 +744180,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -743959,6 +744591,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -744032,7 +744672,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-full-coverage-continuation",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -744050,7 +744691,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/README.md",
@@ -744058,11 +744699,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "530211bdebc8cdae993281f56741f727679294c1b869d474c2c218dc8df37a2f"
+              "sha256": "cf1b21958b059bd435b9a347313f5b92fb7d51746f4d46da689551af73cc534c"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -744713,6 +745354,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -745970,7 +746621,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -745987,11 +746639,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -746411,6 +747063,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -746469,7 +747130,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -746486,11 +747148,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -746910,6 +747572,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -764309,7 +764980,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-inbox-read-command-validation"
+          "release-0.6-inbox-read-command-validation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -764317,7 +764989,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "Dockerfile.base",
@@ -765252,6 +765924,14 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "The four notification command contracts now document their optional empty JSON body and the validation response. Existing bodyless callers, read state, scoped visibility and current-session checks passed with compiled HTTP and PostgreSQL."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -768952,7 +769632,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -768960,7 +769641,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "Dockerfile.base",
@@ -769351,6 +770032,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -769565,7 +770254,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -769581,11 +770271,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -769926,6 +770616,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -770055,7 +770754,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -770071,11 +770771,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -770416,6 +771116,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -770474,7 +771183,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -770490,11 +771200,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "a639ebe63b92361517262175e3ff9d56004c1a112c476ee37721bae862fd3e9c"
+              "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -770835,6 +771545,15 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Source-bound review covers PostgreSQL cluster identity in recovery evidence. The focused production and physical PostgreSQL backup and restore checks passed. The original approval inputs and any requirements outside database recovery retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -836717,7 +837436,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -836725,7 +837445,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -837942,6 +838662,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -838091,7 +838819,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -838099,7 +838828,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -839316,6 +840045,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -840329,7 +841066,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -840337,7 +841075,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -841554,6 +842292,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -841621,7 +842367,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -841640,7 +842387,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -841859,6 +842606,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         }
@@ -1097415,7 +1098170,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1097779,7 +1098535,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1098259,6 +1099015,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1098464,7 +1099228,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1098828,7 +1099593,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1099308,6 +1100073,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1099513,7 +1100286,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1099877,7 +1100651,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1100357,6 +1101131,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1100563,7 +1101345,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1100927,7 +1101710,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1101407,6 +1102190,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1101612,7 +1102403,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1101976,7 +1102768,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1102456,6 +1103248,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1102661,7 +1103461,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1103025,7 +1103826,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1103505,6 +1104306,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1103710,7 +1104519,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1104074,7 +1104884,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1104554,6 +1105364,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1104760,7 +1105578,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1105124,7 +1105943,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1105604,6 +1106423,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1105809,7 +1106636,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1106173,7 +1107001,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1106653,6 +1107481,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1106858,7 +1107694,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1107222,7 +1108059,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+              "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1107702,6 +1108539,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1132748,7 +1133593,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1138635,6 +1139480,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "presentation_renewals": [
@@ -1139097,7 +1139950,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-ci-attempt-evidence"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1139150,7 +1140004,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1144925,6 +1145779,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1145404,7 +1146266,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-ci-attempt-evidence"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1147478,7 +1148341,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+              "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
             },
             {
               "path": ".size-limit.json",
@@ -1150331,6 +1151194,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-ci-attempt-evidence",
+              "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
             }
           ]
         },
@@ -1150506,7 +1151377,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-ci-attempt-evidence"
         ]
       }
     },
@@ -1150849,7 +1151721,8 @@
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
         "Journey burn rates now require paired success and failure measurements from each scrape source and release revision before aggregating. Promtool reproduced false P1 alerts when electricity outcomes were split across replicas and solar outcomes across revisions. The corrected rules exclude both incomplete inputs and preserve the real P1 and exact aggregate from two complete saving sources. All seven protected rule suites passed locally and against the current staged Prometheus image in an isolated container. The real candidate scrape and P1/P2 delivery receipts remain open.",
-        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151258,7 +1152131,8 @@
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
           "release-0.6-journey-source-pairing",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1151570,7 +1152444,8 @@
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
-        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal."
+        "The restore verifier captures the PostgreSQL system ID with the source table fingerprints, selects a backup from that system, and checks the restored instance ID. The promotion checker requires that ID in the version 2 baseline, restore report and both off-server manifests. Four accepted invalid receipts reproduced on the old checker and are refused now. All 42 promotion and rollout checks passed. The first native run passed 36 of 38 cases. Two restore readiness waits expired on the throttled fixture as WAL replay was still progressing. Both passed with the original assertions on the isolated follow-up with more CPU. Recapture the version 2 baseline for the approved off-server rehearsal.",
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151661,7 +1152536,8 @@
           "release-0.6-production-marker-wiring",
           "release-0.6-receiver-version-backup",
           "release-0.6-rollout-rollback-readback",
-          "release-0.6-restore-source-identity"
+          "release-0.6-restore-source-identity",
+          "release-0.6-ci-attempt-evidence"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1151715,7 +1152591,9 @@
           "packages/db/scripts/backup/test_verify_restore.py",
           "packages/db/scripts/backup/verify_restore.py",
           "deploy/production/guarded-rollout.py",
-          "deploy/production/test_guarded_rollout.py"
+          "deploy/production/test_guarded_rollout.py",
+          ".github/workflows/ci.yml",
+          "docs/development/ci.md"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1345941,6 +1346819,172 @@
         {
           "file": "static.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-ci-attempt-evidence": {
+      "batch": "release-0.6-ci-attempt-evidence",
+      "base_commit": "7c1a525e05f91f53bf78a2778d6543b13cb6c0a8",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "e34e128629f2e712e8df1c41043f4c75250b26eb6ef99f0e16f63851afe385c6"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "dc2284bed6e3be8b624160503245fda2bb731e9ffdceb2d9f01808f7b90145e7"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "cf1b21958b059bd435b9a347313f5b92fb7d51746f4d46da689551af73cc534c"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "1d15a399b97745aee50cb60242b1b545d93a9aed249d991e9333daa0b849f4bb"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        }
+      ],
+      "checks": [
+        "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
+        "Workflow lint, Prettier, Python syntax and Git diff checks passed."
+      ],
+      "limitations": [
+        "Artifact pairing was tested locally from the workflow YAML. The new full-CI behavior still needs exact candidate evidence from GitHub."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-ci-attempt-evidence",
+      "execution_receipts": [
+        {
+          "file": "artifact-attempt.log",
+          "sha256": "7927f68b6de027dae257e5949c7b255aa4110efae74203641fd6ddc684438a1a"
+        },
+        {
+          "file": "before.log",
+          "sha256": "f14dbbdc37120662918e2443ac4f2849849b9143f5914c44e9aa0b1f90ceeabd"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "b84489ddadc4d093fa11604f7684a3529c3f520a6a7c4ba69dfbebc8f67ba7cb"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "7b896859a38fe294eed6d781eeaeb66b2a511247bf94c098ffc57378942e9cda"
+        },
+        {
+          "file": "static.log",
+          "sha256": "75a3a6db1b5f58f364bf932895fd6a083cbb9ffe1188f3e63d6b8f962f2f21bd"
         }
       ]
     }

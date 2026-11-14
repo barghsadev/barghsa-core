@@ -67,21 +67,48 @@ class PromotionEvidenceTest(unittest.TestCase):
                 promotion.verify_workflow(1, expected['path'], SHA)
 
     def test_refuses_skipped_license_step(self):
-        jobs = [
-            {'name': name, 'conclusion': 'success',
+        jobs = self.ci_jobs()
+        with patch.object(promotion, 'command', return_value=json.dumps({'jobs': jobs})) as command:
+            promotion.verify_ci_checks(1, SHA, 2)
+        command.assert_called_once_with(
+            'Hosted CI checks readback', 'gh', 'api',
+            f'repos/{promotion.REPO}/actions/runs/1/attempts/2/jobs?per_page=100',
+        )
+        jobs[1]['steps'][0]['conclusion'] = 'skipped'
+        with patch.object(promotion, 'command', return_value=json.dumps({'jobs': jobs})):
+            with self.assertRaisesRegex(ValueError, 'enforced licenses'):
+                promotion.verify_ci_checks(1, SHA, 2)
+
+    @staticmethod
+    def ci_jobs():
+        return [
+            {'name': name, 'conclusion': 'success', 'run_id': 1, 'run_attempt': 2, 'head_sha': SHA,
              'steps': [{'name': step, 'conclusion': 'success'}]}
             for name, step in (
                 ('Run tests', 'Run affected tests or full coverage'),
                 ('Scan runtime container images', 'Check shipped component licenses'),
                 ('Verify combined source coverage', 'Enforce changed source and critical file coverage'),
+                ('Check build and application integrity', 'Exercise all production browser flows and shared components'),
             )
         ]
-        with patch.object(promotion, 'command', return_value=json.dumps({'jobs': jobs})):
-            promotion.verify_ci_checks(1)
-        jobs[1]['steps'][0]['conclusion'] = 'skipped'
-        with patch.object(promotion, 'command', return_value=json.dumps({'jobs': jobs})):
-            with self.assertRaisesRegex(ValueError, 'enforced licenses'):
-                promotion.verify_ci_checks(1)
+
+    def test_ci_requires_exact_attempt_browser_run_and_unique_jobs(self):
+        jobs = self.ci_jobs()
+        for replacement in (
+            jobs[:-1],
+            [*jobs, jobs[0]],
+            [{**jobs[0], 'run_attempt': 1}, *jobs[1:]],
+            [{**jobs[0], 'run_id': 2}, *jobs[1:]],
+            [{**jobs[0], 'head_sha': 'b' * 40}, *jobs[1:]],
+            [*jobs[:-1], {**jobs[-1], 'steps': []}],
+        ):
+            with self.subTest(jobs=replacement), patch.object(
+                promotion, 'command', return_value=json.dumps({'jobs': replacement}),
+            ), self.assertRaisesRegex(ValueError, 'must all pass in the same workflow attempt'):
+                promotion.verify_ci_checks(1, SHA, 2)
+        with patch.object(promotion, 'command') as command, self.assertRaisesRegex(ValueError, 'invalid'):
+            promotion.verify_ci_checks(1, SHA, None)
+        command.assert_not_called()
 
     @staticmethod
     def load_report():

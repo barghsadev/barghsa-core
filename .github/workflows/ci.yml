@@ -329,7 +329,7 @@ jobs:
         if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: browser-source-coverage
+          name: browser-source-coverage-attempt-${{ github.run_attempt }}
           path: apps/web/test-results/browser-coverage.json
           retention-days: 14
       - name: Report observed browser flakes and failures
@@ -341,14 +341,14 @@ jobs:
         if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: browser-outcomes
+          name: browser-outcomes-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/browser-outcomes.json
           retention-days: 14
       - name: Upload production browser failures
         if: failure() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: production-browser-failures
+          name: production-browser-failures-attempt-${{ github.run_attempt }}
           path: apps/web/test-results/
           retention-days: 7
 
@@ -464,7 +464,7 @@ jobs:
         if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
+          name: coverage-reports-attempt-${{ github.run_attempt }}
           path: |
             apps/*/coverage/
             packages/*/coverage/
@@ -536,12 +536,12 @@ jobs:
       - uses: actions/download-artifact@v4
         if: env.FULL_CI == 'true'
         with:
-          name: coverage-reports
+          name: coverage-reports-attempt-${{ github.run_attempt }}
           path: .
       - uses: actions/download-artifact@v4
         if: env.FULL_CI == 'true'
         with:
-          name: browser-source-coverage
+          name: browser-source-coverage-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/browser-source
       - name: Verify coverage collection and failure handling
         if: env.FULL_CI == 'true'
@@ -575,6 +575,6 @@ jobs:
         if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: changed-coverage
+          name: changed-coverage-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/changed-coverage.json
           retention-days: 14

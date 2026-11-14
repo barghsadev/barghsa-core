@@ -13,6 +13,12 @@ whose dependencies passed can finish, so the diagnostic artifact preserves
 their reports. Release acceptance still requires both test jobs and the
 combined coverage gate to pass.
 
+Native and browser coverage artifact names include the workflow attempt. The
+combined coverage job downloads both reports from its own attempt. For a new
+release receipt, dispatch full CI or rerun all jobs. The promotion checker
+requires successful native tests, production browser tests, license checks and
+combined coverage from that same attempt.
+
 Application quality also runs the staging queue, rollback and Telegram fixtures,
 and the production approval and guarded rollout tests. These exercise the release
 commands with isolated repositories, Compose configuration and simulated providers.

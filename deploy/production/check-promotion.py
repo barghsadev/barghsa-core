@@ -77,22 +77,26 @@ def verify_workflow(run_id, path, sha):
     return run
 
 
-def verify_ci_checks(run_id):
+def verify_ci_checks(run_id, sha, attempt):
+    if type(attempt) is not int or attempt < 1:
+        raise ValueError('The CI workflow attempt is missing or invalid')
     required = {
         'Run tests': 'Run affected tests or full coverage',
+        'Check build and application integrity': 'Exercise all production browser flows and shared components',
         'Scan runtime container images': 'Check shipped component licenses',
         'Verify combined source coverage': 'Enforce changed source and critical file coverage',
     }
     response = json.loads(command(
         'Hosted CI checks readback', 'gh', 'api',
-        f'repos/{REPO}/actions/runs/{run_id}/jobs?per_page=100&filter=latest',
+        f'repos/{REPO}/actions/runs/{run_id}/attempts/{attempt}/jobs?per_page=100',
     ))
-    successful = {
-        job['name']: {step['name'] for step in job['steps'] if step['conclusion'] == 'success'}
-        for job in response['jobs'] if job['conclusion'] == 'success'
-    }
-    if any(step not in successful.get(job, set()) for job, step in required.items()):
-        raise ValueError('Full tests, enforced licenses and combined coverage must each pass')
+    jobs = [job for job in response['jobs'] if job['name'] in required]
+    if (len(jobs) != len(required) or {job['name'] for job in jobs} != required.keys()
+            or any(job.get('run_id') != run_id or job.get('run_attempt') != attempt
+                   or job.get('head_sha') != sha or job['conclusion'] != 'success'
+                   or not any(step['name'] == required[job['name']] and step['conclusion'] == 'success'
+                              for step in job['steps']) for job in jobs)):
+        raise ValueError('Full tests, production browser tests, enforced licenses and combined coverage must all pass in the same workflow attempt')
 
 
 def verify_browser_rollup(run_id, directory, sha, attempt):
@@ -626,7 +630,7 @@ def main():
         paths, hashes = index_receipts(args.receipt_index, sha)
         dast = verify_dast_receipt(paths['authenticated_dast'], hashes['authenticated_dast'], version, sha)
         ci_run = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
-        verify_ci_checks(args.ci_run)
+        verify_ci_checks(args.ci_run, sha, ci_run.get('run_attempt'))
         browser_run = verify_workflow(args.browser_run, '.github/workflows/browser-nightly.yml', sha)
         with tempfile.TemporaryDirectory(prefix='barghsa-promotion-') as temporary:
             directory = Path(temporary)
