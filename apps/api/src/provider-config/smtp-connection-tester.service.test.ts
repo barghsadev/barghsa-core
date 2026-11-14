@@ -109,14 +109,20 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
       () => ({
         verify: async () => true,
         sendMail: async () => {
-          throw new Error(`delivery rejected ${password} for ${recipient}`);
+          throw Object.assign(new Error(`delivery rejected ${password} for ${recipient}`), {
+            responseCode: 550,
+          });
         },
         close,
       }),
       new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
     );
     const result = await service.test({ ...baseConfig, password }, recipient);
-    expect(result.ok).toBe(false);
+    expect(result).toEqual({
+      ok: false,
+      error: 'SMTP test send failed (SMTP reply 550)',
+      transient: false,
+    });
     expect(result.error).not.toContain(password);
     expect(result.error).not.toContain(recipient);
     expect(warn).toHaveBeenCalledExactlyOnceWith('SMTP connection test failed');
@@ -134,6 +140,7 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     );
     expect(await service.test(baseConfig, 'staff@example.com', beforeSend)).toMatchObject({
       ok: false,
+      error: 'SMTP test authorization failed',
     });
     expect(verify).toHaveBeenCalledOnce();
     expect(beforeSend).toHaveBeenCalledOnce();
@@ -144,23 +151,26 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
       () => ({
         sendMail: async () => ({ accepted: [] }),
         verify: async () => {
-          throw new Error('535 5.7.8 Authentication credentials invalid');
+          throw Object.assign(new Error('535 5.7.8 Authentication credentials invalid'), {
+            responseCode: 535,
+          });
         },
       }),
       new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
     );
     const result = await service.test(baseConfig, 'staff@example.com');
     expect(result.ok).toBe(false);
-    expect(result.error).toContain('Authentication credentials');
+    expect(result.error).toBe('SMTP handshake failed (SMTP reply 535)');
   });
 
-  it('redacts the configured password from error messages', async () => {
+  it('discards configured and unrelated secrets from server errors', async () => {
     const secret = 'super-secret-pw-123';
+    const response = `login failed for "${secret}" using token unrelated-secret`;
     const service = new SmtpConnectionTesterService(
       () => ({
         sendMail: async () => ({ accepted: [] }),
         verify: async () => {
-          throw new Error(`login failed for "${secret}"`);
+          throw new Error(response);
         },
       }),
       new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
@@ -171,16 +181,22 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     );
     expect(result.ok).toBe(false);
     expect(result.error).not.toContain(secret);
-    expect(result.error).toContain('••••');
+    expect(result.error).not.toContain('unrelated-secret');
+    expect(result.error).toBe('SMTP handshake failed');
   });
 
-  for (const diagnostic of ['', 'x'.repeat(3000)]) {
-    it(`bounds SMTP diagnostic length ${diagnostic.length}`, async () => {
+  for (const [message, responseCode] of [
+    ['', undefined],
+    ['x'.repeat(3000), 9999],
+    ['provider error', '535 extra private text'],
+    ['provider error', 535.5],
+  ] as const) {
+    it(`keeps SMTP diagnostics bounded for invalid code ${String(responseCode)}`, async () => {
       const service = new SmtpConnectionTesterService(
         () => ({
           sendMail: async () => ({ accepted: [] }),
           verify: async () => {
-            throw new Error(diagnostic);
+            throw Object.assign(new Error(message), { responseCode });
           },
         }),
         new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
@@ -188,7 +204,7 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
       const result = await service.test(baseConfig, 'staff@example.com');
       expect(result).toMatchObject({
         ok: false,
-        error: diagnostic ? diagnostic.slice(0, 1000) : 'SMTP handshake failed',
+        error: 'SMTP handshake failed',
       });
     });
   }
@@ -199,7 +215,22 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     const result = await service.test(baseConfig, 'staff@example.com');
     expect(result.ok).toBe(false);
     expect(result.error).toContain('blocked');
+    expect(result.error).not.toContain('10.0.0.1');
     // createTransport must never be called for a blocked destination.
+    expect(createTransport).not.toHaveBeenCalled();
+  });
+  it('keeps resolver errors out of diagnostics and never starts a transport', async () => {
+    const createTransport = vi.fn();
+    const guard = new SmtpNetworkGuard({
+      resolve: async () => {
+        throw new Error('private resolver details');
+      },
+    });
+    const service = new SmtpConnectionTesterService(createTransport, guard);
+    expect(await service.test(baseConfig, 'staff@example.com')).toEqual({
+      ok: false,
+      error: 'SMTP destination is blocked or could not be resolved',
+    });
     expect(createTransport).not.toHaveBeenCalled();
   });
   for (const [error, transient] of [

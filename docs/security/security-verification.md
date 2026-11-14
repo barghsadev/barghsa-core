@@ -39,6 +39,8 @@ read parser.
 
 The Resend connection test uses the fixed API origin and refuses redirects.
 It discards HTTP failure bodies and records the operation and status.
+SMTP connection tests record the failed step and a valid numeric SMTP failure
+code when available. New diagnostics exclude raw server replies and DNS details.
 Resend and SMS.ir delivery receipts and parsed error responses
 are capped at 64 KiB. The Resend domain list has a 2 MiB cap, and Sentry's
 matching event receipt has a 4 KiB cap. These limits apply to decoded bytes.

@@ -54,16 +54,11 @@ const defaultTransportFactory: SmtpTransportFactory = (config, checkedHost) => {
   });
 };
 
-/** Strip credentials and contacts that the SMTP server may echo. */
-function sanitizeError(err: unknown, config: SmtpConfig, recipient: string): string {
-  let message = err instanceof Error ? err.message : String(err);
-  if (config.password) message = message.split(config.password).join('••••');
-  if (config.username) message = message.split(config.username).join('***');
-  for (const address of [recipient, config.from_email, config.reply_to]) {
-    if (address) message = message.split(address).join('••••');
-  }
-  const trimmed = message.slice(0, 1000);
-  return trimmed || 'SMTP handshake failed';
+function connectionDiagnostic(error: unknown, stage: string): string {
+  const code = error && typeof error === 'object' && 'responseCode' in error && error.responseCode;
+  return typeof code === 'number' && Number.isInteger(code) && code >= 400 && code <= 599
+    ? `${stage} (SMTP reply ${code})`
+    : stage;
 }
 
 @Injectable()
@@ -96,17 +91,24 @@ export class SmtpConnectionTesterService {
       checkedHost = await this.guard.resolveAllowedHost(config.host);
     } catch (err) {
       if (err instanceof SmtpDestinationBlockedError) {
-        return { ok: false, error: err.detail };
+        return { ok: false, error: 'SMTP destination is blocked or could not be resolved' };
       }
-      return { ok: false, error: (err as Error).message, transient: isTransientEmailError(err) };
+      return {
+        ok: false,
+        error: 'SMTP destination check failed',
+        transient: isTransientEmailError(err),
+      };
     }
 
     const factory = this.transportFactory ?? defaultTransportFactory;
     const transport = factory(config, checkedHost);
+    let stage = 'SMTP handshake failed';
     try {
       const verified = await transport.verify();
       if (!verified) return { ok: false, error: 'SMTP verification returned no confirmation' };
+      stage = 'SMTP test authorization failed';
       await beforeSend?.();
+      stage = 'SMTP test send failed';
       const result = await transport.sendMail({
         from: config.from_name?.trim()
           ? { name: config.from_name.trim(), address: config.from_email }
@@ -132,9 +134,12 @@ export class SmtpConnectionTesterService {
         ? { ok: true }
         : { ok: false, error: 'SMTP server did not accept the test recipient' };
     } catch (err) {
-      const message = sanitizeError(err, config, recipient);
       this.logger.warn('SMTP connection test failed');
-      return { ok: false, error: message, transient: isTransientEmailError(err) };
+      return {
+        ok: false,
+        error: connectionDiagnostic(err, stage),
+        transient: isTransientEmailError(err),
+      };
     } finally {
       transport.close?.();
     }
