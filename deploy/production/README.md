@@ -213,6 +213,27 @@ before invoking any adapter and checks that the verified backup is still under
 24 hours old. An updated plan or report needs matching owner authorization.
 The rollout receipt records both hashes without including the approval text.
 
+The [manual production workflow](../../.github/workflows/production-promotion.yml)
+requires an exact candidate SHA on protected `main`. Provision the `production`
+GitHub environment and the `barghsa-production` runner group before dispatch.
+Restrict the group to the approved workflow on `refs/heads/main` and use a
+dedicated ingress runner. The repository is public. Keep production credentials
+off runners that can execute fork or other repository workflows.
+[GitHub runner group access](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/manage-access).
+
+Set the production environment variable `PRODUCTION_RELEASE_EVIDENCE_DIR` to
+the absolute operator-owned evidence directory. Save `rollout-plan.json` as
+mode `0600` in that directory and keep the same plan directory for all traffic
+changes to the ingress so they share the rollout lock. In the subdirectory
+named for the full candidate SHA, save `promotion-report.json`,
+`owner-approval.json`, `grafana-annotation.json`, and `sentry-release.json`.
+The runner verifies the Sentry commit associations, then the guard checks the
+production scope, candidate SHA, plan hash, and owner authorization before
+calling the ingress. It creates `rollout-receipt.jsonl` in the candidate
+directory. A completed ramp triggers the Grafana and Sentry marker steps.
+Keep the rollout receipt and reconcile a failed marker with the corresponding
+operator command below. The guard refuses to overwrite an existing receipt.
+
 Use `guarded-rollout.py` on the authorized ingress operator's host. It checks
 candidate smoke at zero traffic, advances through the configured percentages
 and waits for a fresh observation window at each percentage, including 100.

@@ -372,17 +372,23 @@ def main():
     parser.add_argument('--receipt', required=True, type=Path)
     parser.add_argument('--promotion-report', type=Path)
     parser.add_argument('--owner-approval', type=Path)
+    parser.add_argument('--production-commit', help='Require the production scope and this exact candidate SHA')
     args = parser.parse_args()
     os.umask(0o077)
     try:
-        plan_path = args.plan.resolve()
-        with plan_path.open('rb') as file:
+        plan_path = args.plan.absolute()
+        source = protected_file(plan_path) if args.production_commit is not None else plan_path.open('rb')
+        with source as file:
             content = file.read(MAX_JSON_BYTES + 1)
         require(len(content) <= MAX_JSON_BYTES, 'plan_too_large')
         plan = json.loads(content)
         validate_plan(plan, time.time())
+        if args.production_commit is not None:
+            require(plan['scope']['environment'] == 'production'
+                    and plan['candidate']['commit'] == args.production_commit,
+                    'production_workflow_plan_mismatch')
         plan_digest = sha256(content).hexdigest()
-        with (plan_path.parent / '.rollout.lock').open('a') as lock:
+        with (plan_path.resolve().parent / '.rollout.lock').open('a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             approval = {}
             if plan['scope']['environment'] == 'production':

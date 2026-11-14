@@ -280,6 +280,7 @@ class IsolatedRolloutTest(unittest.TestCase):
                 selected[kind] = [sys.executable, str(hook), str(state), kind, 'healthy']
             config = root / 'plan.json'
             config.write_text(json.dumps(selected))
+            config.chmod(0o600)
             receipt = root / 'receipt.jsonl'
             report = root / 'promotion.json'
             report_data = {'status': 'ready_for_owner_review', 'version': '0.9.0',
@@ -306,6 +307,27 @@ class IsolatedRolloutTest(unittest.TestCase):
 
             paths = ('--promotion-report', str(report), '--owner-approval', str(approval))
             self.assertIn('production_approval_required', execute().stderr)
+            config.chmod(0o644)
+            result = execute(*paths, '--production-commit', CANDIDATE['commit'])
+            self.assertEqual(result.returncode, 1)
+            self.assertIn('unsafe_annotation_file', result.stderr)
+            config.chmod(0o600)
+            result = execute(*paths, '--production-commit', PREVIOUS['commit'])
+            self.assertEqual(result.returncode, 1)
+            self.assertIn('production_workflow_plan_mismatch', result.stderr)
+            rehearsal = {**selected, 'scope': SCOPE, 'baseline': {**selected['baseline'], 'scope': SCOPE}}
+            config.write_text(json.dumps(rehearsal))
+            result = execute(*paths, '--production-commit', CANDIDATE['commit'])
+            self.assertEqual(result.returncode, 1)
+            self.assertIn('production_workflow_plan_mismatch', result.stderr)
+            self.assertFalse(receipt.exists())
+            self.assertEqual(json.loads(state.read_text())['changes'], [])
+            config.write_text(json.dumps(selected))
+            paths = (*paths, '--production-commit', CANDIDATE['commit'])
+            result = execute(*paths)
+            self.assertEqual(result.returncode, 1)
+            self.assertFalse(receipt.exists())
+            self.assertEqual(json.loads(state.read_text())['changes'], [])
             for data, error in (
                 ({**approval_data, 'scope': {'environment': 'production', 'database': 'other'}}, 'production_approval_mismatch'),
                 ({**approval_data, 'plan_sha256': 'd' * 64}, 'production_approval_mismatch'),

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:08:18+00:00",
+  "updated": "2026-11-14T17:18:06+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13689,7 +13689,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13702,7 +13703,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13873,6 +13874,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -13968,7 +13977,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13980,7 +13990,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14437,6 +14447,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -22344,7 +22362,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22356,7 +22375,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22664,6 +22683,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -22740,7 +22767,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22752,7 +22780,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23060,6 +23088,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -25420,7 +25456,8 @@
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
-        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25477,7 +25514,8 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-promotion-checkpoint-parity",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": null
       }
@@ -25636,7 +25674,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25668,11 +25707,11 @@
             },
             {
               "path": "deploy/production/guarded-rollout.py",
-              "sha256": "4bbafaff7be2f5570e9556c264fdd121d174fa9f7fbdd54ba9d0d988e2f73a14"
+              "sha256": "29c4c07cc89f75834c53629ba374ba1ffb3a2063713f81a66b522405712e0359"
             },
             {
               "path": "deploy/production/test_guarded_rollout.py",
-              "sha256": "fe939013cb593efa4b43483947ad406c236155ed25820ac65854dd480879cc98"
+              "sha256": "836385d4980944a544db30f0c877f5fe2cc6659ed258e65a68d17a8ef58b2ad6"
             },
             {
               "path": "docs/runbooks/database-restore.md",
@@ -25975,6 +26014,15 @@
                 "deploy/production/test_guarded_rollout.py"
               ],
               "scope": "Guarded rollout now verifies route readback after a passing observation before advancing or completing. Existing approval, smoke, money, security, latency, sample and timeout criteria remain in effect. The 18 passing guard cases cover the protected CLI, successful ramp, route drift and rollback."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/guarded-rollout.py",
+                "deploy/production/test_guarded_rollout.py"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -37782,7 +37830,8 @@
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37805,7 +37854,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -38600,6 +38649,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -41146,7 +41203,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41174,7 +41232,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             }
           ],
           "checks": [
@@ -41494,6 +41552,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -714079,7 +714145,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -714091,7 +714158,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -714291,6 +714358,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -740565,7 +740640,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -740587,7 +740663,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -741212,6 +741288,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -741368,7 +741452,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -741379,7 +741464,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -741812,6 +741897,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -750633,7 +750726,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -750657,7 +750751,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -751021,6 +751115,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -753953,7 +754055,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Provision the ten exact dashboards with a verified Grafana image in the target organization. Read one verified candidate deployment marker as a named operator in all ten dashboards."
+        "Provision the ten exact dashboards with a verified Grafana image in the target organization. Read one verified candidate deployment marker as a named operator in all ten dashboards.",
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -753972,7 +754075,8 @@
           "deploy/monitoring/grafana-worker-health-dashboard.json"
         ],
         "batches": [
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": null
       }
@@ -760447,7 +760551,8 @@
       "launch_required": true,
       "remaining": [
         "Verify the approved Sentry release integration and read back the exact GitHub commit in every configured project for the immutable candidate. Wire the documented marker step to the approved production rollout runner.",
-        "On the approved production-equivalent runner, verify the marker handoff against a completed rehearsal receipt using a protected test destination or the isolated Sentry protocol fixture. Confirm exactly one write, exact version and commit readback, and safe reconciliation of uncertain delivery. The first real production marker readback belongs to release-readiness#R-07.01."
+        "On the approved production-equivalent runner, verify the marker handoff against a completed rehearsal receipt using a protected test destination or the isolated Sentry protocol fixture. Confirm exactly one write, exact version and commit readback, and safe reconciliation of uncertain delivery. The first real production marker readback belongs to release-readiness#R-07.01.",
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -760463,7 +760568,8 @@
         ],
         "batches": [
           "release-0.6-sentry-deploy-marker",
-          "release-0.6-promotion-receipt-order"
+          "release-0.6-promotion-receipt-order",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": null
       }
@@ -763186,7 +763292,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -763234,7 +763341,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -763615,6 +763722,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -763949,7 +764064,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -763997,7 +764113,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "ff881d983c250f752a4c175d5a720539afcf04af74b6c53cc167e465fd3fb699"
+              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -764382,6 +764498,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-production-marker-wiring",
+              "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
             }
           ]
         }
@@ -765012,7 +765136,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Wire the tested composite action after guarded-rollout success on the approved protected ingress runner. Verify the configured Grafana organization, service account and exact candidate marker receipt in a production-equivalent rehearsal."
+        "The manual guarded production workflow runs the existing Grafana action after success. Provision the restricted ingress runner and production environment, verify the configured Grafana organization and service account, and read back the exact candidate marker in a production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -765026,7 +765150,8 @@
         ],
         "batches": [
           "release-0.6-grafana-release-markers",
-          "release-0.6-sentry-deploy-marker"
+          "release-0.6-sentry-deploy-marker",
+          "release-0.6-production-marker-wiring"
         ],
         "current_acceptance": null
       }
@@ -1145835,7 +1145960,8 @@
         "Use the documented restored-application probe against the approved isolated deployed candidate after database, configuration and object recovery. The local fixtures verify its report and protection against stale revisions. Actual end-to-end recovery and RPO/RTO measurements remain open.",
         "The configuration backup job now requires remote ciphertext and manifest readback before retention. Native isolated PostgreSQL/S3 tests passed. The protected off-server destination, recovery key and configuration and core-service recovery receipts remain required.",
         "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts.",
-        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open."
+        "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1145922,7 +1146048,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-configuration-backup-readback",
           "release-0.6-wal-upload-readback",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-production-marker-wiring"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1338560,6 +1338687,96 @@
         {
           "file": "budgets.log",
           "sha256": "55d067af00bbbd9b5ea640fa792a8ac3edc20d50970d7863b7ad9489e6a844b0"
+        }
+      ]
+    },
+    "release-0.6-production-marker-wiring": {
+      "batch": "release-0.6-production-marker-wiring",
+      "base_commit": "7d7fe976e3b202d350edc8a7f5021385330fd5ca",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.11",
+        "06-security-testing-observability.md#T-06.16.02.04",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.18.02.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        ".github/workflows/production-promotion.yml",
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/test_guarded_rollout.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/actions/grafana-release-annotation/action.yml",
+          "sha256": "1d6f2fbb15c68cac364f437e32db7da7b4d7a4880d4031933351e3e40bd89af0"
+        },
+        {
+          "path": ".github/actions/sentry-release-deploy/action.yml",
+          "sha256": "b4fd402bdc60ba449410ba117d2aa4594e63e4c3143eafdfabb73b680f743c7d"
+        },
+        {
+          "path": ".github/workflows/production-promotion.yml",
+          "sha256": "bfed6ed7179bd571580d8f364ac853128282653c31474c9f3453a52de54eaade"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "29c4c07cc89f75834c53629ba374ba1ffb3a2063713f81a66b522405712e0359"
+        },
+        {
+          "path": "deploy/production/record-release-annotation.py",
+          "sha256": "190b7519e3a394339433c19346201bceb70110959274a680e0efe47fda765bc4"
+        },
+        {
+          "path": "deploy/production/record-sentry-deploy.py",
+          "sha256": "5c0d9cd1bc65455268a513a4f968e73ac79e396a3227889db5755a82fdbd51ce"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "836385d4980944a544db30f0c877f5fe2cc6659ed258e65a68d17a8ef58b2ad6"
+        }
+      ],
+      "checks": [
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
+        "actionlint, changed-file formatting and diff checks passed. The exact production CLI fixture refused a wrong SHA, rehearsal scope, unsafe plan permissions and invalid approval before any ingress change. The valid fixture retained an approved rollout receipt."
+      ],
+      "limitations": [
+        "The workflow was validated statically. Tests use isolated rollout and marker fixtures. No job was dispatched and no production operation was authorized. GitHub returned no configured repository environments."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-production-marker-wiring",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "e46dc63685dbf79a246b3c516785195defe5cb266f4c86d79009774fda66ee25"
+        },
+        {
+          "file": "final-guard-case.log",
+          "sha256": "08408d7331b7078e45a788eb1ab548f02c5329f55e18d0b890899c212cc46ba7"
+        },
+        {
+          "file": "final-static.log",
+          "sha256": "3ba3fa8a185a01cadb41bb193322841e61b6b5faaf3bd45aa59f111203e3b340"
         }
       ]
     }

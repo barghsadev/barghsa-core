@@ -1,0 +1,67 @@
+name: Guarded production promotion
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Full SHA of the staged candidate named in the owner's approval
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: barghsa-production-promotion
+  cancel-in-progress: false
+
+jobs:
+  rollout:
+    if: github.repository == 'barghsadev/barghsa-core' && github.ref == 'refs/heads/main' && inputs.candidate_sha == github.sha
+    runs-on:
+      group: barghsa-production
+    environment: production
+    timeout-minutes: 1440
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Locate the protected evidence for this revision
+        id: evidence
+        shell: bash
+        env:
+          EVIDENCE_ROOT: ${{ vars.PRODUCTION_RELEASE_EVIDENCE_DIR }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          [[ "$EVIDENCE_ROOT" = /* && "$EVIDENCE_ROOT" != *$'\r'* && "$EVIDENCE_ROOT" != *$'\n'* ]]
+          directory="${EVIDENCE_ROOT%/}/$GITHUB_SHA"
+          test -d "$directory"
+          printf 'directory=%s\n' "$directory" >> "$GITHUB_OUTPUT"
+      - name: Verify the Sentry project commit associations
+        shell: bash
+        env:
+          EVIDENCE_DIR: ${{ steps.evidence.outputs.directory }}
+        run: python3 deploy/production/record-sentry-deploy.py --config "$EVIDENCE_DIR/sentry-release.json" --verify-release
+      - name: Verify owner approval and execute the guarded rollout
+        id: guard
+        shell: bash
+        env:
+          EVIDENCE_DIR: ${{ steps.evidence.outputs.directory }}
+          EVIDENCE_ROOT: ${{ vars.PRODUCTION_RELEASE_EVIDENCE_DIR }}
+        run: |
+          exec python3 deploy/production/guarded-rollout.py --production-commit "$GITHUB_SHA" \
+            --plan "$EVIDENCE_ROOT/rollout-plan.json" --receipt "$EVIDENCE_DIR/rollout-receipt.jsonl" \
+            --promotion-report "$EVIDENCE_DIR/promotion-report.json" --owner-approval "$EVIDENCE_DIR/owner-approval.json"
+      - name: Publish and verify the Grafana marker
+        uses: ./.github/actions/grafana-release-annotation
+        with:
+          config: ${{ steps.evidence.outputs.directory }}/grafana-annotation.json
+          receipt: ${{ steps.evidence.outputs.directory }}/rollout-receipt.jsonl
+      - name: Publish and verify the Sentry deployment marker
+        if: ${{ !cancelled() && steps.guard.outcome == 'success' }}
+        uses: ./.github/actions/sentry-release-deploy
+        with:
+          config: ${{ steps.evidence.outputs.directory }}/sentry-release.json
+          receipt: ${{ steps.evidence.outputs.directory }}/rollout-receipt.jsonl
