@@ -511,6 +511,49 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
                     observed[1] = 'verified backup'
                 self.assertEqual(observed, expected)
 
+    def test_active_manifest_switch_preserves_the_previous_bytes_on_install_failure(self):
+        text = RELEASE.read_text()
+        start = text.rindex('\nverify_running_image clamav "$clamav_id"\n')
+        switch = text[text.index('\n', start + 1):text.index('\ntrap - ERR\nprintf', start)]
+        script = r'''set -euo pipefail
+active=$1
+candidate=$2
+install() {
+  if [[ "$MANIFEST_FAILURE" == install ]]; then
+    printf 'PARTIAL' > "${@: -1}"
+    return 1
+  fi
+  command install "$@"
+}
+mv() {
+  [[ $1 == -fT && $2 == -- ]]
+  [[ "$MANIFEST_FAILURE" != rename ]] || return 1
+  command mv -f -- "$3" "$4"
+}
+trap 'cat "$active"; echo rollback' ERR
+''' + switch + '\necho accepted\n'
+        for failure in ('none', 'install', 'rename'):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                active = root / 'active.env'
+                candidate = root / 'candidate.env'
+                active.write_text('PREVIOUS=verified\n')
+                active.chmod(0o600)
+                candidate.write_text('CANDIDATE=verified\n')
+                result = subprocess.run(
+                    ['bash', '-c', script, 'fixture', str(active), str(candidate)],
+                    env={**os.environ, 'MANIFEST_FAILURE': failure},
+                    capture_output=True, text=True, timeout=10,
+                )
+                failed = failure != 'none'
+                self.assertEqual(result.returncode, int(failed), result.stderr)
+                expected = 'PREVIOUS=verified\n' if failed else 'CANDIDATE=verified\n'
+                self.assertEqual(active.read_text(), expected)
+                self.assertEqual(active.stat().st_mode & 0o777, 0o600)
+                self.assertEqual(sorted(p.name for p in root.iterdir()),
+                                 ['active.env', 'candidate.env'])
+                self.assertEqual(result.stdout, expected + 'rollback\n' if failed else 'accepted\n')
+
     def test_public_smoke_checks_candidate_revision_before_promotion(self):
         text = RELEASE.read_text()
         smoke = text[text.index('verify_public_json() {'):
@@ -683,7 +726,7 @@ verify_public_json "$1" live || false
         running = text[text.index("\nfor service in api worker ai-inference web"):
                        text.index("\nfor health in live ready")]
         final_stateful = text[text.rindex('\nverify_running_image postgres "$postgres_id"\n'):
-                              text.index('\ninstall -m 0600 "$candidate" "$active"')]
+                              text.index('\npending_active=')]
         receipt = text[text.rindex('if [[ -n "$commit" ]]; then'):]
         script = f'''set -euo pipefail
 BARGHSA_STAGING_RELEASE_COMMIT={'a' * 40}

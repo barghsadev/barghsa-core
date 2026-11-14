@@ -417,7 +417,13 @@ docker run --rm --env-file "$runtime" --network barghsa-staging-private \
 
 verify_running_image postgres "$postgres_id"
 verify_running_image clamav "$clamav_id"
-install -m 0600 "$candidate" "$active"
+pending_active=$(mktemp "${active}.XXXXXXXX")
+if ! install -m 0600 -- "$candidate" "$pending_active" ||
+   ! mv -fT -- "$pending_active" "$active"; then
+  rm -f -- "$pending_active"
+  echo 'Could not publish the active staging manifest' >&2
+  false
+fi
 trap - ERR
 printf 'Staging release healthy: %s\n' "$BARGHSA_APP_IMAGE"
 printf 'Staging app and web image IDs: %s %s\n' "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID"

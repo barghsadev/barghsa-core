@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T16:46:13+00:00",
+  "updated": "2026-11-14T16:51:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21112,7 +21112,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -21132,7 +21133,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21466,6 +21467,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ]
         }
@@ -25210,7 +25219,8 @@
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "The release notifier persists the unknown delivery marker before sending and replaces it atomically on confirmation. The summary, album and verified queue receipt fixtures pass. Verify the actual worker receipts on the accepted candidate.",
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
-        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25293,7 +25303,8 @@
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-release-notification-durability",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": null
       }
@@ -25322,7 +25333,8 @@
         "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25377,7 +25389,8 @@
           "release-0.6-promotion-migration-receipt",
           "release-0.6-migration-manifest-binding",
           "release-0.6-complete-staging-checkpoint-receipt",
-          "release-0.6-promotion-checkpoint-parity"
+          "release-0.6-promotion-checkpoint-parity",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": null
       }
@@ -25534,7 +25547,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25554,15 +25568,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "26fc0c57351fcbfa78eb514b5cbef29ebe6be823eb52d750cc212c0d1a6708d4"
+              "sha256": "5e51342a3e12f09be27cdd54d6ba8d34cf215cf08b6444f4ecd13cc9e11bf7ee"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -25854,6 +25868,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ]
         }
@@ -34094,7 +34118,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -34150,7 +34175,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -34599,6 +34624,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ]
         }
@@ -37649,7 +37682,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-wal-upload-readback",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37680,7 +37714,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -38443,6 +38477,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ]
         }
@@ -105858,7 +105900,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-operator-queue-coverage",
           "release-0.6-saving-quote-fixture-isolation",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -106006,7 +106049,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -107656,6 +107699,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -173163,7 +173214,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -173535,7 +173587,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -173547,7 +173599,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -175008,6 +175060,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -644031,7 +644092,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -644203,7 +644265,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -644923,6 +644985,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -665783,7 +665853,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -666023,7 +666094,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -666623,6 +666694,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -666757,7 +666836,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -666997,7 +667077,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -667597,6 +667677,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -667729,7 +667817,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -667969,7 +668058,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -668569,6 +668658,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -668701,7 +668798,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -668941,7 +669039,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -669565,6 +669663,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -670191,7 +670297,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -670431,7 +670538,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -671031,6 +671138,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -671241,7 +671356,8 @@
           "release-0.6-notification-scan-recheck",
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -671613,7 +671729,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -671625,7 +671741,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -673110,6 +673226,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -673397,7 +673522,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -673637,7 +673763,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -674237,6 +674363,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -674368,7 +674502,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -674608,7 +674743,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -675208,6 +675343,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -675340,7 +675483,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -675580,7 +675724,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -676180,6 +676324,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -676313,7 +676465,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -676553,7 +676706,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -677177,6 +677330,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -677308,7 +677469,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -677548,7 +677710,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -678148,6 +678310,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -678279,7 +678449,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "status": "done",
@@ -678519,7 +678690,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -679119,6 +679290,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The production-side staging script changes only the public JSON smoke reads. The exact revision, dependency and version checks and the rollback path were rechecked with 17 focused tests. Prior deployment, S3, scanner and application evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -706743,7 +706922,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-notification-scan-recheck",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -706755,7 +706935,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -707098,6 +707278,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ]
         }
@@ -738991,7 +739179,8 @@
         "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram.",
         "The release notifier retains a complete unknown receipt if confirmed summary or album storage fails. Focused deployment and queue fixtures pass. Verify actual accepted staging and Telegram receipts.",
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
-        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open."
+        "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -739058,7 +739247,8 @@
           "release-0.6-staging-nginx-fixture",
           "release-0.6-release-notification-durability",
           "release-0.6-staging-bounded-smoke",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_acceptance": null
       }
@@ -1128195,7 +1128385,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1128219,7 +1128409,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1131864,6 +1132054,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "presentation_renewals": [
@@ -1132319,7 +1132518,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-consultation-read-authority",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1134488,7 +1134688,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "2915739e0b7e4cfa59bc3d1228d72a6a64ec475dddfbe542972f33976288a2e1"
+              "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1134512,7 +1134712,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "478fcc55c210da01517580858e56d4c8406e6d095d6205803fe1475be220fcae"
+              "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1138085,6 +1138285,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Only the queued album attachment and receipt path is affected. The notifier verifies the exact bytes loaded into memory against the reviewed digests. Queue and notification suites preserve summary, fallback, exact staging checks and uncertain delivery handling."
+            },
+            {
+              "batch": "release-0.6-atomic-active-staging-manifest",
+              "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The final staging active manifest write now uses an atomic rename from the same directory. Existing image, health, migration and rollback checks retain their criteria. The complete rollback suite and the deployment-to-notifier boundary passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1138557,7 +1138766,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-staging-bounded-smoke",
           "release-0.6-consultation-read-authority",
-          "release-0.6-reviewed-album-bytes"
+          "release-0.6-reviewed-album-bytes",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1143954,7 +1144164,8 @@
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
         "Both new consultation catalogue and staff team-read expiry regressions rejected the previous compiled baseline. The two fixes passed 25 compiled consultation, workflow and assignment tests and the selected wallet-funded payment and completion journey. Exact staged evidence remains open.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
-        "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open."
+        "Encrypted operator-log restores now verify the selected environment, UTC day and archive version before writing bytes. The fixture verified matching original gzip bytes, wrong environment and day, an invalid version, and an oversized header. A scheduled archival write and independent restore from the approved deployed cold storage destination remain open.",
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1144351,7 +1144562,8 @@
           "release-0.6-auth-credential-races",
           "release-0.6-consultation-read-authority",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-operator-archive-restore-identity"
+          "release-0.6-operator-archive-restore-identity",
+          "release-0.6-atomic-active-staging-manifest"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1336958,6 +1337170,103 @@
         {
           "file": "scoped-checks.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-atomic-active-staging-manifest": {
+      "batch": "release-0.6-atomic-active-staging-manifest",
+      "base_commit": "bd67f97203d9cc827c2d0079241a340271508d72",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "549a0b3fc0b9c1ca3f43a3e3a03dbf97d99e154e3faa26533bc5f5e034de1b03"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e3a8465cfb2f4f451532f3b52347c5aabe53cd43e1ff41be45b9869c7b40aac5"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "2f61926a95b5eb66894164d8e509fb5f3bd441edeab3d5972ff879af0a5565e5"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "c101e7302bf40831c7b024314103bd363c381e7651d1c7c3648b2ff79a515058"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "5e51342a3e12f09be27cdd54d6ba8d34cf215cf08b6444f4ecd13cc9e11bf7ee"
+        }
+      ],
+      "checks": [
+        "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
+        "The prior script overwrote the active manifest with partial bytes on a failed copy. The corrected fixture verifies the exact previous bytes, mode and cleanup at both failure points and the candidate bytes on success. Bash syntax, ShellCheck, Prettier and git diff checks passed."
+      ],
+      "limitations": [
+        "The shell fixture exercises the actual switch and the caller uses isolated services. The actual accepted staging deployment, rollback rehearsal and Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-atomic-active-staging-manifest",
+      "execution_receipts": [
+        {
+          "file": "regression-before.log",
+          "sha256": "d7e473c5b06448d5576a7d3d812735c9179518ddd77e86120adbf213a2c5403a"
+        },
+        {
+          "file": "rollback-tests.log",
+          "sha256": "3997dc06b57b96957964deec835f26cae62022ab5720468b52faf8caf8d0d57e"
+        },
+        {
+          "file": "deploy-caller.log",
+          "sha256": "855ba6145927f766983d4d7385dbc813e9472c41f89ec147132f608aab66ae27"
+        },
+        {
+          "file": "scoped-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "shellcheck.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ]
     }
