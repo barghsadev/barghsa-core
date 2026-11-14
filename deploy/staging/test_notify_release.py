@@ -1,5 +1,6 @@
 import importlib.util
 import hashlib
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import io
 import json
 import os
@@ -9,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from threading import Thread
 import unittest
 from unittest.mock import patch
 
@@ -121,7 +123,7 @@ class ReleaseNotificationTests(unittest.TestCase):
     def test_screenshot_multipart_preserves_bytes_and_persian_caption(self):
         data = b"\x89PNG\r\n\x1a\n" + b"synthetic image bytes"
         caption = "تصویر محیط آزمایشی برقسا، نسخه 0.1.0"
-        with patch.object(release.urllib.request, "urlopen", return_value=io.BytesIO(b'{"ok":true}')) as send:
+        with patch.object(release.opener, "open", return_value=io.BytesIO(b'{"ok":true}')) as send:
             self.assertEqual(release.request_json("https://example.test", {"chat_id": -100123, "caption": caption}, data), {"ok": True})
         request = send.call_args.args[0]
         self.assertIn(data, request.data)
@@ -157,7 +159,7 @@ class ReleaseNotificationTests(unittest.TestCase):
             {'type': 'photo', 'media': 'attach://image1'},
         ])}
         response = io.BytesIO(b'{"ok":true,"result":[{"message_id":21},{"message_id":22}]}')
-        with patch.object(release.urllib.request, 'urlopen', return_value=response) as api:
+        with patch.object(release.opener, 'open', return_value=response) as api:
             result = release.telegram_call('synthetic', 'sendMediaGroup', payload, images)
         self.assertEqual([r['message_id'] for r in result], [21, 22])
         request = api.call_args.args[0]
@@ -165,6 +167,55 @@ class ReleaseNotificationTests(unittest.TestCase):
             self.assertIn(f'name="image{i}"'.encode(), request.data)
             self.assertIn(f'attach://image{i}'.encode(), request.data)
             self.assertIn(data, request.data)
+
+    def test_http_redirects_are_refused_for_release_reads_and_telegram_posts(self):
+        destinations = []
+
+        class Fixture(BaseHTTPRequestHandler):
+            def log_message(self, *_):
+                pass
+
+            def do_GET(self):
+                if self.path == '/destination':
+                    destinations.append(self.command)
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(b'{}')
+                    return
+                self.send_response(int(self.path[1:]))
+                self.send_header('Location', '/destination')
+                self.end_headers()
+
+            do_POST = do_GET
+
+        with ThreadingHTTPServer(('127.0.0.1', 0), Fixture) as server:
+            worker = Thread(target=server.serve_forever, daemon=True)
+            worker.start()
+            try:
+                for payload in (None, {'fixture': True}):
+                    for status in (301, 302, 303, 307, 308):
+                        with self.subTest(post=payload is not None, status=status):
+                            with self.assertRaisesRegex(ValueError, f'HTTP {status}'):
+                                release.request_json(f'http://127.0.0.1:{server.server_port}/{status}', payload)
+                self.assertEqual(destinations, [])
+            finally:
+                server.shutdown()
+                worker.join()
+
+    def test_provider_json_response_is_bounded(self):
+        limit = release.RESPONSE_LIMIT
+        accepted = b'{}' + b' ' * (limit - 2)
+        for data in (accepted, accepted + b' '):
+            with self.subTest(size=len(data)):
+                response = io.BytesIO(data)
+                with patch.object(release.opener, 'open', return_value=response), \
+                        patch.object(response, 'read', wraps=response.read) as read:
+                    if data == accepted:
+                        self.assertEqual(release.request_json("https://example.test"), {})
+                    else:
+                        with self.assertRaisesRegex(ValueError, 'exceeded its size limit'):
+                            release.request_json("https://example.test")
+                    read.assert_called_once_with(limit + 1)
 
     def test_two_or_ten_screenshots_use_one_album_and_cannot_add_another(self):
         for count in [2, 10]:

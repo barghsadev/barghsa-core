@@ -17,6 +17,15 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[2]
 SITE = "https://stg.barghsa.com"
 RELEASE_CHAT_ID = -1004467450624
+RESPONSE_LIMIT = 256 * 1024
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        return None
+
+
+opener = urllib.request.build_opener(NoRedirect)
 
 
 def release_details(root, commit):
@@ -70,12 +79,18 @@ def request_json(url, payload=None, photo=None):
         request.data = json.dumps(payload).encode()
         request.add_header("Content-Type", "application/json")
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            return json.load(response)
+        with opener.open(request, timeout=30) as response:
+            data = response.read(RESPONSE_LIMIT + 1)
     except urllib.error.HTTPError as error:
         # Never print a bot URL: it contains the credential.
         raise ValueError(f"Remote request rejected with HTTP {error.code}") from None
     except (OSError, ValueError):
+        raise ValueError("Remote request did not return a verifiable JSON response") from None
+    if len(data) > RESPONSE_LIMIT:
+        raise ValueError("Remote JSON response exceeded its size limit")
+    try:
+        return json.loads(data)
+    except (UnicodeError, ValueError):
         raise ValueError("Remote request did not return a verifiable JSON response") from None
 
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T08:06:40+00:00",
+  "updated": "2026-11-14T08:16:01+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24529,7 +24529,8 @@
         "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts.",
         "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open.",
         "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
-        "The staging rollout now checks exact edge header values through the public origin before recording the active candidate. Staging release and rollback fixtures passed. Verify the resulting live release log with the exact accepted v0.6.0 SHA."
+        "The staging rollout now checks exact edge header values through the public origin before recording the active candidate. Staging release and rollback fixtures passed. Verify the resulting live release log with the exact accepted v0.6.0 SHA.",
+        "The staging notifier rejects redirect responses and caps staging and Telegram JSON replies. The live v0.5.1 version and configured Telegram channel returned directly through the verified HTTPS endpoints. The exact accepted v0.6.0 send and delivery receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -24602,7 +24603,8 @@
           "release-0.6-notification-image-readback",
           "release-0.6-migration-manifest-binding",
           "release-0.6-staging-storage-policy-readback",
-          "release-0.6-staging-edge-smoke"
+          "release-0.6-staging-edge-smoke",
+          "release-0.6-telegram-receipt-transport"
         ],
         "current_acceptance": null
       }
@@ -688697,7 +688699,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints."
+        "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints.",
+        "The release notification client rejects every tested HTTP redirect status on staging reads and Telegram requests. The loopback fixture verified that no redirected endpoint received a request. Continue the remaining outbound transport inventory."
       ],
       "owner": null,
       "depends_on": [],
@@ -688727,7 +688730,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-s3-response-limits"
+          "release-0.6-s3-response-limits",
+          "release-0.6-telegram-receipt-transport"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -688834,7 +688838,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal."
+        "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal.",
+        "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory."
       ],
       "owner": null,
       "depends_on": [],
@@ -688869,7 +688874,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-s3-response-limits",
           "release-0.6-otlp-connection-deadline",
-          "release-0.6-storage-body-deadline"
+          "release-0.6-storage-body-deadline",
+          "release-0.6-telegram-receipt-transport"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -741297,7 +741303,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "fa889dfcd7d7777c827a27adf19c97ecb600de18daad7c4401d27af539b3a542"
+              "sha256": "3147b218d0586c360d30bb70dfb5bd0961a043f367529d44c33e9004f77ad130"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -742103,6 +742109,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Renewed the staff content command and generated API contract bindings. The only runtime deltas are empty-body validation on five staff mutations. Permission, revision, concurrency and audit safeguards passed in the same focused suites. Existing source-bound evidence covers unchanged callers and behavior."
+            },
+            {
+              "batch": "release-0.6-telegram-receipt-transport",
+              "base_commit": "3425cc356c7d0e653f0deccfdee009097cc581a5",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Renewed the notifier transport binding after scoped tests for redirect refusal, bounded responses and existing release receipt handling. The 18 notifier, 24 queue and 17 promotion cases passed, and the existing channel and staging version were verified read-only."
             }
           ]
         }
@@ -1086920,7 +1086934,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
+              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1086928,7 +1086942,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "fa889dfcd7d7777c827a27adf19c97ecb600de18daad7c4401d27af539b3a542"
+              "sha256": "3147b218d0586c360d30bb70dfb5bd0961a043f367529d44c33e9004f77ad130"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1087122,6 +1087136,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "The backup tool now reads the stored manifest byte for byte after publishing it. The staging release and promotion verifier both require proof of this read before accepting the checkpoint. Existing backups, the off-server manifest format, the digest binding, and release rollback checks are preserved."
+            },
+            {
+              "batch": "release-0.6-telegram-receipt-transport",
+              "base_commit": "3425cc356c7d0e653f0deccfdee009097cc581a5",
+              "paths": [
+                "deploy/staging/notify-release.py",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Renewed the notifier transport binding after scoped tests for redirect refusal, bounded responses and existing release receipt handling. The 18 notifier, 24 queue and 17 promotion cases passed, and the existing channel and staging version were verified read-only."
             }
           ]
         },
@@ -1100566,7 +1100589,7 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
+              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1103986,6 +1104009,14 @@
                 "apps/api/src/notifications/notification-template-http.integration.test.ts"
               ],
               "scope": "Renewed the staff terms and notification-template read bindings. The only route changes recheck current authorization after the four database reads. The 348 focused HTTP and controller cases cover the affected behaviors and the generated API contract matches."
+            },
+            {
+              "batch": "release-0.6-telegram-receipt-transport",
+              "base_commit": "3425cc356c7d0e653f0deccfdee009097cc581a5",
+              "paths": [
+                "deploy/staging/notify-release.py"
+              ],
+              "scope": "Renewed the notifier transport binding after scoped tests for redirect refusal, bounded responses and existing release receipt handling. The 18 notifier, 24 queue and 17 promotion cases passed, and the existing channel and staging version were verified read-only."
             }
           ],
           "presentation_renewals": [
@@ -1106609,7 +1106640,7 @@
             },
             {
               "path": "deploy/staging/notify-release.py",
-              "sha256": "d13968dcb7414d72b289b19445b57cf4d240de2a61f848d3cb99baa0a1752d23"
+              "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
             },
             {
               "path": "deploy/staging/release-queue.py",
@@ -1109930,6 +1109961,14 @@
                 "apps/api/src/notifications/notification-template-http.integration.test.ts"
               ],
               "scope": "Renewed the staff terms and notification-template read bindings. The only route changes recheck current authorization after the four database reads. The 348 focused HTTP and controller cases cover the affected behaviors and the generated API contract matches."
+            },
+            {
+              "batch": "release-0.6-telegram-receipt-transport",
+              "base_commit": "3425cc356c7d0e653f0deccfdee009097cc581a5",
+              "paths": [
+                "deploy/staging/notify-release.py"
+              ],
+              "scope": "Renewed the notifier transport binding after scoped tests for redirect refusal, bounded responses and existing release receipt handling. The 18 notifier, 24 queue and 17 promotion cases passed, and the existing channel and staging version were verified read-only."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1301339,6 +1301378,79 @@
         {
           "file": "contract.log",
           "sha256": "ffd4fc62380c80b613447bf8f42048a87eb5235fec0e94cf0958e8cc2f8ecd30"
+        }
+      ]
+    },
+    "release-0.6-telegram-receipt-transport": {
+      "batch": "release-0.6-telegram-receipt-transport",
+      "base_commit": "3425cc356c7d0e653f0deccfdee009097cc581a5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/notify-release.py",
+        "deploy/staging/test_notify_release.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "19a58b9ad7d5760cef50f06a6a4cfb6bd2b6cd98cc46c4d5faba5de35a697f1c"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "a8f80820fe247290afec99467b332515ce51a5d1180c85e5b216da69ab27246c"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "b90e65961a31392ab39a306a41e676c8c593afe8a64667049364b6eaf6b6f829"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "e6c1f544868b621427ceaa8634a372268a49d45c08459604bf6b35e88006b005"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "3147b218d0586c360d30bb70dfb5bd0961a043f367529d44c33e9004f77ad130"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "131101628728ecfbfc822fa378dc5a41b597d6de8dfb6256a54c9d3f93cbb1c2"
+        }
+      ],
+      "checks": [
+        "The notifier rejects HTTP 301, 302, 303, 307 and 308 before a destination receives the redirected GET or POST. Its bounded reader accepts exact-limit JSON and rejects any additional byte. Errors exclude the URL and the bot credential.",
+        "All 18 notifier, 24 release queue and 17 promotion tests passed. Live staging returned the original v0.5.1 metadata and Telegram confirmed the configured release channel through getChat without a message send."
+      ],
+      "limitations": [
+        "No release was deployed or announced. The actual v0.6.0 send and immutable staging candidate remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-telegram-receipt-transport",
+      "execution_receipts": [
+        {
+          "file": "notification-final-source.log",
+          "sha256": "5448d6cb7379dac58722714368ac39cda78ca7a3520bed85ffc6de8f37113eda"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "793cbcedcb00b3147303d47eb260f070e7072eb0c469aaf30f92d9b599cb8d66"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "c33ad4d2bbd964e347355f6e13fe8df9aea7f74ac8b15c0cd0e44ba625640c5b"
+        },
+        {
+          "file": "live-staging.log",
+          "sha256": "616a569c94ac3f2465da7889e85cb67b987fa33691502832fc02c3d5d1e004e7"
+        },
+        {
+          "file": "live-telegram-channel.log",
+          "sha256": "d0c1a1b6eebb97da478aa902b8ba1898b5bb8b4a018a59326cb79a582f2996b3"
         }
       ]
     }
