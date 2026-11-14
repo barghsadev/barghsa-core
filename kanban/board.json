@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T02:24:01+00:00",
+  "updated": "2026-11-14T02:38:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16942,7 +16942,8 @@
         "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover.",
         "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required.",
         "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result.",
-        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
+        "At 02:36 UTC on November 14, the active staging PostgreSQL volume had 107,408,958 apparent bytes and no external tablespace links. Docker and /tmp shared 6,257,455,104 free bytes. Use the cutover runbook to measure backup and restore scratch, image transfer and retained volume space. The protected off-server configuration and key remain absent."
       ],
       "owner": null,
       "depends_on": [],
@@ -17031,7 +17032,8 @@
           "release-0.6-live-operational-gate-readback",
           "release-0.6-existing-offsite-capacity",
           "release-0.6-backup-target-monitoring",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-cutover-capacity-and-image-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -686910,7 +686912,8 @@
         "Rebuilt PostgreSQL image dbb54d6c8c53 matches all 241 package and license rows from preflight 43518087320, including 217 pending sign-offs. Its packed gosu, entrypoint and pgvector notices were verified. Strict review remains open.",
         "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added.",
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open."
+        "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
+        "Verified five image and SBOM identities in hosted report-only preflight 43546424873 on bf319cdcb. All 859 exact package entries match the preceding preflight and the same 387 require sign-off. The strict candidate gate remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -686971,7 +686974,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-license-inventory-465def304",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-cutover-capacity-and-image-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1092762,7 +1092766,8 @@
         "Native CRM authority checks cover loss of the required staff grant while the response data is still pending. The profile detail and verification history preserve the existing CRM-only view. Verify the final accepted staging candidate.",
         "The staging storage check now fails closed on a lost PUT acknowledgement and cleans up only the owned probe, with no unguarded delete. Native pinned-image and staging rollback/notification checks passed. Verify the exact final candidate.",
         "Promotion receipt validation accepts the original staged DAST report only for its exact version and commit. The earlier v0.5.0 report passed format validation for its own scope and failed when evaluated as the launch candidate. Obtain the distinct final reports on the corresponding staging releases.",
-        "Nightly email fixtures verify exact report identity and require the complete 40-shard outcome before a passed email. The provider acceptance receipt retains the summary checksum. Actual scheduled run, protected mailbox configuration and recipient delivery remain open."
+        "Nightly email fixtures verify exact report identity and require the complete 40-shard outcome before a passed email. The provider acceptance receipt retains the summary checksum. Actual scheduled run, protected mailbox configuration and recipient delivery remain open.",
+        "Hosted report-only preflight 43546424873 on bf319cdcb has verified reports and SBOMs for all five exact image IDs, with zero high or critical findings. The final strict package gate and production-equivalent image receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1093077,7 +1093082,8 @@
           "release-0.6-crm-read-authority",
           "release-0.6-staging-probe-uncertain-write",
           "release-0.6-promotion-dast-receipt",
-          "release-0.6-nightly-report-identity"
+          "release-0.6-nightly-report-identity",
+          "release-0.6-cutover-capacity-and-image-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1093347,7 +1093353,8 @@
         "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment.",
         "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts.",
         "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open.",
-        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open."
+        "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
+        "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover."
       ],
       "owner": null,
       "depends_on": [],
@@ -1093415,7 +1093422,8 @@
           "release-0.6-live-operational-gate-readback",
           "release-0.6-existing-offsite-capacity",
           "release-0.6-backup-target-monitoring",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-cutover-capacity-and-image-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1273192,6 +1273200,51 @@
         {
           "file": "shards.log",
           "sha256": "28e92dcccc510b44db57360ff271146ccdfd8206eb2518deb2cac070e8eba513"
+        }
+      ]
+    },
+    "release-0.6-cutover-capacity-and-image-readback": {
+      "batch": "release-0.6-cutover-capacity-and-image-readback",
+      "base_commit": "bf319cdcbc53275e10314a963e7a6c2be03fbb92",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "f96c5b04b942048785f9d84b040d4f0c396f469e5e6c0e77b499bd6cba1ef9f4"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "a02805cea7c9f5fce4fc37b5e6383ac53b1ddbbef55ebcf193b3a888da6787b2"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        }
+      ],
+      "checks": [
+        "Pinned-host SSH readback identified the live PostgreSQL mount, WAL, tablespace count, filesystem sharing and available bytes. It checked backup settings by file presence only.",
+        "All five hosted vulnerability reports and CycloneDX SBOMs matched the exact candidate tags, image IDs and file hashes. All 859 package rows matched the preceding report by scope, package URL, observed license, location and disposition."
+      ],
+      "limitations": [
+        "The space measurement is a read-only planning baseline. It is not a cutover, recovery, provider quota or peak-usage receipt. The hosted license inventory is report-only and all 387 pending dispositions remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-cutover-capacity-and-image-readback",
+      "execution_receipts": [
+        {
+          "file": "staging-cutover-capacity.json",
+          "sha256": "572ec6b0d9e5e8bbdd2428268512ffd60ae1b3dbf0ac8cf0cfe30b4c067299ec"
+        },
+        {
+          "file": "hosted-image-readback.json",
+          "sha256": "d402e00ab20803ff5df132c075525f6b7420acf71f2b51a67589d201201415f3"
         }
       ]
     }

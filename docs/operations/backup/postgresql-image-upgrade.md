@@ -65,3 +65,28 @@ replacement image and volume on the stopped-writes topology before updating
 ordinary release rejects a different volume and checks the mounted volume
 before any migrations. For a pre-write rollback, use the preserved manifest
 with its original image and volume.
+
+## Size the staging cutover
+
+On November 14 at 02:36 UTC, Docker's data directory, the active
+`barghsa-staging_pgdata` volume and `/tmp` shared one filesystem with
+6,257,455,104 bytes available at 93% utilization. The volume contained
+107,408,958 apparent bytes, including 33,554,432 bytes of WAL, and had no
+external tablespace links. Use these numbers to plan the first rehearsal and
+repeat the measurements before the cutover.
+
+- Measure free bytes and verify the mount for the Docker data directory,
+  backup scratch, image archive and restore target. Count space on a shared
+  filesystem once. Inventory the active data directory and any external
+  tablespaces. Keep the previous database volume and rollback images in place.
+- Budget backup scratch for the native tar files, extracted payload, plaintext
+  archive and encrypted archive. They coexist before upload. Independently
+  budget the restore filesystem for the downloaded ciphertext, decrypted
+  archive, extracted payload and WAL replay. Use measured file sizes and peak
+  usage from the isolated exercise. Add the logical dump, restored database,
+  replacement and candidate image layers, transfer archive and room for growth
+  during the maintenance window where they share the filesystem.
+- On the approved HTTPS backup destination, verify quota for retained full
+  backups, WAL, retained object versions and the next upload. Restore from the
+  verified off-server copy with the recoverable key and compare both staging
+  databases before starting the live cutover.
