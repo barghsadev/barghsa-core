@@ -104,7 +104,7 @@ The original review used the read-only Linux app and worker image from staging v
 | `argparse@2.0.1`                                                                               | The API includes the original `LICENSE` declaring Python-2.0.                                                                                                                 | Approve this version if the final image retains the original license and copyright notices.                                                                                            |
 | `geoip-country@5.0.202609050122`                                                               | The API image includes the IPv4/IPv6 GeoLite2 country dataset and the software/data license file. The parser code is Apache-2.0; that option does not cover the data.         | Owner approved removal and the unavailable fallback. Verify the final images exclude this package and data.                                                                            |
 
-The candidate updates Nodemailer to `10.1.4` and retains the declaration-only patch in both module formats. The published candidate archive still carries MIT-0 and includes its original license file. Update the review inventory from the next exact API and worker image scans before requesting approval for that version. [Nodemailer 10.1.4](https://github.com/nodemailer/nodemailer/releases/tag/v10.1.4).
+The development image at `f7fc00b88` contains Nodemailer `10.1.4` with the declaration-only patch in both module formats. The original MIT-0 notice in the installed package matches the previous notice byte for byte. The refreshed review workbook asks for a decision on this exact version and image scope. [Nodemailer 10.1.4](https://github.com/nodemailer/nodemailer/releases/tag/v10.1.4).
 
 Both browser builds place the notices under `assets/licenses/` (under `/auth/` for the auth shell). The original bytes were also retrieved from the built app’s HTTP server.
 
@@ -183,6 +183,14 @@ The September 5, 2026 package was present in the verified v0.5.0 staging image. 
 On 2026-11-09 the owner approved removing the bundled data and using the existing unavailable display for v0.6.0. This decision does not approve other exceptions. A later approved source should keep data outside rollback images, preserve the local country-only lookup, and have a verified refresh and retirement procedure. No remote IP lookup is proposed.
 
 ## Acceptance evidence
+
+The five-image scan at `f7fc00b88` reported zero high or critical findings. Its
+857 package entries match the preceding inventory except for the application
+image's Nodemailer version. The revised workbook matches all 386 active
+review entries by scope, package URL, scanner licenses and location. All
+disposition cells are blank. Record the named decisions and verify applicable
+conditions on the final immutable images before running the enforced license
+gate. [Image scan and inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43590799789/job/132434875701).
 
 The five-image scan for `69be928c` matches all 857 entries in the `7b62b875c`
 review packet by exact package URL, scope, license set, installation location

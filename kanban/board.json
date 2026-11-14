@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T10:32:21+00:00",
+  "updated": "2026-11-14T11:46:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24400,7 +24400,8 @@
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -24472,7 +24473,8 @@
           "release-0.6-cumulative-image-receipts",
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-nodemailer-moderate-advisories",
-          "release-0.6-hosted-image-scan-8436b628a"
+          "release-0.6-hosted-image-scan-8436b628a",
+          "release-0.6-license-review-refresh-f7fc00b88"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -52932,7 +52934,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "3b3cd6225542b673e67ac457d02e70c566022fdb95bfa3f9ffbf1ea8ea08bbbc"
+              "sha256": "cf3019f54f38223640b92860810429dec638875d558cab732bc18ba3dfab82c9"
             }
           ],
           "checks": [
@@ -53522,6 +53524,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-license-review-refresh-f7fc00b88",
+              "base_commit": "f7fc00b8873c05dba9fe75441c4bc764898e5f87",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Updated the license-review section to identify the exact Nodemailer version and its hosted image inventory."
             }
           ],
           "presentation_renewals": [
@@ -707309,7 +707319,8 @@
         "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
         "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
         "Nodemailer 10.1.4 replaces 10.0.12 in API, worker and shared. The new audit no longer reports the five moderate Nodemailer advisories and reports zero High or Critical findings. Regenerate the exact image inventory and review the MIT-0 exception at the new version.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -707385,7 +707396,8 @@
           "release-0.6-packaged-backup-manifest-rehearsal",
           "release-0.6-strict-license-and-grafana-proof",
           "release-0.6-nodemailer-moderate-advisories",
-          "release-0.6-hosted-image-scan-8436b628a"
+          "release-0.6-hosted-image-scan-8436b628a",
+          "release-0.6-license-review-refresh-f7fc00b88"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -707662,7 +707674,8 @@
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
         "Hosted rehearsal 43583704822 at 81d4381e9 passed all 12 mobile Chromium cases on its first attempt. Login and all four service histories had Persian and English samples. Maximum LCP was 1,652 ms, populated render 1,659.4 ms, CLS 0.0478 and blocking time 0 ms.",
-        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings."
+        "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -707699,7 +707712,8 @@
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
-          "release-0.6-hosted-image-scan-8436b628a"
+          "release-0.6-hosted-image-scan-8436b628a",
+          "release-0.6-license-review-refresh-f7fc00b88"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -1130634,7 +1130648,8 @@
         "The read-only credential-format inventory on live staging v0.5.1 counted two current Argon2id v19-shaped rows and no password-history rows. It returned aggregate counts only. Obtain and review the actual production import snapshot before accepting migration compatibility.",
         "Hosted image job 132425681736 reproduced all 857 exact package rows for 8436b628a, including 386 awaiting dispositions. Verified the five image IDs, artifact digest, SBOMs and vulnerability report hashes. The scans contained zero High or Critical findings.",
         "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification.",
-        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate."
+        "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
+        "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -1130990,7 +1131005,8 @@
           "release-0.6-password-import-format-inventory",
           "release-0.6-hosted-image-scan-8436b628a",
           "release-0.6-ai-admin-command-validation",
-          "release-0.6-complete-staging-checkpoint-receipt"
+          "release-0.6-complete-staging-checkpoint-receipt",
+          "release-0.6-license-review-refresh-f7fc00b88"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1318649,6 +1318665,45 @@
         {
           "file": "static-checks.log",
           "sha256": "10f2239ee0007b2e6ce8c2e6f3b6faa1f1eb594d253881c465cd2964ac026f27"
+        }
+      ]
+    },
+    "release-0.6-license-review-refresh-f7fc00b88": {
+      "batch": "release-0.6-license-review-refresh-f7fc00b88",
+      "base_commit": "f7fc00b8873c05dba9fe75441c4bc764898e5f87",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "cf3019f54f38223640b92860810429dec638875d558cab732bc18ba3dfab82c9"
+        }
+      ],
+      "checks": [
+        "Verified the exact hosted five-image archive, image identities, Linux amd64 platform, SHA-256 bindings, scans and CycloneDX SBOMs. Zero High or Critical findings were reported.",
+        "Of 857 unique package rows, only the MIT-0 Nodemailer row changed from 10.0.12 to 10.1.4. The installed notice matches the retained upstream notice byte for byte.",
+        "Verified the exported workbook matches all 386 active review rows and preserves the native table, decision dropdown and freeze pane. All decisions are blank and all 49 archive entries passed their checksums."
+      ],
+      "limitations": [
+        "Development report-only evidence does not approve package exceptions or certify final staging image notices. Named dispositions and the enforced gate remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence",
+      "execution_receipts": [
+        {
+          "file": "license-review-packet-readback-f7fc00b88.json",
+          "sha256": "6cf1c9b3b5217aff3ed79763ed1a4a1c11058718010c55fa75869e9f4a2089cb"
+        },
+        {
+          "file": "v0.6-license-review-packet-f7fc00b88.zip",
+          "sha256": "41602f3b21e7895351c48901a13c0df18b6ede90b10de93bb4a4ea290a2bd2a0"
         }
       ]
     }
