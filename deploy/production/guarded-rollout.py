@@ -352,6 +352,7 @@ def roll_out(plan, record):
             return 1
         try:
             route(plan, 'set', 0)
+            route(plan, 'read', 0)
             record_failure(record, 'rolled_back', weight=0)
             return 2
         except (RolloutError, KeyboardInterrupt):

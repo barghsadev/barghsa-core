@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T18:11:19+00:00",
+  "updated": "2026-11-14T18:16:17+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13800,7 +13800,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13813,7 +13814,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13992,6 +13993,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -14088,7 +14097,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -14100,7 +14110,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -14565,6 +14575,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -22504,7 +22522,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22516,7 +22535,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22832,6 +22851,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -22909,7 +22936,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -22921,7 +22949,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -23237,6 +23265,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -25668,7 +25704,8 @@
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
         "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
-        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open."
+        "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25726,7 +25763,8 @@
           "release-0.6-promotion-checkpoint-parity",
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-rollout-final-ingress-readback",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": null
       }
@@ -25888,7 +25926,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-production-marker-wiring",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -25920,11 +25959,11 @@
             },
             {
               "path": "deploy/production/guarded-rollout.py",
-              "sha256": "29c4c07cc89f75834c53629ba374ba1ffb3a2063713f81a66b522405712e0359"
+              "sha256": "8b3d83196609ef676e082b40980e96a20017784b403005f8994e4c158b1255bf"
             },
             {
               "path": "deploy/production/test_guarded_rollout.py",
-              "sha256": "836385d4980944a544db30f0c877f5fe2cc6659ed258e65a68d17a8ef58b2ad6"
+              "sha256": "1b1be2f87ecc786203ccc85d3a9e48ec7f135e13e9e3992b01a61a4af5648a8f"
             },
             {
               "path": "docs/runbooks/database-restore.md",
@@ -26256,6 +26295,15 @@
                 "deploy/staging/test_release_rollback.py"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/guarded-rollout.py",
+                "deploy/production/test_guarded_rollout.py"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -38198,7 +38246,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
           "release-0.6-staging-interruption-recovery",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -38221,7 +38270,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -39040,6 +39089,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The receiver now checks the candidate revision and enforces protected backup by version before Docker starts. The full rollback and worker fixture checks passed. Existing edge, image, AI, notification and storage behavior outside release admission retains its previous evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -41626,7 +41683,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -41654,7 +41712,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             }
           ],
           "checks": [
@@ -41982,6 +42040,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -716913,7 +716979,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -716925,7 +716992,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -717133,6 +717200,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -743810,7 +743885,8 @@
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-full-coverage-continuation"
+          "release-0.6-full-coverage-continuation",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -743832,7 +743908,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -744473,6 +744549,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -744534,7 +744618,8 @@
         "The isolated f571986ee rehearsal passed migration, public revision checks, the private S3 probe, schema-incompatible writer shutdown, roll-forward and compatible restoration of the four exact service image IDs. Repeat the required final candidate and server-specific checks on the approved staging topology with the accepted immutable images and backup.",
         "The observer verifies both exact API readiness commits as well as the web revision and database health before authenticated fixtures. Local tests passed and the old v0.5.1 readiness correctly fails the exact revision comparison. Run against the accepted pair and record the real readback.",
         "Use the replacement PostgreSQL image that confirms both encrypted-object and manifest readbacks. The exact native fixture rejected a changed stored manifest before returning success. The staging release rejects a missing readback before migration. Verify the deployed backup destination, recovery key and live checkpoint before the actual database cutover.",
-        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts."
+        "The production rollout guard now rechecks ingress and the compatible pool after a passing observation within the existing stage deadline. The final-window fixture changed the live route from 100% to 85% candidate traffic, then verified halt and rollback to 0% without a completion event. All 18 guard tests passed. The production-equivalent rehearsal still requires actual route and telemetry receipts.",
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -744572,7 +744657,8 @@
           "release-0.6-local-staging-runner-rehearsal",
           "release-0.6-rollout-api-revision",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-rollout-final-ingress-readback"
+          "release-0.6-rollout-final-ingress-readback",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": null
       }
@@ -744630,7 +744716,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -744641,7 +744728,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -745082,6 +745169,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -753922,7 +754017,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -753946,7 +754042,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -754318,6 +754414,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -766593,7 +766697,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -766641,7 +766746,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -767030,6 +767135,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -767365,7 +767478,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-rollout-rollback-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -767413,7 +767527,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0dfe606221a8c62a0dd4e9ce2c9e9185f7a97bf1a5932c92d7722d86a408d729"
+              "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -767806,6 +767920,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-rollout-rollback-readback",
+              "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The only production guard change adds an independent ingress and previous-pool readiness read before recording rollback. Rollout, observer and release marker caller fixtures passed. Retain source-bound evidence for the unaffected controls."
             }
           ]
         }
@@ -1150416,7 +1150538,8 @@
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
         "The existing due-date, receipt-rejection, provider circuit-breaker and OTP notice checks pass the unchanged scoped critical thresholds on a1264d2d5. The selected shared suites passed 59 tests and the migrated PostgreSQL worker suites passed 55. These invocations used source instrumentation and do not satisfy the full hosted merged coverage gate.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1150822,7 +1150945,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-full-coverage-continuation",
           "release-0.6-csp-enforced-feedback",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-rollout-rollback-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1151061,7 +1151185,9 @@
           "scripts/test_check_release_licenses.py",
           "scripts/test_ci_preflight_receipt.py",
           "scripts/test_email_nightly_browser_report.py",
-          "scripts/test_report_nightly_browser.py"
+          "scripts/test_report_nightly_browser.py",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/test_guarded_rollout.py"
         ]
       }
     },
@@ -1151126,7 +1151252,8 @@
         "New WAL uploads now verify stored ciphertext before reporting archival success. The isolated archive, retry and point-in-time recovery checks passed. Repeat with the approved off-server destination and recoverable key, measure archive backlog and RPO, and keep the actual recovery and alert receipts.",
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "The manual workflow binds protected main to the explicit candidate SHA, validates the Sentry commit association, and uses the existing exact-plan owner approval before calling the ingress. Grafana and Sentry marker steps follow a successful guarded rollout. The 18 rollout, six Grafana and eight Sentry tests passed. The production environment, restricted runner, exact candidate and live marker receipts remain open.",
-        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open."
+        "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1151215,7 +1151342,8 @@
           "release-0.6-wal-upload-readback",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-production-marker-wiring",
-          "release-0.6-receiver-version-backup"
+          "release-0.6-receiver-version-backup",
+          "release-0.6-rollout-rollback-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1151267,7 +1151395,9 @@
           "packages/db/scripts/backup/physical_backup.py",
           "packages/db/scripts/backup/test_physical_backup.py",
           "packages/db/scripts/backup/test_verify_restore.py",
-          "packages/db/scripts/backup/verify_restore.py"
+          "packages/db/scripts/backup/verify_restore.py",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/test_guarded_rollout.py"
         ],
         "latest_staging_scanner_readback": {
           "release": "0.5.1",
@@ -1345206,6 +1345336,90 @@
         {
           "file": "static.log",
           "sha256": "2f082ff8db2595a531bbfff9c802066fa2c5cecd1286ec379503afdba3eee6b8"
+        }
+      ]
+    },
+    "release-0.6-rollout-rollback-readback": {
+      "batch": "release-0.6-rollout-rollback-readback",
+      "base_commit": "7c5185f6a7bcb833837d869916a75bc7693e8d2a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/test_guarded_rollout.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/production-promotion.yml",
+          "sha256": "bfed6ed7179bd571580d8f364ac853128282653c31474c9f3453a52de54eaade"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "21e2deccc2e485a6adfbf65961da8f818bae93e3386aa0045a7610ee46524983"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "8b3d83196609ef676e082b40980e96a20017784b403005f8994e4c158b1255bf"
+        },
+        {
+          "path": "deploy/production/record-release-annotation.py",
+          "sha256": "190b7519e3a394339433c19346201bceb70110959274a680e0efe47fda765bc4"
+        },
+        {
+          "path": "deploy/production/record-sentry-deploy.py",
+          "sha256": "5c0d9cd1bc65455268a513a4f968e73ac79e396a3227889db5755a82fdbd51ce"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "516b3491f2e6fb28ae2a7bf5962513716a8a519dab0970e85fc3c9291e1a330b"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "1b1be2f87ecc786203ccc85d3a9e48ec7f135e13e9e3992b01a61a4af5648a8f"
+        }
+      ],
+      "checks": [
+        "The guarded rollout now reads ingress weight and previous-pool readiness separately after setting candidate traffic to zero. Two subprocess fixtures previously returned verified rollback despite retained candidate traffic or an unready previous pool. Both now return rollback unverified and retain the failed observation reason. All 46 rollout, observer and release marker tests passed. The approved production-equivalent ingress and measured recovery rehearsal remain open.",
+        "Python syntax, document formatting and diff whitespace checks passed."
+      ],
+      "limitations": [
+        "The route and previous-pool failures were injected into isolated subprocess fixtures. No production contact or staging promotion took place."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-rollout-rollback-readback",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "ea85b75d37d44d153a02a4a1fbde344267d3c92bb4948704bd7ade9ceb826b68"
+        },
+        {
+          "file": "after.log",
+          "sha256": "87e7d80f12b9093b5eaa8850cb5bbb9fdb764523c0541bc1b93928554ae5c894"
+        },
+        {
+          "file": "static.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
         }
       ]
     }

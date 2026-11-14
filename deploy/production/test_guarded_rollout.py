@@ -165,7 +165,7 @@ class ObservationsTest(unittest.TestCase):
         ), redirect_stderr(io.StringIO()):
             self.assertEqual(rollout.roll_out(plan(), record), 2)
         self.assertEqual([(args[1], args[2]) for args, _ in route.call_args_list],
-                         [('read', 0), ('set', 5), ('set', 0)])
+                         [('read', 0), ('set', 5), ('set', 0), ('read', 0)])
 
     def test_route_drift_during_the_final_observation_restores_previous_traffic(self):
         reads = []
@@ -191,7 +191,7 @@ class ObservationsTest(unittest.TestCase):
             status = rollout.roll_out(plan(), lambda event, **fields: events.append((event, fields)))
         self.assertEqual(status, 2)
         self.assertEqual(current_weight, 0)
-        self.assertEqual(reads[-1], 100)
+        self.assertEqual(reads[-2:], [100, 0])
         self.assertEqual(events[-2:], [
             ('halted', {'reason': 'route_weight_mismatch'}),
             ('rolled_back', {'weight': 0}),
@@ -234,12 +234,18 @@ if kind == "route":
         weight = request["candidate_weight"]
         if fault == "rollback_unavailable" and weight == 0:
             sys.exit(5)
+        if fault == "rollback_ack_without_change" and weight == 0:
+            print(json.dumps(dict(result, candidate_weight=0, previous_ready=True)))
+            sys.exit(0)
         state["weight"] = weight
         state["changes"].append(weight)
         path.write_text(json.dumps(state))
     result.update(candidate_weight=state["weight"], previous_ready=True)
     if fault == "route_drift" and request["action"] == "read" and state["weight"] == 5:
         result["candidate_weight"] = 4
+    if (fault == "rollback_pool_unready" and request["action"] == "read"
+            and state["weight"] == 0 and state["changes"]):
+        result["previous_ready"] = False
 else:
     weight = request["candidate_weight"]
     assert weight == state["weight"]
@@ -250,7 +256,7 @@ else:
                             for name in ("electricity", "saving", "solar", "consultation")})
     if fault == "smoke_before_traffic":
         result["smoke"]["health"] = False
-    if weight == 5 and fault == "rollback_unavailable":
+    if weight == 5 and fault in ("rollback_unavailable", "rollback_ack_without_change", "rollback_pool_unready"):
         result["critical_wallet_drift"] = 1
     if weight == 5 and fault == "no_solar_volume":
         result["journeys"]["solar"]["attempts"] = 0
@@ -435,6 +441,18 @@ class IsolatedRolloutTest(unittest.TestCase):
         self.assertEqual(state, {'weight': 5, 'changes': [5]})
         self.assertEqual(events[-2]['reason'], 'critical_wallet_drift')
         self.assertEqual(events[-1]['event'], 'rollback_unverified')
+
+    def test_rollback_requires_independent_zero_weight_and_compatible_pool_readback(self):
+        for fault, expected_state in (
+            ('rollback_ack_without_change', {'weight': 5, 'changes': [5]}),
+            ('rollback_pool_unready', {'weight': 0, 'changes': [5, 0]}),
+        ):
+            with self.subTest(fault=fault):
+                status, state, events = self.run_fixture(fault)
+                self.assertEqual(status, 3)
+                self.assertEqual(state, expected_state)
+                self.assertEqual(events[-2]['reason'], 'critical_wallet_drift')
+                self.assertEqual(events[-1]['event'], 'rollback_unverified')
 
     def test_shared_operator_lock_rejects_a_concurrent_invocation(self):
         with tempfile.TemporaryDirectory() as directory:
