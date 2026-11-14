@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T00:41:01+00:00",
+  "updated": "2026-11-14T00:45:52+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -23909,7 +23909,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Validate the final v0.9.0 staging, Telegram, daily backup, database and core-service exercise receipts with the promotion check. The guarded production CLI now binds the exact plan and checked report to the protected owner authorization record and checks backup age. Still verify actual image and off-server backup readbacks and rehearse approved canary provisioning and ingress. The report now binds app and web image IDs to the staging scans and rollout plan.",
+        "Exercise the promotion receipt verifier during the production-equivalent rehearsal with verified staging-equivalent release and notification inputs, daily encrypted backup, database and core-service recovery, and exact image readbacks. Verify the guard binds the reviewed plan and promotion report to separate owner authorization and rejects a stale backup. The first production attempt uses the actual accepted v0.9.0 staging and Telegram receipts under release-readiness#R-07.01.",
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks.",
         "The protected quality job now runs production approval and guarded-rollout fixtures. The exact step passed locally. Retain the hosted candidate run, independent review and real approved rehearsal.",
         "The exact rollout pools require healthy PostgreSQL, Redis and object storage without warnings before authenticated smoke. Tested locally. Verify the production-equivalent canary and compatible restoration on the approved topology."
@@ -23956,7 +23956,8 @@
           "release-0.6-production-approval-binding",
           "release-0.6-promotion-image-receipts",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-promotion-receipt-order"
         ],
         "current_acceptance": null
       }
@@ -722176,7 +722177,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the approved Sentry release integration and read back the exact GitHub commit in every configured project for the immutable candidate. Wire the documented marker step to the approved production rollout runner.",
-        "After explicit production authorization and a completed guarded rollout, verify the actual Sentry deployment marker ID, exact commit, project associations and release version. Preserve the verified receipt and reconcile any uncertain write before retrying."
+        "On the approved production-equivalent runner, verify the marker handoff against a completed rehearsal receipt using a protected test destination or the isolated Sentry protocol fixture. Confirm exactly one write, exact version and commit readback, and safe reconciliation of uncertain delivery. The first real production marker readback belongs to release-readiness#R-07.01."
       ],
       "owner": null,
       "depends_on": [],
@@ -722191,7 +722192,8 @@
           ".github/actions/sentry-release-deploy/action.yml"
         ],
         "batches": [
-          "release-0.6-sentry-deploy-marker"
+          "release-0.6-sentry-deploy-marker",
+          "release-0.6-promotion-receipt-order"
         ],
         "current_acceptance": null
       }
@@ -1084214,7 +1084216,9 @@
       "requirement": [
         "Owner explicitly authorizes production promotion after candidate acceptance.",
         "Deploy the accepted immutable candidate with migration and rollback readiness.",
-        "Verify production smoke journeys, real monitoring and release identity before announcing production success."
+        "Verify production smoke journeys, real monitoring and release identity before announcing production success.",
+        "Use the actual accepted v0.9.0 staging and Telegram receipts, exact CI and browser runs, verified image readbacks, daily encrypted backup, and measured database and core-service recovery to verify the promotion report. Bind the report and plan to the owner's explicit authorization before changing production traffic.",
+        "After the authorized production rollout completes, verify the actual Sentry deployment marker ID, exact commit, project associations, and release version. Keep the original receipt and reconcile uncertain delivery before retrying."
       ],
       "status": "todo",
       "release": "1.0.0",
@@ -1084222,13 +1084226,17 @@
       "remaining": [
         "Owner explicitly authorizes production promotion after candidate acceptance.",
         "Deploy the accepted immutable candidate with migration and rollback readiness.",
-        "Verify production smoke journeys, real monitoring and release identity before announcing production success."
+        "Verify production smoke journeys, real monitoring and release identity before announcing production success.",
+        "Use the actual accepted v0.9.0 staging and Telegram receipts, exact CI and browser runs, verified image readbacks, daily encrypted backup, and measured database and core-service recovery to verify the promotion report. Bind the report and plan to the owner's explicit authorization before changing production traffic.",
+        "After the authorized production rollout completes, verify the actual Sentry deployment marker ID, exact commit, project associations, and release version. Keep the original receipt and reconcile uncertain delivery before retrying."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "current_acceptance": null,
-        "batches": []
+        "batches": [
+          "release-0.6-promotion-receipt-order"
+        ]
       }
     },
     {
@@ -1261856,6 +1261864,61 @@
         {
           "file": "quality.log",
           "sha256": "401baa4ce5bb56f9f80189bda3079d55cf5f94d6bc63a231549d7e419fae5a93"
+        }
+      ]
+    },
+    "release-0.6-promotion-receipt-order": {
+      "batch": "release-0.6-promotion-receipt-order",
+      "base_commit": "852c5881d7e3a72cfbf03d649d13e48e744bd3d0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.02",
+        "06-security-testing-observability.md#T-06.16.02.04",
+        "release-readiness#R-07.01"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "kanban/scripts/board.py",
+          "sha256": "169c79382e5b5fcc1d32dfc685c3beb2adc153d9b05f83621a9bfc99da1e851d"
+        },
+        {
+          "path": "kanban/RELEASES.md",
+          "sha256": "32a8bbc64c1fca97d03a6752eb887255638f6a806667876c9fa4bb5ae3fab6f6"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "8bae10697247ba15b537ec1c71fef2504e7dc5dd602e5a876ed6bd0510ed6d93"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "5378d727e196ca6ab0b0163f39300623a11c67fff9376df825061d46cba335a4"
+        },
+        {
+          "path": "deploy/production/record-sentry-deploy.py",
+          "sha256": "5c0d9cd1bc65455268a513a4f968e73ac79e396a3227889db5755a82fdbd51ce"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "528083fc76a68dcdf031665f563ea5b54877b1c41ffbc95a378911b6c7d821b2"
+        }
+      ],
+      "checks": [
+        "The release chain requires v0.6.0 before v0.9.0 and v0.9.0 before v1.0.0. The final v0.9.0 promotion check requires an actual staged candidate and Telegram receipt, and the production Sentry marker requires the completed authorized rollout receipt.",
+        "Placed those two live receipts on the existing v1.0.0 first production task. Retained the original epic criteria, both mandatory v0.6.0 implementation and rehearsal tasks, and their pending production-equivalent, integration and review evidence. Task statuses, release gates and authorization controls are unchanged.",
+        "All 19 board integrity tests and 12 production promotion verifier tests passed. The generated board and whitespace checks passed."
+      ],
+      "limitations": [
+        "This is a requirement sequencing correction. No readiness, recovery, notification or production gate is claimed complete."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-receipt-order",
+      "execution_receipts": [
+        {
+          "file": "board-tests.log",
+          "sha256": "81416d782bfdfc61031c39babc27f095a02b13c59148a77bdb5a2a764e7bf641"
+        },
+        {
+          "file": "promotion-verifier.log",
+          "sha256": "4890879b8a36b4f39a667a04141f11d3f5e9256a66050e7fb3bba6b2241ef2dc"
         }
       ]
     }
