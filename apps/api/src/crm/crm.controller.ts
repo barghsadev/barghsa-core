@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
 
 @ApiTags('CRM')
 @Controller('api/crm')
@@ -205,10 +206,8 @@ export class CrmController {
     }
 
     const parsedLimit = limit ? parseInt(limit, 10) : 20;
-    const result = await this.crmService.listUsers(
-      cursor ?? null,
-      isNaN(parsedLimit) ? 20 : parsedLimit,
-      filters
+    const result = await recheckStaffAuthorityAfter(req.session, 'crm:read', () =>
+      this.crmService.listUsers(cursor ?? null, isNaN(parsedLimit) ? 20 : parsedLimit, filters)
     );
 
     this.logger.debug(

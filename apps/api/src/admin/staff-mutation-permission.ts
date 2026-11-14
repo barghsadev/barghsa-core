@@ -3,12 +3,13 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 
 export { requireSessionStepUp as requireStaffStepUp } from '../session/session-step-up.js';
+export type RequiredStaffPermissions = string | readonly [string, ...string[]];
 
 /** Hold actor/target accounts in one order, then recheck the actor's current grants. */
 export async function requireStaffMutationPermission(
   client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
   actorUserId: string,
-  permission: string,
+  permission: RequiredStaffPermissions,
   targetUserId?: string | readonly string[]
 ): Promise<void> {
   const users = await client.query(
@@ -32,7 +33,8 @@ export async function requireStaffMutationPermission(
       [actorUserId]
     );
     const grants = resolveStaffPermissions(roles.rows.map((row) => row.permissions));
-    if (grants.includes('*') || grants.includes(permission)) return;
+    const required = typeof permission === 'string' ? [permission] : permission;
+    if (grants.includes('*') || required.every((capability) => grants.includes(capability))) return;
   }
   throw new HttpException({ statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
 }

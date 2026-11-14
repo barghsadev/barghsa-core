@@ -23,6 +23,10 @@ beforeAll(async () => {
   await http.pool.query(
     "INSERT INTO user_roles(user_id,role_id) VALUES ('records-reader','role-crm-verification')"
   );
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version) VALUES ('profile_verification_mode','"MANUAL"',1)
+     ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+  );
   for (const user of ['records-reader', 'records-member']) {
     const session = randomUUID();
     await http.pool.query(
@@ -97,6 +101,74 @@ beforeAll(async () => {
   ]);
 }, 40000);
 afterAll(async () => http?.close());
+
+it.each([
+  ['profile detail', `/profiles/${company}`, 'profiles', 'verification:read'],
+  [
+    'verification history',
+    `/profiles/${company}/records/verification`,
+    'profiles',
+    'verification:read',
+  ],
+  ['agent history', `/profiles/${company}/records/agents`, 'profiles', 'crm:read'],
+  ['legal document links', `/profiles/${company}/documents`, 'legal_profiles', 'verification:read'],
+  ['directory', '/users', 'profiles', 'crm:read'],
+  ['pending verification widget', '/dashboard/pending-verification', 'profiles', 'crm:verify'],
+] as const)('requires the current grant when reading %s', async (_name, path, table, revoked) => {
+  const role = randomUUID();
+  const actor = randomUUID();
+  const session = randomUUID();
+  const allowed = ['crm:read', 'verification:read', 'crm:verify'];
+  await http.pool.query(
+    'INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,$3,true)',
+    [actor, `${actor}@example.test`, 'fixture-only']
+  );
+  await http.pool.query(
+    'INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,$1,$2)',
+    [role, JSON.stringify(allowed)]
+  );
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [actor, role]);
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [session, actor, randomUUID(), randomUUID()]
+  );
+  const blocker = await http.pool.connect();
+  let response: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+    const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    response = fetch(`${http.base}/api/crm${path}`, {
+      headers: { Cookie: `barghsa_session=${session}` },
+      signal: AbortSignal.timeout(10_000),
+    });
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+              [pid]
+            )
+          ).rows[0].waiting
+      )
+      .toBe(true);
+    await http.pool.query('UPDATE staff_roles SET permissions=$2 WHERE role_id=$1', [
+      role,
+      JSON.stringify(allowed.filter((permission) => permission !== revoked)),
+    ]);
+    await blocker.query('ROLLBACK');
+    const denied = await response;
+    expect(denied.status, http.logs()).toBe(403);
+    expect(await denied.json()).toMatchObject({ error: { code: 'AUTHZ:FORBIDDEN' } });
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await response?.catch(() => undefined);
+  }
+});
+
 function read(profile: string, kind: string, cursor?: string, cookie = readerCookie) {
   return fetch(
     `${http.base}/api/crm/profiles/${profile}/records/${kind}${cursor ? '?' + new URLSearchParams({ cursor }) : ''}`,

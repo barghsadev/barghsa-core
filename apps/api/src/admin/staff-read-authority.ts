@@ -3,20 +3,23 @@ import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
-import { requireStaffMutationPermission } from './staff-mutation-permission.js';
+import {
+  requireStaffMutationPermission,
+  type RequiredStaffPermissions,
+} from './staff-mutation-permission.js';
 
 export type StaffReadActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /** Keep the account, grant and session current through a database-only staff read. */
 export async function withStaffReadAuthority<T>(
   actor: StaffReadActor,
-  permission: string,
+  permissions: RequiredStaffPermissions,
   read: (client: PoolClient) => Promise<T>
 ): Promise<T> {
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');
-    await requireStaffMutationPermission(client, actor.userId, permission);
+    await requireStaffMutationPermission(client, actor.userId, permissions);
     await requireCurrentSession(client, actor);
     const context = await client.query(
       "SELECT current_setting('barghsa.actor_context', true) AS context"
@@ -34,15 +37,15 @@ export async function withStaffReadAuthority<T>(
   }
 }
 
-/** Recheck a guarded read without keeping a database transaction open during storage work. */
+/** Recheck a guarded read after database or storage work outside the authority transaction. */
 export async function recheckStaffAuthorityAfter<T>(
   actor: StaffReadActor,
-  permission: string,
+  permissions: RequiredStaffPermissions,
   read: () => Promise<T>
 ): Promise<T> {
   try {
     return await read();
   } finally {
-    await withStaffReadAuthority(actor, permission, async () => {});
+    await withStaffReadAuthority(actor, permissions, async () => {});
   }
 }

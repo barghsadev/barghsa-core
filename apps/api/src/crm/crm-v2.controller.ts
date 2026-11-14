@@ -34,6 +34,10 @@ import { CrmV2Service } from './crm-v2.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
+
+const crmReadPermissions = (includeCorrections: boolean) =>
+  includeCorrections ? (['crm:read', 'verification:read'] as const) : 'crm:read';
 
 /**
  * DTO for updating a CRM profile's editable fields.
@@ -162,9 +166,11 @@ export class CrmV2Controller {
       );
     }
 
-    const result = await this.crmV2Service.getProfileDetail(
-      profileId,
-      hasStaffPermission(req, 'verification:read')
+    const canReadCorrections = hasStaffPermission(req, 'verification:read');
+    const result = await recheckStaffAuthorityAfter(
+      req.session,
+      crmReadPermissions(canReadCorrections),
+      () => this.crmV2Service.getProfileDetail(profileId, canReadCorrections)
     );
 
     if (!result) {
@@ -186,7 +192,7 @@ export class CrmV2Controller {
     return {
       ...result,
       viewerPermissions: {
-        canReadDocuments: hasStaffPermission(req, 'verification:read'),
+        canReadDocuments: canReadCorrections,
         canEdit: hasStaffPermission(req, 'crm:edit'),
         canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
         canVerify: hasStaffPermission(req, 'crm:verify'),
@@ -240,12 +246,18 @@ export class CrmV2Controller {
       .safeParse(query);
     if (!params.success || !page.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
-    const canReadCorrections = hasStaffPermission(req, 'verification:read');
-    const result = await this.crmV2Service.getProfileRecords(
-      params.data.profileId,
-      params.data.kind,
-      page.data.cursor,
-      canReadCorrections
+    const canReadCorrections =
+      params.data.kind === 'verification' && hasStaffPermission(req, 'verification:read');
+    const result = await recheckStaffAuthorityAfter(
+      req.session,
+      crmReadPermissions(canReadCorrections),
+      () =>
+        this.crmV2Service.getProfileRecords(
+          params.data.profileId,
+          params.data.kind,
+          page.data.cursor,
+          canReadCorrections
+        )
     );
     if (!result) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     return params.data.kind === 'verification' ? { ...result, canReadCorrections } : result;
@@ -972,6 +984,8 @@ export class CrmV2Controller {
       );
     }
 
-    return this.crmV2Service.getPendingVerification();
+    return recheckStaffAuthorityAfter(req.session, 'crm:verify', () =>
+      this.crmV2Service.getPendingVerification()
+    );
   }
 }

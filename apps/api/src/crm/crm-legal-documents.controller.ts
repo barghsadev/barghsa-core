@@ -13,6 +13,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { getDbPool } from '@barghsa/db';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import {
   legalDocumentsUnavailable,
@@ -60,6 +61,12 @@ export class CrmLegalDocumentsController {
   ) {
     if (!hasStaffPermission(req, 'crm:read') || !hasStaffPermission(req, 'verification:read'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    return recheckStaffAuthorityAfter(req.session, ['crm:read', 'verification:read'], () =>
+      this.readDocuments(profileId)
+    );
+  }
+
+  private async readDocuments(profileId: string) {
     const pool = getDbPool();
     const legal = (
       await pool.query<{ id: string; documents: unknown }>(
