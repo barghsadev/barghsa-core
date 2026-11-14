@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:45:15+00:00",
+  "updated": "2026-11-14T17:48:16+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4396,7 +4396,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4424,7 +4425,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             }
           ],
           "checks": [
@@ -4678,6 +4679,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -5050,7 +5059,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -5066,7 +5076,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -5302,6 +5312,14 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -5530,7 +5548,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5554,7 +5573,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             }
           ],
           "checks": [
@@ -6051,6 +6070,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -6468,7 +6495,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -6476,7 +6504,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -6736,6 +6764,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -6978,7 +7014,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7018,7 +7055,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7253,6 +7290,14 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -7327,7 +7372,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -7367,7 +7413,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7602,6 +7648,14 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -8078,7 +8132,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-registration-request-observation",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8090,7 +8145,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -8487,6 +8542,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -8611,7 +8674,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -8651,7 +8715,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8886,6 +8950,14 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -9018,7 +9090,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -9030,7 +9103,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -9445,6 +9518,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -13150,7 +13231,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -13170,7 +13252,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             }
           ],
           "checks": [
@@ -13369,6 +13451,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -20432,7 +20522,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "batch": "release-0.6-signed-document-retention-acceptance",
@@ -20446,7 +20537,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -20793,6 +20884,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -23541,7 +23640,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -23549,11 +23649,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "AGENTS.md",
@@ -23852,6 +23952,15 @@
                 "package.json"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -23921,7 +24030,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -23929,7 +24039,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -24210,6 +24320,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -24297,7 +24415,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -24305,7 +24424,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "package.json",
@@ -24854,6 +24973,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -25127,7 +25254,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-native-coverage-rehearsal-81d4381e9",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -25135,7 +25263,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -25329,6 +25457,14 @@
                 "scripts/browser-coverage.test.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -31505,7 +31641,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -31519,7 +31656,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -32236,6 +32373,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -36247,7 +36392,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -36260,11 +36406,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "eslint.config.mjs",
@@ -36584,6 +36730,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -36649,7 +36804,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -36665,7 +36821,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".prettierignore",
@@ -36939,6 +37095,14 @@
                 ".prettierignore"
               ],
               "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -37010,7 +37174,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -37028,7 +37193,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".husky/commit-msg",
@@ -37052,7 +37217,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "eslint.config.mjs",
@@ -37388,6 +37553,15 @@
                 ".prettierignore"
               ],
               "scope": "The same contract is now built as a declaration file. Generated bytes, exact contract drift checks, the clean package build and the web consumer typecheck passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -39279,7 +39453,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-contract-template-coverage"
+          "release-0.6-contract-template-coverage",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -39324,7 +39499,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -40456,6 +40631,14 @@
                 "apps/api/src/electricity/electricity-contract-template.test.ts"
               ],
               "scope": "Only additive cases and their imports changed the two existing test fixtures. The existing assertions and runtime source retain their prior evidence. Targeted native verification covers the added branches."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -40542,7 +40725,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -40557,7 +40741,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".prettierignore",
@@ -40573,7 +40757,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "package.json",
@@ -41249,6 +41433,15 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -41741,7 +41934,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-stage-acceptance-and-publication-order",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -41766,7 +41960,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -41885,6 +42079,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -633100,7 +633302,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -633108,7 +633311,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -633760,6 +633963,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -633919,7 +634130,8 @@
           "release-0.6-clamav-missing-metric",
           "release-0.6-synthetic-result-completeness",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -633927,7 +634139,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -634953,6 +635165,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -635103,7 +635323,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635111,7 +635332,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -635724,6 +635945,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -635840,7 +636069,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635848,7 +636078,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -636461,6 +636691,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -636577,7 +636815,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-postgres-query-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "status": "done",
@@ -636585,7 +636824,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -637198,6 +637437,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -691975,7 +692222,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -691983,7 +692231,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "Dockerfile.web",
@@ -692283,6 +692531,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Renewed release script, focused rollback fixture and documentation bindings for the public edge header check. The 37 release fixtures, final smoke assertions and isolated staging HTTPS proxy passed. The affected change is the release smoke response check; established product and policy evidence continues to apply."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -692603,7 +692859,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -692647,7 +692904,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -692895,6 +693152,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Renewed release script, focused rollback fixture and documentation bindings for the public edge header check. The 37 release fixtures, final smoke assertions and isolated staging HTTPS proxy passed. The affected change is the release smoke response check; established product and policy evidence continues to apply."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -692950,7 +693215,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -692958,7 +693224,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "Dockerfile.web",
@@ -693258,6 +693524,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Renewed release script, focused rollback fixture and documentation bindings for the public edge header check. The 37 release fixtures, final smoke assertions and isolated staging HTTPS proxy passed. The affected change is the release smoke response check; established product and policy evidence continues to apply."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -693792,7 +694066,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -693820,7 +694095,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             }
           ],
           "checks": [
@@ -694048,6 +694323,14 @@
                 "docs/security/content-security-policy.md"
               ],
               "scope": "Renewed release script, focused rollback fixture and documentation bindings for the public edge header check. The 37 release fixtures, final smoke assertions and isolated staging HTTPS proxy passed. The affected change is the release smoke response check; established product and policy evidence continues to apply."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -694133,7 +694416,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-single-edge-security-headers",
           "release-0.6-protected-preflight-and-stateful-readback",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "protected-ci-security-header-assertions",
@@ -694141,7 +694425,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/server.js",
@@ -694221,6 +694505,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -705449,7 +705741,8 @@
           "release-0.6-api-config-history",
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -705462,7 +705755,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -705613,6 +705906,14 @@
                 "packages/eslint-config/reviewed-postgres-sql.json"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -705658,7 +705959,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -705666,7 +705968,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -705851,6 +706153,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -713824,7 +714134,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-storage-sdk-endpoint-policy",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -713833,7 +714144,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -714412,6 +714723,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -716106,7 +716425,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -716118,7 +716438,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".gitignore",
@@ -716468,6 +716788,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -716521,7 +716849,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -716533,7 +716862,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".gitignore",
@@ -716786,6 +717115,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         },
@@ -716904,7 +717241,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-nodemailer-moderate-advisories"
+          "release-0.6-nodemailer-moderate-advisories",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -716912,7 +717250,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -717155,6 +717493,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         },
@@ -717255,7 +717601,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -717263,7 +717610,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -717448,6 +717795,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -717501,7 +717856,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -717509,7 +717865,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "Dockerfile.base",
@@ -717768,6 +718124,14 @@
                 "Dockerfile.base"
               ],
               "scope": "The Alpine package stage removes only glibc Sharp files. The general build, runtime commands and configuration are unchanged. The exact Linux amd64 app SBOM shows no other package changes and installed document previews passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -717821,7 +718185,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -717833,7 +718198,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".gitignore",
@@ -718086,6 +718451,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         },
@@ -718184,7 +718557,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -718196,7 +718570,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -718387,6 +718761,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -719445,7 +719827,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -719469,7 +719852,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -719687,6 +720070,14 @@
                 "Dockerfile.base"
               ],
               "scope": "The Alpine package stage removes only glibc Sharp files. The general build, runtime commands and configuration are unchanged. The exact Linux amd64 app SBOM shows no other package changes and installed document previews passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -721890,7 +722281,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -721898,7 +722290,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "vitest.config.ts",
@@ -721950,7 +722342,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -722225,6 +722617,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md",
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -722263,7 +722664,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -722275,7 +722677,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -722482,6 +722884,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -722519,7 +722929,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -722531,7 +722942,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -722726,6 +723137,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -722766,7 +723185,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source_bound_acceptance",
@@ -722774,7 +723194,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
@@ -722786,7 +723206,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "scripts/ci_preflight_receipt.py",
@@ -722859,6 +723279,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -726677,7 +727106,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-local-compose-and-hosted-postgresql17-test-fixture",
@@ -726747,11 +727177,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -727005,6 +727435,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -727047,7 +727486,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -727055,7 +727495,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -727196,6 +727636,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -727238,7 +727686,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -727246,7 +727695,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -727387,6 +727836,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -727441,7 +727898,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -727473,7 +727931,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -727735,6 +728193,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -730493,7 +730959,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-upload-command-validation"
+          "release-0.6-upload-command-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -730525,7 +730992,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -730788,6 +731255,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -730826,7 +731301,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -730874,7 +731350,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -730996,6 +731472,14 @@
                 "apps/web/playwright.config.ts"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -732574,7 +733058,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -732586,7 +733071,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -732594,7 +733079,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -732861,6 +733346,15 @@
                 "apps/web/playwright.config.ts"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -732913,7 +733407,8 @@
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -732993,7 +733488,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -733138,6 +733633,14 @@
                 "apps/web/playwright.config.ts"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -733497,7 +734000,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -733511,7 +734015,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -733868,6 +734372,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -733915,7 +734427,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -733931,7 +734444,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -734264,6 +734777,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -734865,7 +735386,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -734873,7 +735395,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -735058,6 +735580,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -735104,7 +735634,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -735112,7 +735643,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -735321,6 +735852,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -736593,7 +737132,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-hosted-mobile-and-source-scans-81d4381e9"
+          "release-0.6-hosted-mobile-and-source-scans-81d4381e9",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -736608,7 +737148,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -736964,6 +737504,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -738359,7 +738907,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
           "release-0.6-native-coverage-rehearsal-81d4381e9",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -738372,7 +738921,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -738600,6 +739149,14 @@
                 "scripts/collect-browser-coverage.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -738639,7 +739196,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -738651,7 +739209,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -738879,6 +739437,14 @@
                 "scripts/collect-browser-coverage.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -738918,7 +739484,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -738932,7 +739499,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -739160,6 +739727,14 @@
                 "scripts/collect-browser-coverage.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -739199,7 +739774,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -739210,7 +739786,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -739438,6 +740014,14 @@
                 "scripts/collect-browser-coverage.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -739516,7 +740100,8 @@
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
@@ -739524,11 +740109,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -739672,6 +740257,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "Existing nightly rollup and delivery fixtures passed with the additive message hash and the exact scheduled run and attempt check."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -739710,7 +740304,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -739722,7 +740317,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -739989,6 +740584,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -740043,7 +740646,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -740054,7 +740658,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -740650,6 +741254,14 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -740746,7 +741358,8 @@
         "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
         "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
-        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open."
+        "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
+        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -740791,7 +741404,8 @@
           "release-0.6-auth-contact-coverage-closure",
           "release-0.6-auth-credential-races",
           "release-0.6-hosted-native-timeouts",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -740972,7 +741586,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -740990,7 +741605,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -741477,6 +742092,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -741519,7 +742142,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-ci-monitoring-rules",
           "release-0.6-storage-sdk-endpoint-policy",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -741528,7 +742152,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -741931,6 +742555,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -742001,7 +742633,8 @@
           "release-0.6-restored-application-probe",
           "release-0.6-rollout-final-ingress-readback",
           "release-0.6-backup-native-manifest-parity",
-          "release-0.6-production-marker-wiring"
+          "release-0.6-production-marker-wiring",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -742019,7 +742652,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/README.md",
@@ -742656,6 +743289,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The production workflow can require the protected plan, production scope and exact commit before the existing approval and ingress sequence. The direct operator guard and rollback contract still pass the same fixture suite. Other bound changes only document the wiring."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -743873,7 +744514,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -743890,7 +744532,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -744298,6 +744940,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -744354,7 +745004,8 @@
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -744371,7 +745022,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -744779,6 +745430,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -762067,7 +762726,8 @@
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-release-notification-durability",
           "release-0.6-reviewed-album-bytes",
-          "release-0.6-profile-export-validation"
+          "release-0.6-profile-export-validation",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -762075,7 +762735,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "Dockerfile.base",
@@ -762993,6 +763653,14 @@
                 "packages/api-client/src/openapi.generated.d.ts"
               ],
               "scope": "Only the export command request-body and 400 response contract changed. The ordinary bodyless command, owner scope, trace continuity and single job and audit passed using compiled HTTP and PostgreSQL. The reviewed SQL and bound parameter remain identical."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -766656,7 +767324,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-prepromotion-version",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -766664,7 +767333,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "Dockerfile.base",
@@ -767047,6 +767716,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -767259,7 +767936,8 @@
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -767275,7 +767953,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -767604,6 +768282,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -767731,7 +768417,8 @@
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -767747,7 +768434,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -768076,6 +768763,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -768132,7 +768827,8 @@
           "release-0.6-telegram-rejection-receipts",
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
-          "release-0.6-backup-native-manifest-parity"
+          "release-0.6-backup-native-manifest-parity",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -768148,7 +768844,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -768477,6 +769173,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The promotion verifier checks daily and restored manifest metadata using the existing staging validator. The only staging queue runtime change accepts the valid UTC Z timestamp spelling alongside numeric offsets on the supported Python versions. Both complete focused suites passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -834232,7 +834936,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -834240,7 +834945,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -835449,6 +836154,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -835597,7 +836310,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -835605,7 +836319,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -836814,6 +837528,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -837826,7 +838548,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-storage-browser-probe",
           "release-0.6-comment-journey-isolation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -837834,7 +838557,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -839043,6 +839766,14 @@
                 ".size-limit.json"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -839109,7 +839840,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -839128,7 +839860,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -839339,6 +840071,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         }
@@ -1094318,7 +1095058,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1094682,7 +1095423,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1095154,6 +1095895,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1095358,7 +1096107,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1095722,7 +1096472,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1096194,6 +1096944,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1096398,7 +1097156,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1096762,7 +1097521,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1097234,6 +1097993,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1097439,7 +1098206,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1097803,7 +1098571,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1098275,6 +1099043,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1098479,7 +1099255,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1098843,7 +1099620,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1099315,6 +1100092,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1099519,7 +1100304,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1099883,7 +1100669,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1100355,6 +1101141,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1100559,7 +1101353,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1100923,7 +1101718,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1101395,6 +1102190,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1101600,7 +1102403,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1101964,7 +1102768,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1102436,6 +1103240,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1102640,7 +1103452,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1103004,7 +1103817,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1103476,6 +1104289,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1103680,7 +1104501,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1104044,7 +1104866,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "4515c835bcfac52414cbb6f9b9ce7c883fa2d235db0773cb2f632d81db4d22b9"
+              "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -1104516,6 +1105338,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1129508,7 +1130338,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1135368,6 +1136198,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "presentation_renewals": [
@@ -1135827,7 +1136665,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-profile-export-validation",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-full-coverage-continuation"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1135880,7 +1136719,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -1141628,6 +1142467,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging receiver adds interruption handling around the reviewed migration and manifest activation. The normal successful deployment and notification contracts remain covered by the unchanged queue and notifier tests."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1142104,7 +1142951,8 @@
           "release-0.6-atomic-active-staging-manifest",
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-profile-export-validation",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-full-coverage-continuation"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1144178,7 +1145026,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+              "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
             },
             {
               "path": ".size-limit.json",
@@ -1147023,6 +1147871,14 @@
                 "scripts/collect-browser-coverage.mjs"
               ],
               "scope": "The browser mapper preserves source, range, missing-record and result checks. The existing merge tests and a new duplicate-script and mismatched-source fixture passed."
+            },
+            {
+              "batch": "release-0.6-full-coverage-continuation",
+              "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only full native coverage task continuation changed. Workspace filters, concurrency, prior build gate, test failure handling, artifact upload, and coverage thresholds keep their existing checks."
             }
           ]
         },
@@ -1147197,7 +1148053,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
-          "release-0.6-browser-coverage-mapping"
+          "release-0.6-browser-coverage-mapping",
+          "release-0.6-full-coverage-continuation"
         ]
       }
     },
@@ -1147534,7 +1148391,8 @@
         "The production approval check now applies the existing native PostgreSQL manifest checks to both daily backup and restore artifacts. Eight malformed WAL or tablespace cases passed the old check even with matched receipts. The corrected check rejects them. All 22 promotion and 28 staging queue tests passed. The approved off-server backup and actual recovery receipts remain open.",
         "Hosted rehearsal 43615696071 timed out in the gift-code pagination and legal address tests. The gift-code page now shares a date formatter across its rows, and the address tests scope the new city lookup and configure the React act environment. The related Vitest run passed all 22 cases with the original deadlines, and the exact address file passed both cases again. Four rebuilt browser cases and all 105 bundle budgets passed. The full hosted native and merged gates still need passing receipts.",
         "The Chromium coverage mapper now merges only assets present in each record and validates each recorded source against cached build bytes. It rechecks the built bytes on mapping. Four actual Chromium cases produced four records and 287 mapped sources. A diagnostic with 64 fixture records produced identical normalized coverage to the old mapper for all 287 files. All 24 mapper and merge tests passed. The full hosted release coverage result remains open.",
-        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
+        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1147937,7 +1148795,8 @@
           "release-0.6-backup-native-manifest-parity",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-browser-coverage-mapping",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-full-coverage-continuation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1341672,6 +1342531,160 @@
         {
           "file": "live-backup-preflight.log",
           "sha256": "82d2c5f4e08a6effee5487d9c6f5c0213c32c4811854fee1652ae2d19808badb"
+        }
+      ]
+    },
+    "release-0.6-full-coverage-continuation": {
+      "batch": "release-0.6-full-coverage-continuation",
+      "base_commit": "91db8e6b919bf9efe89e752bd3f3d62a3c7d8f8c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-04.03.05",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0cbd5616db06e6a0d1a6d9ededd43ef08b4a270a9477e7c1008b2abb442644b4"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "109620f02437423191812cebb564410553bdbf52a20b74273a1cda38f7dc57de"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "f801183cb947de4dfd3d4e9e463779d2c42ddd4a49f4eaa74fa897a2edae1aab"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
+        }
+      ],
+      "checks": [
+        "The full native CI commands now let coverage tasks with successful dependencies finish when another workspace fails. Turbo 2.10.11 retained a nonzero exit, reported both independent failures, skipped a workspace with a failed prerequisite build, and finished the independent coverage task. The four affected-test selection checks and 12 coverage gate checks passed. Hosted full-run and combined release evidence remain open.",
+        "Workflow lint, changed-file Prettier and Git diff checks passed."
+      ],
+      "limitations": [
+        "The fixture verifies execution and failure propagation using the pinned Turbo CLI. A failed native run can provide independent diagnostic reports, while release acceptance still requires complete passing exact-source results."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-full-coverage-continuation",
+      "execution_receipts": [
+        {
+          "file": "native-fixture.log",
+          "sha256": "de1964805c878a2ad8869e97946c740f3bd8e24b2361c31508296ed12cb5bdc2"
+        },
+        {
+          "file": "gate-tests.log",
+          "sha256": "0c4da0ea2a7f56985b453820d5c7dd74441047fbed078c41b48924c964cf0dd9"
+        },
+        {
+          "file": "static.log",
+          "sha256": "3ba3fa8a185a01cadb41bb193322841e61b6b5faaf3bd45aa59f111203e3b340"
         }
       ]
     }

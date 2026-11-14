@@ -456,9 +456,9 @@ jobs:
               printf 'tested_base=%s\n' "$PUSH_TEST_BASE" >> "$GITHUB_OUTPUT"
             fi
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
+            pnpm turbo run test:coverage --concurrency=2 --continue=dependencies-successful --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
-            pnpm test:coverage --concurrency=2
+            pnpm test:coverage --concurrency=2 --continue=dependencies-successful
           fi
       - name: Upload coverage reports
         if: always() && env.FULL_CI == 'true'
