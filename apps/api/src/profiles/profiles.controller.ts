@@ -644,15 +644,18 @@ export class ProfilesController {
   @ApiResponse({ status: 200, description: 'Address deleted.' })
   @ApiResponse({
     status: 400,
-    description: 'Cannot delete main address or address linked to order',
+    description:
+      'Invalid address identifier, unexpected body or address is the current main address.',
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async deleteAddress(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Param('addressId', new ParseUUIDPipe()) addressId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     const userId = req.session.userId;
     await this.profilesService.deleteAddress(req.session, profileId, addressId);
     this.logger.log(
@@ -673,13 +676,16 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:addresses:set-main:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Set an address as the main address' })
   @ApiResponse({ status: 200, description: 'Address set as main.' })
+  @ApiResponse({ status: 400, description: 'Invalid address identifier or unexpected body.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async setMainAddress(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Param('addressId', new ParseUUIDPipe()) addressId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     const userId = req.session.userId;
     const address = await this.profilesService.setMainAddress(req.session, profileId, addressId);
     this.logger.log(

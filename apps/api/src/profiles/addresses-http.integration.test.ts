@@ -70,6 +70,52 @@ async function create(user = 'owner') {
   expect(r.status, JSON.stringify(body) + http.logs()).toBe(201);
   return body;
 }
+
+it.each(['delete', 'main'] as const)(
+  'rejects unknown input before changing an address by %s',
+  async (operation) => {
+    const first = await create();
+    const second = await create();
+    const snapshot = async () => ({
+      addresses: (
+        await http.pool.query('SELECT * FROM addresses WHERE profile_id=$1 ORDER BY id', [
+          profileId,
+        ])
+      ).rows,
+      audit: (
+        await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'address_%' ORDER BY id")
+      ).rows,
+    });
+    const before = await snapshot();
+    const method = operation === 'delete' ? 'DELETE' : 'POST';
+    const path = operation === 'delete' ? '/' + second.id : '/' + second.id + '/set-main';
+    const rejected = await request(method, path, 'manager', { mainAddress: true });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+    expect(await snapshot()).toEqual(before);
+    expect((await request(method, path, 'manager', {})).status).toBe(200);
+    const after = await snapshot();
+    expect(after.audit).toHaveLength(before.audit.length + 1);
+    if (operation === 'delete') {
+      expect(after.addresses.find(({ id }) => id === second.id)).toMatchObject({
+        deleted_at: expect.any(Date),
+        main_address: false,
+      });
+      expect(after.addresses.find(({ id }) => id === first.id)).toMatchObject({
+        deleted_at: null,
+        main_address: true,
+      });
+    } else {
+      expect(after.addresses.find(({ id }) => id === second.id)).toMatchObject({
+        main_address: true,
+      });
+      expect(after.addresses.find(({ id }) => id === first.id)).toMatchObject({
+        main_address: false,
+      });
+    }
+  }
+);
+
 it.each(['create', 'update', 'delete', 'main'] as const)(
   'rolls back an address %s when the manager session expires during audit persistence',
   async (operation) => {

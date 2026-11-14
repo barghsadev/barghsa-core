@@ -43124,7 +43124,7 @@
             "description": "Address deleted."
           },
           "400": {
-            "description": "Cannot delete main address or address linked to order"
+            "description": "Invalid address identifier, unexpected body or address is the current main address."
           },
           "401": {
             "description": "Not authenticated"
@@ -43239,6 +43239,9 @@
           "200": {
             "description": "Address set as main."
           },
+          "400": {
+            "description": "Invalid address identifier or unexpected body."
+          },
           "401": {
             "description": "Not authenticated"
           },
@@ -43311,7 +43314,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Agent removed."
+          },
+          "400": {
+            "description": "Invalid profile identifier or unexpected body."
           }
         },
         "tags": [
@@ -43459,7 +43465,7 @@
             "description": "Invitation withdrawn."
           },
           "400": {
-            "description": "Invalid profile or invitation ID."
+            "description": "Invalid profile or invitation ID, or unexpected body."
           },
           "403": {
             "description": "Not authorized to withdraw this invitation."

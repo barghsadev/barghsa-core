@@ -32819,7 +32819,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Cannot delete main address or address linked to order */
+            /** @description Invalid address identifier, unexpected body or address is the current main address. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -32856,6 +32856,13 @@ export interface operations {
         responses: {
             /** @description Address set as main. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid address identifier or unexpected body. */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -32937,7 +32944,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Agent removed. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid profile identifier or unexpected body. */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -33088,7 +33103,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Invalid profile or invitation ID. */
+            /** @description Invalid profile or invitation ID, or unexpected body. */
             400: {
                 headers: {
                     [name: string]: unknown;

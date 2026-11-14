@@ -23,6 +23,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
+import { assertEmptyCommandBody } from '../common/empty-command-body.js';
 
 @ApiTags('Agents')
 @Controller('api/profiles/:profileId')
@@ -156,15 +157,20 @@ export class AgentsController {
   @RateLimit({ namespace: 'agents:withdraw:invite', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Withdraw a pending invitation' })
   @ApiResponse({ status: 200, description: 'Invitation withdrawn.' })
-  @ApiResponse({ status: 400, description: 'Invalid profile or invitation ID.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid profile or invitation ID, or unexpected body.',
+  })
   @ApiResponse({ status: 409, description: 'Invitation changed or expired.' })
   @ApiResponse({ status: 403, description: 'Not authorized to withdraw this invitation.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   async withdrawInvitation(
     @Param('profileId') profileId: string,
     @Param('inviteId') inviteId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     const userId = req.session.userId;
 
     if (!z.uuid().safeParse(profileId).success || !z.uuid().safeParse(inviteId).success)
@@ -217,11 +223,15 @@ export class AgentsController {
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
+  @ApiResponse({ status: 200, description: 'Agent removed.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier or unexpected body.' })
   async removeAgent(
     @Param('profileId') profileId: string,
     @Param('userId') targetUserId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Body() body?: unknown
   ) {
+    assertEmptyCommandBody(body);
     if (!z.uuid().safeParse(profileId).success)
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },

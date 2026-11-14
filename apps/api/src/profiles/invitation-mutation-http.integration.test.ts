@@ -79,7 +79,9 @@ function request(
               options.body === undefined ? { username: '09121234567', role: 'Legal' } : options.body
             ),
           }
-        : {}),
+        : options.body === undefined
+          ? {}
+          : { body: JSON.stringify(options.body) }),
     }
   );
 }
@@ -351,6 +353,19 @@ it('withdrawal distinguishes missing scope from changed or expired decisions', a
   );
   expect((await request(c, 'withdraw')).status).toBe(409);
   expect(await state(c)).toEqual(before);
+});
+
+it('rejects unknown input before withdrawing a pending invitation', async () => {
+  const c = await setup();
+  const before = await state(c);
+  const rejected = await request(c, 'withdraw', { body: { status: 'Declined' } });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(await state(c)).toEqual(before);
+  expect((await request(c, 'withdraw', { body: {} })).status).toBe(200);
+  const after = await state(c);
+  expect(after.invitations).toEqual([{ ...before.invitations[0], status: 'Withdrawn' }]);
+  expect(after.audit.map(({ event }) => event)).toEqual(['invitation_withdrawn']);
 });
 
 it('decline accepts the invited nonmember and preserves membership history', async () => {

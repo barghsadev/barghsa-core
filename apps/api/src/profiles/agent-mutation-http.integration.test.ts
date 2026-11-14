@@ -55,7 +55,7 @@ function mutate(
   c: Context,
   operation: Operation,
   roles = ['Finance'],
-  additionalFields: Record<string, unknown> = {}
+  additionalFields?: Record<string, unknown>
 ) {
   return fetch(
     `${http.base}/api/profiles/${c.profileId}/agents/${c.target}${operation === 'roles' ? '/roles' : ''}`,
@@ -67,7 +67,11 @@ function mutate(
         'Content-Type': 'application/json',
         'X-Correlation-ID': c.correlationId,
       },
-      ...(operation === 'roles' ? { body: JSON.stringify({ roles, ...additionalFields }) } : {}),
+      ...(operation === 'roles'
+        ? { body: JSON.stringify({ roles, ...additionalFields }) }
+        : additionalFields === undefined
+          ? {}
+          : { body: JSON.stringify(additionalFields) }),
     }
   );
 }
@@ -99,6 +103,21 @@ async function snapshot(c: Context) {
     ).rows,
   };
 }
+it('rejects unknown input before removing an agent or revoking sessions', async () => {
+  const c = await setup();
+  const before = await snapshot(c);
+  const rejected = await mutate(c, 'remove', undefined, { roles: ['Manager'] });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(await snapshot(c)).toEqual(before);
+  expect((await mutate(c, 'remove', undefined, {})).status).toBe(200);
+  const after = await snapshot(c);
+  expect(after.members).toEqual([]);
+  expect(after.sessions.every((row) => row.revoked_at instanceof Date)).toBe(true);
+  expect(after.refresh.every((row) => row.consumed_at instanceof Date)).toBe(true);
+  expect(after.audit).toHaveLength(1);
+});
+
 for (const operation of ['roles', 'remove'] as const) {
   for (const change of ['remove-role', 'disable-actor', 'revoke-session', 'rotate-csrf'] as const) {
     it(`${operation} rechecks ${change} after request guards`, async () => {
