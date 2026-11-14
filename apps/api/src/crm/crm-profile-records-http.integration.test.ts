@@ -9,7 +9,8 @@ import type {
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const company = randomUUID(),
   otherCompany = randomUUID(),
-  individual = randomUUID();
+  individual = randomUUID(),
+  verificationCase = randomUUID();
 let readerCookie: string, customerCookie: string;
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
@@ -47,6 +48,11 @@ beforeAll(async () => {
       [id, user, type, title, 'ACTIVE']
     );
   }
+  await http.pool.query(
+    `INSERT INTO verification_cases(id,profile_id,field_name,requested_value,evidence_urls,reason,status,created_by)
+     VALUES ($1,$2,'first_name','Private correction','[]','Fixture evidence','Open','records-reader')`,
+    [verificationCase, individual]
+  );
   for (const [profile, user, role] of [
     [company, 'records-owner', 'Owner'],
     [company, 'records-member', 'Manager'],
@@ -114,6 +120,19 @@ it.each([
   ['legal document links', `/profiles/${company}/documents`, 'legal_profiles', 'verification:read'],
   ['directory', '/users', 'profiles', 'crm:read'],
   ['pending verification widget', '/dashboard/pending-verification', 'profiles', 'crm:verify'],
+  ['verification queue', '/verification-cases', 'verification_cases', 'verification:read'],
+  [
+    'profile verification queue',
+    `/profiles/${individual}/verification-cases`,
+    'verification_cases',
+    'verification:read',
+  ],
+  [
+    'verification case detail',
+    `/verification-cases/${verificationCase}`,
+    'verification_cases',
+    'verification:read',
+  ],
 ] as const)('requires the current grant when reading %s', async (_name, path, table, revoked) => {
   const role = randomUUID();
   const actor = randomUUID();
@@ -133,14 +152,21 @@ it.each([
      VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
     [session, actor, randomUUID(), randomUUID()]
   );
+  const url = `${http.base}/api/crm${path}`;
+  const headers = { Cookie: `barghsa_session=${session}` };
+  if (table === 'verification_cases') {
+    const allowedResponse = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
+    expect(allowedResponse.status, http.logs()).toBe(200);
+    expect(await allowedResponse.text()).toContain('Private correction');
+  }
   const blocker = await http.pool.connect();
   let response: Promise<Response> | undefined;
   try {
     await blocker.query('BEGIN');
     await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
     const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
-    response = fetch(`${http.base}/api/crm${path}`, {
-      headers: { Cookie: `barghsa_session=${session}` },
+    response = fetch(url, {
+      headers,
       signal: AbortSignal.timeout(10_000),
     });
     await expect

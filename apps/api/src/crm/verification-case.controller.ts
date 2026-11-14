@@ -21,6 +21,7 @@ import { VerificationCaseService } from './verification-case.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { recheckStaffAuthorityAfter } from '../admin/staff-read-authority.js';
 
 // ── DTOs ──────────────────────────────────────────────────────────────
 
@@ -233,13 +234,15 @@ export class VerificationCaseController {
       );
     }
 
-    const result = await this.verificationCaseService.listCases({
-      status: status && status.length > 0 ? status : undefined,
-      profileId: profileId && profileId.length > 0 ? profileId : undefined,
-      createdBy: createdBy && createdBy.length > 0 ? createdBy : undefined,
-      limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
-      offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
-    });
+    const result = await recheckStaffAuthorityAfter(req.session, 'verification:read', () =>
+      this.verificationCaseService.listCases({
+        status: status && status.length > 0 ? status : undefined,
+        profileId: profileId && profileId.length > 0 ? profileId : undefined,
+        createdBy: createdBy && createdBy.length > 0 ? createdBy : undefined,
+        limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
+        offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
+      })
+    );
 
     return {
       ...result,
@@ -297,12 +300,14 @@ export class VerificationCaseController {
       );
     }
 
-    const result = await this.verificationCaseService.listCases({
-      profileId,
-      status: status && status.length > 0 ? status : undefined,
-      limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
-      offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
-    });
+    const result = await recheckStaffAuthorityAfter(req.session, 'verification:read', () =>
+      this.verificationCaseService.listCases({
+        profileId,
+        status: status && status.length > 0 ? status : undefined,
+        limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
+        offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
+      })
+    );
 
     return {
       ...result,
@@ -347,7 +352,9 @@ export class VerificationCaseController {
       );
     }
 
-    const result = await this.verificationCaseService.getCase(caseId);
+    const result = await recheckStaffAuthorityAfter(req.session, 'verification:read', () =>
+      this.verificationCaseService.getCase(caseId)
+    );
 
     if (!result) {
       throw new HttpException(

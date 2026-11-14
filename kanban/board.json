@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T03:28:32+00:00",
+  "updated": "2026-11-14T03:34:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -78316,7 +78316,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
@@ -79273,6 +79273,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -84345,7 +84353,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
-              "sha256": "37b415a62c3a607492547e232a188df08653722c52030c3a60e12f84135a2177"
+              "sha256": "6ec47c34ae7b06c818b998a6db6dd7cb6f69ebb7322ea1e1cac684305a7d3fb3"
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
@@ -84617,6 +84625,14 @@
                 "apps/web/src/pages/AdminLayout.tsx"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/verification-case.controller.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -88112,7 +88128,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
@@ -88798,6 +88814,14 @@
                 "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -89110,7 +89134,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
@@ -90388,6 +90412,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -90606,7 +90638,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
@@ -91303,6 +91335,14 @@
                 "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -93515,7 +93555,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records.ts",
@@ -94227,6 +94267,14 @@
                 "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -666570,7 +666618,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.test.ts",
-              "sha256": "9e4c218c0c8f91fcc8dc1bc62673ae27cf7a1170e1bd80dee6e240fd263d3bac"
+              "sha256": "113accaeece4922190d066d9950573a701391f8c5e3ff02163fc64a7200b9246"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -666958,6 +667006,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/verification-case.controller.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ]
         }
@@ -670563,7 +670619,8 @@
       "remaining": [
         "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, 10 upload policy, preview, reservation, verification, record and multipart, five branding asset and storage record, and four additional staff receipt review, allocation and history method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
         "Continue with the remaining domains. The receipt attachment and ledger predicate review has been renewed on current source. Reuse intact source-bound checks and verify demonstrated authority gaps defensively.",
-        "Reconciled five staff CRM GET routes for the directory, profile detail, profile records, legal documents and pending verification. The profile records route has separate native agent and verification history cases. Responses recheck current staff context, grant and session. Verification decisions and sealed links require the appropriate additional grant. Continue the remaining route inventory."
+        "Reconciled five staff CRM GET routes for the directory, profile detail, profile records, legal documents and pending verification. The profile records route has separate native agent and verification history cases. Responses recheck current staff context, grant and session. Verification decisions and sealed links require the appropriate additional grant. Continue the remaining route inventory.",
+        "The three staff verification-case GET routes now recheck the live verification grant and staff session after database and evidence work. Native tests cover retained access and revoked grants before results are returned. Continue the remaining route inventory."
       ],
       "owner": null,
       "depends_on": [],
@@ -670789,7 +670846,8 @@
           "release-0.6-upload-reservation-authority",
           "release-0.6-storage-asset-authority",
           "release-0.6-staff-receipt-authority",
-          "release-0.6-crm-read-authority"
+          "release-0.6-crm-read-authority",
+          "release-0.6-verification-case-read-authority"
         ],
         "current_acceptance": null
       }
@@ -1058959,7 +1059017,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
-              "sha256": "d0e734e60d72f08d08e88dddfeed6eb5c18c5614063feca7ce01d95b33aa4715"
+              "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
             },
             {
               "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -1059794,6 +1059852,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Existing API paths and generated types are unchanged. Browser and component files add retention cases and keep existing cases. The runbook adds the retention rollback steps. Changed-feature checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/crm-profile-records-http.integration.test.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ],
           "presentation_renewals": [
@@ -1093229,7 +1093295,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
-              "sha256": "37b415a62c3a607492547e232a188df08653722c52030c3a60e12f84135a2177"
+              "sha256": "6ec47c34ae7b06c818b998a6db6dd7cb6f69ebb7322ea1e1cac684305a7d3fb3"
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
@@ -1094260,6 +1094326,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The authority helper preserves single-permission checks and accepts an explicit nonempty tuple of jointly required capabilities in one transaction. The CRM reads retain their existing contract, capability scope and response projection, with a final current-authority check. Native regressions cover CRM, approved legal document reads, Finance receipt callers and CRM mutations."
+            },
+            {
+              "batch": "release-0.6-verification-case-read-authority",
+              "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+              "paths": [
+                "apps/api/src/crm/verification-case.controller.ts"
+              ],
+              "scope": "The three verification-case GET handlers recheck the existing staff read grant before publishing a response. Verification mutations and the prior profile, agent and verification-history assertions retain their behavior."
             }
           ]
         },
@@ -1094670,7 +1094744,8 @@
         "The monitoring retention recovery path passed targeted PostgreSQL, component, two-engine browser and unchanged bundle budget checks. Verify the staged workflow and operator application of the exported revision before acceptance.",
         "The two Sharp native dependency exceptions now have exact publisher and npm byte comparisons, signed tag and upstream source receipts. Package sign-off, full build input and final strict gate remain open.",
         "Report-only preflight 43549222626 supplied five exact scan and SBOM receipts for 7138669f5 and matched all 859 inventory rows. Sharp publisher provenance and prior-image checks passed. The strict package gate and accepted deployment are open.",
-        "The PostgreSQL supplement verifies notices for all 217 review rows in the retained image. The strict final image gate and accepted deployment remain open."
+        "The PostgreSQL supplement verifies notices for all 217 review rows in the retained image. The strict final image gate and accepted deployment remain open.",
+        "The global and profile verification queues and case detail passed current staff-grant rechecks in the native PostgreSQL HTTP suite. Verify the accepted candidate and remaining operational gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -1094990,7 +1095065,8 @@
           "release-0.6-operational-retention-recovery",
           "release-0.6-sharp-binary-origin",
           "release-0.6-sharp-attestations-and-build-inputs",
-          "release-0.6-postgres-notice-readback"
+          "release-0.6-postgres-notice-readback",
+          "release-0.6-verification-case-read-authority"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1275724,6 +1275800,70 @@
         {
           "file": "postgres-notice-supplement.zip",
           "sha256": "671128367c1f698ce0aedace50473f19b5ded784367a5a03c5e39033b1ce0c45"
+        }
+      ]
+    },
+    "release-0.6-verification-case-read-authority": {
+      "batch": "release-0.6-verification-case-read-authority",
+      "base_commit": "c589f0814ac1aafa16dc686cae6be437fa00b61f",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.05",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+        "apps/api/src/crm/verification-case.controller.test.ts",
+        "apps/api/src/crm/verification-case.controller.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "678b8facd9a23040ef339f81784f2e51f64f7db487a8577106d51ee83c57d07b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+          "sha256": "05e09795b2cac6b9d122078a446d1863ea0a16a8895afe69020049edfadf7677"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.test.ts",
+          "sha256": "113accaeece4922190d066d9950573a701391f8c5e3ff02163fc64a7200b9246"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.ts",
+          "sha256": "6ec47c34ae7b06c818b998a6db6dd7cb6f69ebb7322ea1e1cac684305a7d3fb3"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
+        }
+      ],
+      "checks": [
+        "114 tests passed across four suites, using the current compiled API and production migrations in PostgreSQL.",
+        "All three verification-case GET endpoints returned the expected record for the granted staff fixture and withheld the response when the grant was revoked before the blocked read completed.",
+        "API typecheck, changed-file ESLint and formatting passed.",
+        "Generated OpenAPI and API-client drift checks passed."
+      ],
+      "limitations": [
+        "The batch covers the three verification-case reads. Staging and the remaining resource-read inventory are open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-verification-case-reads",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "bd5fdb3335db503e9fb6e8ee1c4276fa7dfa73e1e417f43b43d15da5ed05cae9"
         }
       ]
     }

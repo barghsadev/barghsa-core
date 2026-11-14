@@ -2,6 +2,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { VerificationCaseController } from './verification-case.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
+vi.mock('../admin/staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (
+    _actor: unknown,
+    _permission: unknown,
+    read: () => Promise<unknown>
+  ) => read(),
+}));
+
 const profileId = '11111111-2222-4333-8444-555555555555';
 const caseId = '22222222-2222-4333-8444-555555555555';
 const draft = {
