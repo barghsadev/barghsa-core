@@ -131,6 +131,15 @@ describe('bank receipt staff confirmation contract (T-04.2.02.04)', () => {
       expect(parsed).toEqual({ ok: true, reason: 'Amount mismatch' });
     });
 
+    it('rejects caller-supplied review state and accepts the maximum reason length', () => {
+      const reason = 'x'.repeat(BANK_RECEIPT_REJECT_REASON_MAX_LENGTH);
+      expect(parseBankReceiptRejectReason({ reason })).toEqual({ ok: true, reason });
+      expect(parseBankReceiptRejectReason({ reason, state: 'Confirmed' })).toEqual({
+        ok: false,
+        message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON(),
+      });
+    });
+
     it('rejects blank, oversized, non-object, and control-character values', () => {
       expect(parseBankReceiptRejectReason(null).ok).toBe(false);
       expect(parseBankReceiptRejectReason({ reason: '   ' }).ok).toBe(false);
@@ -146,6 +155,13 @@ describe('bank receipt staff confirmation contract (T-04.2.02.04)', () => {
       if (failed.ok) return;
       expect(failed.message).toBe(BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON());
     });
+  });
+
+  it('distinguishes terminal wallet decisions from an ineligible transaction', () => {
+    expect(BANK_RECEIPT_CONFIRM_ERRORS.NOT_PENDING('Processing')).toContain('Processing');
+    expect(BANK_RECEIPT_CONFIRM_ERRORS.NOT_BANK_RECEIPT()).toContain('pending bank-receipt top-up');
+    expect(BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_CONFIRMED()).toContain('already been confirmed');
+    expect(BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_REJECTED()).toContain('already been rejected');
   });
 
   describe('isPendingBankReceiptTopUp', () => {

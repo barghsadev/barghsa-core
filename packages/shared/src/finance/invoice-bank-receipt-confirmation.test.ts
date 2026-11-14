@@ -84,6 +84,15 @@ describe('invoice bank receipt staff confirmation contract (T-04.3.01.03)', () =
       });
     });
 
+    it('rejects caller-supplied invoice ownership and accepts the maximum reason length', () => {
+      const reason = 'x'.repeat(BANK_RECEIPT_REJECT_REASON_MAX_LENGTH);
+      expect(parseInvoiceBankReceiptRejectReason({ reason })).toEqual({ ok: true, reason });
+      expect(parseInvoiceBankReceiptRejectReason({ reason, ownerId: 'other' })).toEqual({
+        ok: false,
+        message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON(),
+      });
+    });
+
     it('rejects blank, oversized, non-object, and control-character values', () => {
       expect(parseInvoiceBankReceiptRejectReason(null).ok).toBe(false);
       expect(parseInvoiceBankReceiptRejectReason({ reason: '   ' }).ok).toBe(false);
@@ -98,6 +107,11 @@ describe('invoice bank receipt staff confirmation contract (T-04.3.01.03)', () =
       if (failed.ok) return;
       expect(failed.message).toBe(INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON());
     });
+  });
+
+  it('distinguishes ineligible receipt states from a missing notification recipient', () => {
+    expect(INVOICE_BANK_RECEIPT_REJECT_ERRORS.NOT_REJECTABLE('Processing')).toContain('Processing');
+    expect(INVOICE_BANK_RECEIPT_REJECT_ERRORS.OWNER_UNNOTIFIABLE()).toContain('cannot be notified');
   });
 
   it('keys the customer rejection notice per receipt and deep-links the invoice', () => {

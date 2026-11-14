@@ -276,7 +276,7 @@ class ReleaseNotificationTests(unittest.TestCase):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.
         staging = self.root / "deploy/staging"
         staging.mkdir(parents=True)
-        for script in ("deploy.sh", "build-postgres-image.sh", "release-queue.py", "release.sh"):
+        for script in ("deploy.sh", "build-postgres-image.sh", "release-queue.py", "release.sh", "install-nginx.sh"):
             shutil.copy(Path(__file__).with_name(script), staging / script)
         bins = self.root / "bin"
         bins.mkdir()
@@ -347,6 +347,15 @@ elif name=='ssh' and args[-1]=='bash -s -- --check-protected-backup':
         print('Staging milestone requires non-disposable storage and encrypted WAL archiving', file=sys.stderr)
         sys.exit(1)
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
+elif name=='ssh' and args[-1]=='mktemp -d /tmp/barghsa-staging-nginx.XXXXXXXX':
+    print('/tmp/barghsa-staging-nginx.Fixture1')
+elif name=='ssh' and args[-1]=='bash -s -- /tmp/barghsa-staging-nginx.Fixture1':
+    assert sys.stdin.buffer.read()==pathlib.Path('deploy/staging/install-nginx.sh').read_bytes()
+    if os.environ.get('FAIL_NGINX_INSTALL'):
+        print('Restored the previous staging NGINX configuration', file=sys.stderr)
+        sys.exit(1)
+elif name=='scp' and args[-1].endswith(':/tmp/barghsa-staging-nginx.Fixture1/'):
+    assert args[-4:-1]==['deploy/staging/nginx-api-proxy.conf','deploy/staging/nginx-s3-proxy.conf','deploy/staging/nginx.conf']
 elif name=='ssh' and args[-1].startswith('bash -c '):
     archive=sys.stdin.buffer.read()
     if os.environ.get('CORRUPT_TRANSFER'): archive+=b'tampered'
@@ -418,7 +427,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             "FAIL_ACCEPTANCE", "FAIL_READINESS", "FAIL_PREFLIGHT", "FAIL_SCAN", "FAIL_LICENSE", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", "MISSING_BACKUP", "MISSING_SCANNER", None,
             "INVALID_RETAINED_ID", "WRONG_RETAINED_ID", "ABSENT_RETAINED_EVIDENCE", "WRONG_RETAINED_EVIDENCE",
             "CHANGE_RETAINED_AFTER_TRANSFER", "FAIL_RETAINED_LICENSE", "CHANGE_RETAINED_LICENSE_AFTER_TRANSFER",
-            "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE", "DISPOSABLE_RECEIPT",
+            "DISPOSABLE_MILESTONE", "RUNTIME_BECAME_DISPOSABLE", "DISPOSABLE_RECEIPT", "FAIL_NGINX_INSTALL",
         )]
         for failure, fresh, prebuilt in [*scenarios, (None, True, False), ("FAIL_LICENSE", True, False), (None, False, True),
                                         ("CORRUPT_TRANSFER", False, True), ("FAIL_RETAINED_LICENSE", False, True)]:
@@ -456,6 +465,9 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 self.assertEqual(result.returncode, 1 if failure else 0, result.stderr)
                 self.assertEqual(receipt.exists(), not failure and not fresh)
                 if not failure:
+                    proxy_install = next(line for line in calls if line.endswith('bash -s -- /tmp/barghsa-staging-nginx.Fixture1'))
+                    app_rollout = next(line for line in calls if '/usr/local/sbin/barghsa-staging-release /etc/barghsa/staging/candidate-' in line)
+                    self.assertLess(calls.index(proxy_install), calls.index(app_rollout))
                     verification = next(line for line in calls if 'release-queue.py verify-images' in line)
                     self.assertLess(calls.index(verification), calls.index(sends[0]))
                     if not fresh:
@@ -517,6 +529,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 elif failure == "DISPOSABLE_RECEIPT":
                     self.assertIn("requires a verified encrypted migration checkpoint", result.stderr)
                     self.assertIn("verify-images", calls[-1])
+                elif failure == "FAIL_NGINX_INSTALL":
+                    self.assertIn("Restored the previous staging NGINX configuration", result.stderr)
+                    self.assertTrue(calls[-1].endswith('bash -s -- /tmp/barghsa-staging-nginx.Fixture1'))
+                    self.assertFalse(any('verify-images' in line for line in calls))
                 elif failure == "INVALID_RETAINED_ID":
                     self.assertIn("Invalid PostgreSQL or ClamAV image ID", result.stderr)
                     self.assertFalse(any(line.startswith(("docker ", "scp ")) for line in calls))

@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
-import { isConfigAuditPage } from './config-audit.js';
+import * as admin from './index.js';
+const { isConfigAuditPage } = admin;
 const entry = {
   id: '01900000-0000-7000-8000-000000000001',
   actorId: 'actor',
@@ -42,4 +43,13 @@ it('rejects duplicate entries and an oversized page or cursor', () => {
   expect(isConfigAuditPage({ scope: 'otp', items: [entry], nextCursor: 'x'.repeat(513) })).toBe(
     false
   );
+});
+it('keeps config pages, workflow decisions and staff authority available from the admin entry point', () => {
+  expect(admin.isServiceWorkflowPolicy(admin.DEFAULT_SERVICE_WORKFLOWS)).toBe(true);
+  expect(admin.resolveStaffPermissions(['["finance:read"]', 'bad JSON', ['finance:read']])).toEqual(
+    ['finance:read']
+  );
+  expect(admin.isOperationalRetention(admin.defaultOperationalRetention)).toBe(true);
+  expect(admin.isReconciliationStatus('resolved')).toBe(true);
+  expect(admin.isReconciliationStatus('settled')).toBe(false);
 });

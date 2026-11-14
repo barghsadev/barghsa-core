@@ -88,6 +88,31 @@ describe('dueAt staff override contract (T-04.1.03.03)', () => {
       expect(parseDueAtOverrideBody([]).ok).toBe(false);
       expect(parseDueAtOverrideBody('x').ok).toBe(false);
     });
+
+    it('accepts a persisted Date at the maximum reason length', () => {
+      const dueAt = new Date('2026-09-01T00:00:00Z');
+      const reason = 'x'.repeat(DUE_AT_OVERRIDE_REASON_MAX_LENGTH);
+      expect(parseDueAtOverrideBody({ dueAt, reason })).toEqual({
+        ok: true,
+        value: { dueAt, reason },
+      });
+    });
+
+    it('rejects attempts to set audit ownership and identifies invalid date and reason values', () => {
+      expect(
+        parseDueAtOverrideBody({
+          dueAt: '2026-09-01T00:00:00Z',
+          reason: 'Approved',
+          actorUserId: 'other',
+        })
+      ).toEqual({ ok: false, issues: ['Unsupported invoice due date fields'], fields: [] });
+      for (const dueAt of [' ', new Date('invalid')]) {
+        expect(parseDueAtOverrideBody({ dueAt, reason: 1 })).toMatchObject({
+          ok: false,
+          fields: ['dueAt', 'reason'],
+        });
+      }
+    });
   });
 
   describe('buildDueAtOverrideSnapshot / readDueAtOverrideSnapshot', () => {
@@ -115,10 +140,36 @@ describe('dueAt staff override contract (T-04.1.03.03)', () => {
       expect(readDueAtOverrideSnapshot({})).toBeNull();
       expect(readDueAtOverrideSnapshot({ due: { source: 'config' } })).toBeNull();
     });
+
+    it('keeps customer-visible metadata and drops corrupt optional history', () => {
+      const snapshot = buildDueAtOverrideSnapshot({
+        dueAt: new Date('2026-09-15T08:00:00.000Z'),
+        previousDueAt: null,
+        reason: 'Extension requested',
+        actorUserId: 'staff-1',
+        overriddenAt: new Date('2026-08-02T12:00:00Z'),
+      });
+      expect(snapshot.previousDueAt).toBeNull();
+      expect(
+        readDueAtOverrideSnapshot({ dueAtOverride: { ...snapshot, previousDueAt: 42 } })
+      ).toEqual(snapshot);
+      for (const fields of [
+        { dueAt: 0 },
+        { reason: null },
+        { actorUserId: 0 },
+        { overriddenAt: null },
+        { customerVisible: false },
+      ]) {
+        expect(readDueAtOverrideSnapshot({ dueAtOverride: { ...snapshot, ...fields } })).toBeNull();
+      }
+    });
   });
 
   it('exports the audit event and permission constants', () => {
     expect(DUE_AT_OVERRIDE_EVENT).toBe('invoice.due_at.override');
     expect(DUE_AT_OVERRIDE_PERMISSION).toBe('admin:finance:invoices:override-due-at');
+    expect(DUE_AT_OVERRIDE_ERRORS.STATE_NOT_OVERRIDEABLE('Paid')).toContain('Paid');
+    expect(DUE_AT_OVERRIDE_ERRORS.BEFORE_ISSUED_AT()).toContain('on or after issuedAt');
+    expect(DUE_AT_OVERRIDE_ERRORS.UNCHANGED()).toContain('unchanged');
   });
 });

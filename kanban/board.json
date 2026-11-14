@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T12:55:48+00:00",
+  "updated": "2026-11-14T13:02:23+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22788,7 +22788,8 @@
       "remaining": [
         "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal.",
         "The compiled f571986ee HTTP adapter recovered and verified an existing settled fixture through live staging HTTPS with its current adapter source. Verify the exact deployed application, circuit signals and controlled recovery.",
-        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
+        "Added direct shared-source verification for provider failure windows, cooldown, single half-open recovery, stale responses and isolated provider settings. The 89 affected API cases passed. Exact staging provider recovery still needs live verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -22840,7 +22841,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-bill-electricity-caller",
           "release-0.6-staging-preflight-readback",
-          "release-0.6-staging-telegram-relay-recovery"
+          "release-0.6-staging-telegram-relay-recovery",
+          "release-0.6-shared-critical-coverage"
         ],
         "current_acceptance": null
       }
@@ -199975,7 +199977,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -200964,6 +200966,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -201603,7 +201613,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -202592,6 +202602,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -203231,7 +203249,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -204220,6 +204238,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -204859,7 +204885,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -205848,6 +205874,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -206487,7 +206521,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -207476,6 +207510,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -208115,7 +208157,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -209104,6 +209146,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -209870,7 +209920,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -210976,6 +211026,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -211625,7 +211683,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -212614,6 +212672,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -213380,7 +213446,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -214486,6 +214552,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -215135,7 +215209,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -216124,6 +216198,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -216686,7 +216768,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at.test.ts",
@@ -217308,6 +217390,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -217795,7 +217885,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at.test.ts",
@@ -218453,6 +218543,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -218888,7 +218986,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at.test.ts",
@@ -219540,6 +219638,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -232634,7 +232740,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -232930,6 +233036,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -233412,7 +233526,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -233727,6 +233841,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -234206,7 +234328,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
@@ -234562,6 +234684,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -235090,7 +235220,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
@@ -235658,6 +235788,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -236135,7 +236273,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
@@ -236491,6 +236629,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -236855,7 +237001,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -237151,6 +237297,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -237515,7 +237669,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -237811,6 +237965,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -238176,7 +238338,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -238472,6 +238634,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -238838,7 +239008,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -239134,6 +239304,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -239508,7 +239686,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -239804,6 +239982,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -240170,7 +240356,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -240466,6 +240652,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -729444,7 +729638,8 @@
         "Manual hosted browser run 43561500300 at 4cecd844b passed all 40 shards in attempt 1. The checked archive recorded 14,858 expected, 27 skipped, zero unexpected, zero flakes and zero runner errors. The quarantine check passed with zero active or expired critical quarantines. This diagnostic did not send a scheduled report. Repeat the final frozen candidate gate and verify the scheduled email receipt.",
         "At 20a2a7fa, the hosted critical accessibility gate and all 12 primary mobile measurements passed. Verified the original reports. Maximum LCP was 1,592 ms. Six non-critical axe samples recorded zero violations. Separate measurements of the two flagged notification controls in both languages and themes had a minimum contrast ratio of 11.96:1. Exact final-candidate and manual workflow review remain required.",
         "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
-        "Hosted run 43583704822 belongs to 81d4381e9, attempt 1. All 2,976 Chromium tests passed with no flakes, skips or runner errors. Mapped coverage completed, but combined coverage failed with 63 file errors. The two telemetry files now pass the unchanged changed-source threshold locally at 55/55 lines and 59/61 branches."
+        "Hosted run 43583704822 belongs to 81d4381e9, attempt 1. All 2,976 Chromium tests passed with no flakes, skips or runner errors. Mapped coverage completed, but combined coverage failed with 63 file errors. The two telemetry files now pass the unchanged changed-source threshold locally at 55/55 lines and 59/61 branches.",
+        "Six further shared finance, verification and admin files from the hosted failure now pass the original critical coverage gate locally. Verified 161/161 lines and 130/133 branches for these six; rerun the full final candidate gate after fixing the other deficits."
       ],
       "owner": null,
       "depends_on": [],
@@ -729480,7 +729675,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-board-source-validation",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-telemetry-source-coverage"
+          "release-0.6-telemetry-source-coverage",
+          "release-0.6-shared-critical-coverage"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -729533,7 +729729,8 @@
         "The staged migration rehearsal now has an explicit official release boundary for protected storage and encrypted WAL. Verify the actual archive settings, off-server checkpoint and readback during the accepted candidate rollout.",
         "The staging receiver still requires protected storage and encrypted WAL before running migrations. The worker also refuses a disposable checkpoint at receipt verification and on notification retries. Verify the real archive settings, the off-server checkpoint and its readback during the accepted candidate rollout.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal."
+        "A failed staging proxy syntax test or reload now restores the existing files and exits before running the application release. The isolated Ubuntu fixture passed validation failure, reload failure, successful install and competing update checks. Complete the exact full deployment rehearsal.",
+        "Hosted preflight 43597378287 failed its notifier deployment fixture before rollout because it lacked the new proxy staging SSH command. The corrected fixture retained every existing assertion and verified that failed proxy installation exits before app rollout, runtime image verification or Telegram."
       ],
       "owner": null,
       "depends_on": [],
@@ -729596,7 +729793,8 @@
           "release-0.6-protected-staging-migration",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-complete-staging-checkpoint-receipt",
-          "release-0.6-staging-nginx-recovery"
+          "release-0.6-staging-nginx-recovery",
+          "release-0.6-staging-nginx-fixture"
         ],
         "current_acceptance": null
       }
@@ -750336,7 +750534,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "73d7f08b03740fdc08f7b711c104c9f54abde4d7160b3392e329aaf610243d1d"
+              "sha256": "d346d9b8d118ca4b6f77da24499b343cf584e0a9daf06fda9e2e20adb430805e"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -751201,6 +751399,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "The staging deploy entry point selects the new rollback-safe proxy installer. Release identity, required backup, migrations, runtime image checks, staging labels, metrics and notification logic are untouched. The runbook and shell fixture changes are additive. All 43 related release checks and the isolated Ubuntu proxy installer passed."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-fixture",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Add the proxy staging SSH and SCP contract and failed install ordering to the existing release fixture. Existing acceptance, backup, image and notification assertions are preserved."
             }
           ]
         }
@@ -1101872,7 +1102078,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "73d7f08b03740fdc08f7b711c104c9f54abde4d7160b3392e329aaf610243d1d"
+              "sha256": "d346d9b8d118ca4b6f77da24499b343cf584e0a9daf06fda9e2e20adb430805e"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1102129,6 +1102335,14 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-nginx-fixture",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Add the proxy staging SSH and SCP contract and failed install ordering to the existing release fixture. Existing acceptance, backup, image and notification assertions are preserved."
             }
           ]
         },
@@ -1102736,7 +1102950,7 @@
             },
             {
               "path": "packages/shared/src/finance/due-at-override.test.ts",
-              "sha256": "cee5e6f52bacd9aa8399b19e2960f4062eca9d4f2e1eae63a53fedf78bd0ab91"
+              "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
             },
             {
               "path": "packages/shared/src/finance/due-at-override.ts",
@@ -1103492,7 +1103706,7 @@
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
-              "sha256": "56a712a2482df7d5f31299c7666a9de12d4c66dfd72b797d388e10e9072052ba"
+              "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-dual-approval.test.ts",
@@ -1107095,6 +1107309,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-shared-critical-coverage",
+              "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+              "paths": [
+                "packages/shared/src/finance/due-at-override.test.ts",
+                "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts"
+              ],
+              "scope": "Existing assertions and runtime implementation are preserved. New shared tests cover input and recovery boundaries; the affected finance and provider API tests passed."
             }
           ],
           "presentation_renewals": [
@@ -1131100,7 +1131323,8 @@
         "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
         "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required.",
         "The v0.5.1 active QA preview has no KBs or eligible knowledge in any of its five slots. The retained staging database still has both previously tested KBs. The exact public source has current free-provider vector proof. Republish reviewed sources via authenticated staff and recent verification, then record live retrieval, inference and a private delivery receipt on the accepted candidate.",
-        "The hosted full rehearsal passed 2,976 browser cases with zero failures, skips and flakes. Combined coverage failed across seven groups with 63 file errors. The telemetry package now emits coverage and passes the existing threshold locally. Preserve the full file report, address remaining errors and run the final enforced gates."
+        "The hosted full rehearsal passed 2,976 browser cases with zero failures, skips and flakes. Combined coverage failed across seven groups with 63 file errors. The telemetry package now emits coverage and passes the existing threshold locally. Preserve the full file report, address remaining errors and run the final enforced gates.",
+        "The shared critical coverage batch closes six specific previously reported file gaps in its scoped check. The full rehearsal still has other coverage failures, plus the strict license and exact operational release checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131461,7 +1131685,8 @@
           "release-0.6-promotion-checkpoint-parity",
           "release-0.6-staging-telegram-relay-recovery",
           "release-0.6-staging-knowledge-preview-readback",
-          "release-0.6-telemetry-source-coverage"
+          "release-0.6-telemetry-source-coverage",
+          "release-0.6-shared-critical-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1319591,6 +1319816,164 @@
         {
           "file": "telemetry-coverage-gate.json",
           "sha256": "6c4bc1f59f734000f30cf44f0e4088a429209889908813215b5796bf15ba0b76"
+        }
+      ]
+    },
+    "release-0.6-shared-critical-coverage": {
+      "batch": "release-0.6-shared-critical-coverage",
+      "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/shared/src/verification/circuit-breaker.test.ts",
+        "packages/shared/src/finance/due-at-override.test.ts",
+        "packages/shared/src/finance/wallet-bank-receipt-confirmation.test.ts",
+        "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+        "packages/shared/src/admin/config-audit.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.test.ts",
+          "sha256": "dbb1ed63370bb4b3bcfd57f484e59b88e2ddca9021d58b6cc093413243533fc1"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.test.ts",
+          "sha256": "04bbe304ac8baaedc5674413353ccb4491b75260ff53a6d13f962205bfdab905"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-confirmation.test.ts",
+          "sha256": "be624fb8ce617390cf01fc1c01b786e0cb1dc6cf7226054853570e0b815f2fbd"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.test.ts",
+          "sha256": "ca600c3878b4d3d0bf37130f8dc07b783542f069055f17c235fde0a673fd0e14"
+        },
+        {
+          "path": "packages/shared/src/admin/config-audit.test.ts",
+          "sha256": "957c5ea2b761e7f89aa46f4af2aa70f595b455c47cd9d76eb447c947367028c0"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        },
+        {
+          "path": "packages/shared/src/verification/index.ts",
+          "sha256": "6217cff7a56e1851be33209946506de648a367a845e6ddf7ae23f1ba8d0af307"
+        },
+        {
+          "path": "packages/shared/src/verification/types.ts",
+          "sha256": "3c66fd7acdcb8ae5116c9f516985e4d16cf06c69ed42a3aba601a14bdcb11a6a"
+        },
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.ts",
+          "sha256": "dfa81af62c5efe5a04cc0f4a4b371314007f273e1da70186e19ea8922b559377"
+        },
+        {
+          "path": "packages/shared/src/admin/index.ts",
+          "sha256": "3757d24452557ea03b0846a758606258f53bed4c674d47295d98549777691361"
+        },
+        {
+          "path": "packages/shared/src/finance/due-at-override.ts",
+          "sha256": "8f7cbc05a6ff2516d8a1dd2c36211bcae88b8a7cf7919ca365703d88112a521e"
+        },
+        {
+          "path": "packages/shared/src/finance/receipt-rejection-fields.ts",
+          "sha256": "8d2aeabe8cae8587984b27de6f2b841e8e1812f194e958b4c9c489d8de2d5b79"
+        }
+      ],
+      "checks": [
+        "636 verification, admin and finance tests passed in 48 shared files. The unchanged scoped 90% lines and 85% branches per-file gate passed for all six files. The report records 161/161 lines and 130/133 branches.",
+        "89 affected API cases passed across four files, including verification circuit breaker and bank receipt decision services. The first setup failed before executing cases because the new test used an ES2024 Promise helper. The test now uses an ES2022-compatible fixture and both final invocations passed.",
+        "Targeted TypeScript lint via ESLint, formatting and git diff checks passed. No shared runtime source changed."
+      ],
+      "limitations": [
+        "Additional files and the full immutable candidate coverage run remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-shared-critical-coverage",
+      "execution_receipts": [
+        {
+          "file": "targeted-shared-coverage.log",
+          "sha256": "e3ba0dfd257da5af4e6b30a249c9f868400b09c240bf705c206b8520cb63b972"
+        },
+        {
+          "file": "affected-api.log",
+          "sha256": "c555a6fc494391419768170a5e22159fe607782bdf39e95c0f7d627b25c2b029"
+        },
+        {
+          "file": "shared-critical-gate.json",
+          "sha256": "b769f59e8f2b2aaaa6bcb351fbc51feb442aa9c6b69c26acf2edf0d42bbb4992"
+        }
+      ]
+    },
+    "release-0.6-staging-nginx-fixture": {
+      "batch": "release-0.6-staging-nginx-fixture",
+      "base_commit": "bf83ce12f0a603f164583ee72ce3e2d6474014ee",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "release-readiness#R-01.05"
+      ],
+      "changed_paths": [
+        "deploy/staging/test_notify_release.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "d346d9b8d118ca4b6f77da24499b343cf584e0a9daf06fda9e2e20adb430805e"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/install-nginx.sh",
+          "sha256": "5239fdc3b1a8d7879435304cc18a72ada0891dd32a0f2c685d0c97bf8c1a19f7"
+        }
+      ],
+      "checks": [
+        "Verified original hosted failure diagnostics for the missing proxy staging transfer and installer fixture.",
+        "All 18 local notifier tests passed. The release fixture verified the exact remote installer bytes and that proxy failure stops before runtime verification or Telegram. It retained every previous assertion and verified successful proxy install precedes app rollout."
+      ],
+      "limitations": [
+        "Repeat the exact hosted preflight and live staging acceptance gates. No release or notification was sent by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-nginx-fixture",
+      "execution_receipts": [
+        {
+          "file": "notify-tests.log",
+          "sha256": "602b5002cb3f71a9598966ccdb3eecdbc17dd32aec4c324a9a1d108e4a5c9f86"
+        },
+        {
+          "file": "check-43597378287-quality-132454686315-failed.log",
+          "sha256": "52e0d9fffb42848345149241c74d9685d15b2d5668f8eec682f07bdd5fd05424"
         }
       ]
     }
