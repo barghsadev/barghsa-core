@@ -48,8 +48,14 @@ groups:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md
       - alert: PostgresBackupMonitoringUnavailable
         expr: |
-          up{job="barghsa-postgres-backup",environment!="",database!=""}
-          unless on (job, instance, environment, database) barghsa:postgres_backup_report:valid
+          (
+            up{job="barghsa-postgres-backup",environment!="",database!=""}
+            unless on (job, instance, environment, database) barghsa:postgres_backup_report:valid
+          )
+          or (
+            (barghsa:postgres_backup_report:expected{environment!="",database!=""} == 1)
+            unless on (environment, database) up{job="barghsa-postgres-backup"}
+          )
         for: 2m
         labels:
           severity: critical

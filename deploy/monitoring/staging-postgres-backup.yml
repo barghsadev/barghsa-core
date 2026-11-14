@@ -1,0 +1,11 @@
+services:
+  prometheus:
+    volumes:
+      - ./staging-postgres-backup-scrape.yml:/etc/prometheus/optional-scrapes/postgres-backup.yml:ro
+      - ./staging-postgres-backup-expectation.yml:/etc/prometheus/optional/postgres-backup-expectation.yml:ro
+      - type: bind
+        source: ${BARGHSA_POSTGRES_BACKUP_CONFIG_DIR:?Set the protected PostgreSQL backup scrape configuration directory}
+        target: /run/postgres-backup
+        read_only: true
+        bind:
+          create_host_path: false

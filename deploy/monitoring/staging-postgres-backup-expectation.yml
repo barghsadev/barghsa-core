@@ -1,0 +1,8 @@
+groups:
+  - name: barghsa-staging-postgres-backup-expectation
+    rules:
+      - record: barghsa:postgres_backup_report:expected
+        expr: vector(1)
+        labels:
+          environment: staging
+          database: core

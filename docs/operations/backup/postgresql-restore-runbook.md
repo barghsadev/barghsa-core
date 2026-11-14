@@ -210,8 +210,21 @@ require verified client and server TLS, and grant the exporter read-only access.
 Configure the private Prometheus target with job name `barghsa-postgres-backup`
 and exact `environment` and `database` labels. Mount
 `deploy/monitoring/postgres-backup-alerts.yml` in the target Prometheus rule set.
+Declare `barghsa:postgres_backup_report:expected` with value `1` and the same
+environment and database labels independently of service discovery. This lets
+Prometheus page when the expected target is missing altogether.
+
+For staging, add `deploy/monitoring/staging-postgres-backup.yml` to the active
+monitoring Compose files. Set `BARGHSA_POSTGRES_BACKUP_CONFIG_DIR` to the
+protected directory containing `ca.pem`, `client.pem`, `client-key.pem` and
+`targets.yml`. The target file is a Prometheus file discovery list with the
+approved exporter hostname and port. Use the hostname in the certificate.
+The overlay mounts these files read-only, scrapes only the three job metrics,
+and declares the expected `staging` and `core` target.
+
 Read back the actual result, verify firing and recovery for failed and stale
-backups and missing reports, and retain the P1 on-call delivery receipts.
+backups, failed scrapes and a missing expected target, and retain the P1
+on-call delivery receipts.
 [Node Exporter textfile collector](https://github.com/prometheus/node_exporter#textfile-collector) · [PostgreSQL backup alerts](../../runbooks/postgresql-backup.md).
 
 Install/enable those timers only after checking storage access, source baseline

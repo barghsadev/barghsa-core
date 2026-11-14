@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T00:12:17+00:00",
+  "updated": "2026-11-14T00:26:35+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16859,7 +16859,8 @@
         "Full backups verify encrypted object size and SHA-256 over S3 before publishing a completion marker. The rebuilt Linux amd64 image passed TLS backup, WAL and PITR. Live backup storage, key, schedule and paging receipts remain open.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "Live v0.5.1 readback at 23:50 UTC found no protected backup environment, key or WAL environment, and the backup staleness rule was absent. Verify the approved off-server storage, recoverable key and actual backup/restore before live cutover.",
-        "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required."
+        "The existing EU host had 99.3 GB available and no backup service in the checked Barghsa scope. Staging has 6.25 GB available on the active database volume filesystem. Owner approval for a private off-site staging destination on the EU host was requested. Protected storage and a recoverable key remain required.",
+        "The private mTLS backup scrape and independently declared staging/core target now have an isolated configuration proof. Enable them after the approved off-server backup and exporter are provisioned, and read back the actual job result."
       ],
       "owner": null,
       "depends_on": [],
@@ -16946,7 +16947,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-live-operational-gate-readback",
-          "release-0.6-existing-offsite-capacity"
+          "release-0.6-existing-offsite-capacity",
+          "release-0.6-backup-target-monitoring"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -35075,7 +35077,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-backup-target-monitoring"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35121,7 +35124,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "20a01c5ad67cc091a2c92fd333d7f7dd63a96a3e6a08f3e7b54f7920dce7d302"
+              "sha256": "8770c27934ce1b2e78ecff01c182d81f533873c16775bf80e5fb51abae0417e5"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -35673,6 +35676,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-backup-target-monitoring",
+              "base_commit": "1c0b382b69e7c1116d9435e5e259822091798f03",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The runbook adds protected discovery and expected-target P1 setup. The existing measured restore, connection, data-integrity and SLA procedure retain their instructions and source evidence."
             }
           ]
         }
@@ -716513,7 +716524,8 @@
       "remaining": [
         "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
         "Verify the deployed AuthenticationFailuresElevated P1 rule against representative scoped traffic and firing and resolved receipts. The initial threshold requires at least 30 rejected attempts in a rolling five-minute window and a 50% rejection ratio for five minutes, evaluated separately for password and OTP submissions. Verify the remaining payment, wallet, notification and SLO signals in the target scope. Verify the barghsa_role label on all monitored API targets and the rollout guard response.",
-        "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route."
+        "Verify live P1 firing and resolved PostgreSQL collection, connection, deadlock and replica-lag receipts from the deployed candidate, including the approved on-call route.",
+        "Backup monitoring now raises the existing P1 when the expected staging/core target disappears from discovery. All seven pinned rule suites passed. Verify the exact deployed exporter, Alertmanager and approved on-call firing and recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -716544,7 +716556,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-authentication-failure-alert",
           "release-0.6-rollout-authentication-alert",
-          "release-0.6-postgres-alert-wiring"
+          "release-0.6-postgres-alert-wiring",
+          "release-0.6-backup-target-monitoring"
         ],
         "current_acceptance": null
       }
@@ -717250,7 +717263,8 @@
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-backup-object-readback",
-          "release-0.6-recovery-baseline-proof"
+          "release-0.6-recovery-baseline-proof",
+          "release-0.6-backup-target-monitoring"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -717266,7 +717280,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "20a01c5ad67cc091a2c92fd333d7f7dd63a96a3e6a08f3e7b54f7920dce7d302"
+              "sha256": "8770c27934ce1b2e78ecff01c182d81f533873c16775bf80e5fb51abae0417e5"
             }
           ],
           "checks": [
@@ -717401,6 +717415,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Database recovery evidence binds the original source baseline and recomputes the recovery point. Focused native restore and production approval tests passed. Other verified gate paths and their existing evidence remain applicable."
+            },
+            {
+              "batch": "release-0.6-backup-target-monitoring",
+              "base_commit": "1c0b382b69e7c1116d9435e5e259822091798f03",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "The runbook adds protected discovery and expected-target P1 setup. The existing measured restore, connection, data-integrity and SLA procedure retain their instructions and source evidence."
             }
           ]
         }
@@ -1083731,7 +1083753,8 @@
         "Canary and independent probes reject dependency warnings and incomplete readiness before reading business fixtures. The approved production-equivalent deployment, backup, recovery and live operating checks remain open.",
         "The exact staging S3 probe path passed isolated testing with the deployed SeaweedFS image on an empty test volume. Actual candidate staging, approved storage, backup and recovery receipts remain pending.",
         "Read-only v0.5.1 monitoring at 23:50 UTC showed seven loaded rules. None was the required watchdog, burn-rate, scanner staleness or backup staleness rule, and no synthetic or scanner signature sample was present. The storage credentials and key paths were absent. The release queue contained no v0.6.0 deployment.",
-        "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts."
+        "Verified the candidate off-site host and the live PostgreSQL mount read-only at 23:56 UTC. The EU HTTPS probe from staging returned no response before its timeout. The existing mirror host may be considered for isolated backups and monitoring, subject to host approval and verified private reachability, key recovery and receipts.",
+        "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1083797,7 +1083820,8 @@
           "release-0.6-canary-dependency-readiness",
           "release-0.6-probe-object-cleanup",
           "release-0.6-live-operational-gate-readback",
-          "release-0.6-existing-offsite-capacity"
+          "release-0.6-existing-offsite-capacity",
+          "release-0.6-backup-target-monitoring"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1261313,6 +1261337,79 @@
         {
           "file": "eslint.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-backup-target-monitoring": {
+      "batch": "release-0.6-backup-target-monitoring",
+      "base_commit": "1c0b382b69e7c1116d9435e5e259822091798f03",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/postgres-backup-alerts.test.yml",
+        "deploy/monitoring/postgres-backup-alerts.yml",
+        "deploy/monitoring/staging-postgres-backup-expectation.yml",
+        "deploy/monitoring/staging-postgres-backup-scrape.yml",
+        "deploy/monitoring/staging-postgres-backup.yml",
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "docs/runbooks/postgresql-backup.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.test.yml",
+          "sha256": "d82e2fe101af9db45a54d2c2fe1fb9cc0b5577a10c6bffab3acb8537aadc5823"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.yml",
+          "sha256": "cbf8dcc771183b793f7a3aa7c8195fe9e45231f0ebc055b772053b23ba0c02a5"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup-expectation.yml",
+          "sha256": "d7ac6045709116d7b0cfe2401a5bbdf0d25b0b9fdb796c826ca8474988cf696a"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup-scrape.yml",
+          "sha256": "466b433129c6715ace8a2df5779f2ff71b95b482da00fa06cfe36f18837a0501"
+        },
+        {
+          "path": "deploy/monitoring/staging-postgres-backup.yml",
+          "sha256": "f60336f5f8cdc44d5b1ae5e19d935c6ba5f4a497395bd8c8ad5c389e97947a59"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "8770c27934ce1b2e78ecff01c182d81f533873c16775bf80e5fb51abae0417e5"
+        },
+        {
+          "path": "docs/runbooks/postgresql-backup.md",
+          "sha256": "6a5ce48a7939f22d78f8f1a07e61551b2d61aaf7223a84b1472b829b2dce2c36"
+        }
+      ],
+      "checks": [
+        "The pinned Linux amd64 promtool passed all seven rule suites, including the two-minute P1 delay, recovery when the expected backup target returned, and a second alert when discovery removed it. The test proves an unscoped target cannot satisfy the expectation.",
+        "Docker Compose rejected absent protected input and added only the three read-only mounts when enabled. The pinned promtool loaded the whole staging configuration and backup expectation. Its optional synthetic-discovery warning reflects that the isolated fixture omitted that separate overlay.",
+        "Changed-file formatting and diff checks passed."
+      ],
+      "limitations": [
+        "No live backup service, scrape, monitoring overlay or external receiver was configured. The verified off-server backup, measured recovery and actual alert delivery remain prerequisites."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-backup-target-monitoring",
+      "execution_receipts": [
+        {
+          "file": "all-promtool-rules.log",
+          "sha256": "647defc0e93dfbc9943700256d003881c88569fe77a4ecba9dd2aabc9f6a2cc5"
+        },
+        {
+          "file": "compose-and-promtool.log",
+          "sha256": "8db2a275c141380331ff07a24fcfb4f304f7e880758e0c7fa674319747b21059"
         },
         {
           "file": "format.log",

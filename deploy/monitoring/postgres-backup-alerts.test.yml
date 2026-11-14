@@ -82,3 +82,32 @@ tests:
               dashboard_uid: barghsa-postgresql
               runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md
       - { eval_time: 24h4m, alertname: PostgresBackupStale, exp_alerts: [] }
+
+  - interval: 1m
+    input_series:
+      - series: 'barghsa:postgres_backup_report:expected{environment="staging",database="core"}'
+        values: '1+0x7'
+      - series: 'up{job="barghsa-postgres-backup",instance="unscoped"}'
+        values: '1+0x7'
+      - series: 'up{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '_ _ _ 1 1 stale _ _'
+      - series: 'barghsa_postgres_backup_last_job_success{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '_ _ _ 1 1 1 1 1'
+      - series: 'barghsa_postgres_backup_last_job_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '_ _ _ 120 120 120 120 120'
+      - series: 'barghsa_postgres_backup_last_verified_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '_ _ _ 120 120 120 120 120'
+    alert_rule_test:
+      - { eval_time: 1m, alertname: PostgresBackupMonitoringUnavailable, exp_alerts: [] }
+      - eval_time: 2m
+        alertname: PostgresBackupMonitoringUnavailable
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: critical, priority: P1 }
+            exp_annotations: *missing
+      - { eval_time: 3m, alertname: PostgresBackupMonitoringUnavailable, exp_alerts: [] }
+      - { eval_time: 6m, alertname: PostgresBackupMonitoringUnavailable, exp_alerts: [] }
+      - eval_time: 7m
+        alertname: PostgresBackupMonitoringUnavailable
+        exp_alerts:
+          - exp_labels: { environment: staging, database: core, severity: critical, priority: P1 }
+            exp_annotations: *missing
