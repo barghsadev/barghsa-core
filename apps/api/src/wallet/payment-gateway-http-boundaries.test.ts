@@ -138,6 +138,31 @@ it.each([404, 204])('treats inquiry HTTP %i as absent without parsing a body', a
   expect(json).not.toHaveBeenCalled();
 });
 
+it.each([false, true])(
+  'releases the native response stream when recovery reports an absent payment (circuit %s)',
+  async (withCircuit) => {
+    const cancel = vi.fn();
+    const response = new Response(new ReadableStream({ cancel }), { status: 404 });
+    const fetch = vi.fn().mockResolvedValue(response);
+    vi.stubGlobal('fetch', fetch);
+    try {
+      const gateway = createHttpPaymentGateway({
+        requestUrl: 'https://psp.example.test/request',
+        inquiryUrl: 'https://psp.example.test/inquiry',
+        apiKey: 'local-fixture-key',
+        ...(withCircuit
+          ? { circuit: { failureThreshold: 5, resetTimeoutMs: 1_000, halfOpenMaxProbes: 1 } }
+          : {}),
+      });
+      await expect(gateway.recoverPayment(start)).resolves.toBeNull();
+      expect(cancel).toHaveBeenCalledOnce();
+      expect(fetch).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  }
+);
+
 it.each([{ body: null }, { body: [] }, { body: { authority: 42 } }, { body: { authority: '  ' } }])(
   'requires a real authority when recovering $body',
   async ({ body }) => {

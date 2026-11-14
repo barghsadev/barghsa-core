@@ -159,6 +159,7 @@ export type PaymentGatewayFetch = (
   ok: boolean;
   status: number;
   json: () => Promise<unknown>;
+  discardBody?: () => Promise<void>;
 }>;
 
 const MAX_GATEWAY_RESPONSE_BYTES = 10 * 1024 * 1024;
@@ -259,6 +260,9 @@ const fetchPaymentGateway: PaymentGatewayFetch = async (input, init) => {
   return {
     ok: response.ok,
     status: response.status,
+    async discardBody() {
+      await response.body?.cancel().catch(() => undefined);
+    },
     async json() {
       if (!response.body) throw new SyntaxError('Empty payment gateway response');
       const { bytes, truncated } = await readCappedBytes(response.body, MAX_GATEWAY_RESPONSE_BYTES);
@@ -716,7 +720,10 @@ export function createHttpPaymentGateway(options: {
         },
         signal: AbortSignal.timeout(timeoutMs),
       });
-      if (res.status === 404 || res.status === 204) return null;
+      if (res.status === 404 || res.status === 204) {
+        await res.discardBody?.();
+        return null;
+      }
       let body: unknown;
       try {
         body = await res.json();

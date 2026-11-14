@@ -124802,7 +124802,7 @@
             1270681637133213,
             397185908703100,
             1117666762973603,
-            2812588235411531,
+            3938782728449213,
             2101415813951704,
             2058946213734767,
             315801395080800,
@@ -124917,7 +124917,8 @@
             3927417430269962,
             455272099528399,
             3239468737812509,
-            3613915422274983
+            3613915422274983,
+            1540413741092317
           ],
           "presentation_renewals": [
             {
@@ -125084,7 +125085,7 @@
             1270681637133213,
             4406911412757718,
             533651428807525,
-            2812588235411531,
+            3938782728449213,
             315801395080800,
             1040589702438338,
             2794002585401148,
@@ -125122,7 +125123,8 @@
             1884657879217517,
             1012317342429498,
             2408107684351146,
-            2953325610027326
+            2953325610027326,
+            1540413741092317
           ]
         },
         "implementation_checkpoint": {
@@ -129070,7 +129072,7 @@
             1270681637133213,
             4406911412757718,
             533651428807525,
-            2812588235411531,
+            3938782728449213,
             315801395080800,
             1040589702438338,
             2794002585401148,
@@ -129108,7 +129110,8 @@
             1884657879217517,
             1012317342429498,
             2408107684351146,
-            2953325610027326
+            2953325610027326,
+            1540413741092317
           ]
         },
         "implementation_checkpoint": {
@@ -384587,7 +384590,8 @@
         "The release notification client bounds the JSON response read to 256 KiB plus one boundary byte and retains a 30-second socket timeout. The fixture accepted the exact boundary and rejected an oversized reply before parsing. Verify deployment and finish the remaining outbound inventory.",
         "The detached staging queue now rejects HTTP redirects and caps live JSON at 256 KiB for the release metadata and notification-retry readiness reads. The socket timeout remains 30 seconds. The loopback fixture received no redirected request and verified exact-limit acceptance and oversized rejection.",
         "The private Telegram transport retains its 10-second deadline, 64 KiB response cap and redirect rejection. An inconsistent HTTP and Bot API status cannot authorize a retry. Actual candidate and the remaining outbound inventory remain open.",
-        "The staging host release smoke now enforces a 20-second maximum and 64 KiB response limit on all three public JSON reads. Real curl loopback tests passed the exact limit, oversized response without Content-Length and redirects. The broader outbound provider inventory and exact deployment remain open."
+        "The staging host release smoke now enforces a 20-second maximum and 64 KiB response limit on all three public JSON reads. Real curl loopback tests passed the exact limit, oversized response without Content-Length and redirects. The broader outbound provider inventory and exact deployment remain open.",
+        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -384626,7 +384630,8 @@
           "release-0.6-telegram-receipt-transport",
           "release-0.6-bound-staging-worker-readbacks",
           "release-0.6-telegram-rejection-receipts",
-          "release-0.6-staging-bounded-smoke"
+          "release-0.6-staging-bounded-smoke",
+          "release-0.6-payment-recovery-response"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -387226,7 +387231,7 @@
             3418971548279004,
             3837835578614614,
             4416694339274639,
-            2812588235411531
+            3938782728449213
           ],
           "checks": [
             2834913664602663,
@@ -387238,7 +387243,8 @@
             4013138167456246,
             1884657879217517,
             1012317342429498,
-            3298725967042171
+            3298725967042171,
+            1540413741092317
           ]
         }
       },
@@ -391365,9 +391371,9 @@
             410251123743514,
             1412117181171944,
             2143505960497004,
-            2017160090784428,
+            2165698803818398,
             740566060418767,
-            2812588235411531,
+            3938782728449213,
             244783737707374,
             1670022935980222,
             3767724507594592,
@@ -391395,7 +391401,8 @@
             3239468737812509,
             2454183000652926,
             984826596146034,
-            3900013905582121
+            3900013905582121,
+            3884635036213300
           ]
         }
       }
@@ -392510,9 +392517,9 @@
           "base_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
           "source_evidence": [
             677360496321412,
-            2017160090784428,
+            2165698803818398,
             740566060418767,
-            2812588235411531,
+            3938782728449213,
             3971980083992363,
             2923259893179372,
             1087088856558274,
@@ -392563,7 +392570,8 @@
             4413329622847884,
             3811722477790042,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            3884635036213300
           ]
         }
       },
@@ -393500,9 +393508,9 @@
           "base_commit": "013cd314854837e9b1f704080ecaa8d334816f5a",
           "source_evidence": [
             677360496321412,
-            2017160090784428,
+            2165698803818398,
             740566060418767,
-            2812588235411531,
+            3938782728449213,
             3971980083992363,
             2923259893179372,
             1087088856558274,
@@ -393554,7 +393562,8 @@
             4413329622847884,
             3811722477790042,
             2484943224506275,
-            1511795022188542
+            1511795022188542,
+            3884635036213300
           ]
         }
       },
@@ -395218,7 +395227,7 @@
             3418971548279004,
             3837835578614614,
             4416694339274639,
-            2812588235411531
+            3938782728449213
           ],
           "checks": [
             3945384511050756,
@@ -395250,7 +395259,8 @@
             145435064327048,
             1556141402419245,
             1660715985267185,
-            2738410776947585
+            2738410776947585,
+            1540413741092317
           ]
         }
       },
@@ -397699,8 +397709,8 @@
             1182217888245805,
             1183468454534810,
             1345875911635862,
-            2812588235411531,
-            2017160090784428,
+            3938782728449213,
+            2165698803818398,
             2606557603986526
           ],
           "checks": [
@@ -397749,7 +397759,8 @@
             3224257337317482,
             2219027220416468,
             1889525020198242,
-            2379578128810161
+            2379578128810161,
+            985239836471606
           ]
         }
       }
@@ -551853,7 +551864,7 @@
             1270681637133213,
             397185908703100,
             1117666762973603,
-            2812588235411531,
+            3938782728449213,
             2058946213734767,
             315801395080800,
             1040589702438338,
@@ -553545,7 +553556,8 @@
             3665683489722190,
             3225640764228665,
             3454701496299565,
-            1345081247258369
+            1345081247258369,
+            1540413741092317
           ],
           "presentation_renewals": [
             {
@@ -562455,7 +562467,8 @@
         "The whole API rerun exposed the legacy RTF verification request using a category property. The controller now accepts the optional field from the existing category enum and rejects unknown fields or invalid values. The server-issued key still selects the category and the owned reservation still controls the scope and declared bytes. All 43 affected compiled tests passed, including the substituted-byte denial and the legacy category call. The exact whole candidate and staging gates remain open.",
         "The Resend connection tester discards HTTP failure bodies before publishing an operation and status diagnostic. Unrecognized domain status strings cannot enter the saved test result. Fixed endpoint, authorization-before-send, verified recipient, receipt bounds, provider status classification and activation rules are preserved. All 128 related unit and compiled API cases passed. The final focused tester run passed 26 cases. Read back the exact candidate on the protected deployed sink.",
         "Local API run at 4e4e428b7 passed 8,355 tests with three failures and one skip. Its independent per-file evaluation met the unchanged floors across 199 changed API paths. The slot and CRM positive step-up fixtures now pass all 20 related HTTP cases. Require a passing native and combined-coverage run on exact final release source.",
-        "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open."
+        "The SMTP connection tester now excludes raw server replies and DNS details from new diagnostics. It records a failed step and an optional valid numeric reply code. All 402 related provider cases passed. Exact deployed and historical sink checks remain open.",
+        "HTTP payment recovery now releases an unused response stream on the existing 404/204 absence path. The new fixture reproduced the missing closure. All 224 affected gateway, top-up and callback tests passed and the critical file met its unchanged thresholds. The remaining provider transport inventory and exact staged candidate checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -562886,7 +562899,8 @@
           "release-0.6-upload-verification-compatibility",
           "release-0.6-resend-provider-diagnostics",
           "release-0.6-api-step-up-fixtures",
-          "release-0.6-smtp-test-diagnostics"
+          "release-0.6-smtp-test-diagnostics",
+          "release-0.6-payment-recovery-response"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -762189,6 +762203,65 @@
           "sha256": "1a80b26a24a6600d86c92e3aae00fa90dc6771cd2dab0439df36f372ddef6cc3"
         }
       ]
+    },
+    "release-0.6-payment-recovery-response": {
+      "batch": "release-0.6-payment-recovery-response",
+      "base_commit": "fdd58fefeb934f0aa2bfc9176de56d92fc3c8a63",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.06.02.02",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "release-readiness#R-02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/wallet/payment-gateway.ts",
+        "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts"
+      ],
+      "checks": [
+        "The native Response fixture failed before the fix because its stream was never canceled. After the fix it passed with and without the circuit breaker and confirmed one provider call.",
+        "The native generic HTTP payment adapter releases an unused inquiry response body when the provider returns 404 or 204. All 224 targeted gateway, top-up recovery and callback cases passed. The critical gateway file covered 390/409 lines and 369/384 branches under the original thresholds.",
+        "API build, type checking, ESLint, Prettier and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "Focused runtime and coverage checks. The approved real provider and final release remain subject to their existing gates."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "2945695d3a24c87573031a30f3c0c96ec8185409a6aa4dac61ccd0d0c5f6d7ec"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "sha256": "cea775c6b46ceafb9b468c3dc9a4a19d22759f60522dd3ae10552c95934f55c7"
+        }
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-payment-recovery-response",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "411c4c0807cccb10dcbd93af9ab4d8f7907e785bf4b1c266f5c4895cec2e239a"
+        },
+        {
+          "file": "native.log",
+          "sha256": "654e1eec87af5b59631c08cfb22214a008c83f8aaebc0117ad3bc43b8ce6df86"
+        },
+        {
+          "file": "build.log",
+          "sha256": "eafcd883d9c5feb99e3cf2e62b5c6640970f726e9fe9e269efe939f39dbe4ae8"
+        },
+        {
+          "file": "scoped-coverage.json",
+          "sha256": "4578ea1cb11bd402e52a9375f42ae78752b412a4c2f9a07fa29c23b1cd0de9fa"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -774215,9 +774288,9 @@
         "path": "apps/api/src/wallet/online-topup-authority.integration.test.ts",
         "sha256": "a3f7cfcf9c73462673474e04d9a060c64bc067c9e5187fa6a821e6acad22f00e"
       },
-      "2812588235411531": {
+      "3938782728449213": {
         "path": "apps/api/src/wallet/payment-gateway.ts",
-        "sha256": "c0677e822b870e53e247d022e78ecce643f2ea720c4f87674c439b0c6f66aa8a"
+        "sha256": "2945695d3a24c87573031a30f3c0c96ec8185409a6aa4dac61ccd0d0c5f6d7ec"
       },
       "315801395080800": {
         "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -777703,9 +777776,9 @@
         "path": "apps/api/src/verification/provider-registry.ts",
         "sha256": "26aa75774f71089ab7be9b6cf87eea2bf0735bce91de8fec3e5ef193aa853b43"
       },
-      "2017160090784428": {
+      "2165698803818398": {
         "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
-        "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
+        "sha256": "cea775c6b46ceafb9b468c3dc9a4a19d22759f60522dd3ae10552c95934f55c7"
       },
       "740566060418767": {
         "path": "apps/api/src/wallet/payment-gateway.test.ts",
@@ -795999,6 +796072,14 @@
         ],
         "scope": "The three commands now reject undeclared request fields. Prior status codes, valid request paths and authorization, redemptions, team transactions and wallet SQL remain in effect. Other API operations are byte-identical in the generated contract. Compiled PostgreSQL and staff-team caller cases passed."
       },
+      "1540413741092317": {
+        "batch": "release-0.6-payment-recovery-response",
+        "base_commit": "fdd58fefeb934f0aa2bfc9176de56d92fc3c8a63",
+        "paths": [
+          "apps/api/src/wallet/payment-gateway.ts"
+        ],
+        "scope": "The native generic HTTP payment adapter releases an unused inquiry response body when the provider returns 404 or 204. All 224 targeted gateway, top-up recovery and callback cases passed. The critical gateway file covered 390/409 lines and 369/384 branches under the original thresholds."
+      },
       "4344194472610302": {
         "batch": "release-0.6-operator-log-pseudonyms",
         "base_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
@@ -803127,6 +803208,15 @@
         ],
         "scope": "Connection tester HTTP diagnostic text only, with source-bound evidence and unchanged provider reachability, recipient, configuration and authority coverage. Related service and API fixtures passed."
       },
+      "3884635036213300": {
+        "batch": "release-0.6-payment-recovery-response",
+        "base_commit": "fdd58fefeb934f0aa2bfc9176de56d92fc3c8a63",
+        "paths": [
+          "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "apps/api/src/wallet/payment-gateway.ts"
+        ],
+        "scope": "The native generic HTTP payment adapter releases an unused inquiry response body when the provider returns 404 or 204. All 224 targeted gateway, top-up recovery and callback cases passed. The critical gateway file covered 390/409 lines and 369/384 branches under the original thresholds."
+      },
       "3333076656569246": {
         "batch": "release-0.6-admin-theme-default",
         "base_commit": "2a36d073c475e40dacb32004321d517a8047201e",
@@ -804449,6 +804539,15 @@
           "pnpm-lock.yaml"
         ],
         "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+      },
+      "985239836471606": {
+        "batch": "release-0.6-payment-recovery-response",
+        "base_commit": "fdd58fefeb934f0aa2bfc9176de56d92fc3c8a63",
+        "paths": [
+          "apps/api/src/wallet/payment-gateway.ts",
+          "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts"
+        ],
+        "scope": "The native generic HTTP payment adapter releases an unused inquiry response body when the provider returns 404 or 204. All 224 targeted gateway, top-up recovery and callback cases passed. The critical gateway file covered 390/409 lines and 369/384 branches under the original thresholds."
       },
       "833363599006433": {
         "batch": "release-0.6-critical-defect-candidate-gate",
