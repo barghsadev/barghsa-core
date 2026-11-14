@@ -12,4 +12,4 @@ Compose passes `BARGHSA_WEB_CSP_MODE` to the web process. The default is `report
 
 HSTS is an ingress policy. Enable it only after verifying production TLS and the impact on subdomains. This policy does not enable preload.
 
-The pilot and staging proxies emit one value for `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options`. They replace those four upstream fields and keep the existing CSP handling. The proxy checks verify the exact header values and count on HTTPS success and proxy-generated size and rate-limit responses.
+The pilot and staging proxies emit one value for `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options`. They replace those four upstream fields and keep the existing CSP handling. The proxy checks verify the exact header values and count on HTTPS success and proxy-generated size and rate-limit responses. Staging release verification also checks those four fields on the live web root and API readiness responses before recording the candidate as active.

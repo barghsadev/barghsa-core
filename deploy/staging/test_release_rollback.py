@@ -382,10 +382,11 @@ commit=$1
 version=0.6.0
 curl() {{
   case "$*" in
+    *"--dump-header -"*"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$API_HEADERS" ;;
+    *"--dump-header -"*"$APP_PUBLIC_URL/") printf '%s' "$WEB_HEADERS" ;;
     *"$APP_PUBLIC_URL/api/health/live") printf '%s' "$LIVE" ;;
     *"$APP_PUBLIC_URL/api/health/ready") printf '%s' "$READY" ;;
     *"$APP_PUBLIC_URL/release.json?commit=$commit") printf '%s' "$WEB" ;;
-    *"$APP_PUBLIC_URL/") printf 'login' ;;
     *) return 98 ;;
   esac
 }}
@@ -397,6 +398,11 @@ echo promote
         checks = {name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')}
         ready = {'status': 'ok', 'checks': checks, 'commit': commit}
         metadata = {'commit': commit, 'version': '0.6.0'}
+        content_type_header = 'X-Content-Type-Options: nosniff\r\n'
+        permissions_header = 'Permissions-Policy: camera=(), microphone=(), geolocation=()\r\n'
+        headers = ('HTTP/1.1 200 OK\r\n' + content_type_header
+                   + 'Referrer-Policy: strict-origin-when-cross-origin\r\n'
+                   + 'X-Frame-Options: DENY\r\n' + permissions_header + '\r\n')
         for name, api, web, expected in (
             ('matching', ready, metadata, None),
             ('degraded', {**ready, 'status': 'degraded',
@@ -415,15 +421,38 @@ echo promote
             ('previous-version', ready, {**metadata, 'version': '0.5.1'}, 'Staging web release does not match'),
             ('missing-version', ready, {'commit': commit}, 'Staging web release does not match'),
             ('invalid-web', ready, [], 'Staging web release does not match'),
+            ('duplicate-web-header', ready, metadata, 'Invalid staging edge header X-Content-Type-Options on /'),
+            ('missing-api-header', ready, metadata, 'Invalid staging edge header Permissions-Policy on /api/health/ready'),
+            ('incorrect-api-header', ready, metadata, 'Invalid staging edge header X-Frame-Options on /api/health/ready'),
+            ('unexpected-web-status', ready, metadata, 'Invalid staging edge response on /'),
         ):
             with self.subTest(name=name):
+                web_headers = headers
+                api_headers = headers
+                if name == 'duplicate-web-header':
+                    web_headers = headers.replace(content_type_header, content_type_header * 2)
+                if name == 'missing-api-header':
+                    api_headers = headers.replace(permissions_header, '')
+                if name == 'incorrect-api-header':
+                    api_headers = headers.replace('DENY', 'SAMEORIGIN')
+                if name == 'unexpected-web-status':
+                    web_headers = headers.replace('200 OK', '302 Found')
                 result = subprocess.run(['bash', '-c', script, 'public-smoke', commit],
                                         capture_output=True, text=True, env={**os.environ,
-                                            'LIVE': '{"status":"ok"}', 'READY': json.dumps(api), 'WEB': json.dumps(web)})
+                                            'LIVE': '{"status":"ok"}', 'READY': json.dumps(api), 'WEB': json.dumps(web),
+                                            'WEB_HEADERS': web_headers, 'API_HEADERS': api_headers})
                 self.assertEqual(result.returncode, bool(expected), result.stderr)
-                self.assertEqual(result.stdout.strip(), 'rollback' if expected else 'promote')
+                lines = result.stdout.splitlines()
                 if expected:
+                    self.assertEqual(lines[-1], 'rollback')
+                    self.assertNotIn('promote', lines)
                     self.assertIn(expected, result.stderr)
+                else:
+                    self.assertEqual(lines, [
+                        'Staging edge security headers verified on /',
+                        'Staging edge security headers verified on /api/health/ready',
+                        'promote',
+                    ])
 
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()

@@ -331,7 +331,28 @@ if not valid:
     sys.exit(f"Invalid staging {kind} health response")
 ' "$health" "$commit"
 done
-curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/" >/dev/null
+for route in / /api/health/ready; do
+  curl --fail --silent --show-error --max-time 20 --http1.1 --suppress-connect-headers \
+    --dump-header - --output /dev/null "$APP_PUBLIC_URL$route" |
+    python3 -c '
+import http.client, sys
+
+route = sys.argv[1]
+status = sys.stdin.buffer.readline().split()
+if status[:2] != [b"HTTP/1.1", b"200"]:
+    sys.exit(f"Invalid staging edge response on {route}")
+headers = http.client.parse_headers(sys.stdin.buffer)
+for name, value in {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "DENY",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+}.items():
+    if headers.get_all(name) != [value]:
+        sys.exit(f"Invalid staging edge header {name} on {route}")
+print(f"Staging edge security headers verified on {route}")
+' "$route"
+done
 if [[ -n "$commit" ]]; then
   curl --fail --silent --show-error --max-time 20 -H 'Cache-Control: no-cache' \
     "$APP_PUBLIC_URL/release.json?commit=$commit" |
