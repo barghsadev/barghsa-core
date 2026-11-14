@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T20:19:39+00:00",
+  "updated": "2026-11-14T20:26:12+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21563,7 +21563,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -21929,6 +21929,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         }
@@ -25953,7 +25961,8 @@
         "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
-        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -26043,7 +26052,8 @@
           "release-0.6-linux-recovery-readback",
           "release-0.6-receiver-version-backup",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-staging-service-health"
         ],
         "current_acceptance": null
       }
@@ -26331,7 +26341,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -26701,6 +26711,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         }
@@ -35107,7 +35125,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35596,6 +35614,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "The Compose label and fixture change preserve the previously verified migration and runtime separation, TLS settings and encrypted credential inputs. The Linux Compose suite verifies both file formats and the expected label for every serving process."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         }
@@ -38777,7 +38803,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -39638,6 +39664,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the immutable staged commit selection changes in the production workflow. The existing candidate, owner approval, rollout and release marker safeguards are preserved. The corresponding promotion and rollout fixtures passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         }
@@ -175672,7 +175706,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -177204,6 +177238,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -676734,7 +676776,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -678290,6 +678332,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -712585,7 +712635,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -712960,6 +713010,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         }
@@ -745785,7 +745843,8 @@
         "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
         "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts.",
         "The staging receiver now requires the candidate commit and version and enforces the encrypted backup and WAL requirement for v0.6.0 and later when called directly. Six earlier fixture assertions exposed missing version-based enforcement or inherited/missing release metadata. The corrected receiver blocks unsafe candidates before Docker or migrations and retains the supported v0.5.1 and protected runtime paths. All 20 local and native staging Linux rollback checks, 28 queue checks and 21 notifier checks passed. The approved off-server storage and exact deployment remain open.",
-        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open."
+        "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -745857,7 +745916,8 @@
           "release-0.6-staging-interruption-recovery",
           "release-0.6-linux-recovery-readback",
           "release-0.6-receiver-version-backup",
-          "release-0.6-first-announcement-runtime"
+          "release-0.6-first-announcement-runtime",
+          "release-0.6-staging-service-health"
         ],
         "current_acceptance": null
       }
@@ -1125080,7 +1125140,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
+              "sha256": "0b4a1d7dde17e6715803be7203bc726ce1d6960bef260552ab3a338c47894bed"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -1125088,7 +1125148,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "562dac724a2778f5a5cfdf6cef97197d2ecae429c846223a44bce3efafc316b0"
+              "sha256": "e125d98370f6e7e9d33b94e9811d2de4a7480df9054d951260f3242fbf33582c"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1125387,6 +1125447,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Scoped renewal covers the first-announcement staging readiness and running-image readback. The existing checked migration, image receipts, Telegram idempotency and rollback paths retain their previous checks. The complete related fixtures passed."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ]
         },
@@ -1139218,7 +1139287,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1139238,7 +1139307,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
+              "sha256": "0b4a1d7dde17e6715803be7203bc726ce1d6960bef260552ab3a338c47894bed"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1142994,6 +1143063,15 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ],
           "presentation_renewals": [
@@ -1145630,7 +1145708,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "4fc31d04b95ae1092cf0cc0951f4e3bc8b4ada77c1988d5d4b0f8d12c214d24b"
+              "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1145650,7 +1145728,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "df4e579cdc2224705aea9d8a6f09666f73e089d5447bb0ae26e93ff705a3223d"
+              "sha256": "0b4a1d7dde17e6715803be7203bc726ce1d6960bef260552ab3a338c47894bed"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1149334,6 +1149412,15 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
+            },
+            {
+              "batch": "release-0.6-staging-service-health",
+              "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The runbook explicitly lists Docker health in the release readback. The release worker adds one Docker state field and keeps exact image identity, channel, summary, album, retries and provider behavior. All 50 queue and notifier fixture cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1156037,7 +1156124,8 @@
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
-        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open."
+        "The manual production workflow dispatches from protected main after staging and Telegram receipt recording. It verifies the exact published SHA against the released board entry, checks that this SHA is an ancestor of the dispatching commit with its own accepted v0.9.0 ledger and version, and uses it for checkout and protected evidence lookup. A two-commit fixture ran both workflow steps and reproduced the old head equality conflict. Twenty-nine promotion and 19 rollout tests passed, including missing delivery and unmerged SHA denial. The owner approval checks and restricted workflow entry point remain in effect. The actual v0.9.0 release, production-equivalent rehearsal and authorized promotion remain open.",
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -1156132,7 +1156220,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-promotion-staged-ancestor"
+          "release-0.6-promotion-staged-ancestor",
+          "release-0.6-staging-service-health"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1352011,6 +1352100,86 @@
         {
           "file": "apps/web/coverage/coverage-final.json",
           "sha256": "e8be88bb31f3075ee75a27b4104aa73f337e1c063aa027eba43de5532d90f9c3"
+        }
+      ]
+    },
+    "release-0.6-staging-service-health": {
+      "batch": "release-0.6-staging-service-health",
+      "base_commit": "8289ae53382fd13c70265c3ed3e669ba78411f79",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "b98664cb04448a72fa16db9507104646046b9d58195ff812dea18e47d4cd546e"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "0b4a1d7dde17e6715803be7203bc726ce1d6960bef260552ab3a338c47894bed"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "e125d98370f6e7e9d33b94e9811d2de4a7480df9054d951260f3242fbf33582c"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "a0a6c0728498c9bfad18524a4c5a2185ebfad16f0b2dcd84a0a4bb0de7eba202"
+        }
+      ],
+      "checks": [
+        "The staging worker now checks Docker health for the API, worker, inference, web, PostgreSQL and ClamAV alongside exact image identities. The prior readback passed matching images without requesting health. The notification retry fixture refused an unhealthy worker, a starting scanner and an absent web health check, then accepted the healthy exact runtime with one message. All 29 queue and 21 notifier fixture tests passed. A read-only check of the actual six services on v0.5.1 passed. Verify the exact v0.6.0 deployment and Telegram receipts.",
+        "Python compilation, Git whitespace and runbook format checks passed."
+      ],
+      "limitations": [
+        "The live check used published v0.5.1 and made no changes. The fixture sends no live releases and does not certify v0.6.0 staging acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-service-health",
+      "execution_receipts": [
+        {
+          "file": "prior-contract.log",
+          "sha256": "8551b5b998eca70b887c8a0da84beace236aef2615520d28adcb277c89602c95"
+        },
+        {
+          "file": "queue.log",
+          "sha256": "968c837faba39b95dd23bc17b9adc372505eff3df45f07de3d376675b0289974"
+        },
+        {
+          "file": "notifier.log",
+          "sha256": "039aaca3d5330e57b3a2e17c6fef0b387cda9ee960268125cae81cefb8adc947"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1b3a5a15200c774ece62106e2a9dbb83ae297461e9be0113eccf67a665f8db1f"
+        },
+        {
+          "file": "docs.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "live-compose-readback.json",
+          "sha256": "70e2343d4e6b1a5ac843b56c1ce25f8cc0b19e64b9431c7ae19775efe816e761"
         }
       ]
     }

@@ -580,9 +580,9 @@ if __name__ == '__main__':
         }}
         ids = receipt["image_ids"]
         running = "\n".join([
-            *(f"{service} true {ids['app']}" for service in ("api", "worker", "ai-inference")),
-            *(f"{service} true {ids[service]}" for service in ("web", "postgres", "clamav")),
-            f"redis true sha256:{'f' * 64}",
+            *(f"{service} true {ids['app']} healthy" for service in ("api", "worker", "ai-inference")),
+            *(f"{service} true {ids[service]} healthy" for service in ("web", "postgres", "clamav")),
+            f"redis true sha256:{'f' * 64} healthy",
         ])
         original_command = queue.command
         cases = (
@@ -595,8 +595,17 @@ if __name__ == '__main__':
              "Running staging image differs from the saved receipt: postgres"),
             (live, readiness, running.replace("\nworker true", "\nworker false"),
              "Running staging image differs from the saved receipt: worker"),
-            (live, readiness, running + "\n" + f"clamav true {ids['clamav']}",
+            (live, readiness, running + "\n" + f"clamav true {ids['clamav']} healthy",
              "Running staging image differs from the saved receipt: clamav"),
+            (live, readiness, running.replace(f"worker true {ids['app']} healthy",
+                                              f"worker true {ids['app']} unhealthy"),
+             "Staging service health is not ready: worker"),
+            (live, readiness, running.replace(f"clamav true {ids['clamav']} healthy",
+                                              f"clamav true {ids['clamav']} starting"),
+             "Staging service health is not ready: clamav"),
+            (live, readiness, running.replace(f"web true {ids['web']} healthy",
+                                              f"web true {ids['web']} missing"),
+             "Staging service health is not ready: web"),
             (live, readiness, "\n".join(line for line in running.splitlines()
                                         if not line.startswith("ai-inference ")),
              "Missing running staging services: ai-inference"),
@@ -641,7 +650,8 @@ if __name__ == '__main__':
                     self.assertEqual(len((self.capture / "notifications").read_text().splitlines()), 1)
                 self.assertFalse(any("--retry-unknown" in args for args in commands))
                 reached_readback = not error or error.startswith((
-                    "Running staging image", "Missing running staging services", "Invalid staging running image"
+                    "Running staging image", "Missing running staging services",
+                    "Invalid staging running image", "Staging service health",
                 ))
                 self.assertEqual(sum(args[0] == "ssh" for args in commands), int(reached_readback))
 

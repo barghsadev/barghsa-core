@@ -431,7 +431,7 @@ ids=$(docker container ls --quiet --no-trunc \
     --filter label=com.docker.compose.project=barghsa-staging \
     --filter label=com.docker.compose.oneoff=False)
 test -n "$ids"
-docker container inspect --format '{{index .Config.Labels "com.docker.compose.service"}} {{.State.Running}} {{.Image}}' $ids
+docker container inspect --format '{{index .Config.Labels "com.docker.compose.service"}} {{.State.Running}} {{.Image}} {{with .State.Health}}{{.Status}}{{else}}missing{{end}}' $ids
 """
     lines = command(checkout, "ssh", "-p", port, "-o", "BatchMode=yes",
                     "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=10",
@@ -441,13 +441,15 @@ docker container inspect --format '{{index .Config.Labels "com.docker.compose.se
     running = set()
     for line in lines:
         columns = line.split()
-        if len(columns) != 3:
+        if len(columns) != 4:
             raise ValueError("Invalid staging running image readback")
-        service, active, image = columns
+        service, active, image, health = columns
         if service not in expected:
             continue
         if service in running or active != "true" or image != expected[service]:
             raise ValueError(f"Running staging image differs from the saved receipt: {service}")
+        if health != "healthy":
+            raise ValueError(f"Staging service health is not ready: {service}")
         running.add(service)
     if missing := expected.keys() - running:
         raise ValueError(f"Missing running staging services: {', '.join(sorted(missing))}")
