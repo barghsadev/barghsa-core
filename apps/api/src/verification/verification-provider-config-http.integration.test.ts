@@ -57,6 +57,41 @@ const verify = () =>
     body: JSON.stringify({ providerId: 'stub', input: { nationalId: '0000000000' } }),
   });
 
+it('refuses a mismatched provider identity and leaves disabled encrypted settings unused', async () => {
+  const update = (value: unknown) =>
+    http.pool.query(
+      'INSERT INTO app_config(key,value) VALUES ($1,$2::jsonb) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value',
+      [configKey, JSON.stringify(value)]
+    );
+  const fixtureCiphertext = 'unreadable-disabled-settings';
+  try {
+    const unconfigured = await verify();
+    expect(unconfigured.status, http.logs()).toBe(200);
+    expect(await unconfigured.json()).toMatchObject({ durationMs: expect.any(Number) });
+    await update({ providerId: 'other', enabled: true, settingsCiphertext: fixtureCiphertext });
+    for (const response of [await read(), await verify()]) {
+      expect(response.status, http.logs()).toBe(503);
+      const body = await response.text();
+      expect(JSON.parse(body)).toMatchObject({
+        error: { code: 'VERIFICATION:PROVIDER:UNAVAILABLE' },
+      });
+      expect(body).not.toContain(fixtureCiphertext);
+    }
+    await update({ providerId: 'stub', enabled: false, settingsCiphertext: fixtureCiphertext });
+    const result = await verify();
+    expect(result.status, http.logs()).toBe(200);
+    expect(await result.json()).toMatchObject({ verified: false });
+    await update({ providerId: 'stub', enabled: true, settingsCiphertext: null });
+    const noSettings = await read();
+    expect(noSettings.status).toBe(200);
+    expect(await noSettings.json()).toMatchObject({
+      config: { enabled: true, settingsConfigured: false },
+    });
+  } finally {
+    await http.pool.query('DELETE FROM app_config WHERE key=$1', [configKey]);
+  }
+});
+
 it('keeps legacy settings private, seals replacement settings and decrypts only for the adapter', async () => {
   const initial = await read();
   expect(initial.status).toBe(200);

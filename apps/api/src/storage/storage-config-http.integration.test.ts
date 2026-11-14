@@ -327,6 +327,12 @@ it('restores a historical cleanup age through a separate version-bound activatio
   const activate = `${policy}/rollback-activate`;
   expect((await request(history, 'GET', undefined, {})).status).toBe(401);
   expect((await request(`${history}?beforeVersion=0`)).status).toBe(400);
+  for (const route of [stage, activate]) {
+    const refused = await request(route, 'POST', { expectedVersion: active.version });
+    expect(refused.status, http.logs()).toBe(400);
+    expect(await refused.json()).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  }
+  expect(await read()).toEqual(active);
   const result = await request(history);
   expect(result.status, http.logs()).toBe(200);
   expect(result.headers.get('cache-control')).toContain('no-store');
@@ -826,6 +832,11 @@ it('restores reviewed settings without retaining or reusing historical credentia
   expect((await current()).version).toBe(baseVersion);
   const activate = '/config/rollback-activate';
   const activation = { draftId: draft.id, expectedVersion: baseVersion };
+  const probeCount = probeRequests.length;
+  const malformed = await request(activate, 'POST', { ...activation, draftId: 'invalid' });
+  expect(malformed.status, http.logs()).toBe(400);
+  expect(probeRequests).toHaveLength(probeCount);
+  expect((await current()).version).toBe(baseVersion);
   await http.pool.query(
     "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='storage-editor'"
   );

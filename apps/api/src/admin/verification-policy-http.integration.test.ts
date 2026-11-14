@@ -56,6 +56,18 @@ beforeEach(async () => {
 });
 const read = () => fetch(http.base + path, { headers });
 const history = (query = '') => fetch(http.base + path + '/history' + query, { headers });
+
+it('requires the current read grant for historical verification requirements', async () => {
+  expect((await history()).status).toBe(200);
+  await http.pool.query(
+    "UPDATE staff_roles SET permissions='[\"admin:config:write\"]' WHERE role_id='policy-role'"
+  );
+  for (const query of ['', '?beforeVersion=0']) {
+    const denied = await history(query);
+    expect(denied.status, http.logs()).toBe(403);
+    expect(await denied.json()).not.toHaveProperty('items');
+  }
+});
 const restore = (sourceId: string, expectedVersion: number) =>
   fetch(http.base + path, {
     method: 'PUT',
