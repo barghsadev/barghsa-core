@@ -220,7 +220,7 @@ export class SolarPostalService {
       }
       await client.query(
         `UPDATE solar_construction_postal SET status='shipped',courier=$2,tracking_number=$3,
-         send_date=$4::date::timestamptz,receipt_image_id=$5,staff_notes=NULL,
+         send_date=$4::date::timestamp AT TIME ZONE 'UTC',receipt_image_id=$5,staff_notes=NULL,
          staff_confirmed_by=NULL,staff_confirmed_at=NULL WHERE request_id=$1`,
         [
           requestId,
@@ -339,7 +339,7 @@ export class SolarPostalService {
         send_date: string | null;
         receipt_image_id: string | null;
       }>(
-        `SELECT id,status,courier,tracking_number,send_date::date::text AS send_date,receipt_image_id
+        `SELECT id,status,courier,tracking_number,(send_date AT TIME ZONE 'UTC')::date::text AS send_date,receipt_image_id
          FROM solar_construction_postal WHERE request_id=$1 FOR ${lock}`,
         [requestId]
       )

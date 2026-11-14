@@ -6,7 +6,9 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  const database = new URL(process.env.TEST_DATABASE_URL!);
+  database.searchParams.set('options', '-c TimeZone=Asia/Tehran');
+  http = await startHttpFixture(database.toString());
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES('tracking-writer','Tracking writer','Test','["orders:read","orders:write"]'),('tracking-reader','Tracking reader','Test','["orders:read"]')`
   );
@@ -51,7 +53,7 @@ async function fixture() {
     )
   ).rows[0].id as string;
   await http.pool.query(
-    "INSERT INTO solar_construction_postal(request_id,status,courier,tracking_number,send_date) VALUES($1,'shipped','Parcel Co','TRACK-123','2026-01-02')",
+    "INSERT INTO solar_construction_postal(request_id,status,courier,tracking_number,send_date) VALUES($1,'shipped','Parcel Co','TRACK-123',TIMESTAMPTZ '2026-01-02 00:00:00+00')",
     [request]
   );
   return { owner, actor, profile, request };
@@ -175,6 +177,43 @@ it('projects tracking form fields while preserving live authority and exact no-w
   });
   expect(await (await record(f, input)).json()).toEqual(receipt);
   expect(await counts(f)).toEqual({ audit: 1, notifications: 1 });
+});
+
+it('keeps the submitted UTC shipment day in customer and staff reads when PostgreSQL uses Tehran time', async () => {
+  const f = await fixture();
+  expect((await http.pool.query('SHOW TimeZone')).rows[0]).toEqual({ TimeZone: 'Asia/Tehran' });
+  await http.pool.query(
+    "UPDATE solar_construction_postal SET status='waiting_for_shipment', send_date=NULL WHERE request_id=$1",
+    [f.request]
+  );
+  const postal = `solar/requests/${f.request}/postal`;
+  const submission = await send(f.owner, `${postal}/shipment`, 'POST', {
+    courier: 'Parcel Co',
+    trackingNumber: 'TRACK-123',
+    sendDate: '2026-01-02',
+  });
+  expect(submission.status, await submission.clone().text()).toBe(200);
+  expect((await row(f)).send_date).toEqual(new Date('2026-01-02T00:00:00Z'));
+  expect(await (await send(f.owner, postal)).json()).toMatchObject({
+    postal: { status: 'shipped', send_date: '2026-01-02' },
+  });
+  expect(await (await send(f.actor, path(f))).json()).toMatchObject({ sendDate: '2026-01-02' });
+  const review = await send(f.actor, `admin/${postal}/review`, 'POST', { decision: 'received' });
+  expect(review.status, await review.clone().text()).toBe(200);
+  expect(await review.json()).toMatchObject({ data: { sendDate: '2026-01-02' } });
+
+  // A previously saved non-midnight timestamp keeps its UTC day in every view.
+  await http.pool.query(
+    "UPDATE solar_construction_postal SET send_date=TIMESTAMPTZ '2026-01-01 20:30:00+00' WHERE request_id=$1",
+    [f.request]
+  );
+  expect(await (await send(f.owner, postal)).json()).toMatchObject({
+    postal: { send_date: '2026-01-01' },
+  });
+  expect(await (await send(f.actor, path(f))).json()).toMatchObject({ sendDate: '2026-01-01' });
+  const retained = await send(f.actor, `admin/${postal}/review`, 'POST', { decision: 'received' });
+  expect(retained.status, await retained.clone().text()).toBe(200);
+  expect(await retained.json()).toMatchObject({ data: { sendDate: '2026-01-01' } });
 });
 
 it('records a reviewed public update once, preserves the shipment stage, and exposes only customer-safe fields', async () => {
@@ -318,7 +357,7 @@ it('clears arrival estimates on receipt or issues and clears all tracking data w
   });
   expect((await send(f.actor, path(f) + '/review', 'POST', command(2))).status).toBe(409);
   await http.pool.query(
-    "UPDATE solar_construction_postal SET status='shipped',tracking_number='RESEND-456',send_date='2026-01-06' WHERE request_id=$1",
+    "UPDATE solar_construction_postal SET status='shipped',tracking_number='RESEND-456',send_date=TIMESTAMPTZ '2026-01-06 00:00:00+00' WHERE request_id=$1",
     [f.request]
   );
   expect(await row(f)).toMatchObject({

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T19:26:21+00:00",
+  "updated": "2026-11-14T19:38:14+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -121958,7 +121958,8 @@
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
           "release-0.6-inbox-read-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -122318,7 +122319,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
@@ -125265,6 +125266,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -190030,7 +190039,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -190142,7 +190152,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -191330,6 +191340,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -191625,7 +191643,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -191737,7 +191756,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -192926,6 +192945,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -193854,7 +193881,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -193966,7 +193994,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -195154,6 +195182,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -195448,7 +195484,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -195560,7 +195597,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -196749,6 +196786,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -197043,7 +197088,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -197155,7 +197201,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -198343,6 +198389,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -198637,7 +198691,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -198749,7 +198804,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -199937,6 +199992,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -200241,7 +200304,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -200361,7 +200425,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -201558,6 +201622,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -201852,7 +201924,8 @@
           "release-0.6-operational-retention",
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -201964,7 +202037,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -203152,6 +203225,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -560341,7 +560422,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -560365,7 +560447,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -561192,6 +561274,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -561341,7 +561431,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -561365,7 +561456,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -562192,6 +562283,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -562341,7 +562440,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -562365,7 +562465,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -563192,6 +563292,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -563343,7 +563451,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -563367,7 +563476,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -564194,6 +564303,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -566116,7 +566233,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -566140,7 +566258,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -566967,6 +567085,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -567116,7 +567242,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -567140,7 +567267,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -567967,6 +568094,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -568116,7 +568251,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -568140,7 +568276,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -568967,6 +569103,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -569117,7 +569261,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -569141,7 +569286,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -569968,6 +570113,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -570118,7 +570271,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -570142,7 +570296,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -570969,6 +571123,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -571120,7 +571282,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -571144,7 +571307,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -571971,6 +572134,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -572126,7 +572297,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -572150,7 +572322,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -572977,6 +573149,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -573126,7 +573306,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -573150,7 +573331,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -573977,6 +574158,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -574127,7 +574316,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -574151,7 +574341,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -574979,6 +575169,14 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -585782,7 +585980,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -586042,7 +586241,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -586070,7 +586269,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -587555,6 +587754,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -587767,7 +587975,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -588027,7 +588236,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -588055,7 +588264,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -589540,6 +589749,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -589753,7 +589971,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -590013,7 +590232,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -590041,7 +590260,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -591526,6 +591745,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -591738,7 +591966,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -591998,7 +592227,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -592026,7 +592255,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -593511,6 +593740,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -593723,7 +593961,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -593983,7 +594222,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -594011,7 +594250,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -595496,6 +595735,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -595709,7 +595957,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -595969,7 +596218,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -595997,7 +596246,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -597482,6 +597731,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -597696,7 +597954,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -597956,7 +598215,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -597984,7 +598243,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -599469,6 +599728,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -599684,7 +599952,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -599928,7 +600197,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -599956,7 +600225,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -601499,6 +601768,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -601680,7 +601958,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -601940,7 +602219,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -601968,7 +602247,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -603453,6 +603732,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -603664,7 +603952,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -603924,7 +604213,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -603952,7 +604241,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -605437,6 +605726,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -605649,7 +605947,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -605893,7 +606192,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -605921,7 +606220,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -607464,6 +607763,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -607643,7 +607951,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -607887,7 +608196,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -607915,7 +608224,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -609458,6 +609767,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -609637,7 +609955,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -609881,7 +610200,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -609909,7 +610228,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress-projection.ts",
@@ -611452,6 +611771,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -614677,7 +615005,8 @@
           "release-0.6-saving-quote-fixture-isolation",
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -615061,7 +615390,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -615073,7 +615402,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
@@ -617015,6 +617344,15 @@
                 "apps/api/src/solar/solar-postal.service.ts"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -709101,7 +709439,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-full-coverage-continuation",
           "release-0.6-ci-attempt-evidence",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -709142,7 +709481,7 @@
             },
             {
               "path": "packages/eslint-config/reviewed-postgres-sql.json",
-              "sha256": "9813248d5d255e4344982be29447b9ee27c642bc286fc45d7c8d8a956a98b81a"
+              "sha256": "1be858fba5f09fe4b04f1b443b6958cef82ebe21840c0ebcc173b272fbbe0535"
             }
           ],
           "source_renewals": [
@@ -709289,6 +709628,14 @@
                 "packages/eslint-config/reviewed-postgres-sql.json"
               ],
               "scope": "Renewal covers solar guidance read authority and the two SQL review digests. The existing guidance contents and parameterized lookups remain the same. The compiled HTTP checks passed against disposable PostgreSQL with canonical migrations. The configured customer response and staff editor response match. The original staff edits and other solar workflow acceptance retain their recorded evidence."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "packages/eslint-config/reviewed-postgres-sql.json"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ]
         }
@@ -736267,7 +736614,8 @@
           "release-0.6-solar-back-touch-target",
           "release-0.6-browser-attempt-receipts",
           "release-0.6-nightly-exact-shard-evidence",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
@@ -1029622,7 +1029970,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -1029698,7 +1030047,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1030500,6 +1030849,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1030745,7 +1031102,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -1030821,7 +1031179,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1031623,6 +1031981,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1031876,7 +1032242,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -1031952,7 +1032319,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1032754,6 +1033121,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1032991,7 +1033366,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -1033067,7 +1033443,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1033869,6 +1034245,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1034105,7 +1034489,8 @@
           "release-0.6-migration-backed-dev-setup",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -1034181,7 +1034566,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1034983,6 +1035368,14 @@
                 "apps/web/src/components/WalletReceiptHistoryDetails.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1125100,7 +1125493,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -1129959,6 +1130352,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1130310,7 +1130711,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ]
       }
     },
@@ -1132158,7 +1132560,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1132406,7 +1132808,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
-              "sha256": "4773c5ae92c41d55bdc4a5073c2bd00575b9369d821a379c03c6781fb46f2692"
+              "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
             },
             {
               "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
@@ -1135997,6 +1136399,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts",
+                "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1136477,7 +1136888,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-inbox-read-command-validation",
           "release-0.6-solar-guidance-authority",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ]
       }
     },
@@ -1137401,7 +1137813,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1142429,6 +1142841,14 @@
                 "apps/api/src/jobs/jobs.controller.ts"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "presentation_renewals": [
@@ -1142895,7 +1143315,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1143824,7 +1144245,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
-              "sha256": "8d2ec5235840afe8908e7cf8d29d54bca71e7ccadb8cda64a02778b1f582eb8c"
+              "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -1148760,6 +1149181,14 @@
                 "apps/api/src/jobs/jobs.controller.ts"
               ],
               "scope": "Renewal covers strict optional empty JSON on async retry and the generated contract. The previous 202 response and bodyless web caller remain available. Job ownership, audit rollback and state changes remain in the existing service and their focused native tests passed."
+            },
+            {
+              "batch": "release-0.6-solar-postal-utc-day",
+              "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+              "paths": [
+                "apps/api/src/solar/solar-postal.service.ts"
+              ],
+              "scope": "Only shipment date normalization and the staff snapshot date projection changed. The input fields, SQL parameters, permissions, lifecycle, audit and original tracking assertions retain their evidence. The compiled PostgreSQL regression verifies the updated path."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1149243,7 +1149672,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1154712,7 +1155142,8 @@
         "Solar administrative guidance now uses the live catalogue authority, and all four reads stop if the session expires during a database wait. All six compiled HTTP regressions, 93 related API cases and 86 web caller cases passed. The older full Chromium rehearsal passed all 2,976 cases. Its combined job failed on the missing web report from native timeouts. Exact deployed candidate evidence remains open.",
         "The first-launch checker now requires exact candidate and scope, a named review, time and source evidence digest for rollout, provider/storage, security/incident and release/on-call sections. The production guard requires all four entries in the exact owner-approved promotion report. The placeholder regression, 26 promotion, 19 guard and 14 release marker tests passed. The actual independent reviews, production-equivalent rehearsal and explicit owner authorization remain required.",
         "From v0.6.0, the staging deploy command saves the verified migration and image receipt and performs exact live web and API identity, dependency health, and six-service image readback before the first Telegram summary. If the readback fails the queued receipt is retained for a notification-only retry. The prior deploy script announced in the controlled degraded-runtime fixture. The corrected end-to-end path withholds it. All 29 queue, 20 rollback and 21 notifier tests passed. Exact staged deployment and Telegram receipts remain open.",
-        "Profile-export job retry now rejects undeclared JSON before queue or audit changes. The compiled PostgreSQL fixture reproduced a 202 on the old endpoint. The corrected endpoint returns the standard 400 for an unexpected object or array and preserves the full job row and audit log. Empty objects and omitted request bodies still return 202 and retain the normal owner-only retry contract. The generated specification and client document both outcomes. Complete the wider request inventory and verify the staged candidate."
+        "Profile-export job retry now rejects undeclared JSON before queue or audit changes. The compiled PostgreSQL fixture reproduced a 202 on the old endpoint. The corrected endpoint returns the standard 400 for an unexpected object or array and preserves the full job row and audit log. Empty objects and omitted request bodies still return 202 and retain the normal owner-only retry contract. The generated specification and client document both outcomes. Complete the wider request inventory and verify the staged candidate.",
+        "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1155126,7 +1155557,8 @@
           "release-0.6-solar-guidance-authority",
           "release-0.6-promotion-review-evidence",
           "release-0.6-first-announcement-runtime",
-          "release-0.6-async-retry-command-body"
+          "release-0.6-async-retry-command-body",
+          "release-0.6-solar-postal-utc-day"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1155380,7 +1155812,8 @@
           "packages/eslint-config/reviewed-postgres-sql.json",
           "apps/api/src/jobs/jobs-http.integration.test.ts",
           "apps/api/src/jobs/jobs.controller.ts",
-          "packages/api-client/src/openapi.generated.d.ts"
+          "packages/api-client/src/openapi.generated.d.ts",
+          "apps/api/src/solar/solar-postal-tracking.integration.test.ts"
         ]
       }
     },
@@ -1350765,6 +1351198,126 @@
         {
           "file": "static.log",
           "sha256": "c8d5577008ca01ec1e9d2f03c14982b8230b67b61ef26987885ebf35a116bc06"
+        }
+      ]
+    },
+    "release-0.6-solar-postal-utc-day": {
+      "batch": "release-0.6-solar-postal-utc-day",
+      "base_commit": "ebffbc7cf59509559453ac271802266e0ffe344c",
+      "task_keys": [
+        "03-core-business.md#T-03.11.01.01",
+        "03-core-business.md#T-03.11.01.02",
+        "03-core-business.md#T-03.11.01.03",
+        "03-core-business.md#T-03.11.02.01",
+        "03-core-business.md#T-03.11.02.04",
+        "03-core-business.md#T-03.11.02.05",
+        "03-core-business.md#T-03.11.02.06",
+        "03-core-business.md#T-03.11.03.01",
+        "03-core-business.md#T-03.11.03.02",
+        "03-core-business.md#T-03.11.03.03",
+        "03-core-business.md#T-03.11.04.01",
+        "03-core-business.md#T-03.11.04.02",
+        "03-core-business.md#T-03.11.04.03",
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "03-core-business.md#T-03.90.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/solar/solar-postal.service.ts",
+        "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+        "packages/eslint-config/reviewed-postgres-sql.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/solar/solar-postal-tracking.integration.test.ts",
+          "sha256": "7d8e61d8f8de9022a151b1b8d4d0d1fddad43b3bc5b246f64623382e2535d82a"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal-tracking.service.ts",
+          "sha256": "f31d220851bc2ef03260c8eb659f458274051a72c37c61fada23acf00869a0d6"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal-tracking.validation.ts",
+          "sha256": "e027399c78c240c1409a74c68e708ef44cba34f47524efa2df036336fed77846"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.controller.ts",
+          "sha256": "14dc0023a5cf575a5e7b1a23ff014b57c9d7623cb57289d49f2931a2e28aa8b7"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.service.ts",
+          "sha256": "d3b6278c3f4ae377837946b069f1b15a26facce5117de21c40014daf42bb9245"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0239_solar_postal_tracking.sql",
+          "sha256": "6bf1569db64706974d60c54940c9bca0f9e222143c43a84ef2ab0c52b3d54565"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "1be858fba5f09fe4b04f1b443b6958cef82ebe21840c0ebcc173b272fbbe0535"
+        }
+      ],
+      "checks": [
+        "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required.",
+        "API build, types, scoped ESLint, Prettier and git diff checks passed."
+      ],
+      "limitations": [
+        "The initial broader coverage probe hit local Docker socket timeouts during two MinIO-dependent files. The final targeted suite used migrated PostgreSQL without MinIO and did not certify those files or the whole-package coverage gate. Hosted full coverage and the candidate staging deployment are still required.",
+        "Read-only live staging showed GMT and zero non-midnight UTC rows among one existing shipment date. No persisted shipment data was changed by the verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-solar-postal-utc-day",
+      "execution_receipts": [
+        {
+          "file": "before.log",
+          "sha256": "e4d77e7da308381205b0827cc8958d5cfb7543004184fa1e4bfdbd87733a7f81"
+        },
+        {
+          "file": "native-final.log",
+          "sha256": "de8cac3315facc5b94978e59dd7aa5438258b517baae986cd49d9493ebd76ee3"
+        },
+        {
+          "file": "web.log",
+          "sha256": "63a5693c56a96ffb9dafd36992933abf20af5f9f244730087c2919e0aaa2d22f"
+        },
+        {
+          "file": "static.log",
+          "sha256": "6f184d5fac1cca6fef5bb7dec77e2a6f6e2f457f4093f09603437327f91aa8d7"
         }
       ]
     }
