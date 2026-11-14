@@ -337,9 +337,11 @@ worker stores the engine version, signature version and build timestamp in
 for mirror checks and the sealed upload rehearsal.
 
 The initial runtime sets `BARGHSA_DISPOSABLE=true`. Docker volumes survive
-container and image releases. An installation with data to retain needs an
-approved off-server backup destination and tested recovery before changing
-that flag. Place the backup tool's `BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and
+container and image releases. The official staging worker for v0.6.0 and later
+requires `BARGHSA_DISPOSABLE=false` and `BARGHSA_STAGING_WAL_ARCHIVE=true` before
+starting containers or stopping writers. Provision an approved off-server
+backup destination and test recovery before changing those settings. Place
+the backup tool's `BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and
 replication-authorized direct `PGDIRECT_URL` in root-owned
 `/etc/barghsa/staging/backup.env`. Allow the dedicated backup role's
 replication connection from the staging Docker network. Mount the recoverable,
@@ -357,7 +359,7 @@ enters rollback. The retained PostgreSQL image must confirm both readbacks.
 The release worker copies the backup label, database system ID, encrypted
 object name, length, ciphertext SHA-256 and canonical manifest SHA-256 into
 `runtime_images.migration_backup` in
-`job.json`. A disposable release records `status: disposable` in that field.
+`job.json`. Disposable rehearsals record `status: disposable` in that field.
 Use the verified checkpoint identity to recover the exact pre-migration data.
 Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)
 to test recovery and provision scheduled backups and WAL/PITR. Configuration

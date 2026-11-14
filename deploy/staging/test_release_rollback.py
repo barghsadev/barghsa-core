@@ -18,6 +18,33 @@ class ReleaseRollbackTests(unittest.TestCase):
     app_id = f"sha256:{'a' * 64}"
     web_id = f"sha256:{'b' * 64}"
 
+    def test_official_milestone_refuses_disposable_or_non_archiving_runtime(self):
+        text = RELEASE.read_text()
+        check = text[text.index('if [[ "${2:-}" == --require-protected-backup'):
+                     text.index('\nbackup_env=')]
+        script = f'''set -euo pipefail
+{check}
+echo backup-settings-admitted
+'''
+        for flag, disposable, wal, allowed in (
+            ('--require-protected-backup', 'false', 'true', True),
+            ('--require-protected-backup', 'true', 'true', False),
+            ('--require-protected-backup', 'true', 'false', False),
+            ('--require-protected-backup', 'false', 'false', False),
+            ('--require-protected-backup', 'false', '', False),
+            ('', 'true', 'false', True),
+        ):
+            with self.subTest(flag=flag, disposable=disposable, wal=wal):
+                result = subprocess.run(
+                    ['bash', '-c', script, 'backup-fixture', 'candidate.env', flag],
+                    env={**os.environ, 'BARGHSA_DISPOSABLE': disposable, 'BARGHSA_STAGING_WAL_ARCHIVE': wal},
+                    capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(result.returncode, 0 if allowed else 1)
+                self.assertEqual(result.stdout.strip(), 'backup-settings-admitted' if allowed else '')
+                if not allowed:
+                    self.assertIn('requires non-disposable storage and encrypted WAL archiving', result.stderr)
+
     def run_rollback(self, simulate_failure=False, schema_ready=True, postgres_ready=True,
                      identities=True, available=True, running_mismatch=""):
         with tempfile.TemporaryDirectory(prefix="barghsa-rollback-") as directory:

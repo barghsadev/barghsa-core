@@ -21,6 +21,13 @@ BARGHSA_POSTGRES_VOLUME=barghsa-staging_pgdata
 source "$candidate"
 set +a
 
+if [[ "${2:-}" == --require-protected-backup ]]; then
+  [[ "${BARGHSA_DISPOSABLE:-false}" == false && "${BARGHSA_STAGING_WAL_ARCHIVE:-false}" == true ]] || {
+    echo 'Staging milestone requires non-disposable storage and encrypted WAL archiving' >&2
+    exit 1
+  }
+fi
+
 backup_env=/etc/barghsa/staging/backup.env
 backup_key=/etc/barghsa/staging/backup-key
 if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
