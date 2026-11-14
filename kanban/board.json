@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T02:57:51+00:00",
+  "updated": "2026-11-14T03:05:35+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -50946,7 +50946,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "7118aa8b6c46175a9f5a6478238a26d81aee5fd75bf801d4c529e77da7a018a7"
+              "sha256": "e8fc750f52cd1671c9023c4887ce8413caa711ca3260123c2884b8c7449bcb9c"
             }
           ],
           "checks": [
@@ -51470,6 +51470,14 @@
                 "packages/i18n/package.json"
               ],
               "scope": "Adds one separate staff settings destination, locale dictionary and API contract. Existing routes, contract shapes, access grants and monitoring defaults retain their prior behavior. The wallet bundle adjustment retains all idempotency key creation and replacement points and error messages. Focused wallet, navigation, form and contract checks plus route budgets passed."
+            },
+            {
+              "batch": "release-0.6-sharp-binary-origin",
+              "base_commit": "7138669f5a55dba369237f2b22666ee9bdcfd241",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "The review document adds only Sharp binary and source provenance. The session country unavailability decision and its evidence are byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -687786,7 +687794,8 @@
         "The native strict gate checked both retained candidates locally by Docker ID. All 282 rows match 43518087320 across exact package URLs, licenses and scopes. The 217 PostgreSQL and 27 ClamAV dispositions are still pending. No policy entry was added.",
         "The report-only five-image inventory from 43523386018 at exact 465def304 matched all 859 earlier package rows by scope, package URL, observed licenses and location. All image/SBOM/report identities were verified. The same 387 named dispositions and strict final checks remain open.",
         "Verified five exact report-only image and SBOM receipts from 43534426032. All 859 package and scope rows match the currently prepared packet. The same 387 named dispositions and strict final checks remain open.",
-        "Verified five image and SBOM identities in hosted report-only preflight 43546424873 on bf319cdcb. All 859 exact package entries match the preceding preflight and the same 387 require sign-off. The strict candidate gate remains open."
+        "Verified five image and SBOM identities in hosted report-only preflight 43546424873 on bf319cdcb. All 859 exact package entries match the preceding preflight and the same 387 require sign-off. The strict candidate gate remains open.",
+        "Both locked Sharp libvips 1.3.4 Linux x64 binaries match the publisher workspace archive byte for byte. The review packet now includes eight exact upstream source archives and three build patches. Complete corresponding build input and replacement evidence, final image notice readback and named disposition."
       ],
       "owner": null,
       "depends_on": [],
@@ -687848,7 +687857,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-license-inventory-465def304",
           "release-0.6-verified-main-and-backup-scrape",
-          "release-0.6-cutover-capacity-and-image-readback"
+          "release-0.6-cutover-capacity-and-image-readback",
+          "release-0.6-sharp-binary-origin"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1094637,7 +1094647,8 @@
         "Promotion receipt validation accepts the original staged DAST report only for its exact version and commit. The earlier v0.5.0 report passed format validation for its own scope and failed when evaluated as the launch candidate. Obtain the distinct final reports on the corresponding staging releases.",
         "Nightly email fixtures verify exact report identity and require the complete 40-shard outcome before a passed email. The provider acceptance receipt retains the summary checksum. Actual scheduled run, protected mailbox configuration and recipient delivery remain open.",
         "Hosted report-only preflight 43546424873 on bf319cdcb has verified reports and SBOMs for all five exact image IDs, with zero high or critical findings. The final strict package gate and production-equivalent image receipts remain open.",
-        "The monitoring retention recovery path passed targeted PostgreSQL, component, two-engine browser and unchanged bundle budget checks. Verify the staged workflow and operator application of the exported revision before acceptance."
+        "The monitoring retention recovery path passed targeted PostgreSQL, component, two-engine browser and unchanged bundle budget checks. Verify the staged workflow and operator application of the exported revision before acceptance.",
+        "The two Sharp native dependency exceptions now have exact publisher and npm byte comparisons, signed tag and upstream source receipts. Package sign-off, full build input and final strict gate remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1094954,7 +1094965,8 @@
           "release-0.6-promotion-dast-receipt",
           "release-0.6-nightly-report-identity",
           "release-0.6-cutover-capacity-and-image-readback",
-          "release-0.6-operational-retention-recovery"
+          "release-0.6-operational-retention-recovery",
+          "release-0.6-sharp-binary-origin"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1275513,6 +1275525,58 @@
         {
           "file": "measure.sh",
           "sha256": "c0cc66f576f155696502e81b047b01eb6e1286abe7eb3722feb7d901994cac05"
+        }
+      ]
+    },
+    "release-0.6-sharp-binary-origin": {
+      "batch": "release-0.6-sharp-binary-origin",
+      "base_commit": "7138669f5a55dba369237f2b22666ee9bdcfd241",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "e8fc750f52cd1671c9023c4887ce8413caa711ca3260123c2884b8c7449bcb9c"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "ea3184ee8ba883928aac56e9dd12465b84a03f5990731db907eccf5ba37f05f6"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2c893c9db31454ff9811299f84f6e945145ddb26c333885c2e0c687f80dce300"
+        },
+        {
+          "path": "deploy/licenses/sharp-libvips/1.3.4/LICENSE.txt",
+          "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+        },
+        {
+          "path": "deploy/licenses/sharp-libvips/1.3.4/THIRD-PARTY-NOTICES.txt",
+          "sha256": "6f0d5086e3bcbee12bcdacf5878b31d1104002aeecaeb241d3fff466108082fe"
+        }
+      ],
+      "checks": [
+        "GitHub reported a valid annotated v1.3.4 tag. The published workspace archive, both npm integrity values and the library and loader bytes matched the exact artifacts retained in the review packet.",
+        "The packaging recipe, platform Dockerfiles and notices match the signed source. All eight upstream component archives contained source and notices and three patch files matched their retained SHA-256 receipts."
+      ],
+      "limitations": [
+        "The package provenance and named source inputs are verified. Complete corresponding build inputs, compatible modified replacement, final image readback and named license approval remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sharp-binary-origin",
+      "execution_receipts": [
+        {
+          "file": "binary-origin-receipt.json",
+          "sha256": "e0e5fe40e268e654f247a02ab89587b65dbb1fdbb1f64cd94269facf29d0a187"
+        },
+        {
+          "file": "upstream-source-receipt.json",
+          "sha256": "bf49d5f9f2f87bcf0a686f6ad69f073ee74693da3918b0e033c699433efe7140"
         }
       ]
     }

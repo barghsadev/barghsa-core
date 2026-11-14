@@ -102,6 +102,26 @@ The replacement files still identify themselves as Vazirmatn 33.003. The Arabic 
 
 The isolated Node Alpine app still contains both libvips variants. Its active Sharp module reports libvips 8.18.7 and the same component versions as the [signed v1.3.4 binary release](https://github.com/lovell/sharp-libvips/releases/tag/v1.3.4) at commit `ebb95f8add54eee8bed840e3fb587e4cbec857d7`. The upstream release includes [its build instructions](https://github.com/lovell/sharp-libvips/blob/v1.3.4/README.md) and a [third-party notice](https://github.com/lovell/sharp-libvips/blob/v1.3.4/THIRD-PARTY-NOTICES.md) identifying additional bundled LGPL components. The app image recipe now includes the exact upstream license and third-party notice under `/app/licenses/sharp-libvips/1.3.4/`; both original bytes were verified from an isolated image as the nonroot runtime user. Verify them again in the final distribution. Have the reviewer verify corresponding source for both binaries and how recipients can replace or relink them. Matching the component version list alone is insufficient.
 
+Both npm archives match the lockfile integrity values. For Linux x64 glibc and
+musl, the library, loader, GLib header and component version file each match
+the corresponding file in the publisher's `npm-workspace.tar.xz` byte for
+byte. GitHub verified the annotated tag signature and published the workspace
+archive checksum. The glibc and musl Dockerfiles and the POSIX build script
+come from the signed commit. The source archive's notices match the copies
+shipped by the image recipe. [Publisher's release](https://github.com/lovell/sharp-libvips/releases/tag/v1.3.4).
+
+The source packet contains the eight versioned archives named for the LGPL
+components in the vendor notices, including the musl-only Linux dependency
+`proxy-libintl`. It also records the three upstream patches for GLib, librsvg
+and libvips, the bundled GVDB license, and the librsvg source archive's
+original Cargo lockfile. The build changes the librsvg manifest and regenerates
+its lockfile. To verify the complete inputs, capture the resulting dependency
+resolution and check the static link inputs, source edits and other build
+dependencies. Verify both installed binaries and their notices on the final
+app image. The prior Alpine probe loaded a compatible replacement file.
+Verify a replacement built from modified source and submit the package and
+distribution conditions for reviewer sign-off. [Exact POSIX build recipe](https://github.com/lovell/sharp-libvips/blob/ebb95f8add54eee8bed840e3fb587e4cbec857d7/build/posix.sh).
+
 A dry run of the production and auth builds identified 74 and 28 npm packages, respectively, with JavaScript present in emitted chunks. Only DOMPurify needed a license expression check; the separately emitted font assets are reviewed above. DOMPurify `3.4.17` declares MPL-2.0 **or** Apache-2.0. Use the already allowed Apache-2.0 option and retain the corresponding notices. Do not treat other workspace inventory entries as shipped solely because the dependency resolver lists them. Base OS and tooling notices, including Poppler and ClamAV, still need the final image inventory and distribution review.
 
 The combined app image SBOM identified three third-party packages without a normalized license field: `busboy@1.6.0`, `png-js@2.0.0`, and `streamsearch@1.1.0`. Their original MIT license files were read from the isolated app image and matched the pinned package copies byte for byte. Internal Barghsa workspace entries without a third-party license field are first-party code.
