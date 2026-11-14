@@ -708248,7 +708248,8 @@
         "The seven staff knowledge-base and group reads now recheck the current session, staff context and admin:ai:kb grant after database and embedding work. Native PostgreSQL tests verified authorized results, refusal after the grant was revoked while each read was waiting, and successful reads after restoring permission. The wider route inventory and exact staged release evidence remain open.",
         "Consultation customer history and detail now check the current session after loading records and permitted related data. Both native HTTP cases observed expiry during a blocked database read and now return 401 without the consultation ID. Complete the remaining route review and exact staging checks.",
         "The consultation catalogue and staff assignment team list now check the current session after the read. Both proved expiry during the actual PostgreSQL wait and now return 401 without the product ID or team name. Authorized responses and both staff aliases passed. The wider inventory and live proof remain open.",
-        "Solar document and postal guidance reads now keep the caller session current through the database read. Both administrative routes also require the existing catalogue edit grant in staff mode. The six native HTTP regressions cover authorized output, denial to read-only staff, context isolation and expiry during actual PostgreSQL waits. The full resource inventory and exact staging evidence remain open."
+        "Solar document and postal guidance reads now keep the caller session current through the database read. Both administrative routes also require the existing catalogue edit grant in staff mode. The six native HTTP regressions cover authorized output, denial to read-only staff, context isolation and expiry during actual PostgreSQL waits. The full resource inventory and exact staging evidence remain open.",
+        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor."
       ],
       "owner": null,
       "depends_on": [],
@@ -708486,7 +708487,8 @@
           "release-0.6-kb-read-authority",
           "release-0.6-consultation-read-expiry",
           "release-0.6-consultation-read-authority",
-          "release-0.6-solar-guidance-authority"
+          "release-0.6-solar-guidance-authority",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": null
       }
@@ -710475,7 +710477,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-api-config-history",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-transactional-sensitive-audit",
@@ -710529,7 +710532,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -711050,6 +711053,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "Renewed the affected source bindings after reviewing the isolated financial recovery commands and optional confirmation behavior. Existing routes and other recovery panels retain their behavior. The changed API paths, affected native payment and staff callers, browser flow and generated contract passed."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ]
         }
@@ -750494,7 +750505,8 @@
         "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open.",
         "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
         "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
-        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate."
+        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
+        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor."
       ],
       "owner": null,
       "depends_on": [],
@@ -750555,7 +750567,8 @@
           "release-0.6-solar-guidance-authority",
           "release-0.6-onboarding-address-native",
           "release-0.6-operations-copy-native",
-          "release-0.6-web-coverage-evidence-reuse"
+          "release-0.6-web-coverage-evidence-reuse",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1109135,7 +1109148,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1109143,7 +1109157,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1109987,6 +1110001,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1110193,7 +1110215,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1110201,7 +1110224,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1111045,6 +1111068,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1111251,7 +1111282,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1111259,7 +1111291,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1112103,6 +1112135,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1112310,7 +1112350,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1112318,7 +1112359,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1113162,6 +1113203,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1113368,7 +1113417,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1113376,7 +1113426,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1114220,6 +1114270,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1114426,7 +1114484,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1114434,7 +1114493,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1115278,6 +1115337,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1115484,7 +1115551,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1115492,7 +1115560,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1116336,6 +1116404,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1116543,7 +1116619,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1116551,7 +1116628,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1117395,6 +1117472,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1117601,7 +1117686,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1117609,7 +1117695,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1118453,6 +1118539,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1118659,7 +1118753,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-coverage-browser-selection",
           "release-0.6-full-coverage-continuation",
-          "release-0.6-ci-attempt-evidence"
+          "release-0.6-ci-attempt-evidence",
+          "release-0.6-team-expiry-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -1118667,7 +1118762,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "c0f436a6d5c86615c463ddf1318ef58bdb885fd1417dde814d87ea5bf0250332"
+              "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
@@ -1119511,6 +1119606,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Reviewed the CI coverage artifact names and exact-attempt production promotion checks. The changed coverage and promotion fixtures passed with the existing acceptance thresholds."
+            },
+            {
+              "batch": "release-0.6-team-expiry-fixture",
+              "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+              "paths": [
+                "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+              ],
+              "scope": "Only the test synchronization changed. Native PostgreSQL reverified the original HTTP status and lack of protected response fields for the three views after session expiry."
             }
           ],
           "presentation_renewals": [
@@ -1163244,7 +1163347,8 @@
         "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
         "Staff-account disablement and activation-link reissue now validate optional empty JSON before performing either protected command. Both previously returned 200 for undeclared JSON. Migrated PostgreSQL cases verify the standard 400 for an extra-field object and an array, preservation of account state, sessions, refresh tokens, activation credentials, delivery and audit records, and acceptance with no request body. The existing empty-object and step-up, expiry, concurrency and rollback assertions passed across 50 staff HTTP cases. Both final request-body cases and 20 web-caller cases passed. Continue the wider command inventory and verify the final candidate.",
         "Wallet creation, gift-code archival and staff-team deletion now validate optional empty JSON. The original compiled API accepted undeclared objects and performed the commands. Migrated PostgreSQL cases verify standard 400 replies for extra fields and arrays, no wallet creation on rejection, preserved gift status, redemption ledger and audit, and preserved team membership and audit. Bodyless commands and empty objects remain supported. All 110 affected API cases and 19 staff-team web caller cases passed. Complete the wider command inventory and exact staging checks.",
-        "Wallet top-up limits now support a version-bound recovery draft and separate verified activation with an audit receipt. The restored limit affects new submissions and a zero limit requires typed UI confirmation. The exact deployed journey and remaining configuration families are open."
+        "Wallet top-up limits now support a version-bound recovery draft and separate verified activation with an audit receipt. The restored limit affects new submissions and a zero limit requires typed UI confirmation. The exact deployed journey and remaining configuration families are open.",
+        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor."
       ],
       "owner": null,
       "depends_on": [],
@@ -1163665,7 +1163769,8 @@
           "release-0.6-web-coverage-evidence-reuse",
           "release-0.6-staff-empty-command-body",
           "release-0.6-wallet-gift-team-empty-commands",
-          "release-0.6-wallet-limit-recovery"
+          "release-0.6-wallet-limit-recovery",
+          "release-0.6-team-expiry-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1361404,6 +1361509,69 @@
         {
           "file": "contract.log",
           "sha256": "521ecab4f8a7d4bfc037167e3793c7b64d32d0f40328ee4b10f5cb5ca4780997"
+        }
+      ]
+    },
+    "release-0.6-team-expiry-fixture": {
+      "batch": "release-0.6-team-expiry-fixture",
+      "base_commit": "be89ec11ab1370686c73b54e77b35fddf8786f28",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/agent-activity-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
+          "sha256": "de0db5d4af7116b2909bc925909171b9910a0ab8e2b6cfa775fc03ebf09f1c3e"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-activity.ts",
+          "sha256": "f406e0d5426ee31ad6d4edd20589f32fe0e13f5fd4726aee3a81c14c2d9e4580"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "07e49589a694a5c7e3b3acb200dbd2e262bbf493ca96d0c18f5b5336f90f04cf"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        }
+      ],
+      "checks": [
+        "The exact protected preflight at 453fec986 passed 5,581 web cases and 8,351 API cases with one API skip and one failure. The team expiry fixture counted two locked audit queries where it expected one. Its corrected lock observation identifies the resource query for member activity, team roster and ownership offers. The migrated fixture retains the original session expiry, 401 response and no-data assertions and passes with a deliberately blocked second audit query. Verify the exact cumulative successor.",
+        "All three target expiry cases passed in the final-source migrated PostgreSQL fixture. Eight unrelated cases were intentionally deselected by the test-name filter. API typecheck, changed-file lint and Git whitespace checks passed."
+      ],
+      "limitations": [
+        "The preflight failed and did not publish the tested SHA. Local isolated tests do not certify the final release or the exact successor GitHub check."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-team-expiry-fixture",
+      "execution_receipts": [
+        {
+          "file": "hosted-failure-summary.json",
+          "sha256": "c623451427aabe4288e4d399d768030024927e7e5cc8d3614c4dd57657bcb7eb"
+        },
+        {
+          "file": "expiry-final.log",
+          "sha256": "706b314b7b5c73d2185d28fa13b1c5276c629578469d130ac146c893d4221871"
+        },
+        {
+          "file": "static.log",
+          "sha256": "0d160eff779cb16eaefa3a5d76e6de18abe693566f2ce8ebd1b583dd7505cdde"
         }
       ]
     }

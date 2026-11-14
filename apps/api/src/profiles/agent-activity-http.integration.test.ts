@@ -88,58 +88,78 @@ async function activity(profileId: string, target: Account, actor: Account, curs
 }
 
 it.each([
-  ['member activity', 'audit_log', 'items'],
-  ['team roster', 'profile_invitations', 'agents'],
-  ['ownership offers', 'profile_ownership_transfers', 'transfers'],
-])('withholds %s after the session expires during a resource read', async (view, table, field) => {
-  const owner = await account();
-  const target = await account();
-  const profile = await legal(owner);
-  await member(profile.id, target);
-  await audit(target, 'order_created', { profileId: profile.id });
-  await http.pool.query(
-    `INSERT INTO profile_ownership_transfers(id,profile_id,from_user_id,to_user_id,status,expires_at)
-     VALUES ($1,$2,$3,$4,'Pending',clock_timestamp()+INTERVAL '1 day')`,
-    [randomUUID(), profile.id, owner.id, target.id]
-  );
-  const route =
-    view === 'member activity'
-      ? `profiles/${profile.id}/agents/${target.id}/activity`
-      : view === 'team roster'
-        ? `profiles/${profile.id}/agents`
-        : 'profiles/ownership-transfers';
-  const blocker = await http.pool.connect();
-  let pending: Promise<Response>;
-  try {
-    await blocker.query('BEGIN');
-    await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
-    const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+  ['member activity', 'audit_log', 'WITH candidates AS MATERIALIZED (%FROM audit_log%', 'items'],
+  [
+    'team roster',
+    'profile_invitations',
+    'SELECT id, username, role, created_at, message%FROM profile_invitations%',
+    'agents',
+  ],
+  [
+    'ownership offers',
+    'profile_ownership_transfers',
+    'SELECT t.id,t.profile_id,t.from_user_id,t.to_user_id,t.expires_at%FROM profile_ownership_transfers t%',
+    'transfers',
+  ],
+])(
+  'withholds %s after the session expires during a resource read',
+  async (view, table, query, field) => {
+    const owner = await account();
+    const target = await account();
+    const profile = await legal(owner);
+    await member(profile.id, target);
+    await audit(target, 'order_created', { profileId: profile.id });
     await http.pool.query(
-      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
-      [owner.session]
+      `INSERT INTO profile_ownership_transfers(id,profile_id,from_user_id,to_user_id,status,expires_at)
+     VALUES ($1,$2,$3,$4,'Pending',clock_timestamp()+INTERVAL '1 day')`,
+      [randomUUID(), profile.id, owner.id, target.id]
     );
-    pending = fetch(`${http.base}/api/${route}`, { headers: owner.headers });
-    await expect
-      .poll(async () => {
+    const route =
+      view === 'member activity'
+        ? `profiles/${profile.id}/agents/${target.id}/activity`
+        : view === 'team roster'
+          ? `profiles/${profile.id}/agents`
+          : 'profiles/ownership-transfers';
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response>;
+    let background: Promise<unknown> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      const waiting = async (pattern: string) => {
         const { rows } = await http.pool.query(
-          'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
-          [pid]
+          `SELECT count(*)::int AS count FROM pg_stat_activity
+         WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid)) AND ltrim(query) LIKE $2`,
+          [pid, pattern]
         );
         return rows[0].count;
-      })
-      .toBe(1);
-    await http.pool.query(
-      'SELECT pg_sleep(greatest(0,extract(epoch FROM expires_at-clock_timestamp()))) FROM sessions WHERE session_id=$1',
-      [owner.session]
-    );
-  } finally {
-    await blocker.query('ROLLBACK');
-    blocker.release();
+      };
+      if (view === 'member activity') {
+        const backgroundRead = 'SELECT 1 FROM audit_log LIMIT 1';
+        background = http.pool.query(backgroundRead);
+        await expect.poll(() => waiting(backgroundRead)).toBe(1);
+      }
+      await http.pool.query(
+        "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
+        [owner.session]
+      );
+      pending = fetch(`${http.base}/api/${route}`, { headers: owner.headers });
+      await expect.poll(() => waiting(query)).toBe(1);
+      await http.pool.query(
+        'SELECT pg_sleep(greatest(0,extract(epoch FROM expires_at-clock_timestamp()))) FROM sessions WHERE session_id=$1',
+        [owner.session]
+      );
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await background;
+    }
+    const response = await pending;
+    expect(response.status, await response.clone().text()).toBe(401);
+    expect(await response.json()).not.toHaveProperty(field);
   }
-  const response = await pending;
-  expect(response.status, await response.clone().text()).toBe(401);
-  expect(await response.json()).not.toHaveProperty(field);
-});
+);
 
 it.each(['Owner', 'Manager'])(
   '%s reads only this member’s public history in this legal profile',
