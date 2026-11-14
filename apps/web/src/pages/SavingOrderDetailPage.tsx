@@ -242,7 +242,10 @@ export function SavingOrderDetailPage() {
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="space-y-2">
-        <Link to="/savings/orders" className="touch-action text-sm text-primary hover:underline">
+        <Link
+          to="/savings/orders"
+          className="touch-action text-sm text-primary hover:underline pointer-coarse:min-h-[45px]!"
+        >
           {copy('orders')}
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>

@@ -59,16 +59,16 @@ for (const [locale, theme] of [
 ] as const) {
   const copy = (name: string) => t(`electricity.comments.${name}`, locale);
   const common = (name: string) => tOrderComments(name, locale);
-  test(`customer comment forms preserve paging and exact electricity/saving receipts (${locale}, ${theme})`, async ({
+  test(`customer electricity comments preserve paging and exact receipts (${locale}, ${theme})`, async ({
     page,
   }, info) => {
     const { state, persist } = await setupOrderCommentForms(page, locale, false);
     const release = await holdSchema(page);
     await page.goto(`/electricity/orders/${electricityOrder}`);
-    let section = page.getByTestId('order-comments');
-    let form = section.getByTestId('order-comment-form');
-    let body = page.locator('#electricity-comment-customer');
-    let send = form.getByRole('button', { name: copy('sendComment'), exact: true });
+    const section = page.getByTestId('order-comments');
+    const form = section.getByTestId('order-comment-form');
+    const body = page.locator('#electricity-comment-customer');
+    const send = form.getByRole('button', { name: copy('sendComment'), exact: true });
     await expect(section.locator('ol>li')).toHaveCount(50);
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 2');
     await expect(section.locator('ol>li').last()).toContainText('Chronological comment 51');
@@ -176,24 +176,27 @@ for (const [locale, theme] of [
     await expect(section).toContainText(common(locale === 'en' ? 'forbidden' : 'missing'));
     await expect(section).not.toContainText('Existing <script> reply');
     await expect(section).not.toContainText('Chronological comment');
-    // The shared saving branch accepts the same body/key contract without a visibility property.
-    state.readMode = 'success';
+  });
+  test(`customer saving comments preserve the exact receipt (${locale}, ${theme})`, async ({
+    page,
+  }, info) => {
+    const { state } = await setupOrderCommentForms(page, locale, false);
     state.writeMode = 'success';
-    await checkpointBrowserCoverage(page);
     await page.goto(`/savings/orders/${savingOrder}`);
-    section = page.getByTestId('order-comments');
-    form = section.getByTestId('order-comment-form');
-    body = page.locator('#saving-comment-customer');
+    const section = page.getByTestId('order-comments');
+    const form = section.getByTestId('order-comment-form');
+    const body = page.locator('#saving-comment-customer');
     await expect(body).toHaveAttribute('aria-required', 'true');
     await expect(form.locator('select')).toHaveCount(0);
     await body.fill('  Saving customer <script> message  ');
     await checkRoutePresentation(page, info, locale);
     await expect(body).toHaveValue('  Saving customer <script> message  ');
-    send = form.getByRole('button', { name: tSaving('sendComment', locale), exact: true });
+    const send = form.getByRole('button', { name: tSaving('sendComment', locale), exact: true });
     await send.click();
-    dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await dialog.locator('button[type=submit]').click();
     await expect(body).toHaveValue('');
+    expect(state.writes).toHaveLength(1);
     expect(state.writes.at(-1)!.path).toBe(`/api/saving/orders/${savingOrder}/comments`);
     expect(state.writes.at(-1)!.body).toEqual({
       body: 'Saving customer <script> message',
