@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T17:41:43+00:00",
+  "updated": "2026-11-14T17:45:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -25382,7 +25382,8 @@
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
-        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
+        "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -25467,7 +25468,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-linux-recovery-readback"
         ],
         "current_acceptance": null
       }
@@ -740848,7 +740850,8 @@
         "Before promotion, staging now requires HTTP 200 JSON for liveness, readiness and web release, with a 64 KiB limit and exact revision and version checks. Failed reads enter existing rollback. The 17 rollback suites and a read-only v0.5.1 transport check passed. The exact accepted v0.6.0 isolated rehearsal and live release and Telegram receipts remain required.",
         "The worker passes immutable screenshot digests to the notifier. It verifies the exact ordered PNG bytes before Telegram contact. The 21 notifier and 28 queue checks passed, including no album for a changed capture and the verified summary fallback. Exact deployed and Telegram receipts remain open.",
         "Staging now replaces the active image manifest atomically after the existing health and image checks. A partial file write or failed rename preserved the previous manifest and entered rollback on the fixture. All 18 rollback tests and the deployment-to-notification caller passed. Exact deployed release receipts remain open.",
-        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open."
+        "The staging receiver now handles HUP, INT and TERM during the release. Before activation it uses existing image and schema rollback checks. A failed or interrupted migration keeps writers stopped until migration status and schema can be verified. An interruption after the atomic manifest rename preserves the activated revision and requires receipt reconciliation. All 19 rollback, 28 queue and 21 notifier tests passed. Live candidate receipts remain open.",
+        "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -740917,7 +740920,8 @@
           "release-0.6-staging-bounded-smoke",
           "release-0.6-reviewed-album-bytes",
           "release-0.6-atomic-active-staging-manifest",
-          "release-0.6-staging-interruption-recovery"
+          "release-0.6-staging-interruption-recovery",
+          "release-0.6-linux-recovery-readback"
         ],
         "current_acceptance": null
       }
@@ -1341611,6 +1341615,63 @@
         {
           "file": "static.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-linux-recovery-readback": {
+      "batch": "release-0.6-linux-recovery-readback",
+      "base_commit": "4c1fd007a78c47b39283b124817e45a3a60f3b0f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "a9d9294bc2153518f2d4ca93357c7d7a2af1802f284c31ec948b7c7f2a218638"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "ddb7e42b47172f34ad1c529ff9d828862644d3b48b063e3a5b9379b23df003b2"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "65baf939379e12bc1d3f57171d3a384327e55292465414e6920c39d343af2100"
+        },
+        {
+          "path": "deploy/staging/install-nginx.sh",
+          "sha256": "5239fdc3b1a8d7879435304cc18a72ada0891dd32a0f2c685d0c97bf8c1a19f7"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "9775153d8afa391d01eef28695ce784ed6907a9d558734150719f55a7222f2ab"
+        },
+        {
+          "path": "deploy/staging/compose.wal-archive.yml",
+          "sha256": "509e9233ba683589906f05102464ddffc45e8e6308f74c365fc655326baf0ae4"
+        }
+      ],
+      "checks": [
+        "All 19 exact rollback fixtures at 4c1fd007a passed on the staging host’s Linux, GNU Bash, coreutils and Docker Compose toolchain in a temporary directory. The running services were untouched. The live release and Telegram receipts remain open.",
+        "The exact v0.6 staging receiver read-only preflight rejected the live setup with exit 1 because the non-disposable and encrypted WAL prerequisites were unmet. This stopped at the preflight before deployment. Provision the approved off-server destination and recovery key, then retain the actual checkpoint, restore and deployment receipts."
+      ],
+      "limitations": [
+        "The Linux rollback fixtures use test-owned paths and simulated Docker changes. The live preflight only reads backup configuration and does not execute a release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-linux-recovery-readback",
+      "execution_receipts": [
+        {
+          "file": "exact-source.tar",
+          "sha256": "22e97a75d9dd169ee60d286fb1b6c205c5c0b5b4a1f0d1596dca7939ca00b8cb"
+        },
+        {
+          "file": "linux-fixture.log",
+          "sha256": "3c8a82cce301e051011d5ba50ec4c3ac8c48a948d5d16948f9e64317b5ce01d9"
+        },
+        {
+          "file": "live-backup-preflight.log",
+          "sha256": "82d2c5f4e08a6effee5487d9c6f5c0213c32c4811854fee1652ae2d19808badb"
         }
       ]
     }
