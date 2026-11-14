@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:21:16+00:00",
+  "updated": "2026-11-14T14:26:12+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -1136625,7 +1136625,8 @@
         "The contract-template controller and service pass the original critical thresholds, with compiled PostgreSQL checks for invalid upload names, immutable storage, audit rollback and affected electricity template callers. The full exact combined gate is still required.",
         "The three contract cancellation, PDF and authoring API files pass the scoped critical coverage gate. Seventy-seven selected cases passed, with retained hosted coverage bound to byte-identical source. The local Docker MinIO setup timed out before the 14-case signature suite could run, so verify it on the exact hosted candidate.",
         "All five electricity API files flagged by the original combined report pass scoped coverage. The two service files used seven native PostgreSQL cases with byte-identical retained coverage. The full combined coverage gate on the final candidate and the exact staging journey remain open.",
-        "Run 43602481512 failed the existing Wallet production budget. The revised actual disclosure boundary passes all 104 local budgets and 24 relevant production-browser cases. Verify the cumulative successor hosted preflight and full final candidate gates."
+        "Run 43602481512 failed the existing Wallet production budget. The revised actual disclosure boundary passes all 104 local budgets and 24 relevant production-browser cases. Verify the cumulative successor hosted preflight and full final candidate gates.",
+        "The solar contract source service passed the unchanged scoped critical threshold after focused cases for sealed provenance, rendering and reservation loss. Retain the existing native solar attachment and scan tests in the final exact combined run."
       ],
       "owner": null,
       "depends_on": [],
@@ -1136999,7 +1137000,8 @@
           "release-0.6-contract-operation-coverage",
           "release-0.6-electricity-order-boundaries",
           "release-0.6-wallet-receipt-timeline-budget",
-          "release-0.6-electricity-price-and-periods"
+          "release-0.6-electricity-price-and-periods",
+          "release-0.6-solar-contract-source-validation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1327172,6 +1327174,49 @@
         {
           "file": "scoped-gate-final.json",
           "sha256": "831f31c772fbd5f8c81a6a2849a85f447bd253baca9fd72415ca37ae9727ed98"
+        }
+      ]
+    },
+    "release-0.6-solar-contract-source-validation": {
+      "batch": "release-0.6-solar-contract-source-validation",
+      "base_commit": "75c0cf4504b7dd9c296df6f87cf59e8ae779ff6d",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/solar/solar-contract-source.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/solar/solar-contract-source.service.ts",
+          "sha256": "65f5e97f9b93833e0ad61d298c657c4f978c51c0ec128a2bba36367ab7a2ca20"
+        },
+        {
+          "path": "apps/api/src/solar/solar-contract-source.test.ts",
+          "sha256": "86f7bc8d4c986cb247437fe9b8781aa22a0b3fd29ae0b17a5f3ea6868f838b02"
+        }
+      ],
+      "checks": [
+        "Twenty-three focused unit tests passed across source validation and contract authority. They cover unusable or changed bytes, exact template terms and captured price, the current construction request and profile, and lost upload or copy reservations before publication.",
+        "The original critical thresholds passed for the source service at 92/93 lines and 65/75 branches. Retained compiled PostgreSQL and private storage coverage was checksum-verified and bound to byte-identical runtime source.",
+        "API type checking, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The focused instrumented run fell below the repository API whole-package line and statement floors. The exact hosted integration and combined coverage gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-solar-contract-source-validation",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests-final.log",
+          "sha256": "589f5ad5557faeefe6b0746ab8fe7d7e955cd9be34dfda03eb4ade8a4c2c90e1"
+        },
+        {
+          "file": "coverage-final.log",
+          "sha256": "4f0e12c157f95c566c63e082d0cf33fdea0e04cafdf5bc4291f54572d0119b21"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "da63a7906361bcc2505ee5753b876b56f59a443b7a1701d8e96130d8bdba8935"
         }
       ]
     }
