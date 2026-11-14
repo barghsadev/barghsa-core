@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T09:44:30+00:00",
+  "updated": "2026-11-14T10:21:18+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24154,7 +24154,8 @@
         "Confirmed the local Alpine runtime SBOM differs from hosted 43552412387 by two removed glibc Sharp rows and no additions. One pending exception falls outside this runtime. Reconcile the 386 remaining rows with the final hosted images and obtain the required approvals.",
         "Report-only hosted preflight 43558923098 at 69be928c verified five exact image IDs, scan reports and SBOMs, with zero high or critical findings. All 857 package entries match the 7b62b875c review packet, including the same 386 entries awaiting dispositions. Final immutable strict checks and release receipts remain open.",
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
-        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open."
+        "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
+        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -24223,7 +24224,8 @@
           "release-0.6-sharp-runtime-platform",
           "release-0.6-image-and-scanner-receipt-readback",
           "release-0.6-browser-43561500300",
-          "release-0.6-cumulative-image-receipts"
+          "release-0.6-cumulative-image-receipts",
+          "release-0.6-strict-license-and-grafana-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -701826,7 +701828,8 @@
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
+        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -701899,7 +701902,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-packaged-backup-manifest-rehearsal"
+          "release-0.6-packaged-backup-manifest-rehearsal",
+          "release-0.6-strict-license-and-grafana-proof"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -722215,7 +722219,8 @@
       "launch_required": true,
       "remaining": [
         "Read back the exact strict release license, coverage, browser and required domain review gates.",
-        "The consolidated CI gate now requires the existing six Prometheus rule suites on the pinned Prometheus image. The exact workflow step passed locally. Hosted readback and the final strict release gates remain open."
+        "The consolidated CI gate now requires the existing six Prometheus rule suites on the pinned Prometheus image. The exact workflow step passed locally. Hosted readback and the final strict release gates remain open.",
+        "Preflight 43579302081 ran the pinned Prometheus rule step successfully and passed 5,550 web and 8,147 API tests across 904 files, with one API skip. GitHub served the tested a18c8a3d3 SHA on protected main. The strict coverage, license and operational gates remain separate."
       ],
       "owner": null,
       "depends_on": [],
@@ -722234,7 +722239,8 @@
           "release-0.6-protected-main-complete",
           "release-0.6-main-integrity-5aa2db96",
           "release-0.6-deterministic-secret-scan-fixture",
-          "release-0.6-ci-monitoring-rules"
+          "release-0.6-ci-monitoring-rules",
+          "release-0.6-strict-license-and-grafana-proof"
         ],
         "current_acceptance": null
       }
@@ -738682,7 +738688,8 @@
         "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled. The ClamAV freshness alert includes the Storage and Uploads dashboard UID and the scanner runbook. Verify those links on the deployed monitoring stack. Verify the Authentication and Security dashboard and API pressure runbook links from the deployed P1 alert.",
         "Open the PostgreSQL dashboard and linked API pressure or database failover runbook from exact-candidate receipts with approved operator access.",
         "Install the reviewed PostgreSQL disk scrape on the approved private staging target and verify the real data filesystem, both P2 firing and resolved receipts, and operator dashboard access. Resolve the observed 94% usage before the database cutover.",
-        "The official Linux amd64 13.0.13 and 12.4.15 alternatives also fail the exact-image gate with three and two high findings respectively. All five current official release lines have a failing scanned image. Obtain a patched immutable image and verify the deployed operator links."
+        "The official Linux amd64 13.0.13 and 12.4.15 alternatives also fail the exact-image gate with three and two high findings respectively. All five current official release lines have a failing scanned image. Obtain a patched immutable image and verify the deployed operator links.",
+        "The Grafana 12.4.15 Tempo datasource and TraceQL tests passed with the verified Tempo 2.10.10 commit f317720e7e51. Its Go pseudo-version still received both High findings on a standalone probe under Trivy 0.76.2, despite verified ancestry from both patched releases. The local Linux amd64 build stopped before producing a binary because of disk capacity. The replacement image and operating dashboard evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -738760,7 +738767,8 @@
           "release-0.6-authentication-failure-alert",
           "release-0.6-postgres-alert-wiring",
           "release-0.6-postgres-disk-capacity",
-          "release-0.6-grafana-supported-alternative-images"
+          "release-0.6-grafana-supported-alternative-images",
+          "release-0.6-strict-license-and-grafana-proof"
         ],
         "current_acceptance": null
       }
@@ -1121730,7 +1121738,8 @@
         "Hosted preflight 43569700480 failed one of 8,138 API cases because the agent-removal fixture used the role-update body on DELETE. The shipped Team page uses a bodyless DELETE. The corrected fixture retains the credential and refresh-token assertions. All 46 related ownership and agent cases passed locally. The corrected cumulative protected-main check remains required.",
         "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts.",
         "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
-        "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open."
+        "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open.",
+        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release."
       ],
       "owner": null,
       "depends_on": [],
@@ -1122076,7 +1122085,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-scheduled-browser-43576703292"
+          "release-0.6-scheduled-browser-43576703292",
+          "release-0.6-strict-license-and-grafana-proof"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1308685,6 +1308695,75 @@
           "sha256": "4406be35ddb6e65920748e243a33dea4e664b84bdc73c8487b53acd86d490447"
         }
       ]
+    },
+    "release-0.6-strict-license-and-grafana-proof": {
+      "batch": "release-0.6-strict-license-and-grafana-proof",
+      "base_commit": "81d4381e928ab4678b06e33cf1bc1c05f2c0500e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3f585999c18fd9f7dcc5083f646ded5eb9f2f8c9133e684b8d3806b3e6c91328"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "35cea9f291f48b57704942eda2b69e25937b4af3366e047a55d5171467967c98"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        }
+      ],
+      "checks": [
+        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
+        "The Grafana 12.4.15 Tempo datasource and TraceQL tests passed with the verified Tempo 2.10.10 commit f317720e7e51. Its Go pseudo-version still received both High findings on a standalone probe under Trivy 0.76.2, despite verified ancestry from both patched releases. The local Linux amd64 build stopped before producing a binary because of disk capacity. The replacement image and operating dashboard evidence remain open.",
+        "Preflight 43579302081 ran the pinned Prometheus rule step successfully and passed 5,550 web and 8,147 API tests across 904 files, with one API skip. GitHub served the tested a18c8a3d3 SHA on protected main. The strict coverage, license and operational gates remain separate."
+      ],
+      "limitations": [
+        "The full CI rehearsal license job is terminal. The independent coverage jobs are still running. These receipts do not certify staging deployment, release acceptance or a replacement Grafana image."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence",
+      "execution_receipts": [
+        {
+          "file": "strict-license-rehearsal-81d4381e9.json",
+          "sha256": "5e737509ff013bd23839f8a57eb3bece9f160001c1e37144dc775ca71612611f"
+        },
+        {
+          "file": "strict-license-rehearsal-81d4381e9.zip",
+          "sha256": "8f95a3a08a47c0f2b05b2359d60b7c94dd142124e497594779621e4fa6e53fd6"
+        },
+        {
+          "file": "grafana-tempo-compatibility-readback.json",
+          "sha256": "485764b44ca29939a6980ff63ba5f325b12b86932611ae8e9d8e074cd1dee1e3"
+        },
+        {
+          "file": "grafana-tempo-compatibility-readback-probe-scan.json",
+          "sha256": "3b649d513d68931c6aee555ccb24c7ad7ae827ab9c72e438a3a87bea45253f49"
+        },
+        {
+          "file": "protected-main-a18c8a3d3.json",
+          "sha256": "4e670286a0750be7f8565f436a5b06ad23f723e60767d993790bb74f0f8c79e9"
+        },
+        {
+          "file": "affected-test-a18c8a3d3.zip",
+          "sha256": "9c3229d6c524a0a3b32fba4cce88e5160679e42c9bc2b42cf8d5e32631f52e04"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -1308739,7 +1308818,7 @@
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete final v0.6.0 coverage and scheduled delivery, CSP observation, package license dispositions, and production-equivalent environment evidence.",
-    "method": "v0.5.1 staging and Telegram receipts are confirmed. Protected main passed the development integrity check at 4b6580f7c. Scheduled browser run 43576703292 at 1784f6161 passed all 40 shards. The exact report-only inventory still has 386 package entries needing named dispositions. The November 9 target passed. Final strict acceptance, scheduled report delivery, representative CSP observation, external on-call monitoring and production-equivalent TLS, providers, backup, recovery and load evidence remain open."
+    "method": "v0.5.1 staging and Telegram receipts are confirmed. The a18c8a3d3 development preflight passed and GitHub returned that SHA on protected main. Scheduled browser run 43576703292 at 1784f6161 passed all 40 shards. The enforced license rehearsal at 81d4381e9 rejected the same 386 pending entries. Full combined coverage, scheduled report delivery, CSP observation, approved backup and recovery, monitoring and production-equivalent TLS, provider and load evidence remain open."
   },
   "capabilities": [
     {
