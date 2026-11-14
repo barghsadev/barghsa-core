@@ -88,6 +88,72 @@ it('atomically counts concurrent failures and expires the account delay window',
   expect(Number(current.rows[0].count)).toBe(1);
 }, 20000);
 
+it('rejects a forced-password login if the credential changes before token issuance', async () => {
+  await http.pool.query(
+    "UPDATE users SET must_change_password=true WHERE user_id='login-limit-user'"
+  );
+  const replacement = await argon2.hash('Replacement-fixture-password-123!');
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query("SELECT user_id FROM users WHERE user_id='login-limit-user' FOR UPDATE");
+    const { pid } = (await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid'))
+      .rows[0]!;
+    pending = login(username, password);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query<{ count: number }>(
+              `SELECT count(*)::int AS count FROM pg_stat_activity
+         WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))
+           AND query LIKE '%SET password_change_token =%'`,
+              [pid]
+            )
+          ).rows[0]!.count,
+        { timeout: 8000 }
+      )
+      .toBe(1);
+    await blocker.query("UPDATE users SET password_hash=$1 WHERE user_id='login-limit-user'", [
+      replacement,
+    ]);
+    await blocker.query('COMMIT');
+    const denied = await pending;
+    expect(denied.status).toBe(401);
+    expect(await denied.json()).toMatchObject({ error: { code: 'AUTH:TOKEN_INVALID' } });
+    expect(
+      (
+        await http.pool.query(
+          "SELECT password_change_token,password_change_token_expires_at FROM users WHERE user_id='login-limit-user'"
+        )
+      ).rows
+    ).toEqual([{ password_change_token: null, password_change_token_expires_at: null }]);
+    expect((await http.pool.query('SELECT session_id FROM sessions')).rows).toEqual([]);
+    expect((await http.pool.query('SELECT challenge_id FROM otp_challenges')).rows).toEqual([]);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+  }
+}, 15000);
+
+it('rolls back a trusted login and masks a failed session write', async () => {
+  await http.pool
+    .query(`CREATE FUNCTION reject_fixture_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION 'fixture private session-write error'; END $$;
+    CREATE TRIGGER reject_fixture_session BEFORE INSERT ON refresh_tokens FOR EACH ROW EXECUTE FUNCTION reject_fixture_session()`);
+  const failed = await login(username, password);
+  expect(failed.status).toBe(500);
+  const response = await failed.text();
+  expect(JSON.parse(response)).toMatchObject({ error: { code: 'INTERNAL:SERVER_ERROR' } });
+  expect(response + http.logs()).not.toContain('fixture private session-write error');
+  expect(failed.headers.get('Set-Cookie') ?? '').not.toContain('barghsa_session=');
+  expect((await http.pool.query('SELECT session_id FROM sessions')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT id FROM refresh_tokens')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT challenge_id FROM otp_challenges')).rows).toEqual([]);
+});
+
 it('limits broad password spraying in PostgreSQL and returns Retry-After without counting a credential failure', async () => {
   const windowStart = Math.floor(Date.now() / 900000) * 900000;
   await http.pool.query(

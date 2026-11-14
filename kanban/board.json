@@ -18381,7 +18381,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-profile-address-access-command-validation"
+          "release-0.6-profile-address-access-command-validation",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -18397,7 +18398,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -18698,6 +18699,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -27227,7 +27236,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-forced-password-expiry-fixture"
+          "release-0.6-forced-password-expiry-fixture",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-shared-package-and-password-policy",
@@ -27255,7 +27265,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -27736,6 +27746,14 @@
                 "apps/api/src/auth/force-password-http.integration.test.ts"
               ],
               "scope": "Both changed PostgreSQL lock-contention cases passed. Previously accepted cases retain identical fixtures and assertions outside those two cases. Runtime is byte-identical."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -41562,7 +41580,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -41590,7 +41609,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -41598,7 +41617,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -42226,6 +42245,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -42393,7 +42421,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -42421,7 +42450,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -42429,7 +42458,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -43057,6 +43086,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -43357,7 +43395,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -43385,7 +43424,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -43393,7 +43432,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -44021,6 +44060,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -44179,7 +44227,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -44207,7 +44256,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -44215,7 +44264,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -44843,6 +44892,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -45015,7 +45073,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -45043,7 +45102,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -45051,7 +45110,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -45679,6 +45738,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -45852,7 +45920,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -45880,7 +45949,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -45888,7 +45957,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -46516,6 +46585,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -46688,7 +46766,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -46716,7 +46795,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -46724,7 +46803,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -47352,6 +47431,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -47528,7 +47616,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-registration-request-observation",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -47556,7 +47645,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -47564,7 +47653,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -48192,6 +48281,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -49413,7 +49511,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -49445,7 +49544,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -50178,6 +50277,14 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -50515,7 +50622,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -50551,7 +50659,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -51192,6 +51300,14 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -74879,7 +74995,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -74903,7 +75020,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -76476,6 +76593,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "The existing consultation customer list and detail now validate the original session after loading response data. SQL and its bindings, profile/agent locks, response fields and command paths are unchanged. The SQL review file renews only this existing entry. The five compiled request cases passed, including both expiry regressions and prior profile/finance isolation. Earlier evidence is retained for the scope it verified."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -76802,7 +76927,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -76826,7 +76952,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -78399,6 +78525,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "The existing consultation customer list and detail now validate the original session after loading response data. SQL and its bindings, profile/agent locks, response fields and command paths are unchanged. The SQL review file renews only this existing entry. The five compiled request cases passed, including both expiry regressions and prior profile/finance isolation. Earlier evidence is retained for the scope it verified."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -78733,7 +78867,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-consultation-read-expiry"
+          "release-0.6-consultation-read-expiry",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -78757,7 +78892,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -80330,6 +80465,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "The existing consultation customer list and detail now validate the original session after loading response data. SQL and its bindings, profile/agent locks, response fields and command paths are unchanged. The SQL review file renews only this existing entry. The five compiled request cases passed, including both expiry regressions and prior profile/finance isolation. Earlier evidence is retained for the scope it verified."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -111543,7 +111686,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -111571,7 +111715,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -112522,6 +112666,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -112784,7 +112936,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -112812,7 +112965,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -113763,6 +113916,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -114025,7 +114186,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -114053,7 +114215,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -115005,6 +115167,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -115265,7 +115435,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
-          "release-0.6-operator-queue-coverage"
+          "release-0.6-operator-queue-coverage",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -115293,7 +115464,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -116244,6 +116415,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -681929,7 +682108,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -681941,7 +682121,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -682153,6 +682333,14 @@
                 "packages/db/src/schema/auth-delivery-outbox.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -682192,7 +682380,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-public-registration-privacy",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -682212,7 +682401,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -682354,6 +682543,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -682407,7 +682604,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -682439,7 +682637,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -682670,6 +682868,14 @@
                 "packages/db/src/schema/auth-delivery-outbox.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -682703,7 +682909,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-public-registration-privacy",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -682727,7 +682934,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -682786,6 +682993,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -682829,7 +683044,8 @@
           "release-0.6-registration-pointer-after-strength",
           "release-0.6-registration-consent-timing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-public-registration-privacy",
@@ -682853,7 +683069,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -682889,7 +683105,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
@@ -682973,6 +683189,15 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -683021,7 +683246,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -683041,7 +683267,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -683237,6 +683463,14 @@
                 "packages/db/src/schema/auth-delivery-outbox.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -683415,7 +683649,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
           "release-0.6-async-job-tracing",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -683447,7 +683682,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -683459,7 +683694,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -683642,6 +683877,15 @@
                 "packages/db/src/schema/auth-delivery-outbox.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -704737,7 +704981,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-public-registration-privacy",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-profile-address-access-command-validation"
+          "release-0.6-profile-address-access-command-validation",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -704753,7 +704998,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -704885,6 +705130,14 @@
                 "apps/api/src/profiles/invitation-mutation-http.integration.test.ts"
               ],
               "scope": "Four profile address and membership commands now reject unknown JSON before mutating. They still accept omitted and empty bodies. Existing authorization, revocation, transactional audit, soft deletion and prior-order snapshot behavior remain verified. The generated contract only updates the documented outcomes of those four routes."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -704926,7 +705179,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -704942,7 +705196,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -705186,6 +705440,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -705932,7 +706194,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-public-registration-privacy",
           "release-0.6-process-error-reporting",
-          "release-0.6-specialized-queue-tracing"
+          "release-0.6-specialized-queue-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -705948,7 +706211,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -706050,6 +706313,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Additive nullable queue trace columns, worker consumer scopes and transaction-bound outbox ancestry. Existing migration entries, response schemas, authority checks, deadlines, retries and delivery identities remain in place. Existing SQL interpolation expressions were compared unchanged before renewing affected digests. New trace inputs use driver parameters, including the existing fixed-column knowledge policy update."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -706094,7 +706365,8 @@
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-profile-address-access-command-validation"
+          "release-0.6-profile-address-access-command-validation",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -706110,7 +706382,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -706411,6 +706683,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -706446,7 +706726,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -706474,7 +706755,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -706482,7 +706763,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -706625,6 +706906,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -706664,7 +706954,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-async-job-tracing",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -706692,11 +706983,11 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -706914,6 +707205,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -706950,7 +707250,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -706974,11 +707275,11 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -707116,6 +707417,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -707152,7 +707462,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-web-server-tracing"
+          "release-0.6-web-server-tracing",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -707180,7 +707491,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -707188,7 +707499,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -707331,6 +707642,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -718159,7 +718479,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-telegram-rejection-receipts"
+          "release-0.6-telegram-rejection-receipts",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -718175,7 +718496,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
@@ -718434,6 +718755,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Only the contradictory outbound Telegram rejection boundary changed; the valid explicit rate-limit, verified private receipt, and existing authority and no-replay checks passed on the compiled API and migrated PostgreSQL. The security guide change only adds that verified behavior. Preserve prior unaffected receipts."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ]
         }
@@ -737589,7 +737918,7 @@
         "Five additional critical admin and staff authority files from the hosted coverage failure pass the original release per-file gate in a targeted run. Native HTTP, authorization and finance assertions passed. Exact combined release coverage remains open.",
         "The hosted API-client coverage error was a generated file containing only declarations. It now uses the existing declaration extension and the generator reproduces the same bytes. Coverage thresholds and drift checks are unchanged.",
         "All 25 release-changed shared source files pass both critical and non-critical checks. The unchanged gate recorded 256/259 critical lines, 249/257 critical branches, 222/230 non-critical lines and 226/257 non-critical branches.",
-        "The eight compiled contact-login cases passed, including blocking double contact replacement and disabled password login. The scoped auth service now has 565/581 lines and 302/370 branches after comparing byte-identical hosted and local source maps. The unchanged 85% branch threshold requires 315/370. Close the remaining branches and run the exact candidate coverage gate."
+        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -737631,7 +737960,8 @@
           "release-0.6-staff-control-coverage",
           "release-0.6-openapi-declarations",
           "release-0.6-provider-coverage",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -960732,7 +961062,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -960808,7 +961139,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -960840,7 +961171,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -960876,7 +961207,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -961972,6 +962303,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -962208,7 +962549,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -962284,7 +962626,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -962316,7 +962658,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -962352,7 +962694,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -963448,6 +963790,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -963684,7 +964036,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -963760,7 +964113,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -963792,7 +964145,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -963828,7 +964181,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -964924,6 +965277,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -965160,7 +965523,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -965236,7 +965600,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -965268,7 +965632,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -965304,7 +965668,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -966400,6 +966764,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -966636,7 +967010,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -966712,7 +967087,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -966744,7 +967119,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -966780,7 +967155,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -967876,6 +968251,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -985735,7 +986120,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -985811,7 +986197,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -985843,7 +986229,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -985879,7 +986265,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -986975,6 +987361,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -987211,7 +987607,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -987287,7 +987684,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -987319,7 +987716,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -987355,7 +987752,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -988451,6 +988848,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -988687,7 +989094,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -988763,7 +989171,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -988795,7 +989203,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -988831,7 +989239,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -989927,6 +990335,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -990163,7 +990581,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -990239,7 +990658,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -990271,7 +990690,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -990307,7 +990726,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -991403,6 +991822,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -991639,7 +992068,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -991715,7 +992145,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -991747,7 +992177,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -991783,7 +992213,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -992879,6 +993309,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -993115,7 +993555,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -993191,7 +993632,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -993223,7 +993664,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -993259,7 +993700,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -994355,6 +994796,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -994591,7 +995042,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -994667,7 +995119,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -994699,7 +995151,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -994735,7 +995187,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -995831,6 +996283,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -996067,7 +996529,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -996143,7 +996606,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -996175,7 +996638,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -996211,7 +996674,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -997307,6 +997770,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -997543,7 +998016,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -997619,7 +998093,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -997651,7 +998125,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -997687,7 +998161,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -998783,6 +999257,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -999019,7 +999503,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -999095,7 +999580,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -999127,7 +999612,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -999163,7 +999648,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -1000259,6 +1000744,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -1000495,7 +1000990,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -1000571,7 +1001067,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -1000603,7 +1001099,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -1000639,7 +1001135,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -1001735,6 +1002231,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -1001971,7 +1002477,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-contact-otp-ownership",
           "release-0.6-forced-password-expiry-fixture",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -1002047,7 +1002554,7 @@
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
-              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+              "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
@@ -1002079,7 +1002586,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+              "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -1002115,7 +1002622,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+              "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -1003211,6 +1003718,16 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "The existing contact-login tests are preserved and three native cases add two pending-contact checks and disabled password login. All eight cases pass on the compiled API and disposable PostgreSQL. Production source, sessions, OTP and financial safeguards are unchanged."
+            },
+            {
+              "batch": "release-0.6-auth-credential-races",
+              "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+              "paths": [
+                "apps/api/src/auth/login-rate-http.integration.test.ts",
+                "apps/api/src/auth/otp-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "All added assertions passed on the compiled API and disposable migrated PostgreSQL, including credential races, mobile identity rollback and registration proof durability. Existing scenarios and coverage thresholds were preserved. The registration rollback helper now also identifies any competing owner."
             }
           ],
           "presentation_renewals": [
@@ -1142268,7 +1142785,7 @@
         "Daily backup and isolated restore reports now identify the exact off-server manifests by canonical SHA-256. The promotion verifier rejects a substituted manifest under the same label. All 19 promotion and 18 backup unit checks passed, as did the isolated native restore on the retained staging PostgreSQL and SeaweedFS images. The actual approved off-server deployment and production-equivalent recovery remain open.",
         "The restored-application recovery probe now verifies the exact API and web revision before sign-in, then requires the owned dashboard, wallet, all four service reads and logout. The promotion verifier binds one original probe report to the recovery timeline. Forty-seven focused checks passed. Run the probe during the approved, measured restore.",
         "The consultation history and detail read checks now fail closed if their session expires while waiting on PostgreSQL. Both regressions rejected the current baseline, and all five compiled native consultation request checks passed after the correction. Deployed candidate evidence remains open.",
-        "The eight compiled contact-login cases passed, including blocking double contact replacement and disabled password login. The scoped auth service now has 565/581 lines and 302/370 branches after comparing byte-identical hosted and local source maps. The unchanged 85% branch threshold requires 315/370. Close the remaining branches and run the exact candidate coverage gate."
+        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1142661,7 +1143178,8 @@
           "release-0.6-backup-manifest-binding",
           "release-0.6-restored-application-probe",
           "release-0.6-consultation-read-expiry",
-          "release-0.6-auth-contact-coverage-closure"
+          "release-0.6-auth-contact-coverage-closure",
+          "release-0.6-auth-credential-races"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1334757,6 +1335275,149 @@
         {
           "file": "build.log",
           "sha256": "b2d26cadebb117cf054f209e6656f958077b1161c2160518983d1b4029b5664c"
+        }
+      ]
+    },
+    "release-0.6-auth-credential-races": {
+      "batch": "release-0.6-auth-credential-races",
+      "base_commit": "f19a16b653112aa78940c2744fb0cbec39f6dfef",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.02",
+        "01-platform-infrastructure.md#T-06.01.03",
+        "02-auth-users-admin.md#T-01.01.01",
+        "02-auth-users-admin.md#T-01.01.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-01.01.05",
+        "02-auth-users-admin.md#T-01.01.06",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-01.02.02",
+        "02-auth-users-admin.md#T-01.02.03",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "06-security-testing-observability.md#T-06.01.02.02",
+        "06-security-testing-observability.md#T-06.01.02.03",
+        "06-security-testing-observability.md#T-06.01.02.04",
+        "06-security-testing-observability.md#T-06.01.02.05",
+        "06-security-testing-observability.md#T-06.01.02.06",
+        "06-security-testing-observability.md#T-06.01.02.07",
+        "06-security-testing-observability.md#T-06.01.02.09",
+        "06-security-testing-observability.md#T-06.05.01.01",
+        "06-security-testing-observability.md#T-06.05.01.02",
+        "06-security-testing-observability.md#T-06.05.01.06",
+        "06-security-testing-observability.md#T-06.05.01.07",
+        "06-security-testing-observability.md#T-06.05.02.01",
+        "06-security-testing-observability.md#T-06.05.02.02",
+        "06-security-testing-observability.md#T-06.05.02.03",
+        "06-security-testing-observability.md#T-06.05.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/login-rate-http.integration.test.ts",
+        "apps/api/src/auth/otp-http.integration.test.ts",
+        "apps/api/src/auth/registration-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "799ac28b57f9336ea96d6b1872e267fbf930734f377c4b2b4e6ced3ddcbe3411"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "469352cfee84668cc73a4246ccad7d6b6fdb249569657ae82c8a64544e1bdc46"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "a1101f15e357e910882597718b475be9fa3b53e1763229107527d4c44fa9b7d7"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "224c5082f2596ca4006ec91c50d87c5b20f0ece7746213db4e3a2d211b7999d5"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "1209131040f80775e663d54a1a7a45316fb95204e4a2e741a1b52ba0838428aa"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "12fb8f6c0559a905e9d1429f00a0348ae8d0b1089de3a955aa8026def7424ec4"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "34cf2efb19e25e8636305ef3854e8b3f9f6cfbd0adabd62882c0ccb96964b785"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0111_account_login_identifiers.sql",
+          "sha256": "b0810cdf834318f0b0acc92f2f17cbf506060b12e992c37ec144f891154e89bf"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "The compiled API passed all 23 login and OTP cases, the 14 registration cases, and the separately added proof-write regression. The byte-identical auth service now passes the scoped gate with 572/581 lines and 315/370 branches. Full exact candidate coverage and release acceptance remain open.",
+        "The tests verified credential replacement before forced-password token issuance, failed trusted session writes, current and expired registration contention, both mobile username proofs and no partial consent, session or audit writes.",
+        "Changed-file ESLint and Prettier, API type checking and git diff checks passed."
+      ],
+      "limitations": [
+        "The selected instrumented suites ended nonzero at their standalone package coverage floors after all selected cases passed. The unchanged scoped auth checker combines SHA-verified hosted coverage and compiled local process reports.",
+        "The new case initially asserted an incorrect error identifier. It then passed with the precise existing AUTH:OTP:ALREADY_CONSUMED identifier and the same state and rollback assertions. The exact release aggregate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-auth-credential-races",
+      "execution_receipts": [
+        {
+          "file": "credential-race-tests.log",
+          "sha256": "ff574f55827e83677600bf62ebd3c8087bd4d42a4f0724c695e555ea38a8f498"
+        },
+        {
+          "file": "registration-race-tests.log",
+          "sha256": "50e78fcd2130a9bf1467b34f8d5f40e1d6270f671d56785b423f9d4f01e3b0ee"
+        },
+        {
+          "file": "registration-proof-write-confirmed.log",
+          "sha256": "c53a9c5c84cd893682a791108d0e4f3e6465cad19c7088286dcc6856661efbfc"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "cc9f26bc7a888faddd916af92920e414921b5edfcc03ffd2e617c2ef8115ae55"
+        },
+        {
+          "file": "final/combined/apps/api/coverage/coverage-final.json",
+          "sha256": "b5cf949b655d8ea89fa272345496adbc3276c29fcc8bcbe260156693399db34f"
         }
       ]
     }

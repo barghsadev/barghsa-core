@@ -112,6 +112,77 @@ it('consumes username OTP in the account transaction and persists failed attempt
   ).toBe(1);
 }, 15000);
 
+it.each(['claimed', 'unique-constraint', 'write-failure', 'available'] as const)(
+  'preserves mobile username proofs and sessions when the destination is %s',
+  async (state) => {
+    const destination = '+989121234567';
+    const id = await challenge(destination);
+    const proofs = () =>
+      http.pool.query<{ attempts_remaining: number; consumed_at: Date | null }>(
+        `SELECT attempts_remaining,consumed_at FROM otp_challenges
+         WHERE challenge_id=$1 OR challenge_id=(SELECT previous_challenge_id FROM otp_challenges WHERE challenge_id=$1)
+         ORDER BY challenge_id`,
+        [id]
+      );
+    const original = (await proofs()).rows;
+    expect(original).toHaveLength(2);
+    expect(original.every((proof) => proof.consumed_at === null)).toBe(true);
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+       VALUES ($1,'otp-user',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [randomUUID(), randomUUID(), randomUUID()]
+    );
+    if (state === 'claimed') {
+      await http.pool.query(
+        "INSERT INTO users(user_id,username,password_hash) VALUES ('other-owner',$1,'test-only')",
+        [destination]
+      );
+    }
+    if (state === 'unique-constraint' || state === 'write-failure') {
+      const code = state === 'unique-constraint' ? '23505' : 'P0001';
+      await http.pool
+        .query(`CREATE FUNCTION reject_mobile_username() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN IF NEW.username<>OLD.username THEN RAISE EXCEPTION 'fixture private write error' USING ERRCODE='${code}'; END IF; RETURN NEW; END $$;
+        CREATE TRIGGER reject_mobile_username BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION reject_mobile_username()`);
+    }
+    const result = await post('change-username', {
+      newUsername: destination,
+      otpChallengeId: id,
+      otp: '123456',
+      previousOtp: '112233',
+    });
+    const audit = await http.pool.query("SELECT id FROM audit_log WHERE event='username_changed'");
+    const account = await http.pool.query(
+      "SELECT username,mobile FROM users WHERE user_id='otp-user'"
+    );
+    const sessions = await http.pool.query(
+      "SELECT revoked_at FROM sessions WHERE user_id='otp-user' AND 'barghsa_session='||session_id::text<>$1",
+      [headers.Cookie]
+    );
+    expect(sessions.rows).toHaveLength(1);
+    if (state === 'available') {
+      expect(result.status).toBe(200);
+      expect(account.rows).toEqual([{ username: destination, mobile: destination }]);
+      expect((await proofs()).rows).toEqual(
+        Array(2).fill({ attempts_remaining: 0, consumed_at: expect.any(Date) })
+      );
+      expect(audit.rows).toHaveLength(1);
+      expect(sessions.rows[0].revoked_at).toBeInstanceOf(Date);
+      return;
+    }
+    expect(result.status).toBe(state === 'write-failure' ? 500 : 409);
+    const response = await result.text();
+    expect(response).not.toContain('fixture private write error');
+    if (state !== 'write-failure') {
+      expect(JSON.parse(response)).toMatchObject({ error: { code: 'AUTH:CHANGE_USERNAME:TAKEN' } });
+    }
+    expect(account.rows).toEqual([{ username: 'otp-old@example.test', mobile: null }]);
+    expect((await proofs()).rows).toEqual(original);
+    expect(audit.rows).toEqual([]);
+    expect(sessions.rows).toEqual([{ revoked_at: null }]);
+  }
+);
+
 it('allows exactly one concurrent contact verification and rejects reuse', async () => {
   const id = await challenge('+989121234567', 'add_mobile');
   const body = {
@@ -289,6 +360,32 @@ it('exhausts login after five concurrent wrong codes and refuses the correct cod
   expect(
     (await http.pool.query('SELECT count(*)::int AS count FROM device_trusts')).rows[0].count
   ).toBe(0);
+});
+
+it('rejects an already expired login proof without spending an attempt or granting device trust', async () => {
+  const id = await challenge('otp-old@example.test', 'login');
+  await http.pool.query(
+    "UPDATE otp_challenges SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE challenge_id=$1",
+    [id]
+  );
+  const rejected = await post('login/verify', {
+    challengeId: id,
+    otp: '123456',
+    trustDevice: true,
+  });
+  expect(rejected.status).toBe(401);
+  expect(await rejected.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT attempts_remaining,consumed_at FROM otp_challenges WHERE challenge_id=$1',
+        [id]
+      )
+    ).rows
+  ).toEqual([{ attempts_remaining: 5, consumed_at: null }]);
+  expect((await http.pool.query('SELECT session_id FROM sessions')).rowCount).toBe(1);
+  expect((await http.pool.query('SELECT id FROM refresh_tokens')).rows).toEqual([]);
+  expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toEqual([]);
 });
 
 it('rolls back OTP consumption and partial session writes when refresh-token insertion fails', async () => {

@@ -54,7 +54,11 @@ async function pendingRegistration(
   return { username, body: { challengeId: body.challengeId, otp: '123456' } };
 }
 
-async function expectRegistrationRolledBack(challengeId: string, username: string) {
+async function expectRegistrationRolledBack(
+  challengeId: string,
+  username: string,
+  existingOwners: string[] = []
+) {
   expect(
     (
       await fixture.pool.query(
@@ -63,6 +67,17 @@ async function expectRegistrationRolledBack(challengeId: string, username: strin
       )
     ).rows[0]
   ).toEqual({ consumed_at: null, attempts_remaining: 5 });
+  await expectNoRegistrationSideEffects(challengeId, username, existingOwners);
+}
+
+async function expectNoRegistrationSideEffects(
+  challengeId: string,
+  username: string,
+  existingOwners: string[]
+) {
+  expect(
+    (await fixture.pool.query('SELECT user_id FROM users WHERE username=$1', [username])).rows
+  ).toEqual(existingOwners.map((user_id) => ({ user_id })));
   expect(
     (
       await fixture.pool.query(
@@ -73,16 +88,138 @@ async function expectRegistrationRolledBack(challengeId: string, username: strin
   ).toEqual([{ notice_user_id: null }]);
   const counts = (
     await fixture.pool.query(
-      `SELECT (SELECT count(*)::int FROM users WHERE username=$1) AS users,
-      (SELECT count(*)::int FROM tos_acceptances) AS consent,
+      `SELECT (SELECT count(*)::int FROM tos_acceptances) AS consent,
       (SELECT count(*)::int FROM sessions) AS sessions,
       (SELECT count(*)::int FROM refresh_tokens) AS refresh,
-      (SELECT count(*)::int FROM audit_log WHERE event='user_created') AS audits`,
-      [username]
+      (SELECT count(*)::int FROM audit_log WHERE event='user_created') AS audits`
     )
   ).rows[0];
-  expect(counts).toEqual({ users: 0, consent: 0, sessions: 0, refresh: 0, audits: 0 });
+  expect(counts).toEqual({ consent: 0, sessions: 0, refresh: 0, audits: 0 });
 }
+
+it.each(['current', 'expired'] as const)(
+  'preserves the competing identifier owner when the registration proof is %s',
+  async (state) => {
+    const { username, body } = await pendingRegistration();
+    const owner = randomUUID();
+    const blocker = await fixture.pool.connect();
+    let response: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(
+        "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')",
+        [owner, username]
+      );
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      const deadline = (
+        await fixture.pool.query(
+          "UPDATE otp_challenges SET expires_at=clock_timestamp()+INTERVAL '3 seconds' WHERE challenge_id=$1 RETURNING expires_at",
+          [body.challengeId]
+        )
+      ).rows[0].expires_at as Date;
+      response = post('auth/register/verify', body);
+      await expect
+        .poll(
+          async () =>
+            (
+              await fixture.pool.query(
+                "SELECT count(*)::int AS count FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid)) AND query LIKE 'INSERT INTO users%'",
+                [pid]
+              )
+            ).rows[0].count
+        )
+        .toBe(1);
+      if (state === 'expired') {
+        await expect
+          .poll(
+            async () =>
+              (
+                await fixture.pool.query('SELECT clock_timestamp()>$1::timestamptz AS expired', [
+                  deadline,
+                ])
+              ).rows[0].expired,
+            { timeout: 5000 }
+          )
+          .toBe(true);
+      }
+      await blocker.query('COMMIT');
+      const rejected = await response;
+      expect(rejected.headers.getSetCookie()).toEqual([
+        expect.stringMatching(/^barghsa_preauth=;/),
+      ]);
+      if (state === 'expired') {
+        expect(rejected.status, fixture.logs()).toBe(401);
+        expect(await rejected.json()).toMatchObject({ error: { code: 'AUTH:OTP:EXPIRED' } });
+        await expectRegistrationRolledBack(body.challengeId, username, [owner]);
+      } else {
+        expect(rejected.status, fixture.logs()).toBe(409);
+        expect(await rejected.json()).toMatchObject({
+          error: { code: 'AUTH:REGISTER:USERNAME_TAKEN' },
+        });
+        expect(
+          (
+            await fixture.pool.query(
+              'SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',
+              [body.challengeId]
+            )
+          ).rows
+        ).toEqual([{ consumed_at: expect.any(Date), attempts_remaining: 0 }]);
+        await expectNoRegistrationSideEffects(body.challengeId, username, [owner]);
+      }
+      expect(
+        (
+          await fixture.pool.query(
+            'SELECT user_id,kind FROM account_login_identifiers WHERE destination=$1',
+            [username]
+          )
+        ).rows
+      ).toEqual([{ user_id: owner, kind: 'primary' }]);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await response;
+    }
+  },
+  15000
+);
+
+it('rolls registration back and masks a unique write failure without an identifier owner', async () => {
+  const { username, body } = await pendingRegistration();
+  const privateDetail = 'private-registration-constraint';
+  await fixture.pool.query(`
+    CREATE FUNCTION reject_registration_insert() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION '${privateDetail}' USING ERRCODE='23505'; END $$;
+    CREATE TRIGGER reject_registration_insert BEFORE INSERT ON users
+      FOR EACH ROW EXECUTE FUNCTION reject_registration_insert();`);
+
+  const rejected = await post('auth/register/verify', body);
+  const rejectedBody = await rejected.text();
+  expect(rejected.status).toBe(500);
+  expect(JSON.parse(rejectedBody)).toMatchObject({ error: { code: 'AUTH:REGISTER:FAILED' } });
+  expect(rejectedBody).not.toContain(privateDetail);
+  expect(fixture.logs()).not.toContain(privateDetail);
+  expect(rejected.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
+  await expectRegistrationRolledBack(body.challengeId, username);
+});
+
+it('creates no account when PostgreSQL does not persist registration proof consumption', async () => {
+  const { username, body } = await pendingRegistration();
+  await fixture.pool.query(`
+    CREATE FUNCTION withhold_registration_consumption() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      IF OLD.purpose='registration' AND OLD.consumed_at IS NULL AND NEW.consumed_at IS NOT NULL
+      THEN RETURN NULL; END IF;
+      RETURN NEW;
+    END $$;
+    CREATE TRIGGER withhold_registration_consumption BEFORE UPDATE ON otp_challenges
+      FOR EACH ROW EXECUTE FUNCTION withhold_registration_consumption();`);
+
+  const rejected = await post('auth/register/verify', body);
+  expect(rejected.status, fixture.logs()).toBe(409);
+  expect(await rejected.json()).toMatchObject({ error: { code: 'AUTH:OTP:ALREADY_CONSUMED' } });
+  expect(rejected.headers.getSetCookie()).toEqual([expect.stringMatching(/^barghsa_preauth=;/)]);
+  await expectRegistrationRolledBack(body.challengeId, username);
+});
 
 it('rolls registration back when its creation audit fails, then permits exactly one concurrent retry', async () => {
   const { username, body } = await pendingRegistration();
