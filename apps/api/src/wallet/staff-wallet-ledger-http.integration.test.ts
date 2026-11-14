@@ -195,6 +195,50 @@ it('returns an empty history without creating a wallet, and 404 for an unknown p
   expect((await get(randomUUID())).status).toBe(404);
 });
 
+it('does not reach a private ledger after the selected staff session has been revoked', async () => {
+  const sessionId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES($1,'ledger-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')`,
+    [sessionId, randomUUID(), randomUUID()]
+  );
+  const ledger = () =>
+    fetch(`${http.base}/api/admin/reconciliation/wallets/${profile}/transactions`, {
+      headers: { Cookie: `barghsa_session=${sessionId}` },
+    });
+  expect((await ledger()).status).toBe(200);
+  await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [sessionId]);
+  const revoked = await ledger();
+  expect(revoked.status, http.logs()).toBe(401);
+  expect(await revoked.json()).not.toHaveProperty('transactions');
+});
+
+it('rejects customer operating context inside the reconciliation transaction', async () => {
+  const { StaffWalletLedgerController } = await import('./staff-wallet-ledger.controller.js');
+  const csrfToken = (
+    await http.pool.query<{ csrf_token: string }>(
+      'SELECT csrf_token FROM sessions WHERE session_id=$1',
+      [sessions['ledger-customer-grant']]
+    )
+  ).rows[0]!.csrf_token;
+  const { hasStaffPermission } = await import('../session/staff-permissions.js');
+  type LedgerRequest = Parameters<StaffWalletLedgerController['transactions']>[2];
+  const request = {
+    session: {
+      userId: 'ledger-customer-grant',
+      sessionId: sessions['ledger-customer-grant'],
+      csrfToken,
+      isStaff: true,
+      operatingContext: 'staff',
+      permissions: ['admin:reconciliation:view'],
+    },
+  } as unknown as LedgerRequest;
+  expect(hasStaffPermission(request, 'admin:reconciliation:view')).toBe(true);
+  await expect(
+    new StaffWalletLedgerController().transactions(profile, {}, request)
+  ).rejects.toMatchObject({ status: 403 });
+});
+
 it.each(['ledger-unrelated', 'ledger-customer-grant', 'ledger-customer', 'anonymous'])(
   'denies %s without revealing financial history',
   async (user) => {

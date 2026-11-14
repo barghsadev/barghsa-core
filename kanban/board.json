@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:28:08+00:00",
+  "updated": "2026-11-14T14:32:00+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -55853,7 +55853,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
-              "sha256": "aaf5cfb48b4ff8da4d72d7aef74ded5e47db3f14756f5bff104cea17c1a8fd7f"
+              "sha256": "0be71f0c00d5e524533d83e6b49c9c46ae8ae76eba0fff1992ed0d0c1f62a669"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
@@ -57638,6 +57638,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ],
           "presentation_renewals": [
@@ -95498,7 +95506,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
-              "sha256": "aaf5cfb48b4ff8da4d72d7aef74ded5e47db3f14756f5bff104cea17c1a8fd7f"
+              "sha256": "0be71f0c00d5e524533d83e6b49c9c46ae8ae76eba0fff1992ed0d0c1f62a669"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-access.ts",
@@ -97220,6 +97228,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The exact manifest and lock comparison isolates the changed dependency to Nodemailer and preserves other resolved packages. Both packaged declaration formats retain the same TypeScript adjustment. API and worker provider, SMTP, outbox and OTP checks renew related behavior. Retain the previous evidence for unchanged behavior. The installed dependency audit and local checks do not refresh image, live provider or final release receipts."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ],
           "presentation_renewals": [
@@ -160760,7 +160776,7 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
+              "sha256": "004d60a791fe1f7d815c4bd8a79feb160c16d9246fae0276293e3972d48940c1"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
@@ -161922,6 +161938,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ],
           "presentation_renewals": [
@@ -176680,7 +176704,7 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
+              "sha256": "004d60a791fe1f7d815c4bd8a79feb160c16d9246fae0276293e3972d48940c1"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
@@ -177835,6 +177859,14 @@
                 "apps/web/src/components/WalletTransactionList.test.tsx"
               ],
               "scope": "The only runtime change is loading the existing receipt timeline when its customer disclosure opens. The existing page-level limit and all recorded timeline, attachment, ownership and review assertions retain their criteria. The component and affected callers were verified with the revised loading boundary."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ],
           "presentation_renewals": [
@@ -723580,7 +723612,7 @@
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
-              "sha256": "0d1b2c351082e3a2eae764007e0e64f334b5abccb4b871d3f41b54469eda263b"
+              "sha256": "004d60a791fe1f7d815c4bd8a79feb160c16d9246fae0276293e3972d48940c1"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
@@ -723833,6 +723865,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "Additive tests renew compiled electricity delivery options, staff adjustment controls, profile access and customer correction safety. Prior financial and access assertions retain their source evidence."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ]
         }
@@ -1114349,7 +1114389,7 @@
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
-              "sha256": "aaf5cfb48b4ff8da4d72d7aef74ded5e47db3f14756f5bff104cea17c1a8fd7f"
+              "sha256": "0be71f0c00d5e524533d83e6b49c9c46ae8ae76eba0fff1992ed0d0c1f62a669"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-access.ts",
@@ -1119399,6 +1119439,14 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Adds one independent native eligibility test. Existing saving flow and money assertions, test cases and runtime code retain their reviewed behavior."
+            },
+            {
+              "batch": "release-0.6-wallet-read-and-alert-boundaries",
+              "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+              "paths": [
+                "apps/api/src/wallet/wallet.controller.test.ts"
+              ],
+              "scope": "Additional review, staff-context and legacy alert inputs preserve the prior behavior assertions and runtime sources. Compiled reconciliation history verification and current test receipts renew the affected binding."
             }
           ],
           "presentation_renewals": [
@@ -1137611,7 +1137659,8 @@
         "All five electricity API files flagged by the original combined report pass scoped coverage. The two service files used seven native PostgreSQL cases with byte-identical retained coverage. The full combined coverage gate on the final candidate and the exact staging journey remain open.",
         "Run 43602481512 failed the existing Wallet production budget. The revised actual disclosure boundary passes all 104 local budgets and 24 relevant production-browser cases. Verify the cumulative successor hosted preflight and full final candidate gates.",
         "The solar contract source service passed the unchanged scoped critical threshold after focused cases for sealed provenance, rendering and reservation loss. Retain the existing native solar attachment and scan tests in the final exact combined run.",
-        "The saving order service passed the unchanged scoped critical gate after proving current agreement, catalogue, address and gift eligibility against compiled HTTP and native PostgreSQL. Verify the full final candidate coverage report."
+        "The saving order service passed the unchanged scoped critical gate after proving current agreement, catalogue, address and gift eligibility against compiled HTTP and native PostgreSQL. Verify the full final candidate coverage report.",
+        "Wallet review and staff ledger controllers and the chargeback alert reader now pass the original critical thresholds. Focused tests covered current reconciliation context, wallet amount and body validation, and the absence of private alerts without authorized recipients. The three remaining wallet mutation file deficits and the final full combined gate are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1137987,7 +1138036,8 @@
           "release-0.6-wallet-receipt-timeline-budget",
           "release-0.6-electricity-price-and-periods",
           "release-0.6-solar-contract-source-validation",
-          "release-0.6-saving-quote-boundaries"
+          "release-0.6-saving-quote-boundaries",
+          "release-0.6-wallet-read-and-alert-boundaries"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1328368,6 +1328418,72 @@
         {
           "file": "scoped-gate-final.json",
           "sha256": "4a299a3b7935fa6db9197d3e38334d29b62e823b510a6ddfd3e1b69df3e0b1f2"
+        }
+      ]
+    },
+    "release-0.6-wallet-read-and-alert-boundaries": {
+      "batch": "release-0.6-wallet-read-and-alert-boundaries",
+      "base_commit": "0626184e6c353eaea0b769c5ea437f686f44dfe9",
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.12.03",
+        "06-security-testing-observability.md#T-06.10.02.09",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/wallet/wallet.controller.test.ts",
+        "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+        "apps/api/src/wallet/chargeback-alert.service.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/wallet.controller.test.ts",
+          "sha256": "0be71f0c00d5e524533d83e6b49c9c46ae8ae76eba0fff1992ed0d0c1f62a669"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
+          "sha256": "004d60a791fe1f7d815c4bd8a79feb160c16d9246fae0276293e3972d48940c1"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.test.ts",
+          "sha256": "76c2b9874768e7e5b6251f04114c8bbb1f4410b9e91823c089a1b41a37c8a7ea"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "fe786e32c456164e6c950c0e27fd8eb0982645a27584b1de40b3dd5f37ce2907"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "1fcf0067ed61eee2e0b1949b2ce55861bdc1d9524f50d66c2abc772367b22285"
+        }
+      ],
+      "checks": [
+        "Forty-two focused cases passed with native PostgreSQL 17.9 and compiled HTTP for the staff reconciliation integration. Rejected top-up inputs did not start payment, revoked or customer operating contexts could not read the ledger, and unqualified recipients did not receive a financial alert.",
+        "The unchanged critical checker passed all three files at 236/237 lines and 105/109 branches. Historical evidence was reused only for matching runtime bytes. API type checks and ESLint passed."
+      ],
+      "limitations": [
+        "The instrumented subset did not meet the API whole-package functions floor. The exact release coverage and provider gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-wallet-read-and-alert-boundaries",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "f945fa6811dbf1d5463eeebc2753ff31fa2b7c4d97b0cc4daa1e8b5fff342632"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "bdd5d32ead2ac55b537c804155b9ab52122b4f9023717dfb3fbd54d9f965af26"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "6badbdfc03f2cc3d7e448ccd95debf454c0b2ee9a64688be7e8af0cb1ec9ce40"
         }
       ]
     }

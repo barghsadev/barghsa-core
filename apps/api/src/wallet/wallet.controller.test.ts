@@ -44,6 +44,8 @@ function makeController() {
     state: 'Pending',
     redirectUrl: 'https://pay.test/start?authority=abc',
   });
+  const reviewOnline = vi.fn().mockResolvedValue({ review: { hash: REVIEW_HASH } });
+  const reviewReceipt = vi.fn().mockResolvedValue({ review: { hash: REVIEW_HASH } });
   const submit = vi.fn().mockResolvedValue({
     transactionId: 'tx-receipt-1',
     amount: 250_000n,
@@ -55,10 +57,19 @@ function makeController() {
   const controller = new WalletController(
     { getWallet, resolveOnlineTopUpLimit } as never,
     { getAccessibleProfile } as never,
-    { initiate } as never,
-    { submit } as never
+    { initiate, review: reviewOnline } as never,
+    { submit, review: reviewReceipt } as never
   );
-  return { controller, getAccessibleProfile, initiate, submit, getWallet, resolveOnlineTopUpLimit };
+  return {
+    controller,
+    getAccessibleProfile,
+    initiate,
+    submit,
+    getWallet,
+    resolveOnlineTopUpLimit,
+    reviewOnline,
+    reviewReceipt,
+  };
 }
 
 function rejectionBody(error: unknown): Record<string, unknown> {
@@ -69,6 +80,47 @@ function rejectionBody(error: unknown): Record<string, unknown> {
 }
 
 describe('WalletController online top-up (T-04.2.02.01)', () => {
+  it('requires a reviewed positive amount and forwards it as exact IRR with the captured key', async () => {
+    const { controller, reviewOnline, initiate } = makeController();
+    await expect(controller.reviewOnlineTopUp(PROFILE_ID, undefined, req)).rejects.toMatchObject({
+      status: 400,
+      response: expect.objectContaining({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }),
+    });
+    await expect(
+      controller.reviewOnlineTopUp(PROFILE_ID, { amount: 0, idempotencyKey: 'review-1' }, req)
+    ).rejects.toMatchObject({
+      status: 400,
+      response: expect.objectContaining({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }),
+    });
+    expect(reviewOnline).not.toHaveBeenCalled();
+    await expect(
+      controller.reviewOnlineTopUp(PROFILE_ID, { amount: '1000', idempotencyKey: 'review-1' }, req)
+    ).resolves.toEqual({ review: { hash: REVIEW_HASH } });
+    expect(reviewOnline).toHaveBeenCalledExactlyOnceWith(
+      req.session,
+      PROFILE_ID,
+      1000n,
+      'review-1'
+    );
+    expect(initiate).not.toHaveBeenCalled();
+  });
+
+  it('rejects absent top-up and receipt bodies before calling the payment services', async () => {
+    const { controller, initiate, submit, reviewReceipt } = makeController();
+    await expect(
+      controller.initiateOnlineTopUp(PROFILE_ID, undefined, 'review-1', req)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.reviewBankReceiptTopUp(PROFILE_ID, undefined, req)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.submitBankReceiptTopUp(PROFILE_ID, undefined, 'receipt-1', req)
+    ).rejects.toMatchObject({ status: 400 });
+    expect(initiate).not.toHaveBeenCalled();
+    expect(reviewReceipt).not.toHaveBeenCalled();
+    expect(submit).not.toHaveBeenCalled();
+  });
+
   it('returns the versioned onlineTopUpLimit with the wallet balance', async () => {
     const { controller, getWallet, resolveOnlineTopUpLimit } = makeController();
     getWallet.mockResolvedValue({

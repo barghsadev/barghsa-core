@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
   ChargebackAlertService,
   COUNT_UNRESOLVED_CHARGEBACKS_SQL,
@@ -111,6 +112,93 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
     });
     expect(result).toEqual({ recipients: 0, inserted: 0 });
     expect(client.query).not.toHaveBeenCalled();
+  });
+
+  it('does not queue a financial alert when no current recipient has permission', async () => {
+    const client = {
+      query: vi.fn().mockResolvedValue({
+        rows: [{ user_id: 'unrelated', is_admin: false, role_permissions: [['contracts:write']] }],
+      }),
+    };
+    const service = new ChargebackAlertService();
+    const result = await correlationIdStorage.run('chargeback-test-trace', () =>
+      service.notifyChargeback(client, {
+        eventId: EVENT_ID,
+        status: 'unmatched',
+        notification: notification(),
+        walletId: PROFILE_ID,
+        originalTransactionId: null,
+      })
+    );
+    expect(result).toEqual({ recipients: 0, inserted: 0 });
+    expect(client.query).toHaveBeenCalledExactlyOnceWith(FIND_FINANCE_ALERT_RECIPIENTS_SQL);
+  });
+
+  it('preserves legacy chargeback summaries with partial metadata', async () => {
+    const client = {
+      query: vi
+        .fn()
+        .mockResolvedValueOnce({ rows: [{ status: 'unresolved', n: 3 }] })
+        .mockResolvedValueOnce({
+          rows: [
+            {
+              event_id: 'legacy-invalid',
+              status: 'legacy',
+              wallet_id: null,
+              original_transaction_id: null,
+              raw: null,
+              created_at: '2026-09-02T06:00:00.000Z',
+            },
+            {
+              event_id: 'legacy-numeric',
+              status: 'unresolved',
+              wallet_id: PROFILE_ID,
+              original_transaction_id: null,
+              raw: { amountIrR: 75, reason: '' },
+              created_at: '2026-09-02T07:00:00.000Z',
+            },
+            {
+              event_id: 'legacy-incomplete',
+              status: 'unresolved',
+              wallet_id: PROFILE_ID,
+              original_transaction_id: null,
+              raw: { amountIrR: Number.NaN, reason: 'legacy reason' },
+              created_at: '2026-09-02T08:00:00.000Z',
+            },
+          ],
+        }),
+    };
+    const warning = await new ChargebackAlertService().getDashboardWarning(client);
+    expect(warning.count).toBe(3);
+    expect(warning.items).toEqual([
+      {
+        eventId: 'legacy-invalid',
+        status: 'unmatched',
+        walletId: null,
+        originalTransactionId: null,
+        amountIrR: null,
+        reason: null,
+        createdAt: '2026-09-02T06:00:00.000Z',
+      },
+      {
+        eventId: 'legacy-numeric',
+        status: 'unresolved',
+        walletId: PROFILE_ID,
+        originalTransactionId: null,
+        amountIrR: '75',
+        reason: null,
+        createdAt: '2026-09-02T07:00:00.000Z',
+      },
+      {
+        eventId: 'legacy-incomplete',
+        status: 'unresolved',
+        walletId: PROFILE_ID,
+        originalTransactionId: null,
+        amountIrR: null,
+        reason: 'legacy reason',
+        createdAt: '2026-09-02T08:00:00.000Z',
+      },
+    ]);
   });
 
   it('reuses the existing outbox and upserts jobs when the idempotency key already exists', async () => {
