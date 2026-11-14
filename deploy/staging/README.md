@@ -210,11 +210,12 @@ PostgreSQL and ClamAV tags to exact image IDs before building or transferring
 images and pins those IDs in the candidate manifest. The release checks the
 OCI revision labels on the app and web images, verifies the running
 PostgreSQL and ClamAV IDs before migration, and reads back all four IDs
-before saving the active manifest. The worker compares the four running IDs
-with the candidate manifest and saves the commit and verified
-Docker image IDs in its protected `runtime-images.json` before sending the
-Telegram note. A completed job includes the same receipt under `runtime_images`
-in `job.json`. Its `image_scans` field indexes the scan receipts and their
+before saving the active manifest. The VPS matches the public web metadata's
+commit and version to the candidate while rollback is still available. The
+worker compares the four running IDs with the candidate manifest and saves the
+commit and verified Docker image IDs in its protected `runtime-images.json`
+before sending the Telegram note. A completed job includes the same receipt
+under `runtime_images` in `job.json`. Its `image_scans` field indexes the scan receipts and their
 checksums for transferred images. The worker checks the deployed IDs, report
 and SBOM checksums, and license dispositions before announcing. The
 `license_sha256` field binds the passing report to the deployment receipt.

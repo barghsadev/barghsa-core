@@ -50,8 +50,12 @@ done
   echo 'S3 settings must match the single-domain path-style gateway' >&2; exit 1;
 }
 commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}
+version=${BARGHSA_STAGING_RELEASE_VERSION:-}
 [[ -z "$commit" || "$commit" =~ ^[0-9a-f]{40}$ ]] || {
   echo 'Invalid release commit in the candidate manifest' >&2; exit 1;
+}
+[[ -z "$commit" || "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
+  echo 'Invalid release version in the candidate manifest' >&2; exit 1;
 }
 for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
   [[ "${!key:-}" =~ ^barghsa-(app|web|postgres|clamav):vps-[a-z0-9._-]+$ ]] || {
@@ -334,12 +338,13 @@ if [[ -n "$commit" ]]; then
 import json, sys
 
 try:
-    valid = json.load(sys.stdin).get("commit") == sys.argv[1]
+    metadata = json.load(sys.stdin)
+    valid = metadata.get("commit") == sys.argv[1] and metadata.get("version") == sys.argv[2]
 except (ValueError, AttributeError):
     valid = False
 if not valid:
-    sys.exit("Staging web release does not match the candidate commit")
-' "$commit"
+    sys.exit("Staging web release does not match the candidate commit and version")
+' "$commit" "$version"
 fi
 [[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
   echo 'Public S3 gateway did not return AccessDenied' >&2; false;

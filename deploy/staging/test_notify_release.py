@@ -294,6 +294,7 @@ elif name=='ssh' and args[-1].startswith('docker image inspect '):
     print('unknown' if os.environ.get('INVALID_RETAINED_ID') else 'sha256:'+'e'*64)
 elif name=='scp' and pathlib.Path(args[-2]).name=='candidate.env':
     manifest=dict(line.split('=',1) for line in pathlib.Path(args[-2]).read_text().splitlines())
+    assert manifest['BARGHSA_STAGING_RELEASE_VERSION']=='0.6.0'
     assert manifest['BARGHSA_POSTGRES_IMAGE_ID']=='sha256:'+'d'*64
     assert manifest['BARGHSA_CLAMAV_IMAGE_ID']=='sha256:'+'e'*64
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):

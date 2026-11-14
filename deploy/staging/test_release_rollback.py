@@ -375,6 +375,7 @@ trap 'status=$?; echo rollback; exit "$status"' ERR
         script = f'''set -euo pipefail
 APP_PUBLIC_URL=https://staging.example.test
 commit=$1
+version=0.6.0
 curl() {{
   case "$*" in
     *"$APP_PUBLIC_URL/api/health/live") printf '%s' "$LIVE" ;;
@@ -391,21 +392,24 @@ echo promote
         commit = 'a' * 40
         checks = {name: {'status': 'ok'} for name in ('postgresql', 'redis', 'objectStorage')}
         ready = {'status': 'ok', 'checks': checks, 'commit': commit}
+        metadata = {'commit': commit, 'version': '0.6.0'}
         for name, api, web, expected in (
-            ('matching', ready, {'commit': commit}, None),
+            ('matching', ready, metadata, None),
             ('degraded', {**ready, 'status': 'degraded',
                           'checks': {**checks, 'objectStorage': {'status': 'degraded'}}},
-             {'commit': commit}, 'Invalid staging ready'),
+             metadata, 'Invalid staging ready'),
             ('redis-fallback', {**ready, 'warnings': ['redis-unavailable']},
-             {'commit': commit}, 'Invalid staging ready'),
+             metadata, 'Invalid staging ready'),
             ('absent-storage', {**ready, 'checks': {key: value for key, value in checks.items()
                                                     if key != 'objectStorage'}},
-             {'commit': commit}, 'Invalid staging ready'),
-            ('previous-api', {**ready, 'commit': 'b' * 40}, {'commit': commit}, 'Invalid staging ready'),
-            ('missing-api-revision', {**ready, 'commit': None}, {'commit': commit}, 'Invalid staging ready'),
+             metadata, 'Invalid staging ready'),
+            ('previous-api', {**ready, 'commit': 'b' * 40}, metadata, 'Invalid staging ready'),
+            ('missing-api-revision', {**ready, 'commit': None}, metadata, 'Invalid staging ready'),
             ('invalid-schema', {**ready, 'checks': {'postgresql': {'status': 'down'}}},
-             {'commit': commit}, 'Invalid staging ready'),
-            ('previous-web', ready, {'commit': 'b' * 40}, 'Staging web release does not match'),
+             metadata, 'Invalid staging ready'),
+            ('previous-web', ready, {**metadata, 'commit': 'b' * 40}, 'Staging web release does not match'),
+            ('previous-version', ready, {**metadata, 'version': '0.5.1'}, 'Staging web release does not match'),
+            ('missing-version', ready, {'commit': commit}, 'Staging web release does not match'),
             ('invalid-web', ready, [], 'Staging web release does not match'),
         ):
             with self.subTest(name=name):
@@ -432,6 +436,7 @@ echo promote
         receipt = text[text.rindex('if [[ -n "$commit" ]]; then'):]
         script = f'''set -euo pipefail
 BARGHSA_STAGING_RELEASE_COMMIT={'a' * 40}
+BARGHSA_STAGING_RELEASE_VERSION=0.6.0
 BARGHSA_APP_IMAGE=barghsa-app:vps-fixture
 BARGHSA_WEB_IMAGE=barghsa-web:vps-fixture
 BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-fixture
@@ -482,6 +487,8 @@ docker() {{
   fi
 }}
 mode=$1
+if [[ "$mode" == invalid-version ]]; then BARGHSA_STAGING_RELEASE_VERSION=0.06.0; fi
+if [[ "$mode" == missing-version ]]; then unset BARGHSA_STAGING_RELEASE_VERSION; fi
 {loaded}
 {verify}
 {before_start}
@@ -499,6 +506,8 @@ echo accepted
         for mode, expected in (
             ('match', 'accepted'),
             ('bootstrap', 'accepted'),
+            ('invalid-version', 'Invalid release version in the candidate manifest'),
+            ('missing-version', 'Invalid release version in the candidate manifest'),
             ('wrong-bootstrap-image', 'Loaded image ID differs from the candidate manifest: BARGHSA_POSTGRES_IMAGE'),
             ('image:barghsa-app:vps-fixture', 'Loaded image ID differs'),
             ('revision', 'Loaded image revision differs from the candidate commit: BARGHSA_WEB_IMAGE'),

@@ -171,6 +171,7 @@ trap 'rm -rf "$release_tmp"' EXIT
 manifest="$release_tmp/candidate.env"
 cat > "$manifest" <<EOF
 BARGHSA_STAGING_RELEASE_COMMIT=$commit
+BARGHSA_STAGING_RELEASE_VERSION=$version
 BARGHSA_APP_IMAGE=$app_image
 BARGHSA_APP_IMAGE_ID=$app_id
 BARGHSA_WEB_IMAGE=$web_image

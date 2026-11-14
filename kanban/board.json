@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T00:37:08+00:00",
+  "updated": "2026-11-14T00:41:01+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20169,7 +20169,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20189,7 +20190,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20418,6 +20419,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -23815,7 +23824,8 @@
         "The protected quality job now runs the existing staging release, rollback and notification fixtures. The extracted workflow step passed locally. Verify the hosted step on the exact candidate and the live rollout.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "The normal staging worker now validates the exact signed bytes and deletes the probe version. The isolated pinned image passed. Hosted run 43529357035 passed the corrected release-control step. The complete hosted check and actual accepted staging rollout remain open.",
-        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open."
+        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open.",
+        "The VPS now checks both the expected release version and exact commit before accepting the candidate manifest. Matching, stale and absent version fixtures exercised the rollback boundary. A live accepted release receipt remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -23878,7 +23888,8 @@
           "release-0.6-protected-rollout-tests",
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": null
       }
@@ -24090,7 +24101,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-hosted-compose-fixtures",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24110,15 +24122,15 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
-              "sha256": "f2afd321a8becb7328bdab11a2d0454dccbe6a66e220f3479bad9bbe80b22953"
+              "sha256": "e57eacab47b4445bd1b4b381e5e837beffbb269e30ecf3b272af4bdd09bf7609"
             },
             {
               "path": "deploy/production/guarded-rollout.py",
@@ -24268,6 +24280,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh",
+                "deploy/staging/README.md",
+                "deploy/staging/test_release_rollback.py"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -31893,7 +31915,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -31948,7 +31971,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -32293,6 +32316,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -35085,7 +35116,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-canary-dependency-readiness",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-backup-target-monitoring"
+          "release-0.6-backup-target-monitoring",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -35115,7 +35147,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -35691,6 +35723,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "The runbook adds protected discovery and expected-target P1 setup. The existing measured restore, connection, data-integrity and SLA procedure retain their instructions and source evidence."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -99481,7 +99521,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -99629,7 +99670,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -101094,6 +101135,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -163116,7 +163165,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -163488,7 +163538,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -163500,7 +163550,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -164684,6 +164734,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -614403,7 +614462,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -614575,7 +614635,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -615223,6 +615283,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -635190,7 +635258,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -635430,7 +635499,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -635949,6 +636018,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -636079,7 +636156,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -636319,7 +636397,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -636838,6 +636916,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -636966,7 +637052,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -637206,7 +637293,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -637725,6 +637812,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -637853,7 +637948,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -638093,7 +638189,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -638636,6 +638732,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -639258,7 +639362,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -639498,7 +639603,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -640017,6 +640122,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -640209,7 +640322,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -640581,7 +640695,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -640593,7 +640707,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -641801,6 +641915,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -642084,7 +642207,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -642324,7 +642448,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -642843,6 +642967,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -642970,7 +643102,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -643210,7 +643343,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -643729,6 +643862,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -643857,7 +643998,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -644097,7 +644239,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -644616,6 +644758,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -644745,7 +644895,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -644985,7 +645136,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -645528,6 +645679,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -645655,7 +645814,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -645895,7 +646055,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -646414,6 +646574,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -646541,7 +646709,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "status": "done",
@@ -646781,7 +646950,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -647300,6 +647469,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -672622,7 +672799,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-probe-object-cleanup"
+          "release-0.6-probe-object-cleanup",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -672634,7 +672812,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -672872,6 +673050,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The deployment probe removes the exact disposable S3 version and fails on a read or cleanup mismatch. The pinned storage image passed isolated native versioned and unversioned checks. Previously accepted live receipts retain their original scope."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -702625,7 +702811,8 @@
         "The initialized and first-release paths now verify all four image IDs against the candidate manifest. Invalid IDs stop before transfer. Runtime ID mismatch blocks the release note. Verify the final isolated candidate and the actual deployed image evidence.",
         "The retained scans are pinned when queued and bound to preflight and running IDs. Native verification accepted the replacement PostgreSQL and restored ClamAV images and rejected the legacy PostgreSQL ID. The isolated final rollout and live job remain open.",
         "The release compares a verified encrypted checkpoint with the active staging cluster ID and stops before migrations on backup failure or mismatch. A TLS object-storage fixture with the exact replacement database restored the test checkpoint. The eventual live cutover, protected storage and final release rehearsal remain open.",
-        "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open."
+        "Staging release and promotion now reject a healthy response from a stale API, degraded storage and a Redis fallback warning. The real v0.5.1 edge returned healthy dependency statuses and lacked the candidate revision, so it correctly did not satisfy the new gate. Final candidate rehearsal remains open.",
+        "The pre-promotion web smoke now verifies the package version and commit together. Missing or invalid manifest versions fail before startup, and stale or absent public versions enter rollback. Repeat on the exact isolated and deployed candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -702675,7 +702862,8 @@
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-scan-binding",
           "release-0.6-protected-stage-migration-backup",
-          "release-0.6-exact-healthy-readiness"
+          "release-0.6-exact-healthy-readiness",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": null
       }
@@ -713239,7 +713427,8 @@
           "release-0.6-immutable-board-readiness",
           "release-0.6-clamav-missing-metric",
           "release-0.6-retained-staging-image-identities",
-          "release-0.6-retained-image-license-policy"
+          "release-0.6-retained-image-license-policy",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -713283,7 +713472,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -713638,6 +713827,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Adds fail-closed retained-image license verification to initialized staging and the promotion evidence check. First-install and exact app/web license checks, existing release gates, runtime deployment ordering and grouped notification safeguards retain passing evidence."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -722080,7 +722277,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-staging-scanner-gate",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -722096,11 +722294,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7c66da228e9ce8614f3be767bee2187d74a3f4cb7de4b7c52fa5946fadc2c776"
+              "sha256": "05cbb1415c73d123f6fbe034088d770d6645d25ee5fc785a55bebd1ebc898aa9"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -722764,6 +722962,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -726052,7 +726259,8 @@
           "release-0.6-ci-monitoring-rules",
           "release-0.6-retained-staging-image-identities",
           "release-0.6-retained-image-license-policy",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-prepromotion-version"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -726084,7 +726292,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -726387,6 +726595,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds staging release, rollback, notification, approval and guarded-rollout fixtures to the protected application-quality job. The exact new step passed all 79 cases locally. Existing workflows and test assertions are preserved."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         }
@@ -1055387,7 +1055603,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7c66da228e9ce8614f3be767bee2187d74a3f4cb7de4b7c52fa5946fadc2c776"
+              "sha256": "05cbb1415c73d123f6fbe034088d770d6645d25ee5fc785a55bebd1ebc898aa9"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
@@ -1055533,6 +1055749,14 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "Staging verifies the loaded ClamAV signatures before stopping writers and retains the version and UTC build timestamp in the release receipt. The queue, rollback, notification and approval suites passed."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ]
         },
@@ -1055546,7 +1055770,8 @@
           "release-0.6-backup-object-readback",
           "release-0.6-retained-image-license-policy",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-staging-scanner-gate"
+          "release-0.6-staging-scanner-gate",
+          "release-0.6-prepromotion-version"
         ]
       }
     },
@@ -1068690,7 +1068915,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1068698,7 +1068923,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1068714,7 +1068939,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1071912,6 +1072137,16 @@
                 "apps/api/src/solar/solar-postal.integration.test.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "presentation_renewals": [
@@ -1072338,7 +1072573,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-protected-rollout-tests",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-prepromotion-version"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1074507,7 +1074743,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "a4f3bf8530716d7f8478e0f87c387170f1b29f424228177587a623fd0f11b62d"
+              "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1074515,7 +1074751,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "100b3ab639de40c59bac814acc47c18ca6138a8236cc726b69842f3b73fc056a"
+              "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -1074531,7 +1074767,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "29449c4584e645db16dce12e7fd3d6289cf05c3f1af37c862bd939a0116fd562"
+              "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -1077631,6 +1077867,16 @@
                 "apps/api/src/solar/solar-postal.integration.test.ts"
               ],
               "scope": "The controller diffs are confined to empty-input validation on the two electricity discard handlers and the shared solar final-review start handler. Existing test assertions retain their bytes. Compiled native PostgreSQL suites verified the changed handlers and existing successful paths, authorization, rollback and financial outcomes. The generated OpenAPI and the UI callers retain their contracts. Prior evidence for byte-identical routes, fixtures and outputs is retained."
+            },
+            {
+              "batch": "release-0.6-prepromotion-version",
+              "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Add the planned release version to the staging candidate manifest and require it beside the immutable SHA in the existing pre-promotion HTTPS metadata check. Existing service, migration, image, storage and notification behavior retain their paths. The full focused rollback and notification suites passed, including failures on missing or mismatched versions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1078074,7 +1078320,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-protected-rollout-tests",
           "release-0.6-probe-object-cleanup",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-prepromotion-version"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1083194,7 +1083441,8 @@
         "Run the new protected release-controls step on the exact v0.6.0 candidate. Local execution of the literal step passed all 79 staging and production fixture tests.",
         "Hosted preflight 43528633717 failed in the new release-control step because Compose tried to open the missing VPS runtime.env. Both fixture tests passed using the exact runner Compose 2.38.2 binary in isolated Linux amd64 and all 13 rollback tests passed locally. The successor hosted run remains required.",
         "Preflight 43523386018 passed the required integrity check and all four affected test tasks on 465def304. The exact SHA reached main and its push reused the affected-test receipt. Full candidate checks remain open.",
-        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open."
+        "Protected preflight 43529357035 passed the corrected release-control step and all three affected test tasks. The exact df4b7639c commit reached protected main, whose test job reused the exact receipt. Full candidate checks and deployed acceptance remain open.",
+        "Local staging tests now verify the expected release version alongside the exact SHA before the active manifest is updated. The final exact candidate, live deployment and Telegram receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1083502,7 +1083750,8 @@
           "release-0.6-staging-migration-checkpoint",
           "release-0.6-protected-rollout-tests",
           "release-0.6-hosted-compose-fixtures",
-          "release-0.6-verified-main-and-backup-scrape"
+          "release-0.6-verified-main-and-backup-scrape",
+          "release-0.6-prepromotion-version"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1261520,6 +1261769,93 @@
         {
           "file": "mtls-readback.json",
           "sha256": "a9894fc03199f742a2d8b8b018484fd9ea701bb28114608552a44dec744d60ba"
+        }
+      ]
+    },
+    "release-0.6-prepromotion-version": {
+      "batch": "release-0.6-prepromotion-version",
+      "base_commit": "5c27b04f3cefd7be0185d9dd12a5dedb355c323e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "f313631fe872812da97571cce73cdf95a333bb8221f07c868bc0078069d07737"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "f7dfcebc46ae399c88644a15ebfb948823e2104910b545530345727a431cf403"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "109a0bd7218624a09acee3a92f8700f761036d66ba9f36a7bcdb7716d840c39d"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "05cbb1415c73d123f6fbe034088d770d6645d25ee5fc785a55bebd1ebc898aa9"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "e57eacab47b4445bd1b4b381e5e837beffbb269e30ecf3b272af4bdd09bf7609"
+        }
+      ],
+      "checks": [
+        "All 13 staging rollback tests passed. The candidate rejects missing and noncanonical manifest versions before startup. The public smoke rejects matching-SHA metadata with a stale or missing version and invokes the existing rollback path.",
+        "All 15 notification and deploy-script tests passed, including transfer of the verified version in the candidate manifest and protected image and announcement ordering.",
+        "Bash syntax for both scripts, ShellCheck, formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The tests use isolated fixtures. Final hosted candidate, staging deployment, storage and Telegram receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-prepromotion-version",
+      "execution_receipts": [
+        {
+          "file": "rollback.log",
+          "sha256": "81b7c3c6983e18080b2189ec8aa7d24cda66c94253ceb430b4ed83f075701c59"
+        },
+        {
+          "file": "notifier.log",
+          "sha256": "42ccadcba7ae7ec1e71529762493f63f970c9c8caea5d808576932b978d31787"
+        },
+        {
+          "file": "quality.log",
+          "sha256": "401baa4ce5bb56f9f80189bda3079d55cf5f94d6bc63a231549d7e419fae5a93"
         }
       ]
     }
