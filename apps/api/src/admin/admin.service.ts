@@ -38,7 +38,6 @@ import {
   type ElectricitySettingRoute,
 } from './electricity-setting-recovery.js';
 import {
-  GREEN_HISTORY_PAGE_SIZE,
   GREEN_RECOVERY_EVENT,
   readGreenRuleDraft,
   readGreenRuleHistory,
@@ -1644,11 +1643,9 @@ export class AdminService {
         client,
         Math.min(baseVersion, beforeVersion ?? baseVersion)
       );
-      const items = history.slice(0, GREEN_HISTORY_PAGE_SIZE);
       return {
         baseVersion,
-        items,
-        nextBeforeVersion: history.length > GREEN_HISTORY_PAGE_SIZE ? items.at(-1)!.version : null,
+        ...history,
         draft: await readGreenRuleDraft(client, baseVersion),
       };
     });
@@ -1667,7 +1664,9 @@ export class AdminService {
       await client.query("SELECT pg_advisory_xact_lock(hashtext('green-electricity-config'))");
       const baseVersion = await readGreenRuleVersion(client);
       if (baseVersion !== input.expectedVersion) throw new ConflictException('Green rules changed');
-      const [source] = await readGreenRuleHistory(client, baseVersion, input.sourceId);
+      const {
+        items: [source],
+      } = await readGreenRuleHistory(client, baseVersion, input.sourceId);
       if (!source) throw new NotFoundException('Green rule revision not found');
       await this.assertGreenElectricityActivation(source.config, client);
       const current = await readGreenRuleDraft(client, baseVersion);

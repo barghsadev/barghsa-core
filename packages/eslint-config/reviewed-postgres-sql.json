@@ -1,5 +1,5 @@
 {
-  "apps/api/src/admin/admin.service.ts": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb",
+  "apps/api/src/admin/admin.service.ts": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a",
   "apps/api/src/admin/business-work-counts.controller.ts": "7f37eb1f1aa439f148c5cf98a337255d639a0392b05394931a6dd8f9460522fa",
   "apps/api/src/ai-agents/ai-agents.service.ts": "fb50e9bcc40902dba933cf110ddc48951a374bdf71d4b026bff759f82c4930b5",
   "apps/api/src/ai-agents/ai-knowledge-chat.service.ts": "5dcaecd1565f8ea0a52a9844845a5b8186bbbfa1c258e7ccef234ccd2ea8d01f",

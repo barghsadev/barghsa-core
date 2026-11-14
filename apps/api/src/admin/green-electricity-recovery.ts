@@ -25,7 +25,7 @@ export const greenRecoveryActivateBody = z.strictObject({
 });
 
 export const GREEN_RECOVERY_EVENT = 'green_electricity.rollback_draft';
-export const GREEN_HISTORY_PAGE_SIZE = 20;
+const GREEN_HISTORY_PAGE_SIZE = 20;
 type QueryClient = Pick<PoolClient, 'query'>;
 
 export async function readGreenRuleVersion(client: QueryClient) {
@@ -51,6 +51,7 @@ export async function readGreenRuleHistory(
        FROM events WHERE data->>'key'=$1
      )
      SELECT id,version::text,config FROM revisions WHERE version>0 AND version<$2
+       AND version<=2147483647 AND version=trunc(version)
      ORDER BY revisions.version DESC,id DESC LIMIT $4`,
     [
       GREEN_ELECTRICITY_CONFIG_KEY,
@@ -59,12 +60,15 @@ export async function readGreenRuleHistory(
       sourceId ? 1 : GREEN_HISTORY_PAGE_SIZE + 1,
     ]
   );
-  return rows.flatMap((row) => {
-    const parsed = version.safeParse(Number(row.version));
-    return parsed.success && validateGreenElectricityConfig(row.config).ok
-      ? [{ id: row.id, version: parsed.data, config: toGreenElectricityConfig(row.config) }]
-      : [];
-  });
+  const page = rows.slice(0, GREEN_HISTORY_PAGE_SIZE);
+  return {
+    items: page.flatMap(({ id, version, config }) =>
+      validateGreenElectricityConfig(config).ok
+        ? [{ id, version: Number(version), config: toGreenElectricityConfig(config) }]
+        : []
+    ),
+    nextBeforeVersion: rows.length > GREEN_HISTORY_PAGE_SIZE ? Number(page.at(-1)!.version) : null,
+  };
 }
 
 export async function readGreenRuleDraft(client: QueryClient, baseVersion: number) {
@@ -82,7 +86,12 @@ export async function readGreenRuleDraft(client: QueryClient, baseVersion: numbe
   const draft = z
     .object({ sourceId: z.string().uuid(), sourceVersion: version, config: z.unknown() })
     .safeParse(row.draft);
-  if (!draft.success || !validateGreenElectricityConfig(draft.data.config).ok) return null;
+  if (
+    !draft.success ||
+    draft.data.sourceVersion >= baseVersion ||
+    !validateGreenElectricityConfig(draft.data.config).ok
+  )
+    return null;
   return {
     id: row.id,
     baseVersion,

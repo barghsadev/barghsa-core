@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T13:30:44+00:00",
+  "updated": "2026-11-14T13:37:18+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -18644,7 +18644,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -18652,7 +18653,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
@@ -34338,7 +34339,8 @@
         "batches": [
           "release-0.6-existing-config-store-and-secret-service",
           "release-0.6-specialized-queue-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-versioned-config-store",
@@ -34350,7 +34352,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/delivery-window-config.service.test.ts",
@@ -34546,7 +34548,8 @@
         "Storage recovery activation shares the version-aware probe and fails closed when ownership or cleanup is unconfirmed. Current credentials and existing location and version guards remain in effect.",
         "Multipart cleanup age now restores a prior audited revision through a separate review draft and recent staff verification. Concurrent activation and normal settings saves use one version guard. Verify the staged workflow and reconcile remaining security recovery criteria.",
         "Monitoring retention restores an audited superseded version through a separately reviewed draft and recent staff verification. Restoring creates a new exportable revision and keeps previous audit entries. Exact deployed verification and infrastructure application remain open.",
-        "NGINX configuration changes now restore the previous config set on syntax or reload failure and retain the backup with an explicit recovery error if rollback cannot be verified. The staged infrastructure recovery receipt remains open."
+        "NGINX configuration changes now restore the previous config set on syntax or reload failure and retain the backup with an explicit recovery error if rollback cannot be verified. The staged infrastructure recovery receipt remains open.",
+        "Local PostgreSQL tests verified that green history can reach valid older revisions after corrupt audit values and that ineligible drafts cannot be activated. Exact deployed recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -34647,7 +34650,8 @@
           "release-0.6-admin-probe-cleanup",
           "release-0.6-multipart-cleanup-recovery",
           "release-0.6-operational-retention-recovery",
-          "release-0.6-staging-nginx-recovery"
+          "release-0.6-staging-nginx-recovery",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-provider-restore-scope",
@@ -55544,7 +55548,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -55552,7 +55557,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -89936,7 +89941,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -89952,7 +89958,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -91022,7 +91028,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -91038,7 +91045,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -99900,7 +99907,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -99912,7 +99920,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -101355,7 +101363,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101367,7 +101376,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -102810,7 +102819,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -102822,7 +102832,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -104202,7 +104212,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -104222,7 +104233,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -116738,7 +116749,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -116758,7 +116770,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -129726,7 +129738,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -129742,7 +129755,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -130642,7 +130655,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -130658,7 +130672,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -131580,7 +131594,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -131596,7 +131611,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -151058,7 +151073,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -151074,7 +151090,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -152052,7 +152068,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -152068,7 +152085,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -154024,7 +154041,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -154040,7 +154058,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -155945,7 +155963,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -155957,7 +155976,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -157332,7 +157351,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -157344,7 +157364,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -158725,7 +158745,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -158737,7 +158758,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -163980,7 +164001,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -163996,7 +164018,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -165897,7 +165919,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -165909,7 +165932,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -167159,7 +167182,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -167171,7 +167195,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -177719,7 +177743,8 @@
           "release-0.6-storage-browser-probe",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -177731,7 +177756,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -180220,7 +180245,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -180236,7 +180262,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -181272,7 +181298,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -181288,7 +181315,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -226729,7 +226756,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -226741,7 +226769,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/wallet/online-topup.integration.test.ts",
@@ -291948,7 +291976,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -292076,7 +292105,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -293328,7 +293357,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -293456,7 +293486,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -294710,7 +294740,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -294722,7 +294753,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -296256,7 +296287,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -296268,7 +296300,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -298845,7 +298877,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -298857,7 +298890,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -301401,7 +301434,8 @@
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -301529,7 +301563,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -393895,7 +393929,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -393907,7 +393942,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -395360,7 +395395,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -395372,7 +395408,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -396825,7 +396861,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -396837,7 +396874,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -398290,7 +398327,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -398302,7 +398340,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -399755,7 +399793,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -399767,7 +399806,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -401220,7 +401259,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -401232,7 +401272,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -402685,7 +402725,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -402697,7 +402738,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -404150,7 +404191,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -404162,7 +404204,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -405615,7 +405657,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -405627,7 +405670,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -407080,7 +407123,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -407092,7 +407136,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -408545,7 +408589,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -408557,7 +408602,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -410010,7 +410055,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -410022,7 +410068,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -411476,7 +411522,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -411488,7 +411535,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -412941,7 +412988,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -412953,7 +413001,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -414406,7 +414454,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -414418,7 +414467,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -415871,7 +415920,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -415883,7 +415933,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -417336,7 +417386,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -417348,7 +417399,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -674025,7 +674076,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
-          "release-0.6-electricity-setting-recovery"
+          "release-0.6-electricity-setting-recovery",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -674033,7 +674085,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -674475,7 +674527,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-web-server-tracing",
           "release-0.6-electricity-setting-recovery",
-          "release-0.6-password-import-format-inventory"
+          "release-0.6-password-import-format-inventory",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -674491,7 +674544,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -680107,7 +680160,8 @@
           "release-0.6-profile-session-command-validation",
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
-          "release-0.6-finance-approval-investigation-bodies"
+          "release-0.6-finance-approval-investigation-bodies",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -680119,7 +680173,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
@@ -688185,7 +688239,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-empty-command-validation",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -688207,7 +688262,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
@@ -692351,7 +692406,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-transactional-sensitive-audit",
@@ -692369,7 +692425,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
@@ -692940,7 +692996,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -692958,7 +693015,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -693308,7 +693365,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -693326,7 +693384,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -693676,7 +693734,8 @@
           "release-0.6-specialized-queue-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -693694,7 +693753,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -695760,7 +695819,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-electricity-setting-recovery",
           "release-0.6-ci-monitoring-rules",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -695801,7 +695861,7 @@
             },
             {
               "path": "packages/eslint-config/reviewed-postgres-sql.json",
-              "sha256": "a9c21fa4a1b97465ed09da65a7e1fcd5d910de0be51d97c281a0f65b6df98c6c"
+              "sha256": "bb2dd36b6fd96bf4fcaf7469dbd55a71ae664b65bbc8e1b1260b5665082e5304"
             }
           ],
           "source_renewals": [
@@ -722083,7 +722143,8 @@
         "batches": [
           "release-0.6-effective-brand-rollback-browser-journey",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-effective-configuration-and-rollback-browser-journey",
@@ -1041246,7 +1041307,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1041262,7 +1041324,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1042356,7 +1042418,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1042372,7 +1042435,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1043465,7 +1043528,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1043481,7 +1043545,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1044576,7 +1044640,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1044592,7 +1044657,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1045687,7 +1045752,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1045703,7 +1045769,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1046795,7 +1046861,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1046811,7 +1046878,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1047903,7 +1047970,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1047919,7 +1047987,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1049012,7 +1049080,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1049028,7 +1049097,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1050120,7 +1050189,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1050136,7 +1050206,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1051229,7 +1051299,8 @@
           "release-0.6-wizard-server-feedback",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -1051245,7 +1051316,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -1094882,7 +1094953,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -1094906,7 +1094978,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -1096047,7 +1096119,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -1096071,7 +1096144,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -1097582,7 +1097655,8 @@
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-api-config-history"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -1097606,7 +1097680,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -1104115,7 +1104189,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -1108445,7 +1108519,8 @@
           "release-0.6-profile-address-access-command-validation",
           "release-0.6-profile-completion-terms-validation",
           "release-0.6-finance-approval-investigation-bodies",
-          "release-0.6-staff-directory-audit-authority"
+          "release-0.6-staff-directory-audit-authority",
+          "release-0.6-api-config-history"
         ]
       }
     },
@@ -1108477,7 +1108552,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -1114469,7 +1114544,8 @@
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-coverage-browser-selection",
           "release-0.6-kb-command-validation",
-          "release-0.6-kb-read-authority"
+          "release-0.6-kb-read-authority",
+          "release-0.6-api-config-history"
         ]
       }
     },
@@ -1114517,7 +1114593,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -1120665,7 +1120741,8 @@
           "release-0.6-kb-command-validation",
           "release-0.6-kb-read-authority",
           "release-0.6-nodemailer-moderate-advisories",
-          "release-0.6-ai-admin-command-validation"
+          "release-0.6-ai-admin-command-validation",
+          "release-0.6-api-config-history"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1120738,7 +1120815,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a8c973e33e06ac4f478d9a47d3cb837e8f568faa1d3a25bcbefc254aae2dbddb"
+              "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -1126781,7 +1126858,8 @@
           "release-0.6-telegram-unlink-validation",
           "release-0.6-notification-scan-recheck",
           "release-0.6-kb-command-validation",
-          "release-0.6-kb-read-authority"
+          "release-0.6-kb-read-authority",
+          "release-0.6-api-config-history"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1132140,7 +1132218,8 @@
         "The scoped release coverage check resolved the three recorded worker file deficits for OTP notices and invoice reminders. Ninety-three affected cases passed, including native migrated PostgreSQL. The final combined and license checks still need exact release evidence.",
         "The scoped release coverage check resolved five named admin and staff read authority file deficits. The affected 55 cases passed, including PostgreSQL integrations. The exact combined release and license gates remain open.",
         "Both shared coverage groups from the failed hosted rehearsal pass the unchanged release checker locally. Exact combined coverage and staged operational evidence remain open.",
-        "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files."
+        "All four previously failing web files passed the scoped combined 90/85 critical thresholds. Run the full combined and release-control gates on the exact candidate after resolving the remaining API files.",
+        "Five API configuration-recovery files now meet the original critical coverage thresholds. Green rollback pagination was fixed and regression-tested. Run the exact full combined coverage gate after the remaining API gaps are resolved."
       ],
       "owner": null,
       "depends_on": [],
@@ -1132506,7 +1132585,8 @@
           "release-0.6-worker-notification-coverage",
           "release-0.6-staff-control-coverage",
           "release-0.6-provider-coverage",
-          "release-0.6-web-admin-coverage"
+          "release-0.6-web-admin-coverage",
+          "release-0.6-api-config-history"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1321322,6 +1321402,193 @@
         {
           "file": "merged-web-admin-coverage-gate.json",
           "sha256": "2b1c90616cf133dcc8624c49fbe2757ea1f1fa64100503334e928b77dd368c38"
+        }
+      ]
+    },
+    "release-0.6-api-config-history": {
+      "batch": "release-0.6-api-config-history",
+      "base_commit": "b220b0cf8702d0503d04fc83061d70a5c1640a0b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.03",
+        "01-platform-infrastructure.md#T-07.02.01",
+        "01-platform-infrastructure.md#T-07.02.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-09.05.01",
+        "05-notifications-documents-ai.md#T-05.03.01",
+        "05-notifications-documents-ai.md#T-05.03.02",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "02-auth-users-admin.md#T-09.06.03",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "06-security-testing-observability.md#T-06.01.01.01",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.10.03.12",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/admin.service.ts",
+        "apps/api/src/admin/green-electricity-recovery.ts",
+        "apps/api/src/admin/config-recovery-history.integration.test.ts",
+        "packages/eslint-config/reviewed-postgres-sql.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "960c460ea8eeaea0030e42e11d7c88278e13a672bde4972337f9bc0ae6990689"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "8e9ef82c3b3b586ac0e05a42c8a6c9b2c93c216f6a518dcc25001e597f542d2a"
+        },
+        {
+          "path": "apps/api/src/admin/config-activation-history.ts",
+          "sha256": "3d6d831804873afee76c39ad621f42adafc7978fafd663ab8ac589396728d78d"
+        },
+        {
+          "path": "apps/api/src/admin/config-recovery-history.integration.test.ts",
+          "sha256": "567557077d3160f943137b94d71f02cf0e61739d442bcd4bb17cdc8c4dac901f"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
+          "sha256": "96258e597a6071bec6636843ab7cff14b96afacf031593b11eeb237c8b819faf"
+        },
+        {
+          "path": "apps/api/src/admin/contract-limit-recovery.ts",
+          "sha256": "a4fb8ebe029567845d455502de49850f3748152b2d805b61fa30fc758cfa67ca"
+        },
+        {
+          "path": "apps/api/src/admin/electricity-setting-recovery-http.integration.test.ts",
+          "sha256": "565f005459ea6dfea64ce255e8c65f565d7db0beb095526f1e777b05697dbf39"
+        },
+        {
+          "path": "apps/api/src/admin/electricity-setting-recovery.ts",
+          "sha256": "31018f88a5c81802aa48584d26ddb51625e00be45588cea8b8300415b0e68083"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-http.integration.test.ts",
+          "sha256": "2e5adad3afaaff3206b80c3e142de02d43c507d00b42c5690e6edbd7c21e927e"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-recovery.ts",
+          "sha256": "3358cee190623e7a1784010192f7a4f456b40bbccb93ea342461450ec688e6df"
+        },
+        {
+          "path": "apps/api/src/admin/service-settings-recovery.ts",
+          "sha256": "966309433b83c7f5e6d4f8f2fdccdc6607f711d3ed00ea6bcdf42da7253c59ae"
+        },
+        {
+          "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
+          "sha256": "734dd7140b80e3ae0b65bea335d47c89aa608f7db434daaa42182e4c14518c06"
+        },
+        {
+          "path": "apps/api/src/admin/service-workflow-http.integration.test.ts",
+          "sha256": "5bc7fac7254683537ef5ef872028eb56bb47d289ff786b139e09f26db4adc7d4"
+        },
+        {
+          "path": "apps/api/src/admin/verification-mode-http.integration.test.ts",
+          "sha256": "be24c06a59a52fbcdf0915757ba8263ac2ce28e777e844bdc96cd1e903402bb8"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "bb2dd36b6fd96bf4fcaf7469dbd55a71ae664b65bbc8e1b1260b5665082e5304"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Fixed green-electricity rollback pagination by retaining a cursor from the audit rows even if a stored value is invalid. Fractional and out-of-range revisions cannot consume page slots. A draft whose source is at or after its base is refused. Existing permissions, step-up, activation rules, transaction and audit entry creation are preserved.",
+        "All 115 focused API tests passed across eight suites, including compiled HTTP with migrated PostgreSQL. The focused instrumented run passed 77 tests and all five affected critical per-file gates at 133/135 lines and 88/92 branches. Tests verified legacy formats, recoverable cursors, no invalid-draft fallback, and current read authority.",
+        "Strict API types, ESLint, formatting and the SQL review rule test passed. Only green recovery methods changed in AdminService. All 58 other class members and 114 template literals match the prior reviewed source."
+      ],
+      "limitations": [
+        "The exact combined hosted coverage gate and staged recovery and live activation receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-api-config-history",
+      "execution_receipts": [
+        {
+          "file": "native.log",
+          "sha256": "901a739a8f0f0dec45b4b016d0340c6916a90c08691cee6264b6241b494c3a54"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "9e9715f88eb46cbf34523954492bb18bbf0ed66b1746584d3e3dc068e8102e42"
+        },
+        {
+          "file": "static.log",
+          "sha256": "1fd57d67e3a97f24f57c02a982c131de50d3c6925a8e9806f362ab76dc9a036f"
+        },
+        {
+          "file": "scoped-gate.json",
+          "sha256": "62f0814291ef12c1458180cbd8598b95f0e9701f76c3926baf024fc51db6d253"
+        },
+        {
+          "file": "admin-service-scope.json",
+          "sha256": "8bc6936675097e1716e7f8a40c0cc435ff09407f3c24589eff2e1c14d2ed89fa"
         }
       ]
     }
