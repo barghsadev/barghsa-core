@@ -8810,7 +8810,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -8830,7 +8831,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -9173,6 +9174,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -12142,7 +12151,8 @@
         "The isolated 0288-to-0289 migration and idempotent repeat passed on the retained Debian and Ubuntu trial runtimes. The Ubuntu staging rehearsal through 0296 also passed, including a no-op rerun and HTTP readiness for both matched pairs. The previous image rejected the migrated copy. Verify the final staging cutover and recovery on the production-equivalent topology.",
         "The staging release now retains the active PostgreSQL volume and checks its mount before startup, before migration, and before marking the deployment healthy. The matching rollback pair was verified on isolated copies on the staging host. Verify the actual logical cutover on staging and repeat on the designated production-equivalent topology.",
         "The staging release requires a complete encrypted pre-migration checkpoint with remote readback and persists it in the exact deployment receipt. Complete the real approved migration and record its backup and recovery.",
-        "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal."
+        "The promotion verifier binds the exact candidate deployment checkpoint to its original off-server manifest. Obtain the actual manifest and reviewed migration, seed and rollback or roll-forward receipts from the accepted rehearsal.",
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -12291,6 +12301,20 @@
         },
         "changed_paths": [
           ".github/workflows/ci.yml",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
+          "deploy/staging/Dockerfile.postgres",
+          "deploy/staging/README.md",
+          "deploy/staging/build-postgres-image.sh",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md",
+          "docs/security/release-license-review.md",
           "packages/db/drizzle/production/meta/_journal.json",
           "packages/db/package.json",
           "packages/db/src/database-foundations.integration.test.ts",
@@ -12303,17 +12327,8 @@
           "packages/db/src/migrate.runner.test.ts",
           "packages/db/src/migrate.snapshot.test.ts",
           "packages/db/src/migrate.ts",
-          "deploy/staging/README.md",
-          "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py",
-          "docs/operations/backup/postgresql-image-upgrade.md",
-          "deploy/staging/Dockerfile.postgres",
-          "deploy/staging/build-postgres-image.sh",
-          "deploy/staging/deploy.sh",
-          "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md"
+          "scripts/test_check_release_licenses.py"
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
@@ -12329,7 +12344,8 @@
           "release-0.6-staging-postgres-volume-guard",
           "release-0.6-queue-schema-rehearsal",
           "release-0.6-staging-migration-checkpoint",
-          "release-0.6-promotion-migration-receipt"
+          "release-0.6-promotion-migration-receipt",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": null
       }
@@ -13370,7 +13386,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "audited-admin-bootstrap-and-first-staff-session",
@@ -13383,7 +13400,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13482,6 +13499,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -13570,7 +13595,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -13582,7 +13608,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -13975,6 +14001,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -20478,7 +20512,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20498,7 +20533,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20760,6 +20795,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -21537,7 +21580,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21549,7 +21593,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -21793,6 +21837,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -21862,7 +21914,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -21874,7 +21927,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -22118,6 +22171,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -24282,7 +24343,8 @@
         "The VPS now checks both the expected release version and exact commit before accepting the candidate manifest. Matching, stale and absent version fixtures exercised the rollback boundary. A live accepted release receipt remains open.",
         "A completed staging job now retains and verifies the actual Telegram summary and any confirmed grouped album against the exact deployed identity, note bytes and queued images. The promotion verifier reconciles the embedded receipt with the protected copies. Capture these results on the accepted v0.6.0 staging release.",
         "Verified notification-only retry after a saved staging runtime receipt in the queue and notifier suites. Verify the accepted v0.6.0 deployment and actual Telegram receipts.",
-        "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts."
+        "After a verified deployment, a notification-only retry reads back the exact four image IDs across the six running staging services before using the saved receipt. The staging suite rejects a changed, stopped, missing, duplicate or malformed service result before sending. Read-only SSH verification matched the current v0.5.1 services. Verify the actual accepted v0.6.0 deployment and Telegram receipts.",
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -24312,6 +24374,9 @@
         "changed_paths": [
           ".github/workflows/ci.yml",
           "audit/skipped-work-handoff.md",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py",
           "deploy/staging/README.md",
           "deploy/staging/deploy.sh",
           "deploy/staging/release-queue.py",
@@ -24349,7 +24414,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staging-telegram-receipt",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": null
       }
@@ -24375,7 +24441,8 @@
         "The exact rollout pools require healthy PostgreSQL, Redis and object storage without warnings before authenticated smoke. Tested locally. Verify the production-equivalent canary and compatible restoration on the approved topology.",
         "The promotion checker validates the original authenticated DAST receipt against the staged candidate, pinned scanner and eight expected probe outcomes. A stale or incomplete report and high findings block approval. Use the exact deployed candidate and retain finding dispositions with the security review.",
         "The approval gate now compares original hosted load artifact bytes for the exact candidate, verifies the seven strict budgets and durable outcomes, and binds separate production-equivalent evidence. Obtain both receipts for the accepted launch candidate.",
-        "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal."
+        "The promotion gate now rejects disposable or mismatched staging migration checkpoints and binds separate recovery rehearsal evidence. Use the actual accepted candidate and production-equivalent rehearsal.",
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -24405,12 +24472,16 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md",
           "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
           "deploy/production/guarded-rollout.py",
           "deploy/production/rollout-observer.py",
+          "deploy/production/test_check_promotion.py",
           "deploy/production/test_guarded_rollout.py",
           "deploy/production/test_rollout_observer.py",
-          "deploy/production/check-promotion.py",
-          "deploy/production/test_check_promotion.py"
+          "deploy/staging/README.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py"
         ],
         "batches": [
           "release-0.6-rollout-latency-and-readonly-smoke",
@@ -24423,7 +24494,8 @@
           "release-0.6-promotion-receipt-order",
           "release-0.6-promotion-dast-receipt",
           "release-0.6-promotion-load-receipt",
-          "release-0.6-promotion-migration-receipt"
+          "release-0.6-promotion-migration-receipt",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": null
       }
@@ -24571,7 +24643,8 @@
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24595,7 +24668,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -24792,6 +24865,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -32651,7 +32732,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -32707,7 +32789,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -33084,6 +33166,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -36010,7 +36100,8 @@
           "release-0.6-backup-target-monitoring",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36033,7 +36124,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -36041,7 +36132,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -36681,6 +36772,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -39119,7 +39219,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -39147,7 +39248,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             }
           ],
           "checks": [
@@ -39403,6 +39504,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -167145,7 +167254,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -167517,7 +167627,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -168820,6 +168930,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -650310,7 +650428,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -650682,7 +650801,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -652009,6 +652128,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -683829,7 +683956,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -683841,7 +683969,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -684112,6 +684240,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -690310,7 +690446,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "batch": "release-0.6-runtime-secret-resolution",
@@ -690322,7 +690459,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
@@ -690458,6 +690595,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -714647,7 +714792,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -714669,11 +714815,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "c7723c914682379c561fa608ae36f25c5067d681e4b408ecf8ba483cb3dd5f7f"
+              "sha256": "7d02d8b247838f7197d84fff286ede02f553875698ac819c097f683b9a60b050"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -715072,6 +715218,15 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -715577,7 +715732,8 @@
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-protected-rollout-tests",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -715599,15 +715755,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "c7723c914682379c561fa608ae36f25c5067d681e4b408ecf8ba483cb3dd5f7f"
+              "sha256": "7d02d8b247838f7197d84fff286ede02f553875698ac819c097f683b9a60b050"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -716116,6 +716272,16 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -716253,7 +716419,8 @@
           "release-0.6-synthetic-exact-fixture-read",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -716264,7 +716431,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -716633,6 +716800,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -717199,7 +717374,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -717220,7 +717396,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -717568,6 +717744,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -717619,7 +717803,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -717640,7 +717825,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -717988,6 +718173,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -725132,7 +725325,8 @@
           "release-0.6-rollout-api-revision",
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-canary-dependency-readiness"
+          "release-0.6-canary-dependency-readiness",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -725156,7 +725350,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -725454,6 +725648,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -734681,7 +734883,8 @@
           "release-0.6-prepromotion-version",
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -734701,7 +734904,7 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e278bffaa5cfe14062c4fea4e8d160a323443fc0e42caa21d0ae3b062803c9b2"
+              "sha256": "5af34b33cfa887eac5edd0de3ceb299cef0be09b9898f941c1d9396c6c1d5faa"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -735455,6 +735658,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Only the three profile selection and three session or trusted-device revocation commands reject undeclared JSON. Omitted and empty bodies retain the existing dispatch. The generated contract only updates the affected HTTP 400 responses. Existing ownership, CSRF, step-up, revocation and audit assertions passed. Other handlers and success response contracts retain their previous evidence."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -737076,7 +737287,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-empty-command-validation"
+          "release-0.6-empty-command-validation",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -737124,7 +737336,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -737431,6 +737643,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -737732,7 +737952,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-recovery-baseline-proof",
           "release-0.6-canary-dependency-readiness",
-          "release-0.6-profile-session-command-validation"
+          "release-0.6-profile-session-command-validation",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -737780,7 +738001,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "5a1d0eb3e6ce3342e3baba752cc1711e17104a12ddaa80f32e3bd8067b52cb24"
+              "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -738101,6 +738322,14 @@
                 "apps/api/src/session/session.controller.ts"
               ],
               "scope": "Only the three profile selection and three session or trusted-device revocation commands reject undeclared JSON. Omitted and empty bodies retain the existing dispatch. The generated contract only updates the affected HTTP 400 responses. Existing ownership, CSRF, step-up, revocation and audit assertions passed. Other handlers and success response contracts retain their previous evidence."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -739384,7 +739613,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -739404,7 +739634,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -739656,6 +739886,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -739768,7 +740006,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -739788,7 +740027,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -740040,6 +740279,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -740090,7 +740337,8 @@
           "release-0.6-retained-image-license-policy",
           "release-0.6-exact-healthy-readiness",
           "release-0.6-recovery-baseline-proof",
-          "release-0.6-protected-rollout-tests"
+          "release-0.6-protected-rollout-tests",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -740110,7 +740358,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "7fb0881c7311c08c4a248a72a2068ef4fbf63a9c244f2f718aac555af0798793"
+              "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -740362,6 +740610,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "The verifier matches the completed staging job checkpoint to the off-server manifest and binds separate migration recovery evidence. Existing staging identity, performance, image, backup and authorization checks retain their prior scope. Promotion and release queue test suites passed."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         }
@@ -1075830,15 +1076086,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "83e4056e3d08c040d73d4f2fda34d52221b5497d526c1eeb65fcc3410033b25b"
+              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "e278bffaa5cfe14062c4fea4e8d160a323443fc0e42caa21d0ae3b062803c9b2"
+              "sha256": "5af34b33cfa887eac5edd0de3ceb299cef0be09b9898f941c1d9396c6c1d5faa"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "d4a26eb6aabba2ba85dfdc6c52262f245ab06cee510015d75c5860871b88b242"
+              "sha256": "a6db318303ed94f1c8674a429d191e0de0e1f8d90a7d6f6991a88ca240675308"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1076008,6 +1076264,16 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ]
         },
@@ -1076024,7 +1076290,8 @@
           "release-0.6-staging-scanner-gate",
           "release-0.6-prepromotion-version",
           "release-0.6-staging-notification-resume",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ]
       }
     },
@@ -1089333,7 +1089600,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1089353,7 +1089620,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "83e4056e3d08c040d73d4f2fda34d52221b5497d526c1eeb65fcc3410033b25b"
+              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1092696,6 +1092963,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ],
           "presentation_renewals": [
@@ -1093129,7 +1093405,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1095298,7 +1095575,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dfb28334180268e1dafc03389cd5a1004d50447e1aa540d0cb4fac70b4e8a2f9"
+              "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1095318,7 +1095595,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "83e4056e3d08c040d73d4f2fda34d52221b5497d526c1eeb65fcc3410033b25b"
+              "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1098562,6 +1098839,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Notification-only retries now verify the running Docker image IDs across the six staging services through trusted SSH. The same retry still verifies public web revision, API readiness and current dependencies, and preserves unknown-send protection. Unrelated prior evidence retains its tested scope."
+            },
+            {
+              "batch": "release-0.6-migration-manifest-binding",
+              "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "The staging worker records the complete backup manifest digest, and the promotion verifier rejects a missing digest or different manifest metadata while retaining its existing ciphertext and timing checks. Queue, notifier and promotion tests passed. Existing acceptance retains its tested scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1099012,7 +1099298,8 @@
           "release-0.6-staff-queue-command-validation",
           "release-0.6-upload-command-validation",
           "release-0.6-profile-session-command-validation",
-          "release-0.6-notification-image-readback"
+          "release-0.6-notification-image-readback",
+          "release-0.6-migration-manifest-binding"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1104876,7 +1105163,8 @@
         "The staging backup-monitoring overlay now declares the expected target independently of discovery and validates in isolation. Live protected mTLS exporter, backup, measured restore and actual paging receipts remain open.",
         "The exact staging backup scrape passed an isolated mutual-TLS test with a verified client and hostname, a required client certificate, and the three scoped textfile metrics. Live backup and restore, exporter and P1 destination receipts remain open.",
         "The staging data volume and backup scratch filesystem were measured without stopping writers. The cutover runbook now lists the files that coexist during backup and restore and the off-server retention quota to verify. Provision the approved endpoint and key, then measure a restored rehearsal before any cutover.",
-        "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover."
+        "The cutover runbook now includes measured backup and restore scratch peaks from the protected native fixture. Verify these on the approved backup destination and retain actual deployment, recovery and monitoring receipts before cutover.",
+        "The staging job now retains a canonical digest for the complete pre-migration backup manifest. The first-launch promotion verifier checks that digest against the original off-server manifest, including timestamps, WAL and tablespaces. Isolated tests passed. Actual off-server provisioning and staging and production-equivalent migration and recovery receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1104946,7 +1105234,8 @@
           "release-0.6-backup-target-monitoring",
           "release-0.6-verified-main-and-backup-scrape",
           "release-0.6-cutover-capacity-and-image-readback",
-          "release-0.6-measured-cutover-scratch"
+          "release-0.6-measured-cutover-scratch",
+          "release-0.6-migration-manifest-binding"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1104980,7 +1105269,6 @@
         },
         "changed_paths": [
           "apps/api/src/documents/document-http.integration.test.ts",
-          "docs/operations/clamav-signatures.md",
           "deploy/monitoring/notification-alerts.test.yml",
           "deploy/monitoring/notification-alerts.yml",
           "deploy/monitoring/staging-prometheus.yml",
@@ -1104988,7 +1105276,12 @@
           "deploy/production/README.md",
           "deploy/production/check-promotion.py",
           "deploy/production/test_check_promotion.py",
+          "deploy/staging/README.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
           "docs/operations/backup/postgresql-restore-runbook.md",
+          "docs/operations/clamav-signatures.md",
           "packages/db/scripts/backup/test_verify_restore.py",
           "packages/db/scripts/backup/verify_restore.py"
         ],
@@ -1287573,6 +1287866,105 @@
         {
           "file": "accessibility-advisories.zip",
           "sha256": "151563cb06dbd43c18034331cdd019a05ebb1db419b483caefb206d4bd651326"
+        }
+      ]
+    },
+    "release-0.6-migration-manifest-binding": {
+      "batch": "release-0.6-migration-manifest-binding",
+      "base_commit": "ecc10813715bf9d97beb6ea0df56f64f33aa3cd6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py",
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "e9b81a5380f71f1f225c6c240f9d19db13d161176f800651d476bdc6ec590f1b"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "50fdfa9c619bea805ac13be8de4f4afa7e927446b257462a6cddf92ce1bbe659"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "7d02d8b247838f7197d84fff286ede02f553875698ac819c097f683b9a60b050"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "f83de3596531b045649b901e5821495caf7a5cbbf22449475fa8db85e6c949a7"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "99f0940aabbcf64485ca7589f6ea460af4c2546e7332ad384eae23d2f64fe862"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "5af34b33cfa887eac5edd0de3ceb299cef0be09b9898f941c1d9396c6c1d5faa"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "a6db318303ed94f1c8674a429d191e0de0e1f8d90a7d6f6991a88ca240675308"
+        }
+      ],
+      "checks": [
+        "All 24 release queue tests, 16 notification and deployment tests and 17 promotion verification tests passed. A changed timestamp, WAL range, or tablespace mapping fails even when the ciphertext ID and checksum match. Markdown formatting and diff checks passed."
+      ],
+      "limitations": [
+        "Fixture and source checks. The live staging backup is unconfigured and production-equivalent rehearsals remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-migration-manifest-binding",
+      "execution_receipts": [
+        {
+          "file": "queue.log",
+          "sha256": "2acc81a5dae17f2945b7a3e89feda9c24b5a830a404beac6569e1ac7b64908ea"
+        },
+        {
+          "file": "notify.log",
+          "sha256": "3f81137471638d280152cce1a9a03f71fd0a451b155fd6d965f6cb4af0e70631"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "713cc9d18ef0c3bdd2c7e9f9d5ef529fad6f863fa2810c1eb879aa994ca6be38"
         }
       ]
     }

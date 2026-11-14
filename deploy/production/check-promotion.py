@@ -457,6 +457,7 @@ def verify_migration_receipts(index_path, path, fingerprint, job, sha):
     runtime = job.get('runtime_images')
     checkpoint = runtime.get('migration_backup') if isinstance(runtime, dict) else None
     manifest = data['checkpoint_manifest']
+    manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
     if (not isinstance(checkpoint, dict) or checkpoint.get('status') != 'verified'
             or runtime.get('commit') != sha or type(manifest.get('version')) is not int
             or manifest['version'] != 1 or type(manifest.get('size')) is not int
@@ -467,7 +468,8 @@ def verify_migration_receipts(index_path, path, fingerprint, job, sha):
             or not matches(r'blobs/[a-f0-9]{32}\.tar\.gpg', manifest.get('blob'))
             or not matches(r'[a-f0-9]{64}', manifest.get('sha256'))
             or any(checkpoint.get(field) != manifest[field]
-                   for field in ('label', 'system_id', 'blob', 'sha256', 'size'))):
+                   for field in ('label', 'system_id', 'blob', 'sha256', 'size'))
+            or checkpoint.get('manifest_sha256') != manifest_digest):
         raise ValueError('Staging migration checkpoint must match its verified off-server manifest')
     started = receipt_time(manifest.get('started_at'))
     completed = receipt_time(manifest.get('completed_at'))

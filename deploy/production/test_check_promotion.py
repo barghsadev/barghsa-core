@@ -373,7 +373,8 @@ class StructuredReceiptTest(unittest.TestCase):
 
     def test_migration_checkpoint_matches_the_deployed_release_and_separate_rehearsal(self):
         manifest = {**self.backup()['backup_manifest'],
-                    'label': f'release-{SHA[:12]}-20261112T065800Z-123'}
+                    'label': f'release-{SHA[:12]}-20261112T065800Z-123',
+                    'wal_ranges': [{'Timeline': 1}], 'tablespaces': {}}
         queue = runpy.run_path(str(promotion.ROOT / 'deploy/staging/release-queue.py'))
         marker = 'BARGHSA_STAGING_MIGRATION_BACKUP_V1 '
         checkpoint = queue['verify_migration_backup'](
@@ -394,12 +395,16 @@ class StructuredReceiptTest(unittest.TestCase):
         self.assertEqual(verified['checkpoint'], manifest['label'])
         self.assertEqual(verified['strategy'], 'rollback')
         self.assertEqual(verified['sha256']['rehearsal_evidence'], promotion.file_digest(evidence))
+        missing_digest = {key: value for key, value in checkpoint.items() if key != 'manifest_sha256'}
         for runtime in ({}, {'commit': 'd' * 40, 'migration_backup': checkpoint},
                         {'commit': SHA, 'migration_backup': {'status': 'disposable'}},
+                        {'commit': SHA, 'migration_backup': missing_digest},
                         {'commit': SHA, 'migration_backup': {**checkpoint, 'system_id': '123'}}):
             with self.subTest(runtime=runtime), self.assertRaisesRegex(ValueError, 'off-server manifest'):
                 check(bundle, {**job, 'runtime_images': runtime})
         for changed in ({'size': True}, {'sha256': '0' * 64}, {'blob': 'other'},
+                        {'started_at': '2026-11-12T06:58:00Z'}, {'wal_ranges': [{'Timeline': 2}]},
+                        {'tablespaces': {'123': '/backup/other'}},
                         {'label': f'release-{"d" * 12}-20261112T065800Z-123'}):
             with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'off-server manifest'):
                 check({**bundle, 'checkpoint_manifest': {**manifest, **changed}})

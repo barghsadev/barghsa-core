@@ -355,7 +355,8 @@ manifest, reads back the encrypted object, and records
 invoking migrations. A failed upload, readback or mismatched receipt enters
 rollback. The retained PostgreSQL image must provide the readback receipt.
 The release worker copies the backup label, database system ID, encrypted
-object name, length and SHA-256 into `runtime_images.migration_backup` in
+object name, length, ciphertext SHA-256 and canonical manifest SHA-256 into
+`runtime_images.migration_backup` in
 `job.json`. A disposable release records `status: disposable` in that field.
 Use the verified checkpoint identity to recover the exact pre-migration data.
 Apply the [PostgreSQL restore runbook](../../docs/operations/backup/postgresql-restore-runbook.md)

@@ -398,12 +398,18 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                         transfer = next(line for line in calls if line.startswith(('docker save ', 'docker load ')))
                         self.assertLess(calls.index(retained_check), calls.index(transfer))
                         evidence = json.loads(receipt.read_text())
+                        manifest = {
+                            "version": 1, "label": "release-" + "a" * 12 + "-20261113T230000Z-123",
+                            "system_id": "123456", "blob": "blobs/" + "d" * 32 + ".tar.gpg",
+                            "size": 42000, "sha256": "f" * 64,
+                        }
                         self.assertEqual(evidence["schema_version"], 1)
                         self.assertEqual(evidence["commit"], "a" * 40)
                         self.assertEqual(evidence["migration_backup"], {
                             "status": "verified", "label": "release-" + "a" * 12 + "-20261113T230000Z-123",
                             "system_id": "123456", "blob": "blobs/" + "d" * 32 + ".tar.gpg",
                             "size": 42000, "sha256": "f" * 64,
+                            "manifest_sha256": hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest(),
                         })
                         self.assertEqual(evidence["scanner"], {
                             "engine_version": "1.5.4", "signature_version": 28182,

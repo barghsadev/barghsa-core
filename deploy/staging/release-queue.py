@@ -72,7 +72,12 @@ def verify_migration_backup(log, commit):
             or any(not isinstance(backup.get(field), str) or not re.fullmatch(pattern, backup[field])
                    for field, pattern in checks.items())):
         raise ValueError("Invalid verified staging migration backup receipt")
-    return {"status": "verified", **{field: backup[field] for field in (*checks, "size")}}
+    # The upload verifier adds this flag to stdout. The off-site manifest has
+    # the same data without the flag.
+    manifest = {key: value for key, value in backup.items() if key != "upload_verified"}
+    manifest_digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
+    return {"status": "verified", "manifest_sha256": manifest_digest,
+            **{field: backup[field] for field in (*checks, "size")}}
 
 
 def verify_scanner(log):
