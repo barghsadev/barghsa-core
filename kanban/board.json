@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T20:07:51+00:00",
+  "updated": "2026-11-14T20:19:39+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -745661,7 +745661,8 @@
         "Full CI uses attempt-specific native and browser coverage archives. The promotion checker requires the native, production browser, license and combined coverage jobs to pass on the same commit, run and attempt. The local workflow fixture passed five artifact pairings. The 24 promotion checks and 26 coverage checks passed. A successful complete hosted run on the immutable release candidate remains required.",
         "Full CI 43615696071 mapped 2,976 passing Chromium records to 996 source files. The combined job failed because the earlier native timeouts left apps/web/coverage/coverage-final.json absent. The successor full rehearsal 43628730572 is bound to 876bd24352eeb61bf411e8ebb1ad231d7601fadb and includes the timeout fixes and workflow attempt binding. The exact release gate remains open.",
         "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
-        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open."
+        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
+        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -745721,7 +745722,8 @@
           "release-0.6-ci-attempt-evidence",
           "release-0.6-solar-guidance-authority",
           "release-0.6-onboarding-address-native",
-          "release-0.6-operations-copy-native"
+          "release-0.6-operations-copy-native",
+          "release-0.6-web-coverage-evidence-reuse"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1155288,7 +1155290,8 @@
         "Profile-export job retry now rejects undeclared JSON before queue or audit changes. The compiled PostgreSQL fixture reproduced a 202 on the old endpoint. The corrected endpoint returns the standard 400 for an unexpected object or array and preserves the full job row and audit log. Empty objects and omitted request bodies still return 202 and retain the normal owner-only retry contract. The generated specification and client document both outcomes. Complete the wider request inventory and verify the staged candidate.",
         "Solar postal submission now stores the submitted day at UTC midnight, and the staff decision preview uses the already established UTC day used by customer reads, tracking and the arrival constraint. The compiled pre-fix Tehran database fixture stored January 2 as January 1 at 20:30 UTC. The corrected fixture retained the exact date in the row, customer view, staff tracking and staff decision preview and preserved the UTC interpretation of an existing non-midnight timestamp. All 80 focused native API cases and 44 web cases passed. The exact released candidate rehearsal remains required.",
         "Strict native run 43628730572 at 876bd2435 recorded 8,344 API passes and one skip. The web job passed 5,580 cases and failed the legal onboarding address fixture at its original five-second deadline. The checksum-verified native archive has eight workspace reports and no web report. The address fixture now flushes the mock query and mutation updates within React act before making the same validation, geography, navigation and persisted-payload assertions. All 22 focused instrumented cases passed with the unchanged deadlines. Hosted exact-candidate native and combined coverage remain open.",
-        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open."
+        "The checksum-verified native archive from strict CI 43628730572 showed missing native execution for verification recovery, maintenance notices, operations retention and storage recovery copy. The new bilingual tests verify both notice languages, explicit activation and application boundaries, and storage-specific copy with shared revision labels. All 138 package tests passed. Against the v0.5.1 baseline, the existing checker passed the i18n critical group with 7/7 lines and 2/2 branches and the normal group with 14/14 lines and 17/17 branches. Full exact-candidate native and combined coverage remain open.",
+        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -1155705,7 +1155708,8 @@
           "release-0.6-async-retry-command-body",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-onboarding-address-native",
-          "release-0.6-operations-copy-native"
+          "release-0.6-operations-copy-native",
+          "release-0.6-web-coverage-evidence-reuse"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1351717,6 +1351721,296 @@
         {
           "file": "packages/i18n/coverage/coverage-final.json",
           "sha256": "814b285ad45e030fedf8c18b0167b6dff66e4a1f825d0e998a05666a7199d29e"
+        }
+      ]
+    },
+    "release-0.6-web-coverage-evidence-reuse": {
+      "batch": "release-0.6-web-coverage-evidence-reuse",
+      "base_commit": "453fec98675d86befa71af1bea8a27c954c58f44",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "d63fa13c5049af6225585468961af04e7cb3c38ae2c74739b06e80f6753f57ea"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-forms.spec.ts",
+          "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-recovery.spec.ts",
+          "sha256": "ea9f04a7d2a3429c76dc95e25cb981cff89e78c9830352d52fa437ad4adf0599"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "191db10d54aded979af1a9e3f8aca2bc77f56c82d915cb6c8e52c903c4ecb104"
+        },
+        {
+          "path": "apps/web/e2e/gift-codes.spec.ts",
+          "sha256": "710f1bb4ac5d169ca506e7b9bcedb86413bbfa29514a499ab895b467573881d8"
+        },
+        {
+          "path": "apps/web/e2e/gift-list-query.spec.ts",
+          "sha256": "84d99099406413739458755ed6e099dc077b06992d6f04f9d73137e9492ad429"
+        },
+        {
+          "path": "apps/web/src/components/AppShell.tsx",
+          "sha256": "d97175ec7166b45d72532677523387495ad53c7a2eb47e6237ea32e63f39e9af"
+        },
+        {
+          "path": "apps/web/src/components/CatalogueQueryEditor.tsx",
+          "sha256": "c231b429c11302d79d4e989a537dfe8f17609461f365e21f97ae0729990b074f"
+        },
+        {
+          "path": "apps/web/src/components/ConfigRecovery.tsx",
+          "sha256": "7b9cd2eb158a90651f8d40be04526792d3a10d146fd981df817c4354f0cd4d5d"
+        },
+        {
+          "path": "apps/web/src/components/ContractLimitsRecovery.tsx",
+          "sha256": "8b23757f5f71feb988cc8d0eeda8eb3f3bb93db2dfd59eeb7c0b57e497ccf1b3"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
+        },
+        {
+          "path": "apps/web/src/components/ElectricitySettingRecovery.tsx",
+          "sha256": "02336815cb305f78548194c8c8550bd742abcc619d70aac08b8309b138022990"
+        },
+        {
+          "path": "apps/web/src/components/GreenRulesRecovery.tsx",
+          "sha256": "3de4266b76d5f19fc53764b4a387f7daff4d07590e1ec51af7988b86000b2cd2"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceRecovery.tsx",
+          "sha256": "51b3e894e58a716b302c06b493620dc1b74ee95cb1d8131f9837ab11ab82b69b"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRateLimitPanel.tsx",
+          "sha256": "406092492214ce28e0534ae556983d67bd012fa04474ad3a7d89adfee93467bd"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRateLimitRecovery.tsx",
+          "sha256": "25f2f2c39c01fab46e84c074af6ffc9ee32ca9f75c5bdfba663f0cdd684a3474"
+        },
+        {
+          "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
+          "sha256": "4a73551a2e77bfdf3afb5a1f20ea62117cd20cb04356d3a32f0aee03a9a73035"
+        },
+        {
+          "path": "apps/web/src/components/VerificationPolicySettings.tsx",
+          "sha256": "bd6fc440953e9c47b9506d824532d95e77f1967a3bee311f3035cea53c531d0c"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "355411908b82ecdd8a28a851d667624e450b93de5e1e4d8603dd40ba9a2018be"
+        },
+        {
+          "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
+          "sha256": "0a2e3ff1ad67a2114a2181eec91639eab7652c5e55de4e7f607b1a3e5d7fa0b2"
+        },
+        {
+          "path": "apps/web/src/hooks/useWizardForm.ts",
+          "sha256": "03a31c152f259759b2f8b1cd3b0fb92c5667081fac8504641fd39cc991035971"
+        },
+        {
+          "path": "apps/web/src/lib/admin-settings-navigation.ts",
+          "sha256": "4ef77e8ae88bc4853f958167c4d51da20d789d83ddb62b80a67c336fec422b91"
+        },
+        {
+          "path": "apps/web/src/lib/analytics-client.ts",
+          "sha256": "9ef01ef99f94f75e4ba19ff3255c96dbcf96efb3b3315a2fdef36e2c602dabad"
+        },
+        {
+          "path": "apps/web/src/lib/brand-config.ts",
+          "sha256": "6a98ef821d858217133475d2de9d887a1d7a3096dc8a6b7c5f8c8947cd393b79"
+        },
+        {
+          "path": "apps/web/src/lib/branding-settings.ts",
+          "sha256": "f6f539eb75621fd38f39f1de73053875be66ffc7ca0c96abec97bf61ff7f55d9"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-increase-decision-form.ts",
+          "sha256": "d04f7c3a48217359afe7ed21b74e67cd0b002e38422b2e7f5ef0056ff3609bac"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-increase-form.ts",
+          "sha256": "7fa9285453b6ef94f19cab3f9af4ccddc7be13cdc88a8e7376b3e9164e0ae916"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "0b147d5bf3d70c1a34095df9c68ba865b16392d86f6c859160dc9d9f36d7b807"
+        },
+        {
+          "path": "apps/web/src/lib/maintenance-form.ts",
+          "sha256": "de6d21c09bd8216b4d003908c62b588ba8fec525ac9ad23aa56035b67e2d780d"
+        },
+        {
+          "path": "apps/web/src/lib/storage-policy-form.ts",
+          "sha256": "20e394674f738db4fbf4c8e1facd067e705de629fafe7c680b9a04833ed88195"
+        },
+        {
+          "path": "apps/web/src/lib/theme.ts",
+          "sha256": "78b161929e99452c9119d67ab911295f9fa68e82058ea7a0aa88db47cf180292"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "208f7a96f4a7a29edfd525ad9bee05fae1fd90e9582dff5dab7c09cda167b5d2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "6df134d3d0ed6a5e2296489364d560af842e7d6e00b004faa1eabd90d2b8928e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "6f6ba7d90d36ee032444fc352c8b3cd87ef828b0f2ebe585686fdc4029eb077e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "1fa82cbf5343d7c70df300ce3df28b12378393e1fb21ecb23f12e1ef6c2ab675"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "74df72dd24be50dad5be88e7c86c4a733e795f4618a83595c0b56e42a5413a51"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "047b23d1b6aed57bed3ed538fdd2fa53fa160d722624253aa44f16b8ef5b4d81"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "8058cbcbbe8775e5e2e7ef3adde17c31e5635ea352af7bd849f68f4dfbdc0e87"
+        },
+        {
+          "path": "apps/web/src/pages/AdminOperationalRetentionPage.tsx",
+          "sha256": "83a1953fb128295d2098278247ee67c969de83989d02b20c4be2d0243ea0f706"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "db4834831bd4ab651ddfe1ae9550d6943f999c437d62074eb746db6d49da506d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "fe973e878c05c3a745e447443b88763979965cd6e2ff0ba17e24f1c168d08716"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
+          "sha256": "aff7a95324e22ce711bb884e92486988e69f82217286d0ca56215da730d7191e"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "20646b21efd88eff725d872012d0192d188a01617fd98a70628cd41fe240b462"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "e45bbb02d809052bd0b215825719220f844d920440de75e90b6a681d8579efb3"
+        },
+        {
+          "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
+          "sha256": "93198c1f3d7a5749cc756cc6e19be3d3ec6bebde2b089e81171d5c1aedef8fed"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "ee6c90b1fb9b6f18ceb950086b7ae9c5a86c86f9e49cf5abf6383941e9f217cd"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "a9e1a4962c12e822a631bd843e3cfeeb155a707e1b6fcfc7935759aa45dc37c9"
+        },
+        {
+          "path": "apps/web/src/pages/admin-gift-codes.test.tsx",
+          "sha256": "f91b722f2752034f48c6883e63b58f7a1ca5b90967b89bac23d60c128f267899"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-increase-fixtures.ts",
+          "sha256": "bd32a489b513bcad1b2d9555b81b6bdb0e354aed9bcd59b55ae4679b0775f4f0"
+        },
+        {
+          "path": "apps/web/src/providers/AnalyticsConsentProvider.tsx",
+          "sha256": "3e037721c25c93eade9c53477e456036b17a15c50759cc53aa06018c312711f8"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "673c19bca9820b439c2d526b4377160d0f2e45c3ce6889f53ae0b26b84faed51"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "cd63ae9402277458634522f11ed14c920743a89e06b93c54bd5f0979c2924710"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "0aab6c1c10c9fe1eab3678141498afdefc8a578f2e38d75f47dbdea1ed6a48c8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/operational-retention.tsx",
+          "sha256": "767d512ddc02848a4fa7d5f39b70d7d9dfda59515114cf17cf83048fe5307017"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "f801183cb947de4dfd3d4e9e463779d2c42ddd4a49f4eaa74fa897a2edae1aab"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "1ceaab0ac21b02f5d8df1297646523be705f83255138f709b20a3f6a29983412"
+        }
+      ],
+      "checks": [
+        "All 27 focused Chromium gift-code cases passed without skips or retries, including discount scope and validity persisted through the migrated API in Persian and English. The fresh browser records mapped to 287 files and were used for the changed gift-code page. The existing checker passed the scoped web diagnostic for all 47 changed source files. Critical coverage was 2,420 of 2,556 lines and 3,371 of 3,758 branches. Gift-code page coverage was 236 of 251 lines and 361 of 409 branches. Full hosted native and combined coverage remain required on the frozen candidate.",
+        "The earlier hosted archives matched their original SHA-256 digests. The retained web source had byte-identical Git blobs, and the six scoped files matched their previously recorded source digests. Current browser hits supersede the out-of-date gift-code page mapping."
+      ],
+      "limitations": [
+        "The scoped diagnostic combines evidence for byte-identical source files from different revisions and only the mapped current gift-code page. It cannot certify the same-SHA, same-attempt full release gate.",
+        "The first Playwright invocation selected the entire staff file as well as gift-code cases. It was interrupted and excluded from the report. The corrected invocation selected only the gift-code test inside that file."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-web-coverage-evidence-reuse",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "6f774682d6a837b402fdf9b70f9bb847ec7e4adbcc87fb4316fde5e2237a1060"
+        },
+        {
+          "file": "gift-browser.log",
+          "sha256": "0f34cabff75a26844859e1b30e6d4c6ef392ea4ff1144fac2ccd77aed781390e"
+        },
+        {
+          "file": "gift-outcomes.json",
+          "sha256": "0515db428d7d491fb0f886701c041db10df2ef5260c4d431ce83fa787482965b"
+        },
+        {
+          "file": "gift-browser-coverage.json",
+          "sha256": "0648367c31941bea14f1c13585441f57e8164415ee19839ffaa584113929f9dd"
+        },
+        {
+          "file": "reused-web-diagnostic.json",
+          "sha256": "c5c913b55322da75f9ea4f36be5f16cc865766fd1db6aca8bc0f89fea415e949"
+        },
+        {
+          "file": "targeted-web-diagnostic.json",
+          "sha256": "36fe0c8e42950baf03aaa1f2d79eba39eaedb7478608a1331fffa638bc63de01"
+        },
+        {
+          "file": "apps/web/coverage/coverage-final.json",
+          "sha256": "e8be88bb31f3075ee75a27b4104aa73f337e1c063aa027eba43de5532d90f9c3"
         }
       ]
     }
