@@ -19403,7 +19403,8 @@
         "The pinned staging object-store image verified exact cleanup in versioned and unversioned buckets with no probe bytes or markers left. Live production lifecycle and object hold checks remain open.",
         "The admin storage configuration probe now checks versioning and deletes the exact version of its generated key. The staging SeaweedFS image verified signed downloads, no retained probe bytes or markers, and an unchanged unrelated object in both disposable bucket modes. Actual deployed policy and expiry remain open.",
         "The staging smoke now uses a create-only probe and cleans up a lost PUT acknowledgement only with proven object ownership. The pinned SeaweedFS image verified exact version deletion, suspended null-version cleanup and conditional unversioned deletion. Verify the selected live storage policies and actual candidate receipts.",
-        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open."
+        "The live v0.5.1 bucket selected by active connection version 1 had versioning enabled and the exact four tagged expiry rules plus seven-day multipart cleanup. All expiring versions require legal-hold=false, with five newer noncurrent versions retained. The current staging smoke passed private write, signed byte read and exact-version cleanup. Elapsed expiry, the accepted candidate and production-equivalent storage remain open.",
+        "Under the live v0.5.1 staging bucket policy, a create-only synthetic probe seeded four tmp keys with ten exact versions on November 14. The baseline retained every version and both legal-hold and unclassified controls. Read back elapsed provider expiry and five-version retention after November 15 at 10:39 UTC."
       ],
       "owner": null,
       "depends_on": [],
@@ -19499,7 +19500,8 @@
           "release-0.6-probe-object-cleanup",
           "release-0.6-admin-probe-cleanup",
           "release-0.6-staging-probe-uncertain-write",
-          "release-0.6-staging-storage-policy-readback"
+          "release-0.6-staging-storage-policy-readback",
+          "release-0.6-staging-storage-lifecycle-baseline"
         ],
         "current_acceptance": null
       }
@@ -677801,7 +677803,8 @@
         "Read-only live v0.5.1 readback from 13:23 to 23:18 UTC on November 13 found zero img-src entries and one style-src-elem report at 13:25, with no API restart. Confirm the Sonner fix on the accepted staging candidate and complete the representative observation and enforcement checks.",
         "At 04:21 UTC on November 14, the live v0.5.1 branding endpoint returned the exact same-origin PNG and the login response stayed report-only. The complete observation and candidate style fix still need live proof.",
         "The November 14 readback verified the exact 3,415-byte published same-origin PNG and private no-store response. The login remained report-only on v0.5.1. The accepted candidate, representative window and enforcement journeys are still required.",
-        "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks."
+        "Live v0.5.1 served the exact 3,415-byte uploaded same-origin PNG with no-store on November 14. From November 13 at 13:23 UTC through November 14 at 09:35 UTC the same API container logged zero img-src reports and one style-src-elem report. Login remains report-only. Observe the candidate style correction and complete the full observation and enforcement checks.",
+        "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only."
       ],
       "owner": null,
       "depends_on": [],
@@ -677825,7 +677828,8 @@
           "release-0.6-csp-window-followup",
           "release-0.6-staging-favicon-confirmed-readback",
           "release-0.6-staging-edge-smoke",
-          "release-0.6-scheduled-browser-43576703292"
+          "release-0.6-scheduled-browser-43576703292",
+          "release-0.6-staging-favicon-owner-reactivation-readback"
         ],
         "current_acceptance": null
       }
@@ -1121955,7 +1121959,8 @@
         "The independent probe now requires rejection of its prior synthetic session after logout, in addition to cookie clearing. Ten synthetic cases passed, including cookie clearing without revocation and an unavailable readback, both reported as logout failures. Provision the approved independent runner and fixture, then verify the deployed revocation, scrape and authorized pager receipts.",
         "The strict Chromium coverage suite now runs both popup touch-target checks in an explicit touch context. The native OTP smoke is selected only with its existing isolated-fixture flag and still passes. The focused run produced 32 passes and 32 coverage records without skips, retries or failures. Full candidate coverage remains open.",
         "Scheduled GitHub run 43576703292 on 1784f6161 completed attempt 1 successfully. Independent archive and SHA checks verified all 40 shard receipts and the rollup: 14,858 passing, 27 skipped, zero failures, zero flakes and zero runner errors. Contracts and quarantine checks passed. The email job skipped because the protected delivery configuration was absent. The final immutable candidate and scheduled email delivery remain open.",
-        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release."
+        "The enforced image job in full CI rehearsal 43583704822 at 81d4381e9 rejected the 386 pending license exceptions. Independent readback verified all five image IDs, scans and SBOM checksums, and all 857 package entries matched the previous inventory. Obtain package-specific dispositions and run the enforced check on the final immutable release.",
+        "Under the live v0.5.1 staging bucket policy, a create-only synthetic probe seeded four tmp keys with ten exact versions on November 14. The baseline retained every version and both legal-hold and unclassified controls. Read back elapsed provider expiry and five-version retention after November 15 at 10:39 UTC."
       ],
       "owner": null,
       "depends_on": [],
@@ -1122302,7 +1122307,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-coverage-browser-selection",
           "release-0.6-scheduled-browser-43576703292",
-          "release-0.6-strict-license-and-grafana-proof"
+          "release-0.6-strict-license-and-grafana-proof",
+          "release-0.6-staging-storage-lifecycle-baseline"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1309189,6 +1309195,120 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-staging-storage-lifecycle-baseline": {
+      "batch": "release-0.6-staging-storage-lifecycle-baseline",
+      "base_commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/check-s3.py",
+          "sha256": "dce144d8975c0bfd7b5fdf1e53c982705cc3429698f5ceebe907101a4c8c9cb4"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+        }
+      ],
+      "checks": [
+        "Under the live v0.5.1 staging bucket policy, a create-only synthetic probe seeded four tmp keys with ten exact versions on November 14. The baseline retained every version and both legal-hold and unclassified controls. Read back elapsed provider expiry and five-version retention after November 15 at 10:39 UTC.",
+        "The staging server ran SeaweedFS 4.47. The live bucket returned exactly the five expected rules. The verified policy digest was 666407c38a05e1089c2a45a8e355601958c6b7eca7afc3509c48caac9f0806bb. No bucket settings or existing objects changed.",
+        "The verifier passed baseline and elapsed fixtures. It rejected premature expiry, changed hold, lost unclassified current, extra history pruning and changed policy. Cleanup requires a verified live elapsed observation and exact synthetic version identities."
+      ],
+      "limitations": [
+        "The 24-hour interval covers only the disposable tmp rule on live v0.5.1. The staged provider has not yet demonstrated elapsed expiry in this probe.",
+        "Candidate and production-equivalent storage, other prefixes and application ownership of disposable classification remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-storage-lifecycle",
+      "execution_receipts": [
+        {
+          "file": "seed.jsonl",
+          "sha256": "1c0c116cd9daa1bab0203b91c8fd6697c8489f82f9fe2364c2a763cee4a3c54e"
+        },
+        {
+          "file": "initial-observation.json",
+          "sha256": "5c7e573384f4fff38c26742031312dcce11a76bdcd585bd7c321daaf3b0dc68b"
+        },
+        {
+          "file": "verified-baseline.json",
+          "sha256": "ef2fc3908e377ee9cc1f9c6dbd9b0ae1b356fa5c66d644b409c860432456cdc3"
+        },
+        {
+          "file": "live-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "verify.py",
+          "sha256": "37c7e3a1e5132333fa73df944f87eda624d753168c9c96ce2302dedebaa11572"
+        },
+        {
+          "file": "observe.sh",
+          "sha256": "3489b21a5c1c5c77456970ab83ee33828655b40ca7a3060f7e78102a8d683288"
+        },
+        {
+          "file": "probe.py",
+          "sha256": "3ff50204f432632bfca1405ef8b2cde4a30020835b91b7d66672970912ddea07"
+        },
+        {
+          "file": "cleanup.sh",
+          "sha256": "2c6d54ea6e18f5015bd95f3e30fe89c0779bb38edd94cb9a36b2ae24365f83ac"
+        },
+        {
+          "file": "verifier-checks.txt",
+          "sha256": "25b5de748e93a865847a3adb74aefe8dd148ebb0662a36d5e94772de36792cc2"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-owner-reactivation-readback": {
+      "batch": "release-0.6-staging-favicon-owner-reactivation-readback",
+      "base_commit": "2c8d502ab8ab89f3d0bb7c50e3e5976942ac0840",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/public/branding.controller.ts",
+          "sha256": "d20b8da63f2b8b3c7990098421ae964b2d6c81e43efec167c858dd3390a1ac8f"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "38bd053845e6b43dd2211d56c20dc5516a65905e3c2292a166b65f41c104944f"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        }
+      ],
+      "checks": [
+        "At 10:44 UTC on November 14, the public branding config for staging v0.5.1 selected the restored same-origin PNG. The response matched all 3,415 source bytes, had private no-store caching, and the login response still used CSP Report-Only."
+      ],
+      "limitations": [
+        "Complete a representative week on the applicable configuration and the candidate enforcement rehearsal before switching CSP modes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-and-edge-privacy",
+      "execution_receipts": [
+        {
+          "file": "staging-favicon-live-readback-20261114.json",
+          "sha256": "d499573d44a2e85b663540d5458e343072e31b801856e766b8c67719c9449ba9"
         }
       ]
     }
