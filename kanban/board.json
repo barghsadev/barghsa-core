@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T09:16:48+00:00",
+  "updated": "2026-11-14T09:21:18+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20666,7 +20666,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -20686,7 +20687,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -20988,6 +20989,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         }
@@ -24616,7 +24625,8 @@
         "The staging rollout now checks exact edge header values through the public origin before recording the active candidate. Staging release and rollback fixtures passed. Verify the resulting live release log with the exact accepted v0.6.0 SHA.",
         "The staging notifier rejects redirect responses and caps staging and Telegram JSON replies. The live v0.5.1 version and configured Telegram channel returned directly through the verified HTTPS endpoints. The exact accepted v0.6.0 send and delivery receipts remain required.",
         "The official v0.6.0 worker checks protected backup configuration before image work and repeats the check under the release lock. Fixtures verify zero image or configuration changes after an early refusal and no announcement if runtime becomes disposable before rollout. Exact staged backup and delivery receipts remain required.",
-        "The v0.6.0 worker now refuses an absent, disposable or mismatched migration checkpoint before a Telegram send, including on notification retry. The actual protected staging backup and announcement are still required."
+        "The v0.6.0 worker now refuses an absent, disposable or mismatched migration checkpoint before a Telegram send, including on notification retry. The actual protected staging backup and announcement are still required.",
+        "The v0.6.0 notification retry rechecks the saved runtime image scans, SBOM checksums and exact license reports before contacting staging or Telegram. The initialized fixture rejects changed app or retained evidence after deployment. Actual v0.6.0 deployment and Telegram receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -24693,7 +24703,8 @@
           "release-0.6-telegram-receipt-transport",
           "release-0.6-protected-staging-migration",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": null
       }
@@ -24927,7 +24938,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "kind": "current-runbook-and-guard-verification",
@@ -24951,7 +24963,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/test_release_rollback.py",
@@ -25203,6 +25215,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         }
@@ -33250,7 +33270,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -33306,7 +33327,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -33723,6 +33744,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         }
@@ -36694,7 +36723,8 @@
           "release-0.6-synthetic-logout-readback",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-coverage-browser-selection"
+          "release-0.6-coverage-browser-selection",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -36725,7 +36755,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -37423,6 +37453,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Renewed browser selection, touch context and native smoke command. Existing product assertions and coverage thresholds are preserved. The local focused browser, collector and native smoke checks are recorded separately from the full hosted gate."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         }
@@ -170435,7 +170473,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -170807,7 +170846,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -172202,6 +172241,14 @@
                 "apps/api/src/telegram/telegram-links.controller.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -657758,7 +657805,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -658130,7 +658178,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -659549,6 +659597,14 @@
                 "apps/api/src/telegram/telegram-links.controller.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -692278,7 +692334,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -692290,7 +692347,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -692601,6 +692658,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         }
@@ -701992,7 +702057,8 @@
         "The report-only five-image scan at 20a2a7fa in run 43564160393 matched exact IDs, CycloneDX SBOMs and vulnerability report hashes with zero high or critical findings. The 857 package rows match the existing review packet, including 386 still requiring named dispositions. The final enforced license, immutable staging images and deployment receipts remain open.",
         "Cumulative development preflight 43567359716 at 0a58af598 produced five checksum-verified image vulnerability and SBOM reports. The report-only comparison found zero high or critical issues and all 857 rows match the review packet, with 386 pending dispositions. Final enforced licensing and staged release readback remain open.",
         "Verified GitHub artifact 14104346756 at the scoped profile preflight 43569700480 for 77dcf1136. All five image identities, vulnerability reports and CycloneDX SBOMs match their receipts and had zero high or critical findings. All 857 package entries match the prior review packet, including 386 still awaiting named dispositions. These results cover the profile preflight before the backup image change.",
-        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover."
+        "Prepared Linux amd64 PostgreSQL image 88dbfd4a packages the reviewed manifest-readback source. It passed an HTTPS backup of synthetic data, exact archive and manifest readbacks, encrypted WAL and point-in-time recovery. Its image scan found zero high or critical vulnerabilities. The two retained-image inventories matched all 282 hosted rows, including 244 pending dispositions. Live v0.5.1 still uses the legacy PostgreSQL image with WAL archiving off and no backup environment, recovery key or WAL storage configuration. Verify approved off-server backup, restore and the live cutover.",
+        "The staging worker now re-reads app and retained SBOM and scan receipts before resuming a v0.6.0 notification. It detects changes to reports and license dispositions against the saved image evidence. Exact approved release images and deployment receipts remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -702058,7 +702124,8 @@
           "release-0.6-browser-43561500300",
           "release-0.6-cumulative-image-receipts",
           "release-0.6-backup-manifest-readback",
-          "release-0.6-packaged-backup-manifest-rehearsal"
+          "release-0.6-packaged-backup-manifest-rehearsal",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -1092673,7 +1092740,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5cccf07f50a7be098046f7b5e629f8c7d2bdd8749b595ccd3447f97d8aeddcda"
+              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -1092681,7 +1092748,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "0d39a542b0d174a38c208ca9b200793901900d4fd8fef0afb453abe8dba453bb"
+              "sha256": "6e2e7dc160e60becff55ee5bdac00420ad7f3dcc65f79eeb7a2cdcd632cc77f3"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -1092906,6 +1092973,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ]
         },
@@ -1092926,7 +1093002,8 @@
           "release-0.6-migration-manifest-binding",
           "release-0.6-backup-manifest-readback",
           "release-0.6-backup-config-preflight",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ]
       }
     },
@@ -1106364,7 +1106441,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1106384,7 +1106461,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5cccf07f50a7be098046f7b5e629f8c7d2bdd8749b595ccd3447f97d8aeddcda"
+              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1109846,6 +1109923,15 @@
                 "deploy/staging/release-queue.py"
               ],
               "scope": "Renewed the staging proof and notification paths for verified migration checkpoints. Prior compatible release receipts and historical execution scopes are preserved. All 71 staging and 17 promotion checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ],
           "presentation_renewals": [
@@ -1110287,7 +1110373,8 @@
           "release-0.6-finance-approval-investigation-bodies",
           "release-0.6-backup-config-preflight",
           "release-0.6-staff-directory-audit-authority",
-          "release-0.6-protected-checkpoint-receipt"
+          "release-0.6-protected-checkpoint-receipt",
+          "release-0.6-notification-scan-recheck"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -1112456,7 +1112543,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "60e1871199071667493f0464a555057293db756312ca8e51c5384f52c024cacf"
+              "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1112476,7 +1112563,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5cccf07f50a7be098046f7b5e629f8c7d2bdd8749b595ccd3447f97d8aeddcda"
+              "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -1115847,6 +1115934,15 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-notification-scan-recheck",
+              "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release-queue.py"
+              ],
+              "scope": "Rechecked the protected notification retry against the persisted image and license proofs. Targeted staging and promotion fixtures passed. Earlier release evidence retains its original scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1116306,7 +1116402,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-staff-directory-audit-authority",
           "release-0.6-protected-checkpoint-receipt",
-          "release-0.6-telegram-unlink-validation"
+          "release-0.6-telegram-unlink-validation",
+          "release-0.6-notification-scan-recheck"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -1308459,6 +1308556,65 @@
         {
           "file": "typecheck.log",
           "sha256": "a131fe6494f052e385f312e881a53c2181a6621313d9578e76f5d30da62f5482"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-notification-scan-recheck": {
+      "batch": "release-0.6-notification-scan-recheck",
+      "base_commit": "5d744267030d910e5b231c8d223df1521e984743",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "618b8156be05fd06252ca5f3738eef8b75329254c866f894199d990046010c03"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "24161590457a858dbe1adb6439550f120ce502acb6add5bc4cd7f908d44db7d1"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "6e2e7dc160e60becff55ee5bdac00420ad7f3dcc65f79eeb7a2cdcd632cc77f3"
+        }
+      ],
+      "checks": [
+        "A protected notification-only retry rechecks the saved app/web scan index and license digest, the queued retained PostgreSQL/ClamAV scan selection and exact license digest, or the single four-image index on first install. All reads use the recorded runtime image IDs and release SHA.",
+        "The isolated initialized queue fixture proved that an app SBOM, retained vulnerability report, or either license report changed after deployment prevents all live reads, redeploy and notification. A matching receipt passes the evidence verification. All 72 staging and 17 production promotion tests passed. The runbook formatting and diff checks passed."
+      ],
+      "limitations": [
+        "This batch verifies saved evidence and the retry boundary in fixtures. It does not establish live v0.6.0 deployment, license sign-off or a Telegram receipt."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-notification-scan-recheck",
+      "execution_receipts": [
+        {
+          "file": "staging.log",
+          "sha256": "bf504c28ad7779d7c84c15db68d25751c2cfe897e08d15ce815329b6e71f0f24"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "72bc243ffdce9b35cdcba358b273b2cd6de6b25f72a869fcbe428c7f596d80c8"
         },
         {
           "file": "lint.log",

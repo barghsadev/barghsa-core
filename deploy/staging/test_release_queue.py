@@ -432,6 +432,70 @@ if __name__ == '__main__':
         self.assertFalse((self.capture / "notifications").exists())
         self.assertFalse((self.capture / "deployed-head").exists())
 
+    def test_protected_notification_retry_rechecks_scan_and_license_bytes(self):
+        commit = self.publish("0.6.0")
+        ids = {scope: "sha256:" + character * 64 for scope, character in
+               zip(("app", "web", "postgres", "clamav"), "bcde")}
+        checkpoint = {"status": "verified", "manifest_readback_verified": True,
+                      "manifest_sha256": "d" * 64, "size": 42, "system_id": "123456",
+                      "blob": f"blobs/{'a' * 32}.tar.gpg", "sha256": "c" * 64,
+                      "label": f"release-{commit[:12]}-20261114T090000Z-123"}
+
+        def write_reports(path, scopes, licenses):
+            path.mkdir()
+            for index, scope in enumerate(scopes, 1):
+                artifact = f"{scope} fixture".encode()
+                digest = hashlib.sha256(artifact).hexdigest()
+                queue.save(path / f"{index}-image.json", {
+                    "image_id": ids[scope], "blocked": False,
+                    "report_sha256": digest, "sbom_sha256": digest,
+                })
+                (path / f"{index}-vulnerabilities.json").write_bytes(artifact)
+                (path / f"{index}-sbom.cdx.json").write_bytes(artifact)
+            report = path / "release-licenses.json"
+            queue.save(report, {
+                "commit": commit,
+                "images": {scope: ids["postgres" if scope == "postgres-staging" else scope]
+                           for scope in licenses if scope != "browser"},
+                "packages": [{"scope": scope, "status": "allowed"} for scope in licenses],
+            })
+            return report
+
+        app = self.root / "app-scans"
+        app_license = write_reports(app, ("app", "web"), ("app", "web", "browser"))
+        retained = self.root / "retained-scans"
+        retained_license = write_reports(retained, ("postgres", "clamav"), ("postgres-staging", "clamav"))
+        job = queue.enqueue(self.repo, self.state, commit, [], retained_scans=retained)
+        path = self.state / "jobs" / commit / "runtime-images.json"
+        runtime = {
+            "schema_version": 1, "commit": commit, "image_ids": ids, "migration_backup": checkpoint,
+            "image_scans": queue.verify_image_scans(app, ids, False),
+            "license_sha256": queue.file_sha256(app_license),
+            "retained_image_scans": queue.verify_retained_scans(retained, ids),
+            "retained_license_report": str(retained_license),
+            "retained_license_sha256": queue.file_sha256(retained_license),
+        }
+        queue.save(path, runtime)
+        queue.verify_saved_image_evidence(job, runtime)
+        for file, message in (
+            (app / "1-sbom.cdx.json", "artifact checksum differs"),
+            (retained / "1-vulnerabilities.json", "artifact checksum differs"),
+            (app_license, "Saved staging image license report changed"),
+            (retained_license, "Saved retained staging image license report changed"),
+        ):
+            with self.subTest(file=file):
+                original = file.read_bytes()
+                file.write_bytes(original + b" ")
+                try:
+                    with patch.object(queue, "verify_live_release") as live:
+                        with self.assertRaisesRegex(ValueError, message):
+                            queue.deploy(job, self.state)
+                        live.assert_not_called()
+                    self.assertFalse((self.capture / "notifications").exists())
+                    self.assertFalse((self.capture / "deployed-head").exists())
+                finally:
+                    file.write_bytes(original)
+
     def test_retry_after_verified_deployment_rechecks_live_health_and_only_notifies(self):
         receipt = {"schema_version": 1, "commit": self.commit, "image_ids": {
             name: "sha256:" + character * 64 for name, character in

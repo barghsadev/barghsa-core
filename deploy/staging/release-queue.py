@@ -344,6 +344,31 @@ def verify_live_release(job):
     return live
 
 
+def verify_saved_image_evidence(job, runtime):
+    ids = runtime["image_ids"]
+    scanned = runtime["image_scans"]
+    retained = job.get("retained_scans")
+    scan_dir = Path(scanned["directory"])
+    commit = job["commit"]
+    if verify_image_scans(scan_dir, ids, includes_stateful=retained is None) != scanned:
+        raise ValueError("Saved staging image scan receipts changed")
+    licensed_ids = {scope: ids[scope] for scope in ("app", "web")}
+    stateful_ids = {"postgres-staging": ids["postgres"], "clamav": ids["clamav"]}
+    if retained is None:
+        licensed_ids.update(stateful_ids)
+    else:
+        observed = verify_retained_scans(Path(retained["directory"]), ids, retained["sha256"])
+        if observed != runtime.get("retained_image_scans"):
+            raise ValueError("Saved retained staging image scan receipts changed")
+        retained_license = verify_license_report(
+            Path(runtime["retained_license_report"]), commit, stateful_ids, browser=False
+        )
+        if retained_license != runtime.get("retained_license_sha256"):
+            raise ValueError("Saved retained staging image license report changed")
+    if verify_image_licenses(scan_dir, commit, licensed_ids) != runtime.get("license_sha256"):
+        raise ValueError("Saved staging image license report changed")
+
+
 def verify_running_images(checkout, images):
     host = os.environ.get("BARGHSA_VPS_HOST") or "89.42.199.13"
     port = os.environ.get("BARGHSA_VPS_SSH_PORT") or "30222"
@@ -404,6 +429,8 @@ def deploy(job, state):
                 or runtime.get("schema_version") != 1 or runtime.get("commit") != job["commit"]):
             raise ValueError("Saved staging runtime receipt does not match the queued release")
         require_migration_checkpoint(job["version"], runtime.get("migration_backup"), job["commit"])
+        if not re.match(r"^0\.[0-5]\.", job["version"]):
+            verify_saved_image_evidence(job, runtime)
         verify_live_release(job)
         with urllib.request.urlopen("https://stg.barghsa.com/api/health/ready", timeout=30) as response:
             readiness = json.load(response)
