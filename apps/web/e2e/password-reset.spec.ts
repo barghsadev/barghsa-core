@@ -1,5 +1,6 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
+import { t as authText } from '@barghsa/i18n/auth';
 import { passwordRecoveryText as copy } from '@barghsa/i18n/password-recovery-forms';
 import type { Page } from '@playwright/test';
 
@@ -51,13 +52,13 @@ for (const locale of ['fa', 'en'] as const) {
       route.fulfill({ json: resetResponse })
     );
     await page.goto('/forgot-password');
-    await page.evaluate((value) => {
-      document.documentElement.lang = value;
-    }, locale);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await page.locator('#username').fill('Recovery@Example.test');
-    const issued = page.waitForRequest('**/api/auth/forgot-password');
-    await page.locator('button[type="submit"]').click();
-    expect((await issued).postDataJSON()).toEqual({ username: 'recovery@example.test' });
+    const [issued] = await Promise.all([
+      page.waitForRequest('**/api/auth/forgot-password'),
+      page.getByRole('button', { name: authText('auth.forgotPassword.submit', locale) }).click(),
+    ]);
+    expect(issued.postDataJSON()).toEqual({ username: 'recovery@example.test' });
     await enterCode(page, locale);
     await page.locator('#new-password').fill('New-browser-password-123!');
     await page.locator('#confirm-password').fill('Does-not-match-123!');

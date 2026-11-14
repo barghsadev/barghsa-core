@@ -152,9 +152,18 @@ for (const locale of ['en', 'fa'] as const) {
     expect(requests).toHaveBeenCalledTimes(1);
     await act(async () => finish(feedback(['nameEn'])));
     await settled(() => expect(document.activeElement).toBe(input('province-name-en')));
+    await act(async () => input('province-name-en').blur());
+    expect(input('province-name-en').getAttribute('aria-invalid')).toBe('true');
+    expect(
+      document.getElementById(input('province-name-en').getAttribute('aria-describedby')!)
+        ?.textContent
+    ).toBe(t('invalidEn'));
     expect(input('province-name-fa').value).toBe('  تهران  ');
     expect(input('province-name-en').value).toBe('  Tehran  ');
     expect(document.body.textContent).not.toContain('private server detail');
+    await fill('province-name-en', '  Tehran Province  ');
+    await settled(() => expect(input('province-name-en').hasAttribute('aria-invalid')).toBe(false));
+    expect(requests).toHaveBeenCalledTimes(1);
     requests.mockResolvedValue(response(province));
     await submit();
     await settled(() => expect(saved).toHaveBeenCalledTimes(1));

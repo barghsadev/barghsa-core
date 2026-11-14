@@ -64,6 +64,9 @@ for (const locale of ['en', 'fa'] as const) {
     }
     await expect(nameEn).toHaveAttribute('aria-invalid', 'true');
     await expect(nameEn).toBeFocused();
+    await nameEn.blur();
+    await expect(nameEn).toHaveAttribute('aria-invalid', 'true');
+    await expect(nameEn).toHaveAccessibleDescription(t('invalidEn'));
     await expect(nameEn).toHaveValue('  Tehran  ');
     await expect(nameFa).toHaveValue('  تهران  ');
     await expect(dialog).not.toContainText('private server detail');
@@ -92,6 +95,9 @@ for (const locale of ['en', 'fa'] as const) {
       method: 'PATCH',
       body: { nameFa: 'تهران', nameEn: 'Tehran', status: 'inactive' },
     });
+    await status.blur();
+    await expect(status).toHaveAttribute('aria-invalid', 'true');
+    await expect(status).toHaveAccessibleDescription(t('invalidStatus'));
     const box = await dialog.boundingBox();
     const viewport = page.viewportSize()!;
     expect(box!.x).toBeGreaterThanOrEqual(0);

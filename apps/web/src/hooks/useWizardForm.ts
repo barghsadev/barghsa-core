@@ -66,8 +66,14 @@ export function useWizardForm<Input extends FieldValues>(
     return {
       name,
       ref: form.register(name).ref,
-      onBlur: () =>
-        form.setValue(name, form.getValues(name), { shouldTouch: true, shouldValidate: true }),
+      onBlur: () => {
+        // Disabling a focused field during submission can fire blur in some browsers.
+        if (busy.current) return;
+        form.setValue(name, form.getValues(name), {
+          shouldTouch: true,
+          shouldValidate: form.getFieldState(name).error?.type !== 'server',
+        });
+      },
       'aria-invalid': state.invalid || undefined,
       'aria-describedby': state.invalid ? errorId(name) : undefined,
     };
