@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T14:34:01+00:00",
+  "updated": "2026-11-14T14:39:39+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -224832,7 +224832,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
+              "sha256": "29230e856845b40e691886f1cbd4f68bea4c46b6b791d7b43a6b35848c465f04"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
@@ -224852,7 +224852,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
@@ -224974,6 +224974,15 @@
                 "apps/api/src/wallet/chargeback-detection.service.ts"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/chargeback-detection.service.test.ts",
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         },
@@ -231940,7 +231949,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
+              "sha256": "29230e856845b40e691886f1cbd4f68bea4c46b6b791d7b43a6b35848c465f04"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
@@ -231960,7 +231969,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
@@ -232082,6 +232091,15 @@
                 "apps/api/src/wallet/chargeback-detection.service.ts"
               ],
               "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/chargeback-detection.service.test.ts",
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         },
@@ -708435,7 +708453,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
@@ -708512,6 +708530,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -708571,7 +708597,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
@@ -708632,6 +708658,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -708819,7 +708853,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
@@ -708993,6 +709027,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Preserves the default Compose volume and service configuration. Adds the staging PostgreSQL volume manifest and mount checks. Existing readiness, rollback, release queue and AI runtime tests passed."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -716548,7 +716590,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
@@ -716717,6 +716759,14 @@
                 "apps/api/src/profiles/invitation-mutation-http.integration.test.ts"
               ],
               "scope": "Four profile address and membership commands now reject unknown JSON before mutating. They still accept omitted and empty bodies. Existing authorization, revocation, transactional audit, soft deletion and prior-order snapshot behavior remain verified. The generated contract only updates the documented outcomes of those four routes."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -728071,7 +728121,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
@@ -728227,6 +728277,14 @@
                 "apps/api/src/session/session-http.integration.test.ts"
               ],
               "scope": "Only the three profile selection and three session or trusted-device revocation commands reject undeclared JSON. Omitted and empty bodies retain the existing dispatch. The generated contract only updates the affected HTTP 400 responses. Existing ownership, CSRF, step-up, revocation and audit assertions passed. Other handlers and success response contracts retain their previous evidence."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -751937,7 +751995,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
-              "sha256": "beea413cddfe4154712ad602de043876b6935da130119aae941ace469c9823f4"
+              "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
@@ -751945,7 +752003,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
+              "sha256": "29230e856845b40e691886f1cbd4f68bea4c46b6b791d7b43a6b35848c465f04"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -752286,6 +752344,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds scoped P2 PostgreSQL filesystem monitoring, its private scrape overlay, dashboard and runbook links. Existing PostgreSQL and backup rules, operation receipt authority and routing, existing dashboard panels and all tests retain their criteria. Native Prometheus and worker tests passed."
+            },
+            {
+              "batch": "release-0.6-wallet-provider-verification",
+              "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+              "paths": [
+                "apps/api/src/wallet/online-topup-callback.service.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.test.ts"
+              ],
+              "scope": "Additional settlement and chargeback cases preserve prior assertions and runtime sources. Each case resets database connection call history so validation asserts the exact observed boundary."
             }
           ]
         }
@@ -1137668,8 +1137735,9 @@
         "Run 43602481512 failed the existing Wallet production budget. The revised actual disclosure boundary passes all 104 local budgets and 24 relevant production-browser cases. Verify the cumulative successor hosted preflight and full final candidate gates.",
         "The solar contract source service passed the unchanged scoped critical threshold after focused cases for sealed provenance, rendering and reservation loss. Retain the existing native solar attachment and scan tests in the final exact combined run.",
         "The saving order service passed the unchanged scoped critical gate after proving current agreement, catalogue, address and gift eligibility against compiled HTTP and native PostgreSQL. Verify the full final candidate coverage report.",
-        "Wallet review and staff ledger controllers and the chargeback alert reader now pass the original critical thresholds. Focused tests covered current reconciliation context, wallet amount and body validation, and the absence of private alerts without authorized recipients. The remaining online top-up callback and chargeback detection deficits and the final full combined gate are open.",
-        "The bank receipt top-up service passed the original critical file thresholds. Retry tests preserved the reviewed terms, rejected foreign-wallet key reuse and refused inconsistent stored snapshots. The final exact hosted release coverage remains open."
+        "Wallet review and staff ledger controllers and the chargeback alert reader now pass the original critical thresholds. Focused tests covered current reconciliation context, wallet amount and body validation, and the absence of private alerts without authorized recipients. The final full combined gate is open.",
+        "The bank receipt top-up service passed the original critical file thresholds. Retry tests preserved the reviewed terms, rejected foreign-wallet key reuse and refused inconsistent stored snapshots. The final exact hosted release coverage remains open.",
+        "The two previously flagged provider callback services pass the original scoped critical thresholds. Focused cases cover exact stored payment context, fail-closed claim recovery and chargeback reversal provenance. Enforced full candidate coverage and actual provider receipts remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1138047,7 +1138115,8 @@
           "release-0.6-solar-contract-source-validation",
           "release-0.6-saving-quote-boundaries",
           "release-0.6-wallet-read-and-alert-boundaries",
-          "release-0.6-bank-receipt-review-binding"
+          "release-0.6-bank-receipt-review-binding",
+          "release-0.6-wallet-provider-verification"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1328533,6 +1328602,74 @@
         {
           "file": "scoped-gate-final.json",
           "sha256": "6bb431b3f0dcd266526a0844c5eb7a34b9c3e29152418a1285e1e55b4f692651"
+        }
+      ]
+    },
+    "release-0.6-wallet-provider-verification": {
+      "batch": "release-0.6-wallet-provider-verification",
+      "base_commit": "879a838c7e57fecf825271991f0a2cd701a2542e",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.02",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.09.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/wallet/online-topup-callback.service.test.ts",
+        "apps/api/src/wallet/chargeback-detection.service.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+          "sha256": "df64030180362233af40c8835d5d121931c481c045ddd16a329a2ec8ac79e546"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
+          "sha256": "29230e856845b40e691886f1cbd4f68bea4c46b6b791d7b43a6b35848c465f04"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "e7b56cb128ac14eab60b65f8772d5828bb3761873eea9f6a87823476b726339e"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+          "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+        }
+      ],
+      "checks": [
+        "Sixty-eight final instrumented unit cases passed. A separate native PostgreSQL 17.9 run passed all 15 unchanged callback recovery cases along with 58 unit cases. It used the compiled HTTP fixture and production migrations.",
+        "Both critical files passed the original thresholds at 212/219 lines and 157/175 branches for online top-up, and 176/183 lines and 136/155 branches for chargeback detection. Historical native coverage was reused only for byte-identical runtime source.",
+        "API type checking, ESLint and formatting passed."
+      ],
+      "limitations": [
+        "The first recovery run had no PostgreSQL fixture, and the new negative cases exposed shared mock call histories. The subsequent PostgreSQL run and final scoped coverage resolved both. Full exact hosted and provider launch gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-wallet-provider-verification",
+      "execution_receipts": [
+        {
+          "file": "targeted-tests.log",
+          "sha256": "748d4da76ddcd20dfedeaeaf0cbd44e821d4e5efdee59b1ff3c7ec12684b5e6f"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "94636f415330ae733cadae4e74db1b326ad15243211cf56692dda83cf7408519"
+        },
+        {
+          "file": "scoped-gate-final.json",
+          "sha256": "e897f4501f898de873d4ea2a941d898864b94791390edd5eae7c5045f9bb58ec"
+        },
+        {
+          "file": "initial-fixture-failure.log",
+          "sha256": "84a60d0ad8db5a60a97e8c941bcaab7e78f06112d1de20de2f9144dedb899fa9"
         }
       ]
     }

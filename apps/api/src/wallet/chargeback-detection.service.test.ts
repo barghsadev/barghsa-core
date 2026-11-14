@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import promClient from 'prom-client';
-import { BadRequestException, HttpException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { WALLET_CHARGEBACK_REASON, chargebackCreditIdempotencyKey } from '@barghsa/shared/finance';
+import {
+  WALLET_CHARGEBACK_REASON,
+  WALLET_CHARGEBACK_EVENT_CONSTRAINT,
+  WALLET_REVERSAL_ERRORS,
+  chargebackCreditIdempotencyKey,
+} from '@barghsa/shared/finance';
 import {
   ChargebackDetectionService,
   chargebackEventLockKeys,
@@ -138,6 +143,7 @@ function rejectionBody(error: unknown): Record<string, unknown> {
 
 function scriptClient(opts: {
   claimInserted?: boolean;
+  claimError?: Error;
   existingEvent?: ReturnType<typeof claimedEventRow> | null;
   credit?: ReturnType<typeof makeCreditRow> | null;
   existingReversal?: { id: string } | null;
@@ -153,6 +159,7 @@ function scriptClient(opts: {
       return { rows: [] };
     }
     if (sql.includes('INSERT INTO wallet_chargeback_events')) {
+      if (opts.claimError) throw opts.claimError;
       if (opts.claimInserted === false) {
         return { rows: [], rowCount: 0 };
       }
@@ -188,7 +195,7 @@ function scriptClient(opts: {
 describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   beforeEach(() => {
     promClient.register.resetMetrics();
-    mockPool.connect.mockResolvedValue(mockClient);
+    mockPool.connect.mockReset().mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.release.mockReset();
   });
@@ -327,6 +334,51 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       status: 'unmatched',
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['{', ErrorCodes.VALIDATION_PARSE_JSON.code],
+    [payload({ amountIrR: '0' }), ErrorCodes.VALIDATION_INPUT_INVALID.code],
+  ])('rejects an invalid signed chargeback before claiming or reversing it', async (body, code) => {
+    const { service, reverseTransaction } = makeService();
+    const failure = await service.handle(signedInput(body)).catch((error: unknown) => error);
+    expect(rejectionBody(failure)).toMatchObject({ error: code });
+    expect(mockPool.connect).not.toHaveBeenCalled();
+    expect(reverseTransaction).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { original_transaction_id: null },
+    { wallet_id: null },
+    { match_method: 'provider_ref_id' },
+    { reversal_transaction_id: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' },
+  ])('withholds terminal reversal evidence when recorded provenance differs', async (override) => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({
+      claimInserted: false,
+      credit: makeCreditRow(),
+      existingReversal: { id: REVERSAL_ID },
+      existingEvent: claimedEventRow({
+        status: 'reversed',
+        original_transaction_id: CREDIT_ID,
+        reversal_transaction_id: REVERSAL_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+        ...override,
+      }),
+    });
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      status: 'unresolved',
+      processed: false,
+      reversed: false,
+      reversalTransactionId: null,
+    });
+    expect(reverseTransaction).not.toHaveBeenCalled();
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('UPDATE wallet_chargeback_events')
+      )
+    ).toBe(false);
   });
 
   it('returns the stored outcome for a duplicate event id without reversing again', async () => {
@@ -497,6 +549,105 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       reversed: true,
       reversalTransactionId: REVERSAL_ID,
       status: 'reversed',
+    });
+    expect(reverseTransaction).not.toHaveBeenCalled();
+  });
+
+  it('reads the persisted reversal after another transaction reverses the credit first', async () => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({ credit: makeCreditRow() });
+    reverseTransaction.mockImplementationOnce(async () => {
+      scriptClient({ credit: makeCreditRow(), existingReversal: { id: REVERSAL_ID } });
+      throw new ConflictException(WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(CREDIT_ID));
+    });
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      status: 'reversed',
+      originalTransactionId: CREDIT_ID,
+      reversalTransactionId: REVERSAL_ID,
+    });
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(reverseTransaction).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a reversal with the wrong amount in reconciliation', async () => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({ credit: makeCreditRow() });
+    reverseTransaction.mockResolvedValueOnce({
+      id: REVERSAL_ID,
+      walletId: PROFILE_ID,
+      type: 'reversal',
+      state: 'Completed',
+      reversesTransactionId: CREDIT_ID,
+      amount: -1n,
+    });
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      status: 'unresolved',
+      mapped: true,
+      reversed: false,
+      reversalTransactionId: null,
+    });
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('UPDATE wallet_chargeback_events'),
+      [EVENT_ID, 'unresolved', CREDIT_ID, null, PROFILE_ID, 'merchant_order_id']
+    );
+  });
+
+  it('cannot reverse a claim without a durable event receipt', async () => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({ claimInserted: false, existingEvent: null });
+    await expect(service.handle(signedInput(payload()))).rejects.toMatchObject({
+      response: { error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code },
+    });
+    expect(reverseTransaction).not.toHaveBeenCalled();
+  });
+
+  it('reads an existing event after its specific uniqueness conflict without reversing again', async () => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({
+      claimError: Object.assign(new Error('Fixture duplicate event'), {
+        code: '23505',
+        constraint: WALLET_CHARGEBACK_EVENT_CONSTRAINT,
+      }),
+      existingEvent: claimedEventRow({ status: 'unmatched' }),
+    });
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      status: 'unmatched',
+      processed: false,
+      reversed: false,
+    });
+    expect(reverseTransaction).not.toHaveBeenCalled();
+  });
+
+  it('propagates database faults without treating them as an existing chargeback', async () => {
+    const { service, reverseTransaction } = makeService();
+    const failure = Object.assign(new Error('Fixture unrelated unique constraint'), {
+      code: '23505',
+      constraint: 'unrelated_key',
+    });
+    scriptClient({ claimError: failure });
+    await expect(service.handle(signedInput(payload()))).rejects.toBe(failure);
+    expect(reverseTransaction).not.toHaveBeenCalled();
+    expect(mockClient.release).toHaveBeenCalledOnce();
+  });
+
+  it('returns an unresolved match without claiming a reversal on retry', async () => {
+    const { service, reverseTransaction } = makeService();
+    scriptClient({
+      claimInserted: false,
+      credit: makeCreditRow(),
+      existingEvent: claimedEventRow({
+        status: 'unresolved',
+        original_transaction_id: CREDIT_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+      }),
+    });
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      status: 'unresolved',
+      processed: false,
+      originalTransactionId: CREDIT_ID,
+      reversalTransactionId: null,
     });
     expect(reverseTransaction).not.toHaveBeenCalled();
   });

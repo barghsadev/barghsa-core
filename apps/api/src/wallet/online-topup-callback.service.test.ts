@@ -126,6 +126,7 @@ function scriptClient(opts: {
   pending?: ReturnType<typeof makePendingRow> | null;
   existingCredit?: { id: string } | null;
   claimInserted?: boolean;
+  claimError?: Error;
   existingEvent?: ReturnType<typeof claimedEventRow> | null;
 }) {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
@@ -165,6 +166,7 @@ function scriptClient(opts: {
       };
     }
     if (sql.includes('INSERT INTO wallet_topup_callback_events')) {
+      if (opts.claimError) throw opts.claimError;
       if (opts.claimInserted === false) {
         return { rows: [], rowCount: 0 };
       }
@@ -180,7 +182,7 @@ function scriptClient(opts: {
 describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   beforeEach(() => {
     promClient.register.resetMetrics();
-    mockPool.connect.mockResolvedValue(mockClient);
+    mockPool.connect.mockReset().mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.release.mockReset();
   });
@@ -525,6 +527,92 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     );
   });
 
+  it.each([
+    ['{', ErrorCodes.VALIDATION_PARSE_JSON.code],
+    [JSON.stringify({ merchantId: MERCHANT }), ErrorCodes.VALIDATION_PARSE_ZOD.code],
+    [payload({ amountIrR: '0' }), ErrorCodes.VALIDATION_INPUT_INVALID.code],
+  ])('rejects an invalid signed settlement body before claiming an event', async (body, code) => {
+    const { service, credit, verifyPayment } = makeService();
+    const failure = await service.handle(signedInput(body)).catch((error: unknown) => error);
+    expect(rejectionBody(failure)).toMatchObject({ error: code });
+    expect(mockPool.connect).not.toHaveBeenCalled();
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(credit).not.toHaveBeenCalled();
+  });
+
+  it('retains a claimed order for recovery when provider verification is unavailable', async () => {
+    scriptClient({ pending: makePendingRow() });
+    const { service, credit, verifyPayment } = makeService();
+    verifyPayment.mockRejectedValueOnce(new Error('test provider timeout'));
+    const input = signedInput(payload());
+    await expect(service.handle(input)).rejects.toMatchObject({
+      status: 502,
+      response: { error: ErrorCodes.PROVIDER_DOWNSTREAM.code },
+    });
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO wallet_topup_callback_events'),
+      expect.any(Array)
+    );
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('UPDATE wallet_topup_callback_events')
+      )
+    ).toBe(false);
+    expect(credit).not.toHaveBeenCalled();
+    expect(mockClient.release).toHaveBeenCalledTimes(1);
+
+    scriptClient({
+      pending: makePendingRow(),
+      claimInserted: false,
+      existingEvent: claimedEventRow({
+        payload_sha256: createHash('sha256').update(input.rawBody).digest('hex'),
+      }),
+    });
+    await expect(service.handle(input)).resolves.toMatchObject({
+      processed: true,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    });
+    expect(credit).toHaveBeenCalledTimes(1);
+  });
+
+  it('refuses to process an event whose stored payload differs even on the same pending order', async () => {
+    scriptClient({
+      pending: makePendingRow(),
+      claimInserted: false,
+      existingEvent: claimedEventRow({ payload_sha256: '0'.repeat(64) }),
+    });
+    const { service, credit, verifyPayment } = makeService();
+    await expect(service.handle(signedInput(payload()))).rejects.toMatchObject({
+      response: { error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code },
+    });
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(credit).not.toHaveBeenCalled();
+  });
+
+  it('does not proceed when a failed claim has no durable event receipt', async () => {
+    scriptClient({ pending: makePendingRow(), claimInserted: false });
+    const { service, credit, verifyPayment } = makeService();
+    await expect(service.handle(signedInput(payload()))).rejects.toMatchObject({
+      response: { error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code },
+    });
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(credit).not.toHaveBeenCalled();
+  });
+
+  it('propagates an unrelated database conflict when claiming a payment event', async () => {
+    const failure = Object.assign(new Error('Fixture unrelated unique constraint'), {
+      code: '23505',
+      constraint: 'unrelated_key',
+    });
+    scriptClient({ pending: makePendingRow(), claimError: failure });
+    const { service, credit, verifyPayment } = makeService();
+    await expect(service.handle(signedInput(payload()))).rejects.toBe(failure);
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(credit).not.toHaveBeenCalled();
+    expect(mockClient.release).toHaveBeenCalledOnce();
+  });
+
   it('credits a ZarinPal GET return after binding orderId/Authority and server-side verify', async () => {
     scriptClient({ pending: makePendingRow() });
     const { service, credit, verifyPayment } = makeService();
@@ -705,6 +793,34 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     });
     expect(verifyPayment).not.toHaveBeenCalled();
     expect(credit).not.toHaveBeenCalled();
+  });
+
+  it('rejects an empty authority before reading the merchant order', async () => {
+    const { service, credit, verifyPayment } = makeService();
+    await expect(
+      service.handleZarinpalReturn({ orderId: TX_ID, authority: ' ', status: 'OK' })
+    ).rejects.toMatchObject({
+      response: { error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code },
+    });
+    expect(mockPool.connect).not.toHaveBeenCalled();
+    expect(verifyPayment).not.toHaveBeenCalled();
+    expect(credit).not.toHaveBeenCalled();
+  });
+
+  it('verifies the original authority on a legacy pending row without a separate reference', async () => {
+    scriptClient({ pending: makePendingRow({ ref_id: null }) });
+    const { service, credit, verifyPayment } = makeService();
+    await expect(service.handle(signedInput(payload()))).resolves.toMatchObject({
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    });
+    expect(verifyPayment).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        authority: AUTHORITY,
+        merchantOrderId: TX_ID,
+      })
+    );
+    expect(credit).toHaveBeenCalledTimes(1);
   });
 
   it('credits a ZarinPal GET return without a webhook HMAC secret', async () => {
