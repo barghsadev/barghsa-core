@@ -38161,7 +38161,13 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": Record<string, never>;
+                "application/json": {
+                    /**
+                     * @description Legacy request hint. Verification uses the server-issued upload key.
+                     * @enum {string}
+                     */
+                    category?: "document" | "image" | "video" | "contract" | "general";
+                };
             };
         };
         responses: {
@@ -38172,7 +38178,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Unexpected request body */
+            /** @description Invalid upload request */
             400: {
                 headers: {
                     [name: string]: unknown;

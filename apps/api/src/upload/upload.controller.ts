@@ -24,9 +24,13 @@ import {
 } from '@nestjs/swagger';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { UploadService } from './upload.service.js';
+import { UPLOAD_CATEGORIES } from './upload.config.js';
+import { PresignedUrlRequestSchema } from './upload.types.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
-import { assertEmptyCommandBody } from '../common/empty-command-body.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
+
+const verifyUploadBody = PresignedUrlRequestSchema.pick({ category: true }).optional();
 
 @Controller('api/upload')
 @UseGuards(SessionAuthGuard)
@@ -105,14 +109,28 @@ export class UploadController {
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'Uploaded object verified.' })
-  @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
-  @ApiResponse({ status: 400, description: 'Unexpected request body' })
+  @ApiBody({
+    required: false,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        category: {
+          type: 'string',
+          enum: [...UPLOAD_CATEGORIES],
+          description: 'Legacy request hint. Verification uses the server-issued upload key.',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid upload request' })
   verifyUpload(
     @Param('key') key: string,
     @Req() actor: AuthenticatedRequest,
     @Body() body?: unknown
   ) {
-    assertEmptyCommandBody(body);
+    if (!verifyUploadBody.safeParse(body).success)
+      throw new BadRequestException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
     return this.uploads.verifyUpload(key, actor);
   }
 

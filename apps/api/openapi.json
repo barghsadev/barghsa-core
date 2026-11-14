@@ -52921,6 +52921,19 @@
             "application/json": {
               "schema": {
                 "additionalProperties": false,
+                "properties": {
+                  "category": {
+                    "description": "Legacy request hint. Verification uses the server-issued upload key.",
+                    "enum": [
+                      "document",
+                      "image",
+                      "video",
+                      "contract",
+                      "general"
+                    ],
+                    "type": "string"
+                  }
+                },
                 "type": "object"
               }
             }
@@ -52932,7 +52945,7 @@
             "description": "Uploaded object verified."
           },
           "400": {
-            "description": "Unexpected request body"
+            "description": "Invalid upload request"
           }
         },
         "tags": [

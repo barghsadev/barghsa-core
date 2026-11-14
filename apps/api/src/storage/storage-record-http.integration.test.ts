@@ -143,17 +143,17 @@ it('reserves required RTF documents and rejects substituted bytes before sealing
   expect(response.status, await response.clone().text()).toBe(200);
   const upload = (await response.json()) as { key: string };
   expect(upload.key).toMatch(/\.rtf$/);
-  const verify = () =>
+  const verify = (category = 'document') =>
     fetch(`${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ category: 'document' }),
+      body: JSON.stringify({ category }),
     });
   objects.set(upload.key, Buffer.alloc(bytes.length, 65));
   expect(await (await verify()).json()).toMatchObject({ status: 'type_mismatch' });
   expect((await row(upload.key)).status).toBe('removed');
   objects.set(upload.key, bytes);
-  expect(await (await verify()).json()).toMatchObject({
+  expect(await (await verify('image')).json()).toMatchObject({
     status: 'confirmed',
     detectedContentType: 'application/rtf',
     exists: true,
@@ -434,7 +434,7 @@ it('authenticates every upload step and requires CSRF before storage access', as
   expect(upload.expiresIn).toBe(900);
   objects.set(upload.key, bytes);
   const verifyPath = `${http.base}/api/upload/${encodeURIComponent(upload.key)}/verify`;
-  for (const invalid of [{ extra: true }, []]) {
+  for (const invalid of [{ category: 'unsupported' }, { category: 'document', extra: true }, []]) {
     const rejected = await fetch(verifyPath, {
       method: 'POST',
       headers,
