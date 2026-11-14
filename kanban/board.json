@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-14T11:54:29+00:00",
+  "updated": "2026-11-14T12:08:51+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -561,14 +561,19 @@
       "reconciled_specification": "kanban/epics/05-notifications-documents-ai.md"
     },
     "staging_payment_credential_location": {
-      "status": "pending",
+      "status": "provisioned_verified_staging",
       "kind": "configuration_input",
       "requested_at": "2026-10-08",
       "scope": "Identify intended staging/sandbox payment merchant credentials through a protected local file orprivate admin/runtime configuration. Current staged merchant is the bootstrap placeholder. Never putsecret values inchat.",
       "affected_task_keys": [
         "release-readiness#R-03.02"
       ],
-      "asked_once": "Current goal chat via request_user_input_async;do not repeat or infer approval."
+      "asked_once": "Current goal chat via request_user_input_async;do not repeat or infer approval.",
+      "resolution": {
+        "location": "/etc/barghsa/staging/payment-sandbox.env and protected staging API runtime",
+        "scope": "Owner-authorized staging HTTP sandbox. Existing settled synthetic fixture was verified previously. Live v0.5.1 health and configured sandbox endpoints were verified on November 14. Production merchant remains required.",
+        "evidence_batch": "release-0.6-staging-telegram-relay-recovery"
+      }
     },
     "product_telegram_configuration": {
       "status": "configured_callback_preflight_failed",
@@ -701,7 +706,7 @@
       "scope": "Reuse available bot/configuration and create missing staging/sandbox/ops configuration. Preserve actual provider proof and financial/security safeguards; no production deployment authorization."
     },
     "v04_telegram_egress": {
-      "status": "awaiting_operator_action",
+      "status": "restored_verified_external_relay",
       "asked_once": "2026-10-11 via request_user_input_async after protected bot installation and bounded egress diagnosis",
       "blocker": "Staging VPS cannot reach official api.telegram.org:443; EHOSTUNREACH and immediate IPv4 connect failure. Bot identity/token/secret match the prepared configuration; new bot creation cannot fix host networking.",
       "required_action": "Hosting provider enables outbound HTTPS to Telegram, or owner supplies a protected approved proxy configuration location. No secret values requested.",
@@ -712,7 +717,12 @@
         "telegram-egress-diagnosis.json"
       ],
       "safeguards": "Previous healthy ngrok webhook untouched; no private-linkage or Telegram root-version reply receipt fabricated. Existing release-worker release notes remain authorized independently.",
-      "independent_work": "Finish remaining v0.4.0 outbox/idempotency disposition, protected staged payment configuration, operations receiver and storage live gates. No later release selected."
+      "independent_work": "Finish remaining v0.4.0 outbox/idempotency disposition, protected staged payment configuration, operations receiver and storage live gates. No later release selected.",
+      "resolution": {
+        "transport": "Owner-designated eu.barghsa.com relay",
+        "scope": "Restored NGINX after DNS startup failure, enabled systemd failure recovery and verified bot identity and empty authenticated callback. Final candidate private assistant and provider evidence remain required.",
+        "evidence_batch": "release-0.6-staging-telegram-relay-recovery"
+      }
     },
     "v04_delivery_identity": {
       "status": "approved",
@@ -22759,7 +22769,8 @@
       "launch_required": true,
       "remaining": [
         "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal.",
-        "The compiled f571986ee HTTP adapter recovered and verified an existing settled fixture through live staging HTTPS with its current adapter source. Verify the exact deployed application, circuit signals and controlled recovery."
+        "The compiled f571986ee HTTP adapter recovered and verified an existing settled fixture through live staging HTTPS with its current adapter source. Verify the exact deployed application, circuit signals and controlled recovery.",
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -22810,7 +22821,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-bill-electricity-caller",
-          "release-0.6-staging-preflight-readback"
+          "release-0.6-staging-preflight-readback",
+          "release-0.6-staging-telegram-relay-recovery"
         ],
         "current_acceptance": null
       }
@@ -172051,7 +172063,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -172379,7 +172391,7 @@
             },
             {
               "path": "deploy/telegram/README.md",
-              "sha256": "1dbd0071ebb0c7dfd6903f75eda1305fdfaa89a10b17ff0cab5d8efa14be6ab3"
+              "sha256": "cf611f111e4b45564027434bc4cd0cdb800e373d5d7f5ed9efcb6f10500f44ca"
             },
             {
               "path": "package.json",
@@ -173628,6 +173640,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts",
+                "deploy/telegram/README.md"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -662981,7 +663002,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -663313,7 +663334,7 @@
             },
             {
               "path": "deploy/telegram/README.md",
-              "sha256": "1dbd0071ebb0c7dfd6903f75eda1305fdfaa89a10b17ff0cab5d8efa14be6ab3"
+              "sha256": "cf611f111e4b45564027434bc4cd0cdb800e373d5d7f5ed9efcb6f10500f44ca"
             },
             {
               "path": "package.json",
@@ -664582,6 +664603,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts",
+                "deploy/telegram/README.md"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -694854,7 +694884,7 @@
             },
             {
               "path": "packages/eslint-config/reviewed-postgres-sql.json",
-              "sha256": "0dde3a7b99e58af785672170c6e20843a56091be5b16c9b6609297867831a00a"
+              "sha256": "a9c21fa4a1b97465ed09da65a7e1fcd5d910de0be51d97c281a0f65b6df98c6c"
             }
           ],
           "source_renewals": [
@@ -694945,6 +694975,14 @@
                 "packages/eslint-config/reviewed-postgres-sql.json"
               ],
               "scope": "Six scoped recovery routes are additive. Existing API definitions are identical, existing settings writes retain their validators, permission, session, versioning and audit behavior, and existing service and wallet journeys passed targeted tests. Wallet copy lookups reuse the same strings and formatting. Unaffected behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "packages/eslint-config/reviewed-postgres-sql.json"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -699900,7 +699938,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/worker/src/ai-inference/server.test.ts",
@@ -699946,6 +699984,14 @@
                 "apps/worker/src/ai-inference/server.ts"
               ],
               "scope": "Added fixed PostgreSQL span timing and scoped the existing tracer across API and worker execution. pg-pool callback handoff now keeps the requesting context. SQL, parameters, schema, financial behavior, timeouts, retries and authorization checks retain their existing implementation. Native database, API and worker cases rechecked the affected boundaries. The SQL allowlist changed only by renewing two reviewed file digests."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -700033,7 +700079,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/web/e2e/otp-config.spec.ts",
@@ -700121,6 +700167,14 @@
                 "packages/i18n/src/verification-config.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -700208,7 +700262,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/web/e2e/otp-config.spec.ts",
@@ -700296,6 +700350,14 @@
                 "packages/i18n/src/verification-config.ts"
               ],
               "scope": "Verification-mode history and restore extend only the mode settings contract. The existing mode draft and activation behavior retain their validation and guards. The verified requirements history now uses the same scoped audit query and its external contract is structurally identical. Both native API suites and affected browser journeys passed. Other operations in the generated OpenAPI are structurally identical. Wallet uses the same accessible pending text and aria-busy with no decorative loading icon. The 76 affected wallet tests passed."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -700385,7 +700447,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/web/e2e/otp-config.spec.ts",
@@ -700486,6 +700548,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -751917,7 +751987,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/test/ai-maintenance.ts",
@@ -752086,6 +752156,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -752175,7 +752253,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/test/ai-maintenance.ts",
@@ -752344,6 +752422,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -752434,7 +752520,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/test/ai-maintenance.ts",
@@ -752603,6 +752689,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -753139,7 +753233,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/test/ai-maintenance.ts",
@@ -753308,6 +753402,14 @@
                 "apps/api/src/telegram/telegram-links-http.integration.test.ts"
               ],
               "scope": "Renewed Telegram link command validation with a native request, preserved link and audit state, and compatible bodyless retries. Existing ownership and provider evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ]
         }
@@ -1122391,11 +1122493,11 @@
             },
             {
               "path": "deploy/telegram/README.md",
-              "sha256": "1dbd0071ebb0c7dfd6903f75eda1305fdfaa89a10b17ff0cab5d8efa14be6ab3"
+              "sha256": "cf611f111e4b45564027434bc4cd0cdb800e373d5d7f5ed9efcb6f10500f44ca"
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8"
+              "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
             },
             {
               "path": "apps/api/src/telegram/root-version.ts",
@@ -1124994,6 +1125096,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Only pre-migration checkpoint admission and matching fixtures changed. Verified label, ciphertext, running database identity, deployment order, receipt digest and notification guards were retained. Historical live evidence remains bound to its original release."
+            },
+            {
+              "batch": "release-0.6-staging-telegram-relay-recovery",
+              "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+              "paths": [
+                "deploy/telegram/README.md",
+                "apps/api/src/telegram/telegram-runtime.service.ts"
+              ],
+              "scope": "Verified bounded Telegram identity recovery and shutdown with targeted protocol and migrated HTTP regression checks. The SQL review confirms the existing query-bearing code byte for byte."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1130807,7 +1130918,8 @@
         "Eight staff AI admin commands now reject unexpected JSON before model deletion or testing, agent deletion or unlinking, policy/group deletion or membership removal. Native PostgreSQL checks verified unchanged records and links, no audit and no provider work on rejection, and acceptance of the existing omitted and empty-object bodies. Complete the remaining request inventory and exact staging verification.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
         "Hosted run 43590799789 verified five exact images and zero High or Critical findings at f7fc00b88. All 857 package rows match the previous inventory except for the app image's Nodemailer upgrade to 10.1.4. The refreshed workbook matches all 386 active review entries and retains blank decisions. Obtain named dispositions and run the enforced license gate on the immutable release.",
-        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131165,7 +1131277,8 @@
           "release-0.6-ai-admin-command-validation",
           "release-0.6-complete-staging-checkpoint-receipt",
           "release-0.6-license-review-refresh-f7fc00b88",
-          "release-0.6-promotion-checkpoint-parity"
+          "release-0.6-promotion-checkpoint-parity",
+          "release-0.6-staging-telegram-relay-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1131460,7 +1131573,8 @@
         "The read-only official release preflight refused live v0.5.1 because the runtime lacks non-disposable mode and encrypted WAL archiving. No deploy or notification was attempted. The approved backup destination, key recovery, backup and restore receipts, and cutover remain required.",
         "The deployment worker now independently validates the commit-bound encrypted migration checkpoint before accepting a protected release receipt or resuming its notice. The approved off-server destination and recovery-key custody, live cutover, and exact backup/restore and release receipts remain required.",
         "Before staging migrations, the receiver now requires ordered timezone-aware checkpoint timestamps, a nonempty native WAL range list with timeline and valid LSN format, and a PostgreSQL tablespace ID list. The detached worker checks the same manifest shape before recording the canonical digest. Verify the actual protected backup, recovery and migration on the accepted candidate.",
-        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required."
+        "The production approval check now applies the staging queue's native manifest validation. Four previously accepted malformed WAL and tablespace cases are rejected even when the checkpoint digest and receipt fields match. Full promotion and queue suites passed. The real approved off-server backup, restore and candidate rehearsal remain required.",
+        "On live v0.5.1, the approved EU Telegram relay recovered after a DNS startup failure. NGINX now retries startup on failure. The same staging API image was restarted once. Readiness and both relay directions passed. The candidate retries bot identity after an unavailable startup check and keeps callbacks closed until identity verification. Exact candidate deployment and provider and private journey evidence remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -1131540,7 +1131654,8 @@
           "release-0.6-backup-config-preflight",
           "release-0.6-protected-checkpoint-receipt",
           "release-0.6-complete-staging-checkpoint-receipt",
-          "release-0.6-promotion-checkpoint-parity"
+          "release-0.6-promotion-checkpoint-parity",
+          "release-0.6-staging-telegram-relay-recovery"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1318935,6 +1319050,95 @@
         {
           "file": "queue-tests.log",
           "sha256": "1326d66d9df187f5fafe6f799b5d842e760ff2f8f22c0ccaf3b6a968c2797430"
+        }
+      ]
+    },
+    "release-0.6-staging-telegram-relay-recovery": {
+      "batch": "release-0.6-staging-telegram-relay-recovery",
+      "base_commit": "9865a3a3b51ddee13f9ab4a99b0c4398c9430f5f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.05.02.08",
+        "06-security-testing-observability.md#T-06.05.02.09",
+        "06-security-testing-observability.md#T-06.05.02.10",
+        "06-security-testing-observability.md#T-06.05.02.11",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "apps/api/src/telegram/telegram-runtime.service.ts",
+        "apps/api/src/telegram/telegram-runtime.service.test.ts",
+        "deploy/telegram/README.md",
+        "packages/eslint-config/reviewed-postgres-sql.json"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.test.ts",
+          "sha256": "aa70909d869343296582bd3de2ae10b89f9c408466d28f55eff8f32d61a56c1d"
+        },
+        {
+          "path": "deploy/telegram/README.md",
+          "sha256": "cf611f111e4b45564027434bc4cd0cdb800e373d5d7f5ed9efcb6f10500f44ca"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "a9c21fa4a1b97465ed09da65a7e1fcd5d910de0be51d97c281a0f65b6df98c6c"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.ts",
+          "sha256": "b64bb0a9b3c0991c9eca7971f66d34daf68aa281557f96ed12846e990cb8115c"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "34c54b73d1ee8d3ebf1bc0f96aa7007beb92fa5fd5034e0bcea1dbc9a999952f"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-protocol.test.ts",
+          "sha256": "dc1dc392ca6d111af3e87293a041b01f1566048fe49769b790d039c871f8d5a6"
+        },
+        {
+          "path": "deploy/telegram/nginx.conf",
+          "sha256": "78ea447acb717b16cf5393d28896b75d8e199cd1fb9abd3ae9d9dd72aa625122"
+        }
+      ],
+      "checks": [
+        "Trusted EU host readback showed NGINX failed since November 7 after Telegram DNS lookup failed. Verified upstream DNS and NGINX configuration, installed a 20-second restart-on-failure policy, and recovered NGINX.",
+        "Verified the bot identity from the live staging container. Restarted the same staging API container and image under the release lock. The valid empty callback was ignored, the unauthenticated callback returned 401, and live readiness and sandbox health passed.",
+        "All 49 Telegram protocol, startup recovery and migrated HTTP cases passed. The wrong identity and unavailable transport kept callbacks closed. A later verified check recovered, and shutdown prevented scheduled or in-flight retries from reactivating the consumer.",
+        "API typecheck, targeted lint, formatting and the reviewed PostgreSQL query rule passed. The entire query-bearing runtime section matched the previous source byte for byte."
+      ],
+      "limitations": [
+        "The live receipt covers the relay on v0.5.1. The candidate retry behavior is locally verified. Real private replies, inference, exact v0.6.0 deployment and release Telegram confirmation remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-telegram-relay-recovery",
+      "execution_receipts": [
+        {
+          "file": "live-relay-recovery.json",
+          "sha256": "0ca393a3f4da6ef62f296338116fe17cb53e62836ab07977ce77ee798faec75c"
+        },
+        {
+          "file": "telegram-tests.log",
+          "sha256": "e6dd7739722f6ac98dd44579127a1cfd32d89e2627b75284a2765a1c04c3ba5a"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "lint-rule.log",
+          "sha256": "b1bc5598a87b0a53cec5731196df9e2d74c85b70f0640b8a53df06d08a88f60e"
         }
       ]
     }

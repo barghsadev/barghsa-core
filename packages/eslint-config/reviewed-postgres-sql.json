@@ -60,7 +60,7 @@
   "apps/api/src/solar/solar-final.service.ts": "f4b958328fc2137eafa2a060818abcf0e9bcf7650d6a23b682b35b4777959397",
   "apps/api/src/solar/solar-postal.service.ts": "5114274fbd81a508040b4dba76a4703a57146759caec1a36666dcd11e6783eb5",
   "apps/api/src/telegram/telegram-links.service.ts": "d7e56e200eae3c9291cb4ca2f701491a5e1911a38f55d189a99b98db47690000",
-  "apps/api/src/telegram/telegram-runtime.service.ts": "bf1dd9f95c0eb2757576aaa2c68598a96a582c4910e6b147e1d9d940ed3fbcd8",
+  "apps/api/src/telegram/telegram-runtime.service.ts": "2eddb42ee968aea19278fa0888362c1270ab7a5de962c1c76795434e191c0ad7",
   "apps/api/src/tickets/tickets.controller.ts": "a4d723c79c8a761555001e209d0bbe2dd296fa38702ae855b8d97cea59f3e6a6",
   "apps/api/src/tickets/tickets.service.ts": "216085a1f0c36cbbd82595d04da8ad42ededdb37392d14e8da0e4adb0de1b782",
   "apps/api/src/tos/tos-acceptance.ts": "82296ce0bddc404317012e10e411f11fb4c5bbc4135cdf1471442091641158a5",

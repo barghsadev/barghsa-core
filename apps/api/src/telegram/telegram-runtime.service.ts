@@ -48,6 +48,7 @@ type Binding = {
   locale: 'fa' | 'en';
 };
 const unavailable = () => new HttpException({ error: 'TELEGRAM_UNAVAILABLE' }, 503);
+const IDENTITY_RETRY_MS = 15_000;
 
 /** A bounded durable consumer; model I/O still runs through the isolated AI process. */
 @Injectable()
@@ -55,6 +56,8 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(TelegramRuntimeService.name);
   private client: TelegramClient | null = null;
   private version: string | null = null;
+  private identityRetry: ReturnType<typeof setTimeout> | null = null;
+  private stopping = false;
   private timer: ReturnType<typeof setInterval> | null = null;
   private running: Promise<void> | null = null;
   constructor(
@@ -71,7 +74,20 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
       fetch,
       process.env['CUSTOMER_TELEGRAM_TRANSPORT']
     );
-    if (!(await client.verifyIdentity())) return;
+    await this.verifyTransport(client);
+  }
+
+  private async verifyTransport(client: TelegramClient) {
+    const verified = await client.verifyIdentity();
+    if (this.stopping) return;
+    if (!verified) {
+      this.identityRetry = setTimeout(() => {
+        this.identityRetry = null;
+        void this.verifyTransport(client);
+      }, IDENTITY_RETRY_MS);
+      this.identityRetry.unref();
+      return;
+    }
     this.client = client;
     this.links.setTransportReady(true);
     this.timer = setInterval(() => {
@@ -85,6 +101,8 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
     this.timer.unref();
   }
   async onModuleDestroy() {
+    this.stopping = true;
+    if (this.identityRetry) clearTimeout(this.identityRetry);
     if (this.timer) clearInterval(this.timer);
     this.links.setTransportReady(false);
     // A hard-stop lease is recovered as failed generation or unknown sending, never resent blindly.

@@ -23,6 +23,17 @@ flow. Keep the renewal timer enabled and install the existing
 `deploy/staging/certbot-reload-nginx.sh` renewal hook. Disable Ubuntu's default
 site on this dedicated host.
 
+Install the following NGINX systemd drop-in at
+`/etc/systemd/system/nginx.service.d/60-barghsa-restart.conf`. It lets NGINX
+retry startup if upstream DNS is temporarily unavailable. Run `systemctl
+daemon-reload` and verify the effective restart policy.
+
+```ini
+[Service]
+Restart=on-failure
+RestartSec=20s
+```
+
 Render `nginx.conf` privately, replacing `__BOT_TOKEN__` with the configured bot
 token, `__WEBHOOK_SECRET__` with the existing customer webhook secret, and
 `__OPENROUTER_API_KEY__` with the owner-provided protected OpenRouter key. Validate
@@ -67,6 +78,14 @@ Changing the transport does not accept a release or authorize production. Keep
 the previous webhook until replacement preflight passes. If handoff has already
 occurred, inspect pending updates and durable delivery state before restoring an
 earlier verified callback. Preserve unknown sends indefinitely for reconciliation.
+
+For a relay outage, verify NGINX and its configured upstream DNS on the EU
+host, then repeat the staging `getMe` and empty authenticated callback checks.
+The staging API retries bot identity checks every 15 seconds after a failed
+startup check. Callback handling and the consumer stay unavailable until
+the expected bot is verified. On releases before this recovery behavior,
+use the staging release lock and restart the existing API after the relay is
+reachable. Verify the same running image and staging readiness after recovery.
 
 If private link codes arrive but knowledge answers fail, inspect the durable
 question status and test the embedding provider separately. Telegram transport,
